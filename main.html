@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 자원순환 탐정단 - 메인 본부</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <style>
+    :root {
+      --primary: #4CAF50;
+      --primary-dark: #388E3C;
+      --secondary: #FF9800;
+      --bg: #F4F9F4;
+      --card-bg: #FFFFFF;
+      --text: #2C3E50;
+      --border: #E0E0E0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 15px; }
+
+    .container { max-width: 850px; margin: 0 auto; background: var(--card-bg); border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); overflow: hidden; }
+
+    /* 상단 상태 바 */
+    header { background: linear-gradient(135deg, #4CAF50, #81C784); color: white; padding: 20px; text-align: center; }
+    .status-bar { display: flex; justify-content: space-around; background: rgba(0,0,0,0.18); padding: 10px; border-radius: 12px; margin-top: 10px; font-weight: bold; font-size: 15px; }
+
+    /* 네비게이션 탭 */
+    nav { display: flex; overflow-x: auto; background: #E8F5E9; padding: 8px; gap: 8px; }
+    nav button { flex: 1; min-width: 110px; padding: 10px; border: none; background: white; border-radius: 10px; font-weight: bold; cursor: pointer; color: #555; transition: 0.2s; }
+    nav button.active { background: var(--primary); color: white; }
+
+    /* 화면 섹션 */
+    .screen { display: none; padding: 25px; }
+    .screen.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    h2 { font-size: 20px; margin-bottom: 15px; color: var(--primary-dark); }
+    .guide-box { background: #FFF8E1; border-left: 5px solid var(--secondary); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; line-height: 1.5; }
+
+    /* 폼 요소 */
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; }
+    input[type="text"], textarea, select { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 10px; font-size: 15px; outline: none; }
+    input[type="text"]:focus, textarea:focus, select:focus { border-color: var(--primary); }
+
+    .btn-action { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
+    .btn-action:hover { background: var(--primary-dark); }
+
+    /* 라벨링 카드 */
+    .card-labeling { text-align: center; border: 2px dashed var(--border); border-radius: 16px; padding: 20px; margin-bottom: 15px; }
+    .item-image { font-size: 70px; margin: 15px 0; }
+    .label-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+    .label-btn { padding: 12px; border: 2px solid var(--border); background: white; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    .label-btn:hover { border-color: var(--primary); background: #E8F5E9; }
+
+    .feedback-box { margin-top: 15px; padding: 15px; border-radius: 10px; font-weight: bold; text-align: center; display: none; }
+    .feedback-box.correct { background: #E8F5E9; color: #2E7D32; display: block; }
+    .feedback-box.wrong { background: #FFEBEE; color: #C62828; display: block; }
+
+    .history-card { background: #FAFAFA; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-top: 10px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+    .history-card button { padding: 6px 12px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- 상단 상태 바 -->
+  <header>
+    <h1>🌱 AI 자원순환 디지털 탐정 본부</h1>
+    <div class="status-bar">
+      <span id="dispGroup">모둠: 불러오는 중</span>
+      <span id="dispAiName">AI 파트너: 불러오는 중</span>
+      <span id="dispScore">⭐ 탐정 점수: 10점</span>
+      <span id="dispBadge">🏅 배지: 신입 탐정</span>
+    </div>
+  </header>
+
+  <!-- 메뉴 탭 -->
+  <nav>
+    <button class="nav-btn active" onclick="switchTab('screen-dashboard')">1. 대시보드</button>
+    <button class="nav-btn" onclick="switchTab('screen-rules')">2. 분류 기준</button>
+    <button class="nav-btn" onclick="switchTab('screen-labeling')">3. 라벨링 미션</button>
+    <button class="nav-btn" onclick="switchTab('screen-detect')">4. AI 탐지 비교</button>
+    <button class="nav-btn" onclick="switchTab('screen-review')">5. 오류 분석·규약</button>
+  </nav>
+
+  <!-- 1) 대시보드 화면 -->
+  <section id="screen-dashboard" class="screen active">
+    <h2>📊 탐정단 미션 대시보드</h2>
+    <div class="guide-box">우리 모둠의 AI 파트너와 함께 8차시 자원순환 탐정 퀘스트를 완수해 보세요!</div>
+    <div style="display: grid; gap: 10px;">
+      <div class="history-card">
+        <span><strong>[1~2차시]</strong> 품목별 분류 기준 및 알고리즘 세우기</span>
+        <button onclick="switchTab('screen-rules')">바로가기</button>
+      </div>
+      <div class="history-card">
+        <span><strong>[3~4차시]</strong> 좋은 데이터 조건 이해 및 이미지 라벨링</span>
+        <button onclick="switchTab('screen-labeling')">바로가기</button>
+      </div>
+      <div class="history-card">
+        <span><strong>[5차시]</strong> AI 객체탐지 결과와 사람 판단 비교·기록</span>
+        <button onclick="switchTab('screen-detect')">바로가기</button>
+      </div>
+      <div class="history-card">
+        <span><strong>[6~8차시]</strong> AI 오류 원인 분석 및 학급 실천 규약 수립</span>
+        <button onclick="switchTab('screen-review')">바로가기</button>
+      </div>
+    </div>
+    <div style="text-align: right; margin-top: 25px;">
+      <button onclick="logout()" style="background: none; border: none; color: #888; font-size: 13px; text-decoration: underline; cursor: pointer;">다른 모둠으로 재로그인</button>
+    </div>
+  </section>
+
+  <!-- 2) 분류 기준 만들기 화면 (2차시) -->
+  <section id="screen-rules" class="screen">
+    <h2>📋 자원순환 품목 분류 기준표</h2>
+    <div class="guide-box">AI가 헷갈리지 않고 정확히 판단할 수 있도록 구체적인 기준을 입력해주세요.</div>
+    <div class="form-group">
+      <label>종이 / 플라스틱 / 캔 / 우유팩 / 일반쓰레기 기준</label>
+      <textarea id="ruleStandard" rows="3" placeholder="예: 우유팩은 물로 깨끗이 헹구고 펼쳐서 말린 것만 우유팩으로 분류함"></textarea>
+    </div>
+    <div class="form-group">
+      <label>가장 헷갈리는 품목과 해결 기준</label>
+      <textarea id="ruleConfusing" rows="2" placeholder="예: 음식물이 묻어 지워지지 않는 비닐은 일반쓰레기로 분류"></textarea>
+    </div>
+    <button class="btn-action" onclick="saveRuleData()">분류 기준 저장하기</button>
+  </section>
+
+  <!-- 3) 이미지 라벨링 화면 (4차시) -->
+  <section id="screen-labeling" class="screen">
+    <h2>🏷️ 이미지 데이터 라벨링 퀘스트</h2>
+    <div class="guide-box">제시된 품목 이미지를 보고 올바른 분류 이름표를 달아주세요!</div>
+    <div class="card-labeling">
+      <div style="font-weight: bold; color: #555;">[문제] 이 품목은 무엇일까요?</div>
+      <div class="item-image">🥛</div>
+      <div style="font-size: 18px; font-weight: bold;">다 마시고 깨끗이 씻은 우유팩</div>
+      <div class="label-options">
+        <button class="label-btn" onclick="checkLabel('종이류')">종이류</button>
+        <button class="label-btn" onclick="checkLabel('우유팩(종이팩)')">우유팩(종이팩)</button>
+        <button class="label-btn" onclick="checkLabel('일반쓰레기')">일반쓰레기</button>
+        <button class="label-btn" onclick="checkLabel('플라스틱')">플라스틱</button>
+      </div>
+      <div id="labelFeedback" class="feedback-box"></div>
+    </div>
+  </section>
+
+  <!-- 4) 객체탐지 테스트 화면 (5차시) -->
+  <section id="screen-detect" class="screen">
+    <h2>🔍 AI 탐지 결과 vs 인간 판단 비교</h2>
+    <div class="guide-box">컴퓨터비전 AI가 판독한 결과와 사람이 직접 확인한 판단을 비교해 기록합니다.</div>
+    <div class="form-group">
+      <label>테스트할 품목 이름</label>
+      <input type="text" id="detectItem" placeholder="예: 찌그러진 알루미늄 캔">
+    </div>
+    <div class="form-group">
+      <label>AI 객체탐지 결과 (AI의 예측)</label>
+      <input type="text" id="detectAiResult" placeholder="예: 플라스틱 (정확도 72%)">
+    </div>
+    <div class="form-group">
+      <label>사람(모둠)의 최종 판단</label>
+      <input type="text" id="detectHumanResult" placeholder="예: 캔류 (알루미늄)">
+    </div>
+    <div class="form-group">
+      <label>AI와 사람의 일치 여부</label>
+      <select id="detectMatch">
+        <option value="일치">일치함 (AI가 정확히 맞춤)</option>
+        <option value="불일치">불일치함 (AI 오류 발생)</option>
+      </select>
+    </div>
+    <button class="btn-action" onclick="saveDetectionData()">비교 결과 기록 저장</button>
+  </section>
+
+  <!-- 5) 오류 분석 및 실천 규약 화면 (6~8차시) -->
+  <section id="screen-review" class="screen">
+    <h2>💡 오류 분석 및 우리 학급 실천 규약</h2>
+    <div class="guide-box">AI가 왜 잘못 판단했는지 데이터 관점에서 분석하고 실천 규약을 세웁니다.</div>
+    <div class="form-group">
+      <label>AI 오류 발생 원인 분석</label>
+      <select id="errorReason">
+        <option value="데이터 부족">학습 데이터(사진)의 수가 부족해서</option>
+        <option value="각도 및 조명 문제">빛 반사나 찌그러진 각도 때문에</option>
+        <option value="이물질">음식물 등 오염 물질이 묻어 있어서</option>
+        <option value="기타">기타 이유</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>데이터 개선 방안</label>
+      <textarea id="dataImprove" rows="2" placeholder="예: 찌그러진 캔 사진을 다양한 각도에서 더 수집하여 학습시킨다."></textarea>
+    </div>
+    <div class="form-group">
+      <label>우리 학급 자원순환 실천 규약</label>
+      <textarea id="classPromise" rows="3" placeholder="예: 우유 급식 후 반드시 물로 헹구고 완전히 펼쳐서 전용 수거함에 넣기"></textarea>
+    </div>
+    <button class="btn-action" onclick="savePromiseData()">최종 실천 규약 제출</button>
+  </section>
+</div>
+
+<!-- Firebase 연동 모듈 -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+    authDomain: "elemeelementary-textbook.firebaseapp.com",
+    projectId: "elemeelementary-textbook",
+    storageBucket: "elemeelementary-textbook.firebasestorage.app",
+    messagingSenderId: "713149004420",
+    appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
+    measurementId: "G-TZT282J9E8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 로컬 세션 확인
+  const groupCode = localStorage.getItem("elementary_groupCode");
+  const aiName = localStorage.getItem("elementary_aiName");
+  let score = parseInt(localStorage.getItem("elementary_score") || "10", 10);
+  let badge = localStorage.getItem("elementary_badge") || "신입 탐정";
+
+  if (!groupCode || !aiName) {
+    alert("로그인 정보가 없습니다. 입장 화면으로 이동합니다.");
+    window.location.href = "index.html";
+  }
+
+  function updateStatusUI() {
+    document.getElementById("dispGroup").textContent = `모둠: ${groupCode}`;
+    document.getElementById("dispAiName").textContent = `AI 파트너: ${aiName}`;
+    document.getElementById("dispScore").textContent = `⭐ 탐정 점수: ${score}점`;
+    document.getElementById("dispBadge").textContent = `🏅 배지: ${badge}`;
+    localStorage.setItem("elementary_score", score.toString());
+    localStorage.setItem("elementary_badge", badge);
+  }
+  updateStatusUI();
+
+  window.switchTab = function(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById(screenId).classList.add('active');
+    const tabs = ['screen-dashboard', 'screen-rules', 'screen-labeling', 'screen-detect', 'screen-review'];
+    const index = tabs.indexOf(screenId);
+    if (index >= 0) document.querySelectorAll('.nav-btn')[index].classList.add('active');
+  };
+
+  window.saveRuleData = async function() {
+    const std = document.getElementById("ruleStandard").value.trim();
+    const conf = document.getElementById("ruleConfusing").value.trim();
+
+    if (!std) {
+      alert("분류 기준을 입력해주세요.");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "classification_rules"), {
+        groupCode: groupCode,
+        standard: std,
+        confusingItems: conf,
+        createdAt: serverTimestamp()
+      });
+      score += 20;
+      updateStatusUI();
+      alert("모둠 분류 기준이 Firestore에 저장되었습니다! (⭐ +20점)");
+    } catch (e) {
+      console.error(e);
+      alert("저장 실패");
+    }
+  };
+
+  window.checkLabel = async function(selected) {
+    const fb = document.getElementById("labelFeedback");
+    const isCorrect = (selected === "우유팩(종이팩)");
+
+    if (isCorrect) {
+      fb.className = "feedback-box correct";
+      fb.innerHTML = "🎉 정답입니다! 코팅된 우유팩은 일반 종이류와 분리해서 배출해야 재활용됩니다.";
+      score += 30;
+      updateStatusUI();
+    } else {
+      fb.className = "feedback-box wrong";
+      fb.innerHTML = "❌ 아쉬워요! 우유팩은 안팎 코팅 때문에 일반 종이류와 따로 모아야 해요.";
+    }
+
+    try {
+      await addDoc(collection(db, "labeling_results"), {
+        groupCode: groupCode,
+        question: "깨끗이 씻은 우유팩",
+        selectedLabel: selected,
+        isCorrect: isCorrect,
+        createdAt: serverTimestamp()
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  window.saveDetectionData = async function() {
+    const item = document.getElementById("detectItem").value.trim();
+    const aiRes = document.getElementById("detectAiResult").value.trim();
+    const humanRes = document.getElementById("detectHumanResult").value.trim();
+    const match = document.getElementById("detectMatch").value;
+
+    if (!item || !aiRes || !humanRes) {
+      alert("모든 비교 항목을 입력해주세요.");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "detection_comparisons"), {
+        groupCode: groupCode,
+        itemName: item,
+        aiPrediction: aiRes,
+        humanJudgement: humanRes,
+        isMatched: match,
+        createdAt: serverTimestamp()
+      });
+      score += 20;
+      updateStatusUI();
+      alert("AI 탐지 비교 결과가 저장되었습니다! (⭐ +20점)");
+    } catch (e) {
+      console.error(e);
+      alert("저장 실패");
+    }
+  };
+
+  window.savePromiseData = async function() {
+    const reason = document.getElementById("errorReason").value;
+    const improve = document.getElementById("dataImprove").value.trim();
+    const promise = document.getElementById("classPromise").value.trim();
+
+    if (!promise) {
+      alert("실천 규약을 작성해주세요.");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "class_promises"), {
+        groupCode: groupCode,
+        errorReason: reason,
+        improvementPlan: improve,
+        promise: promise,
+        createdAt: serverTimestamp()
+      });
+      score += 30;
+      badge = "마스터 탐정 ⭐";
+      updateStatusUI();
+      alert("🎉 모든 차시 학습과 규약 등록이 완료되었습니다! (⭐ +30점 / 마스터 탐정 등극)");
+    } catch (e) {
+      console.error(e);
+      alert("저장 실패");
+    }
+  };
+
+  window.logout = function() {
+    if (confirm("로그아웃하고 초기 입장 화면으로 이동하시겠습니까?")) {
+      localStorage.clear();
+      window.location.href = "index.html";
+    }
+  };
+</script>
+</body>
+</html>
