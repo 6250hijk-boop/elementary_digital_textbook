@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>초등 디지털 교과서 - 자원순환</title>
+  <style>
+    body { font-family: 'Pretendard', sans-serif; max-width: 600px; margin: 30px auto; padding: 0 20px; line-height: 1.6; }
+    h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 8px; }
+    .input-box { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    input, textarea, button { padding: 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; }
+    button { background-color: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; }
+    button:hover { background-color: #2980b9; }
+    ul { list-style-type: none; padding: 0; }
+    li { background: #f8f9fa; margin-bottom: 8px; padding: 12px; border-radius: 4px; border-left: 4px solid #3498db; }
+    .meta { font-size: 12px; color: #888; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <h2>초등 디지털 교과서: 자원순환 기록장</h2>
+  
+  <div class="input-box">
+    <input type="text" id="studentName" placeholder="학생 이름 (예: 김철수)">
+    <input type="text" id="titleInput" placeholder="활동 주제 (예: 올바른 분리배출 방법)">
+    <textarea id="contentInput" rows="3" placeholder="활동 내용을 적어보세요"></textarea>
+    <button id="saveBtn">Firebase에 저장하기</button>
+  </div>
+
+  <hr>
+  <h3>실시간 활동 기록 목록</h3>
+  <ul id="dataList">불러오는 중...</ul>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // Firebase 프로젝트 설정값
+    const firebaseConfig = {
+      apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+      authDomain: "elemeelementary-textbook.firebaseapp.com",
+      projectId: "elemeelementary-textbook",
+      storageBucket: "elemeelementary-textbook.firebasestorage.app",
+      messagingSenderId: "713149004420",
+      appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
+      measurementId: "G-TZT282J9E8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const nameInput = document.getElementById("studentName");
+    const titleInput = document.getElementById("titleInput");
+    const contentInput = document.getElementById("contentInput");
+    const saveBtn = document.getElementById("saveBtn");
+    const dataList = document.getElementById("dataList");
+
+    // Firestore 데이터 조회 함수
+    async function loadData() {
+      dataList.innerHTML = "<li>데이터를 불러오는 중...</li>";
+      try {
+        const q = query(collection(db, "resource_circulation"), orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(q);
+        dataList.innerHTML = "";
+        
+        if (snapshot.empty) {
+          dataList.innerHTML = "<li>등록된 기록이 없습니다.</li>";
+          return;
+        }
+
+        snapshot.forEach((doc) => {
+          const item = doc.data();
+          const li = document.createElement("li");
+          const time = item.createdAt ? item.createdAt.toDate().toLocaleString() : "방금 전";
+          li.innerHTML = `<strong>${item.name || '익명'}</strong>: <strong>${item.title}</strong><br>${item.content}<div class="meta">${time}</div>`;
+          dataList.appendChild(li);
+        });
+      } catch (err) {
+        console.error("조회 에러:", err);
+        dataList.innerHTML = "<li>데이터를 불러오지 못했습니다.</li>";
+      }
+    }
+
+    // 데이터 저장 이벤트
+    saveBtn.addEventListener("click", async () => {
+      const name = nameInput.value.trim();
+      const title = titleInput.value.trim();
+      const content = contentInput.value.trim();
+
+      if (!title || !content) {
+        alert("주제와 내용을 입력해주세요.");
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "resource_circulation"), {
+          name: name || "학생",
+          title: title,
+          content: content,
+          createdAt: serverTimestamp()
+        });
+        alert("성공적으로 저장되었습니다!");
+        nameInput.value = "";
+        titleInput.value = "";
+        contentInput.value = "";
+        loadData();
+      } catch (err) {
+        console.error("저장 에러:", err);
+        alert("저장에 실패했습니다.");
+      }
+    });
+
+    loadData();
+  </script>
+</body>
+</html>
