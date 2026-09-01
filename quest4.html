@@ -3,87 +3,146 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quest 4 - 데이터 라벨링</title>
+  <title>Quest 4 - 라벨링 체육관</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <style>
+    :root { --bg: #2b3a42; --panel: #3f5159; --border: #182328; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
-    body { background-color: #F0F4F8; color: #2C3E50; padding: 20px; }
-    .card { max-width: 650px; margin: 0 auto; background: white; border-radius: 20px; padding: 25px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); text-align: center; }
-    h2 { color: #2E7D32; margin-bottom: 12px; }
-    .guide-box { background: #E8F5E9; border-left: 5px solid #4CAF50; padding: 12px; border-radius: 8px; margin-bottom: 18px; font-size: 14px; line-height: 1.5; text-align: left; }
-    .item-box { border: 2px dashed #BDBDBD; border-radius: 16px; padding: 20px; margin-bottom: 15px; }
-    .label-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
-    .label-btn { padding: 12px; border: 2px solid #E0E0E0; background: white; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 15px; }
-    .label-btn:hover { border-color: #4CAF50; background: #E8F5E9; }
-    .feedback-box { margin-top: 15px; padding: 12px; border-radius: 10px; font-weight: bold; display: none; }
-    .feedback-box.correct { background: #E8F5E9; color: #2E7D32; display: block; }
-    .feedback-box.wrong { background: #FFEBEE; color: #C62828; display: block; }
-    .btn-back { display: inline-block; margin-bottom: 12px; color: #666; text-decoration: none; font-size: 14px; font-weight: bold; float: left; }
+    body { background-color: var(--bg); color: #fff; display: flex; flex-direction: column; align-items: center; padding: 15px; min-height: 100vh; }
+    .container { width: 100%; max-width: 860px; background: var(--panel); border-radius: 18px; border: 5px solid var(--border); overflow: hidden; display: flex; flex-direction: column; align-items: center; }
+    header { width: 100%; background: #1e282d; padding: 14px 20px; border-bottom: 4px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .btn-back { background: #546e7a; color: white; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; border: 2px solid #263238; }
+    h1 { font-size: 18px; color: #ffeb3b; text-shadow: 2px 2px 0px #000; margin: 0; }
+    .game-wrapper { padding: 18px 15px; display: flex; flex-direction: column; align-items: center; width: 100%; }
+    .canvas-container { border: 5px solid #263238; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
+    canvas { display: block; image-rendering: pixelated; }
+    .guide-text { font-size: 13px; font-weight: bold; color: #cfd8dc; background: rgba(0,0,0,0.3); padding: 8px 14px; border-radius: 8px; margin-top: 10px; }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
+    .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease-in-out; }
+    .modal-content { background: white; color: #333; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; border: 4px solid #2E7D32; text-align: center; }
+    .btn-close { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: #888; }
+    h2 { font-size: 19px; margin-bottom: 12px; color: #2E7D32; }
+    .guide-box { background: #E8F5E9; border-left: 5px solid #2E7D32; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; line-height: 1.5; text-align: left; }
+    .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+    .opt-btn { padding: 14px; border: 2px solid #C8E6C9; background: #FAFAFA; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+    .opt-btn:hover { background: #E8F5E9; border-color: #2E7D32; }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
   </style>
 </head>
 <body>
-
-<div class="card">
-  <a href="main.html" class="btn-back">⬅️ 메인 월드로 돌아가기</a>
-  <div style="clear: both;"></div>
-  <h2>🏷️ [Quest 4] 이미지 데이터 라벨링 미션</h2>
-  <div class="guide-box">AI는 사람이 붙여준 이름표(라벨)를 보고 학습합니다. 물건에 알맞은 올바른 분류 이름표를 붙여주세요!</div>
-
-  <div class="item-box">
-    <div style="font-size: 60px;">🥛</div>
-    <div style="font-size: 18px; font-weight: bold; margin-top: 8px;">다 마시고 깨끗이 씻어 펼친 우유팩</div>
-    <div class="label-options">
-      <button class="label-btn" onclick="labelItem('종이류')">종이류</button>
-      <button class="label-btn" onclick="labelItem('우유팩(종이팩)')">우유팩(종이팩)</button>
-      <button class="label-btn" onclick="labelItem('일반쓰레기')">일반쓰레기</button>
-      <button class="label-btn" onclick="labelItem('플라스틱')">플라스틱</button>
+<div class="container">
+  <header>
+    <a href="main.html" class="btn-back">⬅ 마을로</a>
+    <h1>🏷️ Quest 4: 라벨링 체육관</h1>
+    <div style="width: 70px;"></div>
+  </header>
+  <div class="game-wrapper">
+    <div class="canvas-container">
+      <canvas id="roomCanvas" width="600" height="360"></canvas>
     </div>
-    <div id="feedback" class="feedback-box"></div>
+    <div class="guide-text" id="actionGuide">🎮 방향키로 이동하여 [임무 책상] 앞에서 스페이스바를 누르세요.</div>
+  </div>
+</div>
+
+<div id="missionModal" class="modal-overlay">
+  <div class="modal-content">
+    <button class="btn-close" onclick="closeModal()">✖</button>
+    <h2>🏷️ [4차시] 이미지 데이터 라벨링</h2>
+    <div class="guide-box">AI에게 바른 학습 데이터를 주기 위해 물건에 알맞은 올바른 이름표(라벨)를 붙여주세요![cite: 1]</div>
+    <div style="font-size: 60px; margin: 10px 0;">🥛</div>
+    <div style="font-size: 17px; font-weight: bold;">다 마시고 깨끗이 씻어 말린 우유팩</div>
+    <div class="opt-grid">
+      <button class="opt-btn" onclick="saveQuest4('종이류')">종이류</button>
+      <button class="opt-btn" onclick="saveQuest4('우유팩(종이팩)')">우유팩(종이팩)</button>
+      <button class="opt-btn" onclick="saveQuest4('일반쓰레기')">일반쓰레기</button>
+      <button class="opt-btn" onclick="saveQuest4('플라스틱')">플라스틱</button>
+    </div>
   </div>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, doc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
-    authDomain: "elemeelementary-textbook.firebaseapp.com",
-    projectId: "elemeelementary-textbook",
-    storageBucket: "elemeelementary-textbook.firebasestorage.app",
-    messagingSenderId: "713149004420",
-    appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
-    measurementId: "G-TZT282J9E8"
-  };
-
+  const firebaseConfig = { apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00", authDomain: "elemeelementary-textbook.firebaseapp.com", projectId: "elemeelementary-textbook", storageBucket: "elemeelementary-textbook.firebasestorage.app", messagingSenderId: "713149004420", appId: "1:713149004420:web:8483273681e16f5a8fa0d1" };
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
   const studentId = localStorage.getItem("elementary_studentId");
   const studentName = localStorage.getItem("elementary_studentName");
 
-  window.labelItem = async function(ans) {
-    const fb = document.getElementById("feedback");
-    const isCorrect = (ans === "우유팩(종이팩)");
+  const canvas = document.getElementById("roomCanvas");
+  const ctx = canvas.getContext("2d");
+  const guide = document.getElementById("actionGuide");
+  
+  let player = { x: 300, y: 300, speed: 16 };
+  const desk = { x: 300, y: 120, w: 80, h: 50 };
+  let canInteract = false;
 
-    if (isCorrect) {
-      fb.className = "feedback-box correct";
-      fb.innerHTML = "🎉 정답! 코팅된 우유팩은 따로 모아야 고급 화장지로 재활용돼요. (⭐ +30점)";
-      let score = parseInt(localStorage.getItem("elementary_score") || "10", 10) + 30;
-      localStorage.setItem("elementary_score", score.toString());
-    } else {
-      fb.className = "feedback-box wrong";
-      fb.innerHTML = "❌ 우유팩은 안팎 코팅 때문에 일반 종이와 섞이면 재활용되지 않아요!";
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#C8E6C9"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = "#A5D6A7"; ctx.lineWidth = 2;
+    for(let x=0; x<canvas.width; x+=40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
+    for(let y=0; y<canvas.height; y+=40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
+
+    ctx.fillStyle = "#1B5E20"; ctx.fillRect(0, 0, canvas.width, 60);
+    ctx.fillStyle = "#2E7D32"; ctx.fillRect(0, 50, canvas.width, 10);
+
+    ctx.fillStyle = "#5D4037"; ctx.fillRect(desk.x - desk.w/2, desk.y - desk.h/2, desk.w, desk.h);
+    ctx.fillStyle = "#212121"; ctx.fillRect(desk.x - 20, desk.y - 20, 40, 25);
+    ctx.fillStyle = canInteract ? "#64DD17" : "#4CAF50"; ctx.fillRect(desk.x - 16, desk.y - 16, 32, 17);
+
+    ctx.fillStyle = "rgba(0,0,0,0.3)"; ctx.beginPath(); ctx.ellipse(player.x, player.y + 12, 10, 5, 0, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = "#e53935"; ctx.fillRect(player.x - 7, player.y - 16, 14, 6);
+    ctx.fillStyle = "#ffcc80"; ctx.fillRect(player.x - 5, player.y - 9, 10, 8);
+    ctx.fillStyle = "#1e88e5"; ctx.fillRect(player.x - 6, player.y - 1, 12, 8);
+    ctx.fillStyle = "#37474f"; ctx.fillRect(player.x - 5, player.y + 7, 10, 4);
+  }
+
+  function move(dx, dy) {
+    player.x = Math.max(20, Math.min(canvas.width - 20, player.x + dx));
+    player.y = Math.max(70, Math.min(canvas.height - 20, player.y + dy));
+    canInteract = Math.hypot(player.x - desk.x, player.y - desk.y) < 55;
+    guide.textContent = canInteract ? "🌟 스페이스바를 눌러 퀘스트를 시작하세요!" : "🎮 방향키로 이동하여 [임무 책상] 앞으로 가세요.";
+    guide.style.color = canInteract ? "#FFEB3B" : "#cfd8dc";
+    render();
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if (document.getElementById("missionModal").classList.contains("active")) return;
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+      e.preventDefault();
+      if (e.key === "ArrowUp") move(0, -player.speed);
+      if (e.key === "ArrowDown") move(0, player.speed);
+      if (e.key === "ArrowLeft") move(-player.speed, 0);
+      if (e.key === "ArrowRight") move(player.speed, 0);
+    } else if (e.code === "Space") {
+      e.preventDefault();
+      if (canInteract) document.getElementById("missionModal").classList.add("active");
     }
+  });
+
+  window.closeModal = function() {
+    document.getElementById("missionModal").classList.remove("active");
+    player.y += 20; move(0,0);
+  };
+
+  window.saveQuest4 = async function(ans) {
+    const isCorrect = (ans === "우유팩(종이팩)");
+    alert(isCorrect ? "🎉 정답! 코팅된 우유팩은 따로 모아야 고급 화장지로 재활용됩니다. (⭐ +30점)" : "❌ 오답! 우유팩은 안팎 코팅 때문에 일반 종이와 섞이면 안 돼요.");
 
     try {
-      await addDoc(collection(db, "quest4_labeling"), {
-        studentId, studentName, selectedLabel: ans, isCorrect, createdAt: serverTimestamp()
-      });
-    } catch (e) {
-      console.error(e);
-    }
+      await addDoc(collection(db, "quest4_labeling"), { studentId, studentName, answer: ans, isCorrect, createdAt: serverTimestamp() });
+      if (isCorrect) {
+        await updateDoc(doc(db, "students", studentId), { score: increment(30) });
+        localStorage.setItem("elementary_score", parseInt(localStorage.getItem("elementary_score")||"0") + 30);
+      }
+      window.location.href = "main.html";
+    } catch(e) { console.error(e); }
   };
+
+  render();
 </script>
 </body>
 </html>
