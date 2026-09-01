@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>AI 자원순환 탐정 마을</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <style>
@@ -11,18 +11,19 @@
       --poke-panel: #3f5159;
       --poke-border: #182328;
       --poke-accent: #fbc02d;
-      --poke-blue: #29b6f6;
+      --btn-red: #e53935;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
     body {
       background-color: var(--poke-bg);
       color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 15px;
+      padding: 10px;
       min-height: 100vh;
+      user-select: none;
     }
 
     .container {
@@ -30,8 +31,8 @@
       max-width: 860px;
       background: var(--poke-panel);
       border-radius: 18px;
-      border: 5px solid var(--poke-border);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      border: 4px solid var(--poke-border);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -42,32 +43,33 @@
     header {
       width: 100%;
       background: #1e282d;
-      padding: 14px 20px;
-      border-bottom: 4px solid var(--poke-border);
+      padding: 10px 15px;
+      border-bottom: 3px solid var(--poke-border);
       text-align: center;
     }
     h1 {
-      font-size: 20px;
+      font-size: 18px;
       color: #ffeb3b;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       text-shadow: 2px 2px 0px #000;
-      letter-spacing: 1px;
     }
     .status-bar {
       display: flex;
       justify-content: space-around;
       background: rgba(0,0,0,0.4);
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
       font-weight: bold;
       color: #eceff1;
-      border: 2px solid #37474f;
+      border: 1px solid #37474f;
+      flex-wrap: wrap;
+      gap: 4px;
     }
 
-    /* 캔버스 영역 */
+    /* 캔버스 맵 영역 */
     .game-wrapper {
-      padding: 18px 15px;
+      padding: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -75,73 +77,109 @@
     }
     .canvas-container {
       position: relative;
-      border: 5px solid #263238;
+      border: 4px solid #263238;
       border-radius: 12px;
-      box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 6px 16px rgba(0,0,0,0.4);
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
       overflow: hidden;
       background: #78c850;
+      width: 100%;
+      max-width: 640px;
     }
     canvas {
       display: block;
+      width: 100%;
+      height: auto;
       image-rendering: pixelated;
-      image-rendering: crisp-edges;
     }
 
-    /* 조작 안내 및 입장 버튼 */
-    .action-bar {
+    /* 모바일 컨트롤러 (조이스틱 패드 + 스페이스/A 버튼) */
+    .mobile-controls {
       display: flex;
       justify-content: space-between;
       align-items: center;
       width: 100%;
       max-width: 640px;
-      margin-top: 14px;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .guide-text {
-      font-size: 13px;
-      font-weight: bold;
-      color: #cfd8dc;
-      background: rgba(0,0,0,0.3);
-      padding: 8px 14px;
-      border-radius: 8px;
-      border: 1px solid #455a64;
-    }
-    .enter-btn {
-      flex: 1;
-      min-width: 220px;
-      padding: 12px 20px;
-      font-size: 15px;
-      font-weight: bold;
-      border-radius: 10px;
-      border: 2px solid #546e7a;
-      background: #37474f;
-      color: #90a4ae;
-      cursor: not-allowed;
-      transition: 0.2s;
-      text-align: center;
-    }
-    .enter-btn.active {
-      background: #ff9800;
-      color: #ffffff;
-      border-color: #ffe082;
-      cursor: pointer;
-      box-shadow: 0 0 16px rgba(255, 152, 0, 0.8);
-      animation: pulse 0.8s infinite alternate;
-    }
-    @keyframes pulse {
-      from { transform: scale(1); }
-      to { transform: scale(1.03); }
+      margin-top: 12px;
+      padding: 10px 15px;
+      background: #1e282d;
+      border-radius: 14px;
+      border: 2px solid #37474f;
+      gap: 15px;
     }
 
-    /* 실시간 학급 현황 */
+    /* 십자키 조이스틱 */
+    .d-pad {
+      display: grid;
+      grid-template-columns: repeat(3, 48px);
+      grid-template-rows: repeat(3, 48px);
+      gap: 3px;
+    }
+    .d-btn {
+      background: #37474f;
+      color: #eceff1;
+      border: 2px solid #546e7a;
+      border-radius: 8px;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #182328;
+    }
+    .d-btn:active {
+      background: #ff9800;
+      color: #fff;
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #182328;
+    }
+    .d-up { grid-column: 2; grid-row: 1; }
+    .d-left { grid-column: 1; grid-row: 2; }
+    .d-center { grid-column: 2; grid-row: 2; background: #263238; border: none; box-shadow: none; }
+    .d-right { grid-column: 3; grid-row: 2; }
+    .d-down { grid-column: 2; grid-row: 3; }
+
+    /* 대형 액션/스페이스바 버튼 */
+    .action-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+    }
+    .btn-action-a {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #f44336, #c62828);
+      border: 4px solid #ffcdd2;
+      color: white;
+      font-size: 20px;
+      font-weight: 900;
+      box-shadow: 0 5px 0 #5f0909, 0 8px 15px rgba(0,0,0,0.4);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: 0.1s;
+    }
+    .btn-action-a:active, .btn-action-a.ready {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #5f0909, 0 0 15px #ff9800;
+      background: radial-gradient(circle, #ff9800, #e65100);
+    }
+    .btn-action-a span { font-size: 11px; font-weight: normal; margin-top: -2px; }
+
+    /* 실시간 랭킹 */
     .realtime-board {
       width: 100%;
-      padding: 14px 20px;
+      padding: 10px 15px;
       background: #1b2428;
-      border-top: 4px solid var(--poke-border);
-      font-size: 13px;
+      border-top: 3px solid var(--poke-border);
+      font-size: 12px;
       color: #b0bec5;
+      text-align: center;
     }
     .realtime-board strong { color: #ffca28; }
   </style>
@@ -153,7 +191,7 @@
     <h1>AI 자원순환 탐정 마을</h1>
     <div class="status-bar">
       <span id="dispStudent">학생: 불러오는 중</span>
-      <span id="dispAiName">AI 파트너: 불러오는 중</span>
+      <span id="dispAiName">AI 로봇: 불러오는 중</span>
       <span id="dispScore">⭐ 점수: ...</span>
       <span id="dispBadge">🏅 배지: ...</span>
     </div>
@@ -161,14 +199,27 @@
 
   <div class="game-wrapper">
     <div class="canvas-container">
-      <canvas id="mapCanvas" width="640" height="400"></canvas>
+      <canvas id="mapCanvas" width="640" height="420"></canvas>
     </div>
 
-    <div class="action-bar">
-      <div class="guide-text">
-        🎮 키보드 [방향키]로 이동 | [스페이스바]로 건물 입장
+    <!-- 모바일 터치 컨트롤러 -->
+    <div class="mobile-controls">
+      <!-- 방향키 조이스틱 -->
+      <div class="d-pad">
+        <button class="d-btn d-up" onpointerdown="startMove(0, -18, 'up')" onpointerup="stopMove()" onpointerleave="stopMove()">▲</button>
+        <button class="d-btn d-left" onpointerdown="startMove(-18, 0, 'left')" onpointerup="stopMove()" onpointerleave="stopMove()">◀</button>
+        <div class="d-center"></div>
+        <button class="d-btn d-right" onpointerdown="startMove(18, 0, 'right')" onpointerup="stopMove()" onpointerleave="stopMove()">▶</button>
+        <button class="d-btn d-down" onpointerdown="startMove(0, 18, 'down')" onpointerup="stopMove()" onpointerleave="stopMove()">▼</button>
       </div>
-      <button id="enterActionBtn" class="enter-btn" onclick="enterBuilding()">건물 문 앞으로 이동하세요</button>
+
+      <!-- 액션 버튼 (Space / A) -->
+      <div class="action-group">
+        <button id="actionBtn" class="btn-action-a" onclick="enterBuilding()">
+          A
+          <span>입장(Space)</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -196,10 +247,10 @@
   const db = getFirestore(app);
 
   const studentId = localStorage.getItem("elementary_studentId");
-  const studentName = localStorage.getItem("elementary_studentName");
+  const studentName = localStorage.getItem("elementary_studentName") || "탐정";
   const aiName = localStorage.getItem("elementary_aiName") || "에코봇";
 
-  if (!studentId || !studentName) {
+  if (!studentId) {
     window.location.href = "index.html";
   }
 
@@ -207,14 +258,14 @@
   onSnapshot(doc(db, "students", studentId), (docSnap) => {
     if (docSnap.exists()) {
       const d = docSnap.data();
-      document.getElementById("dispStudent").textContent = `학생: ${d.studentName} (${d.studentId})`;
-      document.getElementById("dispAiName").textContent = `AI 파트너: ${d.aiPartnerName || aiName}`;
+      document.getElementById("dispStudent").textContent = `학생: ${d.studentName || studentName} (${d.studentId})`;
+      document.getElementById("dispAiName").textContent = `AI 로봇: ${d.aiPartnerName || aiName}`;
       document.getElementById("dispScore").textContent = `⭐ 점수: ${d.score || 0}점`;
       document.getElementById("dispBadge").textContent = `🏅 배지: ${d.badge || '신입 탐정'}`;
     }
   });
 
-  // 실시간 랭킹 동기화
+  // 실시간 랭킹
   const rankQ = query(collection(db, "students"), orderBy("score", "desc"), limit(4));
   onSnapshot(rankQ, (snapshot) => {
     const list = [];
@@ -225,210 +276,161 @@
     document.getElementById("liveRanking").textContent = list.join(" ｜ ") || "참여 학생 없음";
   });
 
-  /* ================= 포켓몬풍 픽셀 엔진 ================= */
+  /* ================= 픽셀 엔진 ================= */
   const canvas = document.getElementById("mapCanvas");
   const ctx = canvas.getContext("2d");
-  const enterBtn = document.getElementById("enterActionBtn");
+  const actionBtn = document.getElementById("actionBtn");
 
+  // 캐릭터 상태 (기존보다 크기와 속도를 키움)
   let player = {
     x: 320,
-    y: 200,
-    speed: 16,
-    facing: "down", // down, up, left, right
-    step: 0
+    y: 210,
+    speed: 18,
+    facing: "down"
   };
 
-  // 6개 차시 건물 데이터 (포켓몬 체육관/센터 스타일)
+  // 6개 차시 건물 (간판 영역 확보 및 문 위치 최적화)
   const buildings = [
-    { id: "quest1.html", name: "1. AI 시선관", x: 60,  y: 35,  w: 120, h: 80, roofColor: "#d32f2f", roofShadow: "#9a0007", wallColor: "#fff9c4", doorX: 120, doorY: 115 },
-    { id: "quest2.html", name: "2. 기준 연구소", x: 260, y: 35,  w: 120, h: 80, roofColor: "#1976d2", roofShadow: "#004ba0", wallColor: "#e1f5fe", doorX: 320, doorY: 115 },
-    { id: "quest3.html", name: "3. 데이터 선별소", x: 460, y: 35,  w: 120, h: 80, roofColor: "#388e3c", roofShadow: "#00600f", wallColor: "#e8f5e9", doorX: 520, doorY: 115 },
-    { id: "quest4.html", name: "4. 라벨링 체육관", x: 60,  y: 255, w: 120, h: 80, roofColor: "#f57c00", roofShadow: "#bb4d00", wallColor: "#fff3e0", doorX: 120, doorY: 255 },
-    { id: "quest5.html", name: "5. 탐지 실험실", x: 260, y: 255, w: 120, h: 80, roofColor: "#7b1fa2", roofShadow: "#4a0072", wallColor: "#f3e5f5", doorX: 320, doorY: 255 },
-    { id: "quest6.html", name: "6. 규약 리그 본부", x: 460, y: 255, w: 120, h: 80, roofColor: "#00796b", roofShadow: "#004c40", wallColor: "#e0f2f1", doorX: 520, doorY: 255 }
-  ];
-
-  // 장식용 포켓몬 스타일 나무(Tree) 좌표
-  const trees = [
-    {x: 10, y: 15}, {x: 10, y: 70}, {x: 10, y: 125}, {x: 10, y: 250}, {x: 10, y: 310},
-    {x: 600, y: 15}, {x: 600, y: 70}, {x: 600, y: 125}, {x: 600, y: 250}, {x: 600, y: 310},
-    {x: 205, y: 45}, {x: 405, y: 45}, {x: 205, y: 270}, {x: 405, y: 270}
+    { id: "quest1.html", name: "1. AI 시선관",     x: 50,  y: 45,  w: 130, h: 85, roofColor: "#d32f2f", roofShadow: "#9a0007", wallColor: "#fff9c4", doorX: 115, doorY: 130 },
+    { id: "quest2.html", name: "2. 기준 연구소",   x: 255, y: 45,  w: 130, h: 85, roofColor: "#1976d2", roofShadow: "#004ba0", wallColor: "#e1f5fe", doorX: 320, doorY: 130 },
+    { id: "quest3.html", name: "3. 데이터 선별소", x: 460, y: 45,  w: 130, h: 85, roofColor: "#388e3c", roofShadow: "#00600f", wallColor: "#e8f5e9", doorX: 525, doorY: 130 },
+    { id: "quest4.html", name: "4. 라벨링 체육관", x: 50,  y: 270, w: 130, h: 85, roofColor: "#f57c00", roofShadow: "#bb4d00", wallColor: "#fff3e0", doorX: 115, doorY: 270 },
+    { id: "quest5.html", name: "5. 탐지 실험실",   x: 255, y: 270, w: 130, h: 85, roofColor: "#7b1fa2", roofShadow: "#4a0072", wallColor: "#f3e5f5", doorX: 320, doorY: 270 },
+    { id: "quest6.html", name: "6. 규약 리그 본부", x: 460, y: 270, w: 130, h: 85, roofColor: "#00796b", roofShadow: "#004c40", wallColor: "#e0f2f1", doorX: 525, doorY: 270 }
   ];
 
   let currentTargetBuilding = null;
+  let moveInterval = null;
 
-  // 1. 포켓몬풍 맵 바닥 & 흙길 그리기
-  function drawPokemonWorld() {
-    // 잔디 기본 베이스
+  // 바닥 및 도로 렌더링
+  function drawMapBase() {
     ctx.fillStyle = "#78c850";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 픽셀 잔디 패턴 텍스처
+    // 잔디 텍스처
     ctx.fillStyle = "#6bb844";
     for (let x = 0; x < canvas.width; x += 16) {
       for (let y = 0; y < canvas.height; y += 16) {
-        if ((x + y) % 32 === 0) {
-          ctx.fillRect(x + 2, y + 2, 4, 4);
-          ctx.fillRect(x + 8, y + 8, 4, 4);
-        }
+        if ((x + y) % 32 === 0) ctx.fillRect(x + 2, y + 2, 4, 4);
       }
     }
 
-    // 모래/흙길 도로 (포켓몬 타운 패스)
+    // 모래/자갈 도로
     ctx.fillStyle = "#d8b068";
-    ctx.fillRect(0, 160, canvas.width, 48);      // 메인 가로 도로
-    ctx.fillRect(100, 110, 40, 150);             // 좌측 연결로
-    ctx.fillRect(300, 110, 40, 150);             // 중앙 연결로
-    ctx.fillRect(500, 110, 40, 150);             // 우측 연결로
+    ctx.fillRect(0, 175, canvas.width, 50);
+    ctx.fillRect(95, 125, 40, 150);
+    ctx.fillRect(300, 125, 40, 150);
+    ctx.fillRect(505, 125, 40, 150);
 
-    // 길 가장자리 음영
     ctx.fillStyle = "#b89048";
-    ctx.fillRect(0, 160, canvas.width, 3);
-    ctx.fillRect(0, 205, canvas.width, 3);
-
-    // 나무 그리기
-    trees.forEach(t => drawTree(t.x, t.y));
+    ctx.fillRect(0, 175, canvas.width, 3);
+    ctx.fillRect(0, 222, canvas.width, 3);
   }
 
-  // 포켓몬 클래식 나무 스프라이트 렌더링
-  function drawTree(x, y) {
-    ctx.fillStyle = "rgba(0,0,0,0.2)";
-    ctx.fillRect(x + 2, y + 28, 24, 6); // 그림자
-
-    // 나무 밑동
-    ctx.fillStyle = "#8b5a2b";
-    ctx.fillRect(x + 8, y + 18, 12, 12);
-
-    // 잎사귀 (3단 픽셀)
-    ctx.fillStyle = "#1e5b1e"; // 짙은 잎
-    ctx.fillRect(x, y + 6, 28, 14);
-    ctx.fillRect(x + 4, y, 20, 10);
-
-    ctx.fillStyle = "#2e8b2e"; // 밝은 잎 하이라이트
-    ctx.fillRect(x + 2, y + 8, 24, 10);
-    ctx.fillRect(x + 6, y + 2, 16, 6);
-    ctx.fillStyle = "#48b848";
-    ctx.fillRect(x + 6, y + 4, 6, 4);
-  }
-
-  // 2. 포켓몬풍 건물 렌더링
+  // 건물 렌더링 (확대된 대형 간판 적용)
   function drawBuildings() {
     buildings.forEach(b => {
-      // 건물 그림자
-      ctx.fillStyle = "rgba(0,0,0,0.25)";
-      ctx.fillRect(b.x + 4, b.y + b.h - 4, b.w, 10);
-
-      // 벽면 베이스
+      // 건물 본체
       ctx.fillStyle = b.wallColor;
       ctx.fillRect(b.x, b.y + 26, b.w, b.h - 26);
       ctx.strokeStyle = "#37474f";
       ctx.lineWidth = 3;
       ctx.strokeRect(b.x, b.y + 26, b.w, b.h - 26);
 
-      // 둥근 지붕 (포켓몬 센터 스타일 지붕)
+      // 지붕
       ctx.fillStyle = b.roofShadow;
       ctx.fillRect(b.x - 4, b.y + 6, b.w + 8, 24);
       ctx.fillStyle = b.roofColor;
       ctx.fillRect(b.x - 4, b.y, b.w + 8, 20);
       ctx.strokeRect(b.x - 4, b.y, b.w + 8, 24);
 
-      // 지붕 픽셀 하이라이트 라인
-      ctx.fillStyle = "rgba(255,255,255,0.4)";
-      ctx.fillRect(b.x + 4, b.y + 3, b.w - 8, 4);
-
-      // 창문 (푸른색 유리)
-      ctx.fillStyle = "#81d4fa";
-      ctx.fillRect(b.x + 16, b.y + 36, 22, 18);
-      ctx.fillRect(b.x + b.w - 38, b.y + 36, 22, 18);
-      ctx.strokeRect(b.x + 16, b.y + 36, 22, 18);
-      ctx.strokeRect(b.x + b.w - 38, b.y + 36, 22, 18);
-      ctx.fillStyle = "rgba(255,255,255,0.7)";
-      ctx.fillRect(b.x + 18, b.y + 38, 6, 6);
-      ctx.fillRect(b.x + b.w - 36, b.y + 38, 6, 6);
-
-      // 자동문/미닫이문
+      // 문
       ctx.fillStyle = "#b0bec5";
-      ctx.fillRect(b.doorX - 12, b.y + b.h - 24, 24, 24);
-      ctx.fillStyle = "#37474f";
-      ctx.fillRect(b.doorX - 1, b.y + b.h - 24, 2, 24);
-      ctx.strokeRect(b.doorX - 12, b.y + b.h - 24, 24, 24);
+      ctx.fillRect(b.doorX - 14, b.y + b.h - 26, 28, 26);
+      ctx.strokeRect(b.doorX - 14, b.y + b.h - 26, 28, 26);
 
-      // 건물 간판 뱃지
-      ctx.fillStyle = "#263238";
-      ctx.fillRect(b.x + 4, b.y - 18, b.w - 8, 16);
-      ctx.strokeStyle = "#ffeb3b";
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(b.x + 4, b.y - 18, b.w - 8, 16);
+      // 창문
+      ctx.fillStyle = "#81d4fa";
+      ctx.fillRect(b.x + 14, b.y + 38, 22, 18);
+      ctx.fillRect(b.x + b.w - 36, b.y + 38, 22, 18);
+      ctx.strokeRect(b.x + 14, b.y + 38, 22, 18);
+      ctx.strokeRect(b.x + b.w - 36, b.y + 38, 22, 18);
 
-      ctx.font = "bold 10px 'Pretendard'";
-      ctx.fillStyle = "#ffeb3b";
+      // ★ 대형 간판 보드 (글씨 크기 및 가독성 대폭 향상)
+      ctx.fillStyle = "#1e282d";
+      ctx.fillRect(b.x - 6, b.y - 24, b.w + 12, 22);
+      ctx.strokeStyle = "#ffd54f";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(b.x - 6, b.y - 24, b.w + 12, 22);
+
+      ctx.font = "bold 13px 'Pretendard'";
+      ctx.fillStyle = "#ffffff";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(b.name, b.x + b.w / 2, b.y - 10);
+      ctx.fillText(b.name, b.x + b.w / 2, b.y - 13);
     });
   }
 
-  // 3. 포켓몬 트레이너 캐릭터 그리기
+  // ★ 확대된 포켓몬 트레이너 캐릭터 그리기 (약 1.5배 확대)
   function drawPlayer(x, y) {
-    // 발밑 원형 그림자
+    // 발밑 그림자
     ctx.fillStyle = "rgba(0,0,0,0.3)";
     ctx.beginPath();
-    ctx.ellipse(x, y + 10, 9, 4, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y + 16, 14, 6, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // 트레이너 모자 (레드 캡)
+    // 트레이너 모자
     ctx.fillStyle = "#e53935";
-    ctx.fillRect(x - 7, y - 16, 14, 6);
+    ctx.fillRect(x - 11, y - 24, 22, 9);
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(x - 8, y - 11, 16, 2); // 챙
+    ctx.fillRect(x - 13, y - 16, 26, 3); // 챙
 
-    // 얼굴 피부
+    // 얼굴
     ctx.fillStyle = "#ffcc80";
-    ctx.fillRect(x - 5, y - 9, 10, 8);
+    ctx.fillRect(x - 8, y - 13, 16, 12);
 
-    // 눈 (방향에 따라)
+    // 눈 (바라보는 방향)
     ctx.fillStyle = "#212121";
     if (player.facing === "down") {
-      ctx.fillRect(x - 3, y - 6, 2, 3);
-      ctx.fillRect(x + 1, y - 6, 2, 3);
+      ctx.fillRect(x - 5, y - 9, 3, 4);
+      ctx.fillRect(x + 2, y - 9, 3, 4);
     } else if (player.facing === "left") {
-      ctx.fillRect(x - 4, y - 6, 2, 3);
+      ctx.fillRect(x - 6, y - 9, 3, 4);
     } else if (player.facing === "right") {
-      ctx.fillRect(x + 2, y - 6, 2, 3);
+      ctx.fillRect(x + 3, y - 9, 3, 4);
     }
 
-    // 옷 (파란색 트레이너 조끼)
+    // 몸통 옷 (트레이너 조끼)
     ctx.fillStyle = "#1e88e5";
-    ctx.fillRect(x - 6, y - 1, 12, 8);
+    ctx.fillRect(x - 9, y - 1, 18, 12);
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(x - 2, y - 1, 4, 8); // 지퍼 라인
+    ctx.fillRect(x - 3, y - 1, 6, 12);
 
     // 바지 & 신발
     ctx.fillStyle = "#37474f";
-    ctx.fillRect(x - 5, y + 7, 10, 4);
+    ctx.fillRect(x - 8, y + 11, 16, 6);
     ctx.fillStyle = "#d32f2f";
-    ctx.fillRect(x - 6, y + 9, 4, 3);
-    ctx.fillRect(x + 2, y + 9, 4, 3);
+    ctx.fillRect(x - 9, y + 15, 6, 5);
+    ctx.fillRect(x + 3, y + 15, 6, 5);
 
-    // 학생 이름 명찰
-    ctx.font = "bold 11px 'Pretendard'";
+    // 머리 위 이름표
+    ctx.font = "bold 12px 'Pretendard'";
     ctx.fillStyle = "#ffffff";
-    ctx.strokeStyle = "#1a237e";
+    ctx.strokeStyle = "#000000";
     ctx.lineWidth = 3;
-    ctx.strokeText(studentName, x, y - 22);
-    ctx.fillText(studentName, x, y - 22);
+    ctx.strokeText(studentName, x, y - 32);
+    ctx.fillText(studentName, x, y - 32);
   }
 
-  // 전체 화면 렌더링 루프
   function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawPokemonWorld();
+    drawMapBase();
     drawBuildings();
     drawPlayer(player.x, player.y);
   }
 
-  // 이동 처리
-  function move(dx, dy, dir) {
+  // 이동 실행
+  function executeMove(dx, dy, dir) {
     player.facing = dir;
     player.x = Math.max(25, Math.min(canvas.width - 25, player.x + dx));
     player.y = Math.max(30, Math.min(canvas.height - 30, player.y + dy));
@@ -436,39 +438,54 @@
     render();
   }
 
+  // 터치 조이스틱 지속 이동 지원
+  window.startMove = function(dx, dy, dir) {
+    if (moveInterval) clearInterval(moveInterval);
+    executeMove(dx, dy, dir);
+    moveInterval = setInterval(() => {
+      executeMove(dx, dy, dir);
+    }, 100);
+  };
+
+  window.stopMove = function() {
+    if (moveInterval) {
+      clearInterval(moveInterval);
+      moveInterval = null;
+    }
+  };
+
   // 문 앞 도달 검사
   function checkBuildingEntrance() {
     currentTargetBuilding = null;
     buildings.forEach(b => {
       const dist = Math.hypot(player.x - b.doorX, player.y - b.doorY);
-      if (dist < 26) {
+      if (dist < 32) {
         currentTargetBuilding = b;
       }
     });
 
     if (currentTargetBuilding) {
-      enterBtn.classList.add("active");
-      enterBtn.textContent = `🚪 [${currentTargetBuilding.name}] 들어가기 (Space)`;
+      actionBtn.classList.add("ready");
     } else {
-      enterBtn.classList.remove("active");
-      enterBtn.textContent = "건물 문 앞으로 이동하세요";
+      actionBtn.classList.remove("ready");
     }
   }
 
+  // 건물 들어가기
   window.enterBuilding = function() {
     if (currentTargetBuilding) {
       window.location.href = currentTargetBuilding.id;
     }
   };
 
-  // 키보드 이벤트
+  // 키보드 조작 이벤트
   window.addEventListener("keydown", (e) => {
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
       e.preventDefault();
-      if (e.key === "ArrowUp") move(0, -player.speed, "up");
-      if (e.key === "ArrowDown") move(0, player.speed, "down");
-      if (e.key === "ArrowLeft") move(-player.speed, 0, "left");
-      if (e.key === "ArrowRight") move(player.speed, 0, "right");
+      if (e.key === "ArrowUp") executeMove(0, -player.speed, "up");
+      if (e.key === "ArrowDown") executeMove(0, player.speed, "down");
+      if (e.key === "ArrowLeft") executeMove(-player.speed, 0, "left");
+      if (e.key === "ArrowRight") executeMove(player.speed, 0, "right");
     } else if (e.code === "Space" || e.key === "Enter") {
       e.preventDefault();
       enterBuilding();
