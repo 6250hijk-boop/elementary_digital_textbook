@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quest 5 - AI 객체탐지 비교</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    body { background-color: #F0F4F8; color: #2C3E50; padding: 20px; }
+    .card { max-width: 650px; margin: 0 auto; background: white; border-radius: 20px; padding: 25px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    h2 { color: #6A1B9A; margin-bottom: 12px; }
+    .guide-box { background: #F3E5F5; border-left: 5px solid #8E24AA; padding: 12px; border-radius: 8px; margin-bottom: 18px; font-size: 14px; line-height: 1.5; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; }
+    input[type="text"], select { width: 100%; padding: 12px; border: 2px solid #E0E0E0; border-radius: 10px; font-size: 14px; outline: none; }
+    .btn-submit { width: 100%; padding: 14px; background: #8E24AA; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    .btn-back { display: inline-block; margin-bottom: 12px; color: #666; text-decoration: none; font-size: 14px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <a href="main.html" class="btn-back">⬅️ 메인 월드로 돌아가기</a>
+  <h2>🤖 [Quest 5] AI 객체탐지 결과 vs 사람 판단 비교</h2>
+  <div class="guide-box">선생님이 학습시킨 컴퓨터비전 AI가 인식한 결과와 사람이 직접 확인한 결과를 비교해 기록합니다.</div>
+
+  <div class="form-group">
+    <label>1. 테스트할 자원순환 품목</label>
+    <input type="text" id="itemName" placeholder="예: 찌그러진 코카콜라 캔">
+  </div>
+
+  <div class="form-group">
+    <label>2. AI 객체탐지 예측 결과</label>
+    <input type="text" id="aiResult" placeholder="예: 플라스틱 (정확도 72%)">
+  </div>
+
+  <div class="form-group">
+    <label>3. 사람(학생)의 실제 판단</label>
+    <input type="text" id="humanResult" placeholder="예: 캔류 (알루미늄)">
+  </div>
+
+  <div class="form-group">
+    <label>4. 일치 여부</label>
+    <select id="isMatch">
+      <option value="일치">일치함 (AI가 정확히 맞춤)</option>
+      <option value="불일치">불일치함 (AI 예측 오류 발생)</option>
+    </select>
+  </div>
+
+  <button class="btn-submit" id="submitBtn">비교 결과 저장 (⭐ +20점)</button>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+    authDomain: "elemeelementary-textbook.firebaseapp.com",
+    projectId: "elemeelementary-textbook",
+    storageBucket: "elemeelementary-textbook.firebasestorage.app",
+    messagingSenderId: "713149004420",
+    appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
+    measurementId: "G-TZT282J9E8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const studentId = localStorage.getItem("elementary_studentId");
+  const studentName = localStorage.getItem("elementary_studentName");
+
+  document.getElementById("submitBtn").addEventListener("click", async () => {
+    const item = document.getElementById("itemName").value.trim();
+    const aiRes = document.getElementById("aiResult").value.trim();
+    const humanRes = document.getElementById("humanResult").value.trim();
+    const match = document.getElementById("isMatch").value;
+
+    if (!item || !aiRes || !humanRes) {
+      alert("모든 입력 항목을 채워주세요!");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "quest5_detection_compare"), {
+        studentId, studentName, item, aiResult: aiRes, humanResult: humanRes, isMatched: match, createdAt: serverTimestamp()
+      });
+
+      let score = parseInt(localStorage.getItem("elementary_score") || "10", 10) + 20;
+      localStorage.setItem("elementary_score", score.toString());
+      alert("🎉 Quest 5 비교 기록 저장 완료! (⭐ +20점)");
+      window.location.href = "main.html";
+    } catch (e) {
+      console.error(e);
+      alert("저장 실패");
+    }
+  });
+</script>
+</body>
+</html>
