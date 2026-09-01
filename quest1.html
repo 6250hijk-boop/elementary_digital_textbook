@@ -6,127 +6,182 @@
   <title>Quest 1 - AI의 시선</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <style>
+    :root { --bg: #2b3a42; --panel: #3f5159; --border: #182328; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
-    body { background-color: #F0F4F8; padding: 20px; color: #2C3E50; }
-    .card { max-width: 680px; margin: 0 auto; background: white; border-radius: 20px; padding: 25px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
-    h2 { color: #1976D2; margin-bottom: 12px; }
-    .guide-box { background: #E3F2FD; border-left: 5px solid #1976D2; padding: 12px; border-radius: 8px; margin-bottom: 18px; font-size: 14px; line-height: 1.5; }
-    select, textarea { width: 100%; padding: 12px; border: 2px solid #E0E0E0; border-radius: 10px; font-size: 14px; margin-bottom: 12px; outline: none; }
-    select:focus, textarea:focus { border-color: #1976D2; }
-    .btn-submit { width: 100%; padding: 14px; background: #1976D2; color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; }
-    .btn-submit:hover { background: #1565C0; }
-    .feed-title { margin-top: 25px; font-size: 15px; font-weight: bold; color: #333; }
-    .feed-item { background: #F8F9FA; border-left: 4px solid #1976D2; padding: 10px 14px; border-radius: 8px; margin-top: 8px; font-size: 13px; }
+    body { background-color: var(--bg); color: #fff; display: flex; flex-direction: column; align-items: center; padding: 15px; min-height: 100vh; }
+    .container { width: 100%; max-width: 860px; background: var(--panel); border-radius: 18px; border: 5px solid var(--border); overflow: hidden; display: flex; flex-direction: column; align-items: center; }
+    
+    header { width: 100%; background: #1e282d; padding: 14px 20px; border-bottom: 4px solid var(--border); text-align: center; display: flex; justify-content: space-between; align-items: center; }
+    .btn-back { background: #546e7a; color: white; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; border: 2px solid #263238; }
+    h1 { font-size: 18px; color: #ffeb3b; text-shadow: 2px 2px 0px #000; margin: 0; }
+    
+    .game-wrapper { padding: 18px 15px; display: flex; flex-direction: column; align-items: center; width: 100%; }
+    .canvas-container { border: 5px solid #263238; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
+    canvas { display: block; image-rendering: pixelated; }
+    
+    .guide-text { font-size: 13px; font-weight: bold; color: #cfd8dc; background: rgba(0,0,0,0.3); padding: 8px 14px; border-radius: 8px; margin-top: 10px; }
+    
+    /* 미션 팝업 모달 */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
+    .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease-in-out; }
+    .modal-content { background: white; color: #333; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; border: 4px solid #1976D2; }
+    .btn-close { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: #888; }
+    
+    /* 모달 내부 폼 스타일 */
+    h2 { font-size: 19px; margin-bottom: 12px; color: #1976D2; }
+    .guide-box { background: #E3F2FD; border-left: 5px solid #1976D2; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; line-height: 1.5; }
+    .form-group { margin-bottom: 14px; }
+    label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 13px; }
+    input[type="text"], textarea, select { width: 100%; padding: 10px; border: 2px solid #E0E0E0; border-radius: 10px; font-size: 14px; outline: none; }
+    .btn-action { width: 100%; padding: 12px; background: #1976D2; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+    
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
   </style>
 </head>
 <body>
 
-<div class="card">
-  <a href="main.html" style="text-decoration: none; color: #666; font-size: 13px; font-weight: bold;">⬅️ 마을로 돌아가기</a>
-  <h2 style="margin-top: 8px;">🔍 [Quest 1] AI 시선과 학교 자원순환 문제</h2>
-  <div class="guide-box">AI는 사진을 픽셀(숫자) 데이터로 읽습니다. 우리 학교 쓰레기 분리배출 문제를 찾고 AI에게 필요한 데이터를 제안하세요.</div>
+<div class="container">
+  <header>
+    <a href="main.html" class="btn-back">⬅ 마을로</a>
+    <h1>🔍 Quest 1: AI 시선관</h1>
+    <div style="width: 70px;"></div> <!-- 중앙 정렬용 빈 공간 -->
+  </header>
 
-  <label style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 4px;">1. 우리 학교 분리수거장에서 가장 자주 발생하는 문제는?</label>
-  <select id="problem">
-    <option value="음식물 오염">음식물이 묻은 채로 버려짐</option>
-    <option value="라벨 미제거">페트병 비닐 라벨을 안 떼고 버림</option>
-    <option value="우유팩 혼합">우유팩을 일반 종이에 섞어 버림</option>
-    <option value="일반쓰레기 혼합">일반쓰레기와 재활용품이 섞여 있음</option>
-  </select>
+  <div class="game-wrapper">
+    <div class="canvas-container">
+      <canvas id="roomCanvas" width="600" height="360"></canvas>
+    </div>
+    <div class="guide-text" id="actionGuide">🎮 방향키로 이동하여 [임무 책상] 앞에서 스페이스바를 누르세요.</div>
+  </div>
+</div>
 
-  <label style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 4px;">2. AI가 이 문제를 스스로 판별하려면 어떤 사진 데이터를 학습시켜야 할까요?</label>
-  <textarea id="dataIdea" rows="3" placeholder="예: 깨끗한 페트병과 라벨이 붙은 페트병 사진을 각각 100장씩 학습시켜요."></textarea>
-  <button class="btn-submit" id="saveBtn">의견 등록하고 점수 받기 (⭐ +20점)</button>
-
-  <div class="feed-title">📡 실시간 등록된 학급 친구들의 데이터 아이디어</div>
-  <div id="liveFeed" style="margin-top: 6px;">불러오는 중...</div>
+<!-- 미션 모달 창 (이 부분을 퀘스트별로 변경) -->
+<div id="missionModal" class="modal-overlay">
+  <div class="modal-content">
+    <button class="btn-close" onclick="closeModal()">✖</button>
+    
+    <h2>🔍 [1차시] AI가 이미지를 보는 방법</h2>
+    <div class="guide-box">AI는 이미지를 사람처럼 형태가 아닌 숫자(데이터)로 파악합니다.<br>우리 학교의 자원순환 문제를 탐색해 봅시다.</div>
+    
+    <div class="form-group">
+      <label>1. 우리 학교 분리수거장에서 가장 자주 발생하는 문제는?</label>
+      <select id="q1Problem">
+        <option value="음식물 오염">음식물이 묻은 채로 버려짐</option>
+        <option value="라벨 미제거">페트병 비닐 라벨을 안 떼고 버림</option>
+        <option value="일반쓰레기 혼합">일반쓰레기와 재활용품이 혼합됨</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>2. AI 로봇이 이 문제를 스스로 구별하려면 어떤 데이터(사진)를 학습시켜야 할까요?</label>
+      <textarea id="q1Idea" rows="3" placeholder="예: 깨끗한 통과 오염된 통 사진을 각각 많이 수집하여 학습시킨다."></textarea>
+    </div>
+    
+    <button class="btn-action" onclick="saveQuest1()">임무 완료 및 저장 (⭐ +20점)</button>
+  </div>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, setDoc, increment, collection, addDoc, onSnapshot, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, doc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
-    authDomain: "elemeelementary-textbook.firebaseapp.com",
-    projectId: "elemeelementary-textbook",
-    storageBucket: "elemeelementary-textbook.firebasestorage.app",
-    messagingSenderId: "713149004420",
-    appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
-    measurementId: "G-TZT282J9E8"
-  };
-
+  const firebaseConfig = { apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00", authDomain: "elemeelementary-textbook.firebaseapp.com", projectId: "elemeelementary-textbook", storageBucket: "elemeelementary-textbook.firebasestorage.app", messagingSenderId: "713149004420", appId: "1:713149004420:web:8483273681e16f5a8fa0d1" };
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  const studentId = localStorage.getItem("elementary_studentId") || "Guest_" + Math.floor(Math.random() * 1000);
-  const studentName = localStorage.getItem("elementary_studentName") || "체험탐정";
+  const studentId = localStorage.getItem("elementary_studentId");
+  const studentName = localStorage.getItem("elementary_studentName");
 
-  // 실시간 피드 구독
-  const feedQ = query(collection(db, "quest1_feed"), orderBy("createdAt", "desc"), limit(5));
-  onSnapshot(feedQ, (snapshot) => {
-    const box = document.getElementById("liveFeed");
-    box.innerHTML = "";
-    if (snapshot.empty) {
-      box.innerHTML = "<div style='color:#888; font-size:13px;'>아직 등록된 의견이 없습니다. 첫 번째 의견을 작성해보세요!</div>";
-      return;
+  /* ============ 2D 픽셀 방(Room) 엔진 ============ */
+  const canvas = document.getElementById("roomCanvas");
+  const ctx = canvas.getContext("2d");
+  const guide = document.getElementById("actionGuide");
+  
+  let player = { x: 300, y: 300, speed: 16, facing: "up" };
+  const desk = { x: 300, y: 120, w: 80, h: 50 }; // 상호작용 가능한 임무 책상
+  let canInteract = false;
+
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // 바닥 타일 (연구소 스타일)
+    ctx.fillStyle = "#B0BEC5";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = "#90A4AE";
+    ctx.lineWidth = 2;
+    for(let x=0; x<canvas.width; x+=40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
+    for(let y=0; y<canvas.height; y+=40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
+
+    // 북쪽 벽면
+    ctx.fillStyle = "#37474F";
+    ctx.fillRect(0, 0, canvas.width, 60);
+    ctx.fillStyle = "#546E7A";
+    ctx.fillRect(0, 50, canvas.width, 10);
+
+    // 임무 책상 (컴퓨터 모니터 포함)
+    ctx.fillStyle = "#5D4037"; // 책상 상판
+    ctx.fillRect(desk.x - desk.w/2, desk.y - desk.h/2, desk.w, desk.h);
+    ctx.fillStyle = "#212121"; // 모니터
+    ctx.fillRect(desk.x - 20, desk.y - 20, 40, 25);
+    ctx.fillStyle = canInteract ? "#64DD17" : "#0277BD"; // 모니터 화면 (근처에 가면 빛남)
+    ctx.fillRect(desk.x - 16, desk.y - 16, 32, 17);
+
+    // 플레이어
+    ctx.fillStyle = "rgba(0,0,0,0.3)"; ctx.beginPath(); ctx.ellipse(player.x, player.y + 12, 10, 5, 0, 0, Math.PI*2); ctx.fill(); // 그림자
+    ctx.fillStyle = "#e53935"; ctx.fillRect(player.x - 7, player.y - 16, 14, 6); // 모자
+    ctx.fillStyle = "#ffcc80"; ctx.fillRect(player.x - 5, player.y - 9, 10, 8);  // 얼굴
+    ctx.fillStyle = "#1e88e5"; ctx.fillRect(player.x - 6, player.y - 1, 12, 8);  // 옷
+    ctx.fillStyle = "#37474f"; ctx.fillRect(player.x - 5, player.y + 7, 10, 4);  // 바지
+  }
+
+  function move(dx, dy) {
+    player.x = Math.max(20, Math.min(canvas.width - 20, player.x + dx));
+    player.y = Math.max(70, Math.min(canvas.height - 20, player.y + dy));
+    
+    // 책상과의 거리 계산
+    const dist = Math.hypot(player.x - desk.x, player.y - desk.y);
+    canInteract = dist < 55;
+    guide.textContent = canInteract ? "🌟 스페이스바를 눌러 퀘스트를 시작하세요!" : "🎮 방향키로 이동하여 [임무 책상] 앞으로 가세요.";
+    guide.style.color = canInteract ? "#FFEB3B" : "#cfd8dc";
+    
+    render();
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if (document.getElementById("missionModal").classList.contains("active")) return;
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+      e.preventDefault();
+      if (e.key === "ArrowUp") move(0, -player.speed);
+      if (e.key === "ArrowDown") move(0, player.speed);
+      if (e.key === "ArrowLeft") move(-player.speed, 0);
+      if (e.key === "ArrowRight") move(player.speed, 0);
+    } else if (e.code === "Space") {
+      e.preventDefault();
+      if (canInteract) document.getElementById("missionModal").classList.add("active");
     }
-    snapshot.forEach(docSnap => {
-      const d = docSnap.data();
-      const div = document.createElement("div");
-      div.className = "feed-item";
-      div.innerHTML = `<strong>${d.studentName}</strong>: [${d.problem}] ${d.dataIdea}`;
-      box.appendChild(div);
-    });
-  }, (err) => {
-    console.error("피드 로딩 오류:", err);
   });
 
-  // 데이터 저장 이벤트
-  document.getElementById("saveBtn").addEventListener("click", async () => {
-    const prob = document.getElementById("problem").value;
-    const idea = document.getElementById("dataIdea").value.trim();
-    const btn = document.getElementById("saveBtn");
+  window.closeModal = function() {
+    document.getElementById("missionModal").classList.remove("active");
+    player.y += 20; // 스페이스바 연속 클릭 방지용 밀어내기
+    move(0,0);
+  };
 
-    if (!idea) {
-      alert("AI에게 필요한 데이터 학습 아이디어를 적어주세요!");
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = "저장 중...";
+  /* ============ Firebase 저장 함수 (퀘스트별 변경) ============ */
+  window.saveQuest1 = async function() {
+    const prob = document.getElementById("q1Problem").value;
+    const idea = document.getElementById("q1Idea").value.trim();
+    if (!idea) return alert("데이터 학습 아이디어를 적어주세요!");
 
     try {
-      // 1. 피드 컬렉션에 기록 추가
-      await addDoc(collection(db, "quest1_feed"), {
-        studentId: studentId,
-        studentName: studentName,
-        problem: prob,
-        dataIdea: idea,
-        createdAt: serverTimestamp()
-      });
-
-      // 2. 학생 점수 문서 생성 또는 업데이트 (setDoc merge)
-      await setDoc(doc(db, "students", studentId), {
-        studentId: studentId,
-        studentName: studentName,
-        score: increment(20),
-        lastActive: serverTimestamp()
-      }, { merge: true });
-
-      // 로컬 스토리지 점수 갱신
-      let currentScore = parseInt(localStorage.getItem("elementary_score") || "10", 10) + 20;
-      localStorage.setItem("elementary_score", currentScore.toString());
-
-      alert("🎉 Quest 1 완료! (⭐ +20점)");
+      await addDoc(collection(db, "quest1_records"), { studentId, studentName, problem: prob, dataIdea: idea, createdAt: serverTimestamp() });
+      await updateDoc(doc(db, "students", studentId), { score: increment(20) });
+      localStorage.setItem("elementary_score", parseInt(localStorage.getItem("elementary_score")||"0") + 20);
+      alert("🎉 Quest 1 임무 완료! (⭐ +20점)");
       window.location.href = "main.html";
-    } catch (e) {
-      console.error("상세 저장 에러:", e);
-      alert("저장 실패: " + e.message);
-      btn.disabled = false;
-      btn.textContent = "의견 등록하고 점수 받기 (⭐ +20점)";
-    }
-  });
+    } catch(e) { console.error(e); alert("저장 실패"); }
+  };
+
+  render();
 </script>
 </body>
 </html>
