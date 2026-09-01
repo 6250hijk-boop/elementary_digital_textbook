@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quest 2 - 분류 기준 세우기</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    body { background-color: #F0F4F8; color: #2C3E50; padding: 20px; }
+    .card { max-width: 650px; margin: 0 auto; background: white; border-radius: 20px; padding: 25px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    h2 { color: #E65100; margin-bottom: 12px; }
+    .guide-box { background: #FFF3E0; border-left: 5px solid #FF9800; padding: 12px; border-radius: 8px; margin-bottom: 18px; font-size: 14px; line-height: 1.5; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; }
+    textarea { width: 100%; padding: 12px; border: 2px solid #E0E0E0; border-radius: 10px; font-size: 14px; outline: none; }
+    .btn-submit { width: 100%; padding: 14px; background: #FF9800; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    .btn-back { display: inline-block; margin-bottom: 12px; color: #666; text-decoration: none; font-size: 14px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <a href="main.html" class="btn-back">⬅️ 메인 월드로 돌아가기</a>
+  <h2>📋 [Quest 2] 자원순환 품목 분류 기준표</h2>
+  <div class="guide-box">AI가 명확하게 판단할 수 있도록 품목별 분류 규칙과 조건(알고리즘)을 작성해 보세요.</div>
+
+  <div class="form-group">
+    <label>1. 종이 / 플라스틱 / 캔 / 우유팩 분류 기준</label>
+    <textarea id="ruleStd" rows="3" placeholder="예: 우유팩은 물로 헹구고 펼쳐서 말린 것만 분류하고, 일반 종이와 섞지 않음"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>2. 가장 헷갈리는 품목과 해결 기준</label>
+    <textarea id="ruleConf" rows="2" placeholder="예: 양념이 지워지지 않는 컵라면 용기는 일반쓰레기로 분류"></textarea>
+  </div>
+
+  <button class="btn-submit" id="submitBtn">Quest 2 기준 저장 (⭐ +20점)</button>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+    authDomain: "elemeelementary-textbook.firebaseapp.com",
+    projectId: "elemeelementary-textbook",
+    storageBucket: "elemeelementary-textbook.firebasestorage.app",
+    messagingSenderId: "713149004420",
+    appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
+    measurementId: "G-TZT282J9E8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const studentId = localStorage.getItem("elementary_studentId");
+  const studentName = localStorage.getItem("elementary_studentName");
+
+  document.getElementById("submitBtn").addEventListener("click", async () => {
+    const std = document.getElementById("ruleStd").value.trim();
+    const conf = document.getElementById("ruleConf").value.trim();
+
+    if (!std) {
+      alert("분류 기준을 입력해주세요!");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "quest2_rules"), {
+        studentId, studentName, standard: std, confusing: conf, createdAt: serverTimestamp()
+      });
+
+      let score = parseInt(localStorage.getItem("elementary_score") || "10", 10) + 20;
+      localStorage.setItem("elementary_score", score.toString());
+      alert("🎉 Quest 2 완료! (⭐ +20점)");
+      window.location.href = "main.html";
+    } catch (e) {
+      console.error(e);
+      alert("저장 실패");
+    }
+  });
+</script>
+</body>
+</html>
