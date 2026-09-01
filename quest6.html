@@ -3,97 +3,159 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quest 6 - 오류 분석 및 실천 규약</title>
+  <title>Quest 6 - 규약 리그 본부</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <style>
+    :root { --bg: #2b3a42; --panel: #3f5159; --border: #182328; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
-    body { background-color: #F0F4F8; color: #2C3E50; padding: 20px; }
-    .card { max-width: 650px; margin: 0 auto; background: white; border-radius: 20px; padding: 25px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
-    h2 { color: #F57F17; margin-bottom: 12px; }
-    .guide-box { background: #FFFDE7; border-left: 5px solid #FBC02D; padding: 12px; border-radius: 8px; margin-bottom: 18px; font-size: 14px; line-height: 1.5; }
-    .form-group { margin-bottom: 15px; }
-    label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; }
-    select, textarea { width: 100%; padding: 12px; border: 2px solid #E0E0E0; border-radius: 10px; font-size: 14px; outline: none; }
-    .btn-submit { width: 100%; padding: 14px; background: #F57F17; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-    .btn-back { display: inline-block; margin-bottom: 12px; color: #666; text-decoration: none; font-size: 14px; font-weight: bold; }
+    body { background-color: var(--bg); color: #fff; display: flex; flex-direction: column; align-items: center; padding: 15px; min-height: 100vh; }
+    .container { width: 100%; max-width: 860px; background: var(--panel); border-radius: 18px; border: 5px solid var(--border); overflow: hidden; display: flex; flex-direction: column; align-items: center; }
+    header { width: 100%; background: #1e282d; padding: 14px 20px; border-bottom: 4px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .btn-back { background: #546e7a; color: white; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; border: 2px solid #263238; }
+    h1 { font-size: 18px; color: #ffeb3b; text-shadow: 2px 2px 0px #000; margin: 0; }
+    .game-wrapper { padding: 18px 15px; display: flex; flex-direction: column; align-items: center; width: 100%; }
+    .canvas-container { border: 5px solid #263238; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
+    canvas { display: block; image-rendering: pixelated; }
+    .guide-text { font-size: 13px; font-weight: bold; color: #cfd8dc; background: rgba(0,0,0,0.3); padding: 8px 14px; border-radius: 8px; margin-top: 10px; }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
+    .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease-in-out; }
+    .modal-content { background: white; color: #333; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; border: 4px solid #C62828; }
+    .btn-close { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: #888; }
+    h2 { font-size: 19px; margin-bottom: 12px; color: #C62828; }
+    .guide-box { background: #FFEBEE; border-left: 5px solid #C62828; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; line-height: 1.5; }
+    .form-group { margin-bottom: 14px; }
+    label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 13px; }
+    select, textarea { width: 100%; padding: 10px; border: 2px solid #E0E0E0; border-radius: 10px; font-size: 14px; outline: none; }
+    .btn-action { width: 100%; padding: 12px; background: #C62828; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
   </style>
 </head>
 <body>
-
-<div class="card">
-  <a href="main.html" class="btn-back">⬅️ 메인 월드로 돌아가기</a>
-  <h2>💡 [Quest 6] AI 오류 원인 분석 및 학급 실천 규약</h2>
-  <div class="guide-box">AI가 오답을 낸 원인을 데이터 관점에서 진단하고, 학교 생활에서 실천할 자원순환 약속을 정해 보세요.</div>
-
-  <div class="form-group">
-    <label>1. AI 오류가 발생한 주요 원인은 무엇인가요?</label>
-    <select id="errorReason">
-      <option value="데이터 부족">학습 데이터(사진 수)가 부족해서</option>
-      <option value="각도 및 조명 문제">빛 반사나 물체가 찌그러진 각도 때문에</option>
-      <option value="오염 및 이물질">음식물 등 오염 물질이 묻어 있어서</option>
-      <option value="배경 복잡">뒤 배경이 너무 복잡해서</option>
-    </select>
+<div class="container">
+  <header>
+    <a href="main.html" class="btn-back">⬅ 마을로</a>
+    <h1>💡 Quest 6: 규약 리그 본부</h1>
+    <div style="width: 70px;"></div>
+  </header>
+  <div class="game-wrapper">
+    <div class="canvas-container">
+      <canvas id="roomCanvas" width="600" height="360"></canvas>
+    </div>
+    <div class="guide-text" id="actionGuide">🎮 방향키로 이동하여 [임무 책상] 앞에서 스페이스바를 누르세요.</div>
   </div>
+</div>
 
-  <div class="form-group">
-    <label>2. 데이터 관점에서의 AI 성능 개선 방안</label>
-    <textarea id="improvePlan" rows="2" placeholder="예: 찌그러진 캔과 오염된 용기 사진을 100장 이상 더 수집해 재학습시킨다."></textarea>
+<div id="missionModal" class="modal-overlay">
+  <div class="modal-content">
+    <button class="btn-close" onclick="closeModal()">✖</button>
+    <h2>💡 [6~8차시] 오류 분석 및 우리 학급 실천 규약</h2>
+    <div class="guide-box">AI의 오류 원인을 데이터 관점에서 분석하고 실천 규약을 세워 마스터 탐정 배지를 획득하세요![cite: 1]</div>
+    <div class="form-group">
+      <label>1. AI 오류가 발생한 주원인은 무엇인가요?</label>
+      <select id="q6Reason">
+        <option value="데이터 부족">학습 사진 데이터 수 부족</option>
+        <option value="조명 및 각도">빛 반사 또는 찌그러진 각도</option>
+        <option value="오염 물질">음식물 등 오염 물질 묻음</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>2. 데이터 관점에서의 AI 성능 개선 방안</label>
+      <textarea id="q6Improve" rows="2" placeholder="예: 구겨지거나 오염된 사진 데이터를 100장 더 학습시켜요."></textarea>
+    </div>
+    <div class="form-group">
+      <label>3. 우리 학급 자원순환 실천 규약 (약속)</label>
+      <textarea id="q6Promise" rows="2" placeholder="예: 우유팩은 깨끗이 씻고 펼쳐서 전용함에 모으기"></textarea>
+    </div>
+    <button class="btn-action" onclick="saveQuest6()">최종 실천 규약 제출 (⭐ +30점 / 마스터 등극)</button>
   </div>
-
-  <div class="form-group">
-    <label>3. 우리 학급 자원순환 실천 규약 (약속)</label>
-    <textarea id="classPromise" rows="3" placeholder="예: 우유 급식 후 반드시 물로 깨끗이 헹구고 완전히 펼쳐서 전용 수거함에 모은다."></textarea>
-  </div>
-
-  <button class="btn-submit" id="submitBtn">최종 실천 규약 제출 (⭐ +30점 / 마스터 탐정)</button>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, doc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
-    authDomain: "elemeelementary-textbook.firebaseapp.com",
-    projectId: "elemeelementary-textbook",
-    storageBucket: "elemeelementary-textbook.firebasestorage.app",
-    messagingSenderId: "713149004420",
-    appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
-    measurementId: "G-TZT282J9E8"
-  };
-
+  const firebaseConfig = { apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00", authDomain: "elemeelementary-textbook.firebaseapp.com", projectId: "elemeelementary-textbook", storageBucket: "elemeelementary-textbook.firebasestorage.app", messagingSenderId: "713149004420", appId: "1:713149004420:web:8483273681e16f5a8fa0d1" };
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
   const studentId = localStorage.getItem("elementary_studentId");
   const studentName = localStorage.getItem("elementary_studentName");
 
-  document.getElementById("submitBtn").addEventListener("click", async () => {
-    const reason = document.getElementById("errorReason").value;
-    const improve = document.getElementById("improvePlan").value.trim();
-    const promise = document.getElementById("classPromise").value.trim();
+  const canvas = document.getElementById("roomCanvas");
+  const ctx = canvas.getContext("2d");
+  const guide = document.getElementById("actionGuide");
+  
+  let player = { x: 300, y: 300, speed: 16 };
+  const desk = { x: 300, y: 120, w: 80, h: 50 };
+  let canInteract = false;
 
-    if (!promise) {
-      alert("우리 학급 실천 규약을 작성해주세요!");
-      return;
-    }
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#FFCDD2"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = "#EF9A9A"; ctx.lineWidth = 2;
+    for(let x=0; x<canvas.width; x+=40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
+    for(let y=0; y<canvas.height; y+=40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
 
-    try {
-      await addDoc(collection(db, "quest6_final_promises"), {
-        studentId, studentName, errorReason: reason, improvementPlan: improve, classPromise: promise, createdAt: serverTimestamp()
-      });
+    ctx.fillStyle = "#B71C1C"; ctx.fillRect(0, 0, canvas.width, 60);
+    ctx.fillStyle = "#C62828"; ctx.fillRect(0, 50, canvas.width, 10);
 
-      let score = parseInt(localStorage.getItem("elementary_score") || "10", 10) + 30;
-      localStorage.setItem("elementary_score", score.toString());
-      localStorage.setItem("elementary_badge", "마스터 탐정 ⭐");
+    ctx.fillStyle = "#3E2723"; ctx.fillRect(desk.x - desk.w/2, desk.y - desk.h/2, desk.w, desk.h);
+    ctx.fillStyle = "#212121"; ctx.fillRect(desk.x - 20, desk.y - 20, 40, 25);
+    ctx.fillStyle = canInteract ? "#64DD17" : "#FFC107"; ctx.fillRect(desk.x - 16, desk.y - 16, 32, 17);
 
-      alert("🎉 모든 퀘스트 완료! 마스터 탐정 배지를 획득했습니다. (⭐ +30점)");
-      window.location.href = "main.html";
-    } catch (e) {
-      console.error(e);
-      alert("저장 실패");
+    ctx.fillStyle = "rgba(0,0,0,0.3)"; ctx.beginPath(); ctx.ellipse(player.x, player.y + 12, 10, 5, 0, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = "#e53935"; ctx.fillRect(player.x - 7, player.y - 16, 14, 6);
+    ctx.fillStyle = "#ffcc80"; ctx.fillRect(player.x - 5, player.y - 9, 10, 8);
+    ctx.fillStyle = "#1e88e5"; ctx.fillRect(player.x - 6, player.y - 1, 12, 8);
+    ctx.fillStyle = "#37474f"; ctx.fillRect(player.x - 5, player.y + 7, 10, 4);
+  }
+
+  function move(dx, dy) {
+    player.x = Math.max(20, Math.min(canvas.width - 20, player.x + dx));
+    player.y = Math.max(70, Math.min(canvas.height - 20, player.y + dy));
+    canInteract = Math.hypot(player.x - desk.x, player.y - desk.y) < 55;
+    guide.textContent = canInteract ? "🌟 스페이스바를 눌러 퀘스트를 시작하세요!" : "🎮 방향키로 이동하여 [임무 책상] 앞으로 가세요.";
+    guide.style.color = canInteract ? "#FFEB3B" : "#cfd8dc";
+    render();
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if (document.getElementById("missionModal").classList.contains("active")) return;
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+      e.preventDefault();
+      if (e.key === "ArrowUp") move(0, -player.speed);
+      if (e.key === "ArrowDown") move(0, player.speed);
+      if (e.key === "ArrowLeft") move(-player.speed, 0);
+      if (e.key === "ArrowRight") move(player.speed, 0);
+    } else if (e.code === "Space") {
+      e.preventDefault();
+      if (canInteract) document.getElementById("missionModal").classList.add("active");
     }
   });
+
+  window.closeModal = function() {
+    document.getElementById("missionModal").classList.remove("active");
+    player.y += 20; move(0,0);
+  };
+
+  window.saveQuest6 = async function() {
+    const reason = document.getElementById("q6Reason").value;
+    const improve = document.getElementById("q6Improve").value.trim();
+    const promise = document.getElementById("q6Promise").value.trim();
+
+    if (!improve || !promise) return alert("개선 방안과 실천 규약을 모두 입력해주세요!");
+
+    try {
+      await addDoc(collection(db, "quest6_promises"), { studentId, studentName, reason, improvement: improve, promise, createdAt: serverTimestamp() });
+      await updateDoc(doc(db, "students", studentId), { score: increment(30), badge: "마스터 탐정 ⭐" });
+      localStorage.setItem("elementary_score", parseInt(localStorage.getItem("elementary_score")||"0") + 30);
+      localStorage.setItem("elementary_badge", "마스터 탐정 ⭐");
+      alert("🎉 모든 퀘스트 완료! 마스터 탐정으로 승급했습니다! (⭐ +30점)");
+      window.location.href = "main.html";
+    } catch(e) { console.error(e); alert("저장 실패"); }
+  };
+
+  render();
 </script>
 </body>
 </html>
