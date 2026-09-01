@@ -6,176 +6,47 @@
   <title>AI 자원순환 탐정 마을 - 미니맵</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <style>
-    :root {
-      --primary: #2E7D32;
-      --accent: #FF9800;
-      --bg: #1B261D;
-      --panel: #2C3E2D;
-      --text: #FFFFFF;
-    }
-
+    :root { --primary: #2E7D32; --accent: #FF9800; --bg: #1B261D; --panel: #2C3E2D; --text: #FFFFFF; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 15px;
-      min-height: 100vh;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 840px;
-      background: var(--panel);
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      border: 4px solid #4CAF50;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    /* 상단 상태 바 */
-    header {
-      width: 100%;
-      background: #1E2D1F;
-      padding: 15px 20px;
-      border-bottom: 3px solid #4CAF50;
-      text-align: center;
-    }
-    h1 { font-size: 20px; color: #81C784; margin-bottom: 8px; letter-spacing: 1px; }
-    .status-bar {
-      display: flex;
-      justify-content: space-around;
-      background: rgba(0,0,0,0.3);
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: bold;
-      color: #E8F5E9;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    /* 픽셀 미니맵 캔버스 영역 */
-    .game-wrapper {
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-    }
-    .canvas-container {
-      position: relative;
-      border: 4px solid #2E7D32;
-      border-radius: 12px;
-      background: #438e44;
-      box-shadow: inset 0 0 15px rgba(0,0,0,0.4);
-      overflow: hidden;
-    }
-    canvas {
-      display: block;
-      image-rendering: pixelated; /* 픽셀 그래픽 선명도 유지 */
-      image-rendering: crisp-edges;
-    }
-
-    /* 안내 및 조작 버튼 */
-    .guide-text {
-      margin: 10px 0 6px;
-      font-size: 14px;
-      font-weight: bold;
-      color: #C8E6C9;
-    }
-
-    .controls-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 25px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
-
-    /* 모바일/터치용 D-Pad */
-    .d-pad {
-      display: grid;
-      grid-template-columns: repeat(3, 46px);
-      grid-template-rows: repeat(2, 46px);
-      gap: 6px;
-    }
-    .d-btn {
-      background: #38523A;
-      color: white;
-      border: 2px solid #81C784;
-      border-radius: 10px;
-      font-size: 18px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      user-select: none;
-      box-shadow: 0 3px 0 #1B261D;
-    }
-    .d-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 1px 0 #1B261D;
-      background: #4CAF50;
-    }
+    body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; padding: 15px; min-height: 100vh; }
+    .container { width: 100%; max-width: 860px; background: var(--panel); border-radius: 20px; border: 4px solid #4CAF50; overflow: hidden; }
+    header { background: #1E2D1F; padding: 14px 20px; border-bottom: 3px solid #4CAF50; text-align: center; }
+    h1 { font-size: 20px; color: #81C784; margin-bottom: 6px; }
+    .status-bar { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 10px; font-size: 13px; font-weight: bold; color: #E8F5E9; }
+    .game-wrapper { padding: 15px; display: flex; flex-direction: column; align-items: center; }
+    .canvas-container { border: 4px solid #2E7D32; border-radius: 12px; background: #438e44; overflow: hidden; }
+    canvas { display: block; image-rendering: pixelated; }
+    .controls-wrapper { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 10px; flex-wrap: wrap; }
+    .d-pad { display: grid; grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(2, 44px); gap: 6px; }
+    .d-btn { background: #38523A; color: white; border: 2px solid #81C784; border-radius: 8px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .d-up { grid-column: 2; grid-row: 1; }
     .d-left { grid-column: 1; grid-row: 2; }
     .d-down { grid-column: 2; grid-row: 2; }
     .d-right { grid-column: 3; grid-row: 2; }
-
-    /* 입장 버튼 */
-    .enter-btn {
-      padding: 14px 24px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 12px;
-      border: 2px solid #555;
-      background: #424242;
-      color: #9E9E9E;
-      cursor: not-allowed;
-      transition: 0.2s;
-    }
-    .enter-btn.active {
-      background: var(--accent);
-      color: #FFF;
-      border-color: #FFB74D;
-      cursor: pointer;
-      box-shadow: 0 0 15px rgba(255, 152, 0, 0.7);
-      animation: pulse 1s infinite alternate;
-    }
-    @keyframes pulse {
-      from { transform: scale(1); }
-      to { transform: scale(1.04); }
-    }
+    .enter-btn { padding: 12px 24px; font-size: 15px; font-weight: bold; border-radius: 10px; border: 2px solid #555; background: #424242; color: #9E9E9E; cursor: not-allowed; transition: 0.2s; }
+    .enter-btn.active { background: var(--accent); color: #FFF; border-color: #FFB74D; cursor: pointer; }
+    .realtime-board { width: 100%; padding: 15px; background: #233324; border-top: 2px solid #4CAF50; font-size: 13px; }
   </style>
 </head>
 <body>
 
 <div class="container">
   <header>
-    <h1>🗺️ AI 자원순환 탐정 마을 (픽셀 미니맵)</h1>
+    <h1>🗺️ AI 자원순환 탐정 마을 (실시간 미니맵)</h1>
     <div class="status-bar">
       <span id="dispStudent">학생: 불러오는 중</span>
-      <span id="dispAiName">AI 파트너: 불러오는 중</span>
-      <span id="dispScore">⭐ 점수: 10점</span>
-      <span id="dispBadge">🏅 배지: 신입 탐정</span>
+      <span id="dispAiName">AI 로봇: 불러오는 중</span>
+      <span id="dispScore">⭐ 실시간 점수: ...</span>
+      <span id="dispBadge">🏅 배지: ...</span>
     </div>
   </header>
 
   <div class="game-wrapper">
-    <div class="guide-text">
-      ⌨️ 키보드 방향키로 건물의 입구(문)에 들어가면 퀘스트 페이지로 이동합니다!
+    <div style="font-size: 13px; color: #C8E6C9; margin-bottom: 8px; font-weight: bold;">
+      ⌨️ 방향키로 건물의 문(Door)에 다가가면 [입장하기]가 활성화됩니다!
     </div>
-    
     <div class="canvas-container">
-      <canvas id="mapCanvas" width="640" height="400"></canvas>
+      <canvas id="mapCanvas" width="640" height="380"></canvas>
     </div>
 
     <div class="controls-wrapper">
@@ -185,201 +56,139 @@
         <button class="d-btn d-down" onclick="movePlayer(0, 16)">▼</button>
         <button class="d-btn d-right" onclick="movePlayer(16, 0)">▶</button>
       </div>
-
-      <button id="enterActionBtn" class="enter-btn" onclick="enterBuilding()">건물 앞에 도착하지 않음</button>
+      <button id="enterActionBtn" class="enter-btn" onclick="enterBuilding()">건물 문 앞으로 이동하세요</button>
     </div>
+  </div>
+
+  <div class="realtime-board">
+    <strong>🏆 실시간 학급 탐정단 현황:</strong>
+    <span id="liveRanking">데이터 수신 중...</span>
   </div>
 </div>
 
-<script>
-  // 로컬 세션 확인
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, onSnapshot, collection, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+    authDomain: "elemeelementary-textbook.firebaseapp.com",
+    projectId: "elemeelementary-textbook",
+    storageBucket: "elemeelementary-textbook.firebasestorage.app",
+    messagingSenderId: "713149004420",
+    appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
+    measurementId: "G-TZT282J9E8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
   const studentId = localStorage.getItem("elementary_studentId");
   const studentName = localStorage.getItem("elementary_studentName");
   const aiName = localStorage.getItem("elementary_aiName") || "에코봇";
-  const score = localStorage.getItem("elementary_score") || "10";
-  const badge = localStorage.getItem("elementary_badge") || "신입 탐정";
 
   if (!studentId || !studentName) {
-    alert("입장 정보가 없습니다. 로그인 화면으로 이동합니다.");
     window.location.href = "index.html";
   }
 
-  document.getElementById("dispStudent").textContent = `학생: ${studentName} (${studentId})`;
-  document.getElementById("dispAiName").textContent = `AI 파트너: ${aiName}`;
-  document.getElementById("dispScore").textContent = `⭐ 점수: ${score}점`;
-  document.getElementById("dispBadge").textContent = `🏅 배지: ${badge}`;
+  // 실시간 내 정보 동기화
+  onSnapshot(doc(db, "students", studentId), (docSnap) => {
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      document.getElementById("dispStudent").textContent = `학생: ${data.studentName} (${data.studentId})`;
+      document.getElementById("dispAiName").textContent = `AI 로봇: ${data.aiPartnerName || aiName}`;
+      document.getElementById("dispScore").textContent = `⭐ 점수: ${data.score || 0}점`;
+      document.getElementById("dispBadge").textContent = `🏅 배지: ${data.badge || '신입 탐정'}`;
+    }
+  });
 
-  /* ================= 픽셀 맵 & 엔진 ================= */
+  // 실시간 랭킹 목록 동기화
+  const rankQ = query(collection(db, "students"), orderBy("score", "desc"), limit(4));
+  onSnapshot(rankQ, (snapshot) => {
+    const list = [];
+    snapshot.forEach(d => list.push(`${d.data().studentName}(${d.data().score || 0}점)`));
+    document.getElementById("liveRanking").textContent = list.join(" ｜ ") || "등록된 학생 없음";
+  });
+
+  /* 픽셀 엔진 */
   const canvas = document.getElementById("mapCanvas");
   const ctx = canvas.getContext("2d");
   const enterBtn = document.getElementById("enterActionBtn");
 
-  // 플레이어 상태
-  let player = {
-    x: 320,
-    y: 200,
-    size: 20,
-    speed: 16,
-    frame: 0
-  };
-
-  // 6개 퀘스트 건물 배치 (위치, 크기, 지붕 색상, 이동 링크)
+  let player = { x: 320, y: 190, speed: 16 };
   const buildings = [
-    { id: "quest1.html", name: "1. AI 시선 연구소", x: 60,  y: 40,  w: 120, h: 80, roofColor: "#3F51B5", wallColor: "#E8EAF6", doorX: 110, doorY: 120 },
-    { id: "quest2.html", name: "2. 기준 알고리즘실", x: 260, y: 40,  w: 120, h: 80, roofColor: "#E65100", wallColor: "#FFF3E0", doorX: 310, doorY: 120 },
-    { id: "quest3.html", name: "3. 데이터 선별소",   x: 460, y: 40,  w: 120, h: 80, roofColor: "#00796B", wallColor: "#E0F2F1", doorX: 510, doorY: 120 },
-    { id: "quest4.html", name: "4. 라벨링 퀘스트룸", x: 60,  y: 260, w: 120, h: 80, roofColor: "#2E7D32", wallColor: "#E8F5E9", doorX: 110, doorY: 260 },
-    { id: "quest5.html", name: "5. AI 탐지 실험관", x: 260, y: 260, w: 120, h: 80, roofColor: "#6A1B9A", wallColor: "#F3E5F5", doorX: 310, doorY: 260 },
-    { id: "quest6.html", name: "6. 실천 규약 본부", x: 460, y: 260, w: 120, h: 80, roofColor: "#C62828", wallColor: "#FFEBEE", doorX: 510, doorY: 260 }
+    { id: "quest1.html", name: "1. AI 시선", x: 50,  y: 30,  w: 120, h: 80, roofColor: "#3F51B5", wallColor: "#E8EAF6", doorX: 100, doorY: 110 },
+    { id: "quest2.html", name: "2. 기준 작성", x: 260, y: 30,  w: 120, h: 80, roofColor: "#E65100", wallColor: "#FFF3E0", doorX: 310, doorY: 110 },
+    { id: "quest3.html", name: "3. 데이터 선별", x: 470, y: 30,  w: 120, h: 80, roofColor: "#00796B", wallColor: "#E0F2F1", doorX: 520, doorY: 110 },
+    { id: "quest4.html", name: "4. 라벨링 미션", x: 50,  y: 250, w: 120, h: 80, roofColor: "#2E7D32", wallColor: "#E8F5E9", doorX: 100, doorY: 250 },
+    { id: "quest5.html", name: "5. 탐지 비교", x: 260, y: 250, w: 120, h: 80, roofColor: "#6A1B9A", wallColor: "#F3E5F5", doorX: 310, doorY: 250 },
+    { id: "quest6.html", name: "6. 실천 규약", x: 470, y: 250, w: 120, h: 80, roofColor: "#C62828", wallColor: "#FFEBEE", doorX: 520, doorY: 250 }
   ];
 
-  let currentTargetBuilding = null;
+  let currentTarget = null;
 
-  // 픽셀 배경 타일 및 도로 그리기
-  function drawPixelBackground() {
-    // 1. 잔디 패턴 타일
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // 잔디
     for (let x = 0; x < canvas.width; x += 16) {
       for (let y = 0; y < canvas.height; y += 16) {
         ctx.fillStyle = ((x / 16 + y / 16) % 2 === 0) ? "#4CAF50" : "#43A047";
         ctx.fillRect(x, y, 16, 16);
       }
     }
-
-    // 2. 십자형 자갈길 (도로)
+    // 자갈 도로
     ctx.fillStyle = "#BCAAA4";
-    ctx.fillRect(0, 180, canvas.width, 40);   // 가로 도로
-    ctx.fillRect(100, 120, 40, 160);          // 좌측 세로 도로
-    ctx.fillRect(300, 120, 40, 160);          // 중앙 세로 도로
-    ctx.fillRect(500, 120, 40, 160);          // 우측 세로 도로
+    ctx.fillRect(0, 160, canvas.width, 40);
+    ctx.fillRect(90, 110, 40, 140);
+    ctx.fillRect(300, 110, 40, 140);
+    ctx.fillRect(510, 110, 40, 140);
 
-    // 길가 디테일 점(자갈)
-    ctx.fillStyle = "#8D6E63";
-    for (let x = 10; x < canvas.width; x += 32) {
-      ctx.fillRect(x, 198, 4, 4);
-    }
-  }
-
-  // 픽셀 스타일 건물 그리기
-  function drawBuildings() {
+    // 건물
     buildings.forEach(b => {
-      // 벽체
       ctx.fillStyle = b.wallColor;
-      ctx.fillRect(b.x, b.y + 24, b.w, b.h - 24);
-      ctx.strokeStyle = "#2E3B2F";
-      ctx.lineWidth = 3;
-      ctx.strokeRect(b.x, b.y + 24, b.w, b.h - 24);
-
-      // 삼각/평면 픽셀 지붕
+      ctx.fillRect(b.x, b.y + 20, b.w, b.h - 20);
       ctx.fillStyle = b.roofColor;
-      ctx.fillRect(b.x - 4, b.y, b.w + 8, 26);
-      ctx.strokeRect(b.x - 4, b.y, b.w + 8, 26);
+      ctx.fillRect(b.x - 4, b.y, b.w + 8, 22);
+      ctx.fillStyle = "#5D4037"; // 문
+      ctx.fillRect(b.doorX - 10, b.y + b.h - 24, 20, 24);
 
-      // 픽셀 창문
-      ctx.fillStyle = "#81D4FA";
-      ctx.fillRect(b.x + 16, b.y + 36, 24, 20);
-      ctx.fillRect(b.x + b.w - 40, b.y + 36, 24, 20);
-      ctx.strokeRect(b.x + 16, b.y + 36, 24, 20);
-      ctx.strokeRect(b.x + b.w - 40, b.y + 36, 24, 20);
-
-      // 문 (입구)
-      ctx.fillStyle = "#5D4037";
-      ctx.fillRect(b.doorX - 10, b.y + b.h - 26, 20, 26);
-      ctx.strokeRect(b.doorX - 10, b.y + b.h - 26, 20, 26);
-
-      // 건물 간판 (이름)
-      ctx.fillStyle = "rgba(0,0,0,0.75)";
-      ctx.fillRect(b.x - 6, b.y - 18, b.w + 12, 16);
+      ctx.fillStyle = "rgba(0,0,0,0.8)";
+      ctx.fillRect(b.x, b.y - 16, b.w, 15);
       ctx.font = "bold 10px 'Pretendard'";
       ctx.fillStyle = "#FFF";
       ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(b.name, b.x + b.w / 2, b.y - 10);
+      ctx.fillText(b.name, b.x + b.w / 2, b.y - 5);
     });
+
+    // 플레이어
+    ctx.font = "28px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("🕵️‍♂️", player.x, player.y);
   }
 
-  // 픽셀 캐릭터 그리기
-  function drawPixelCharacter(x, y) {
-    // 그림자
-    ctx.fillStyle = "rgba(0,0,0,0.25)";
-    ctx.beginPath();
-    ctx.ellipse(x, y + 12, 10, 5, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // 몸통 (탐정 트렌치코트)
-    ctx.fillStyle = "#A1887F";
-    ctx.fillRect(x - 8, y - 4, 16, 14);
-
-    // 얼굴
-    ctx.fillStyle = "#FFE0B2";
-    ctx.fillRect(x - 6, y - 14, 12, 10);
-
-    // 모자 (탐정 페도라)
-    ctx.fillStyle = "#4E342E";
-    ctx.fillRect(x - 10, y - 16, 20, 4);
-    ctx.fillRect(x - 6, y - 22, 12, 6);
-
-    // 눈 (픽셀)
-    ctx.fillStyle = "#000";
-    ctx.fillRect(x - 4, y - 10, 2, 2);
-    ctx.fillRect(x + 2, y - 10, 2, 2);
-
-    // 이름표
-    ctx.font = "bold 10px 'Pretendard'";
-    ctx.fillStyle = "#FFFFFF";
-    ctx.strokeStyle = "#000000";
-    ctx.lineWidth = 2;
-    ctx.strokeText(studentName, x, y - 26);
-    ctx.fillText(studentName, x, y - 26);
-  }
-
-  // 전체 화면 렌더링 루프
-  function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawPixelBackground();
-    drawBuildings();
-    drawPixelCharacter(player.x, player.y);
-  }
-
-  // 이동 처리 및 충돌/진입 검사
   window.movePlayer = function(dx, dy) {
-    const nextX = Math.max(20, Math.min(canvas.width - 20, player.x + dx));
-    const nextY = Math.max(30, Math.min(canvas.height - 30, player.y + dy));
-
-    player.x = nextX;
-    player.y = nextY;
+    player.x = Math.max(20, Math.min(canvas.width - 20, player.x + dx));
+    player.y = Math.max(30, Math.min(canvas.height - 30, player.y + dy));
     render();
-    checkBuildingEntrance();
-  };
 
-  // 문(Door) 근처 도달 여부 판별
-  function checkBuildingEntrance() {
-    currentTargetBuilding = null;
-
+    currentTarget = null;
     buildings.forEach(b => {
-      // 문 좌표와의 거리 계산
-      const dist = Math.hypot(player.x - b.doorX, player.y - b.doorY);
-      if (dist < 26) {
-        currentTargetBuilding = b;
-      }
+      if (Math.hypot(player.x - b.doorX, player.y - b.doorY) < 26) currentTarget = b;
     });
 
-    if (currentTargetBuilding) {
+    if (currentTarget) {
       enterBtn.classList.add("active");
-      enterBtn.textContent = `🚪 [${currentTargetBuilding.name}] 들어가기 (Space)`;
+      enterBtn.textContent = `🚪 [${currentTarget.name}] 입장하기 (Space)`;
     } else {
       enterBtn.classList.remove("active");
       enterBtn.textContent = "건물 문 앞으로 이동하세요";
     }
-  }
-
-  // 건물 들어가기
-  window.enterBuilding = function() {
-    if (currentTargetBuilding) {
-      window.location.href = currentTargetBuilding.id;
-    }
   };
 
-  // 키보드 이벤트 (방향키 + 스페이스바)
+  window.enterBuilding = function() {
+    if (currentTarget) window.location.href = currentTarget.id;
+  };
+
   window.addEventListener("keydown", (e) => {
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
       e.preventDefault();
@@ -393,7 +202,6 @@
     }
   });
 
-  // 초기 렌더링 실행
   render();
 </script>
 </body>
