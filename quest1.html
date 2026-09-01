@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quest 1 - AI의 시선</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    body { background-color: #F0F4F8; color: #2C3E50; padding: 20px; }
+    .card { max-width: 650px; margin: 0 auto; background: white; border-radius: 20px; padding: 25px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    h2 { color: #1976D2; margin-bottom: 12px; }
+    .guide-box { background: #E3F2FD; border-left: 5px solid #1976D2; padding: 12px; border-radius: 8px; margin-bottom: 18px; font-size: 14px; line-height: 1.5; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; }
+    select, textarea { width: 100%; padding: 12px; border: 2px solid #E0E0E0; border-radius: 10px; font-size: 14px; outline: none; }
+    .btn-submit { width: 100%; padding: 14px; background: #1976D2; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    .btn-back { display: inline-block; margin-bottom: 12px; color: #666; text-decoration: none; font-size: 14px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <a href="main.html" class="btn-back">⬅️ 메인 월드로 돌아가기</a>
+  <h2>🔍 [Quest 1] AI의 시선과 자원순환 문제</h2>
+  <div class="guide-box">AI는 사진을 픽셀(숫자) 데이터로 인식해요! 우리 학교 분리배출 문제점을 찾아보고 AI에게 필요한 데이터를 생각해 보세요.</div>
+
+  <div class="form-group">
+    <label>1. 우리 학교 쓰레기통에서 가장 자주 발생하는 문제는?</label>
+    <select id="problem">
+      <option value="음식물 오염">음식물이나 음료수가 묻은 채로 버려짐</option>
+      <option value="비닐 라벨 미제거">페트병 비닐 라벨을 안 떼고 통째로 버림</option>
+      <option value="우유팩 혼합">우유팩을 일반 종이에 섞어 버림</option>
+      <option value="일반쓰레기 혼합">일반쓰레기와 재활용품이 한곳에 섞여 있음</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>2. AI가 이 문제를 스스로 판별하려면 어떤 사진 데이터를 주어야 할까요?</label>
+    <textarea id="dataIdea" rows="3" placeholder="예: 깨끗한 페트병과 라벨이 붙은 페트병 사진을 다양한 각도에서 100장 학습시켜요."></textarea>
+  </div>
+
+  <button class="btn-submit" id="submitBtn">Quest 1 완료 및 저장 (⭐ +20점)</button>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+    authDomain: "elemeelementary-textbook.firebaseapp.com",
+    projectId: "elemeelementary-textbook",
+    storageBucket: "elemeelementary-textbook.firebasestorage.app",
+    messagingSenderId: "713149004420",
+    appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
+    measurementId: "G-TZT282J9E8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const studentId = localStorage.getItem("elementary_studentId");
+  const studentName = localStorage.getItem("elementary_studentName");
+
+  document.getElementById("submitBtn").addEventListener("click", async () => {
+    const prob = document.getElementById("problem").value;
+    const idea = document.getElementById("dataIdea").value.trim();
+
+    if (!idea) {
+      alert("AI에게 필요한 데이터 아이디어를 적어주세요!");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "quest1_records"), {
+        studentId, studentName, problem: prob, dataIdea: idea, createdAt: serverTimestamp()
+      });
+
+      let score = parseInt(localStorage.getItem("elementary_score") || "10", 10) + 20;
+      localStorage.setItem("elementary_score", score.toString());
+      alert("🎉 Quest 1 완료! (⭐ +20점)");
+      window.location.href = "main.html";
+    } catch (e) {
+      console.error(e);
+      alert("저장 실패");
+    }
+  });
+</script>
+</body>
+</html>
