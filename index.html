@@ -19,8 +19,6 @@
     .btn-start { width: 100%; padding: 14px; background-color: #4CAF50; color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 6px; }
     .btn-start:hover { background-color: #388E3C; }
     .btn-guest { width: 100%; padding: 11px; background-color: #ECEFF1; color: #455A64; border: 1px solid #CFD8DC; border-radius: 12px; font-size: 13px; font-weight: bold; cursor: pointer; margin-top: 6px; }
-    .live-status { margin-top: 20px; padding: 12px; background: #F1F8E9; border-radius: 12px; font-size: 12px; color: #33691E; text-align: left; }
-    .student-tag { display: inline-block; background: #C8E6C9; padding: 2px 8px; border-radius: 12px; margin: 2px; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -43,18 +41,13 @@
     <input type="text" id="aiName" placeholder="예: 에코봇">
   </div>
 
-  <button class="btn-start" id="startBtn">탐정단 등록 및 입장 🚀</button>
+  <button class="btn-start" id="startBtn">탐정단 등록 및 설문 시작 🚀</button>
   <button class="btn-guest" id="guestBtn">체험용 임시 입장 ⚡</button>
-
-  <div class="live-status">
-    <strong>📡 실시간 접속 중인 탐정단: <span id="onlineCount">0</span>명</strong>
-    <div id="onlineList" style="margin-top: 6px;">불러오는 중...</div>
-  </div>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, setDoc, collection, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
@@ -68,20 +61,6 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-
-  // 실시간 접속자 목록 수신 (onSnapshot)
-  onSnapshot(collection(db, "students"), (snapshot) => {
-    const listEl = document.getElementById("onlineList");
-    document.getElementById("onlineCount").textContent = snapshot.size;
-    listEl.innerHTML = "";
-    snapshot.forEach(docSnap => {
-      const data = docSnap.data();
-      const tag = document.createElement("span");
-      tag.className = "student-tag";
-      tag.textContent = `${data.studentName} (${data.aiPartnerName || 'AI'})`;
-      listEl.appendChild(tag);
-    });
-  });
 
   document.getElementById("startBtn").addEventListener("click", async () => {
     const sId = document.getElementById("studentId").value.trim();
@@ -102,7 +81,9 @@
     localStorage.setItem("elementary_studentId", sId);
     localStorage.setItem("elementary_studentName", sName);
     localStorage.setItem("elementary_aiName", ai);
-    window.location.href = "main.html";
+    
+    // 사전 설문 화면으로 이동
+    window.location.href = "survey.html";
   });
 
   document.getElementById("guestBtn").addEventListener("click", () => {
@@ -110,7 +91,9 @@
     localStorage.setItem("elementary_studentId", guestId);
     localStorage.setItem("elementary_studentName", "체험탐정");
     localStorage.setItem("elementary_aiName", "체험봇");
-    window.location.href = "main.html";
+    
+    // 사전 설문 화면으로 이동
+    window.location.href = "survey.html";
   });
 </script>
 </body>
