@@ -1,1 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI 자원순환 탐정단 - 사전 설문조사</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <style>
+    :root {
+      --primary: #2E7D32;
+      --primary-light: #E8F5E9;
+      --border: #CFD8DC;
+      --text: #263238;
+    }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    body {
+      background-color: #ECEFF1;
+      color: var(--text);
+      padding: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background: #FFFFFF;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      overflow: hidden;
+      padding: 24px;
+    }
+
+    header {
+      text-align: center;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--primary-light);
+      margin-bottom: 20px;
+    }
+    h1 { font-size: 20px; color: var(--primary); margin-bottom: 6px; }
+    p.guide { font-size: 13px; color: #546E7A; line-height: 1.5; }
+
+    .student-badge {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    .question-card {
+      background: #FAFAFA;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .question-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      line-height: 1.4;
+      color: #1E2D1F;
+    }
+
+    /* 5점 척도 라디오 버튼 그룹 */
+    .scale-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
+    }
+    .scale-item {
+      flex: 1;
+      text-align: center;
+    }
+    .scale-item input[type="radio"] {
+      display: none;
+    }
+    .scale-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 4px;
+      border: 2px solid #E0E0E0;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .scale-item input[type="radio"]:checked + .scale-label {
+      border-color: var(--primary);
+      background-color: var(--primary-light);
+      color: var(--primary);
+      transform: scale(1.03);
+    }
+    .scale-text {
+      font-size: 10px;
+      color: #78909C;
+      margin-top: 4px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+      transition: background 0.2s;
+    }
+    .btn-submit:hover { background: #1B5E20; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>📋 사전 검사 설문조사</h1>
+    <p class="guide">AI 자원순환 탐정단 활동을 시작하기 전 여러분의 생각을 솔직하게 답변해주세요.</p>
+    <div class="student-badge" id="dispStudent">학생 정보 로딩 중...</div>
+  </header>
+
+  <form id="surveyForm">
+    <!-- 10개 문항 -->
+    <div id="questionsContainer"></div>
+
+    <button type="submit" class="btn-submit" id="submitBtn">설문 제출하고 탐정 마을 입장하기 🚀</button>
+  </form>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+    authDomain: "elemeelementary-textbook.firebaseapp.com",
+    projectId: "elemeelementary-textbook",
+    storageBucket: "elemeelementary-textbook.firebasestorage.app",
+    messagingSenderId: "713149004420",
+    appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
+    measurementId: "G-TZT282J9E8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const studentId = localStorage.getItem("elementary_studentId");
+  const studentName = localStorage.getItem("elementary_studentName") || "탐정";
+
+  if (!studentId) {
+    window.location.href = "index.html";
+  }
+
+  document.getElementById("dispStudent").textContent = `🕵️‍♂️ ${studentName} (${studentId}) 학생`;
+
+  // 연구계획서 역량 기반 10개 설문 문항
+  const questions = [
+    "1. 인공지능(AI)이 사진이나 그림을 보고 사물을 알아맞히는 원리를 알고 있다.",
+    "2. AI가 올바르게 학습하려면 사람이 정확한 '이름표(라벨)'를 붙여주어야 한다는 것을 안다.",
+    "3. AI 학습에 알맞은 '좋은 사진 데이터'의 조건을 설명할 수 있다.",
+    "4. 종이류, 플라스틱, 우유팩, 캔 등을 올바르게 나누어 버리는 기준을 잘 알고 있다.",
+    "5. 우리 학교 쓰레기 분리배출에서 자주 발생하는 문제점을 찾아낼 수 있다.",
+    "6. AI가 물건을 잘못 알아맞혔을 때, 왜 틀렸는지(각도, 빛, 오염 등) 원인을 찾을 수 있다.",
+    "7. AI가 내놓은 결과를 무조건 믿지 않고, 사람이 직접 확인하고 검토해야 한다고 생각한다.",
+    "8. AI 성능을 높이기 위해 어떤 사진 데이터를 더 모아야 할지 생각할 수 있다.",
+    "9. 우리 반 친구들과 함께 지킬 학교 자원순환 실천 약속(규약)을 만들 수 있다.",
+    "10. AI와 데이터를 활용하면 학교나 우리 마을의 환경 문제를 해결하는 데 도움이 된다고 생각한다."
+  ];
+
+  const scaleTexts = ["전혀 아니다", "아니다", "보통이다", "그렇다", "매우 그렇다"];
+  const container = document.getElementById("questionsContainer");
+
+  questions.forEach((q, idx) => {
+    const qNum = idx + 1;
+    const card = document.createElement("div");
+    card.className = "question-card";
+
+    let scaleHtml = `<div class="question-title">${q}</div><div class="scale-group">`;
+    for (let score = 1; score <= 5; score++) {
+      scaleHtml += `
+        <div class="scale-item">
+          <input type="radio" id="q${qNum}_s${score}" name="q${qNum}" value="${score}" required>
+          <label class="scale-label" for="q${qNum}_s${score}">
+            <div>${score}점</div>
+            <div class="scale-text">${scaleTexts[score - 1]}</div>
+          </label>
+        </div>
+      `;
+    }
+    scaleHtml += `</div>`;
+    card.innerHTML = scaleHtml;
+    container.appendChild(card);
+  });
+
+  document.getElementById("surveyForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "설문 제출 중...";
+
+    const answers = {};
+    for (let i = 1; i <= 10; i++) {
+      const checked = document.querySelector(`input[name="q${i}"]:checked`);
+      answers[`q${i}`] = checked ? parseInt(checked.value, 10) : 0;
+    }
+
+    try {
+      // Firebase Firestore의 pre_surveys 컬렉션에 학번을 문서 ID로 저장
+      await setDoc(doc(db, "pre_surveys", studentId), {
+        studentId: studentId,
+        studentName: studentName,
+        answers: answers,
+        submittedAt: serverTimestamp()
+      });
+
+      // 설문 완료 플래그 로컬 저장
+      localStorage.setItem("elementary_surveyDone", "true");
+      alert("사전 설문조사가 완료되었습니다! 탐정 마을로 이동합니다.");
+      window.location.href = "main.html";
+    } catch (err) {
+      console.error(err);
+      alert("설문 저장 중 오류가 발생했습니다: " + err.message);
+      submitBtn.disabled = false;
+      submitBtn.textContent = "설문 제출하고 탐정 마을 입장하기 🚀";
+    }
+  });
+</script>
+</body>
+</html>
