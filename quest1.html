@@ -3,50 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quest 1 - AI의 시선</title>
+  <title>Quest 1 - AI 시선관</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <style>
     :root { --bg: #2b3a42; --panel: #3f5159; --border: #182328; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
     body { background-color: var(--bg); color: #fff; display: flex; flex-direction: column; align-items: center; padding: 15px; min-height: 100vh; }
     .container { width: 100%; max-width: 860px; background: var(--panel); border-radius: 18px; border: 5px solid var(--border); overflow: hidden; display: flex; flex-direction: column; align-items: center; }
-    
-    header { width: 100%; background: #1e282d; padding: 14px 20px; border-bottom: 4px solid var(--border); text-align: center; display: flex; justify-content: space-between; align-items: center; }
+    header { width: 100%; background: #1e282d; padding: 14px 20px; border-bottom: 4px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
     .btn-back { background: #546e7a; color: white; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; border: 2px solid #263238; }
     h1 { font-size: 18px; color: #ffeb3b; text-shadow: 2px 2px 0px #000; margin: 0; }
-    
     .game-wrapper { padding: 18px 15px; display: flex; flex-direction: column; align-items: center; width: 100%; }
     .canvas-container { border: 5px solid #263238; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
     canvas { display: block; image-rendering: pixelated; }
-    
     .guide-text { font-size: 13px; font-weight: bold; color: #cfd8dc; background: rgba(0,0,0,0.3); padding: 8px 14px; border-radius: 8px; margin-top: 10px; }
-    
-    /* 미션 팝업 모달 */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
     .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease-in-out; }
     .modal-content { background: white; color: #333; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; border: 4px solid #1976D2; }
     .btn-close { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: #888; }
-    
-    /* 모달 내부 폼 스타일 */
     h2 { font-size: 19px; margin-bottom: 12px; color: #1976D2; }
     .guide-box { background: #E3F2FD; border-left: 5px solid #1976D2; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; line-height: 1.5; }
     .form-group { margin-bottom: 14px; }
     label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 13px; }
     input[type="text"], textarea, select { width: 100%; padding: 10px; border: 2px solid #E0E0E0; border-radius: 10px; font-size: 14px; outline: none; }
     .btn-action { width: 100%; padding: 12px; background: #1976D2; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 8px; }
-    
     @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
   </style>
 </head>
 <body>
-
 <div class="container">
   <header>
     <a href="main.html" class="btn-back">⬅ 마을로</a>
     <h1>🔍 Quest 1: AI 시선관</h1>
-    <div style="width: 70px;"></div> <!-- 중앙 정렬용 빈 공간 -->
+    <div style="width: 70px;"></div>
   </header>
-
   <div class="game-wrapper">
     <div class="canvas-container">
       <canvas id="roomCanvas" width="600" height="360"></canvas>
@@ -55,27 +45,24 @@
   </div>
 </div>
 
-<!-- 미션 모달 창 (이 부분을 퀘스트별로 변경) -->
 <div id="missionModal" class="modal-overlay">
   <div class="modal-content">
     <button class="btn-close" onclick="closeModal()">✖</button>
-    
     <h2>🔍 [1차시] AI가 이미지를 보는 방법</h2>
-    <div class="guide-box">AI는 이미지를 사람처럼 형태가 아닌 숫자(데이터)로 파악합니다.<br>우리 학교의 자원순환 문제를 탐색해 봅시다.</div>
-    
+    <div class="guide-box">AI는 사진을 형태가 아닌 픽셀 숫자 데이터로 읽습니다. 우리 학교 자원순환 문제를 찾고 필요한 데이터를 생각해 보세요.</div>
     <div class="form-group">
       <label>1. 우리 학교 분리수거장에서 가장 자주 발생하는 문제는?</label>
       <select id="q1Problem">
         <option value="음식물 오염">음식물이 묻은 채로 버려짐</option>
         <option value="라벨 미제거">페트병 비닐 라벨을 안 떼고 버림</option>
-        <option value="일반쓰레기 혼합">일반쓰레기와 재활용품이 혼합됨</option>
+        <option value="우유팩 혼합">우유팩을 일반 종이에 섞어 버림</option>
+        <option value="일반쓰레기 혼합">일반쓰레기와 재활용품이 한곳에 섞임</option>
       </select>
     </div>
     <div class="form-group">
-      <label>2. AI 로봇이 이 문제를 스스로 구별하려면 어떤 데이터(사진)를 학습시켜야 할까요?</label>
-      <textarea id="q1Idea" rows="3" placeholder="예: 깨끗한 통과 오염된 통 사진을 각각 많이 수집하여 학습시킨다."></textarea>
+      <label>2. AI 로봇이 이를 스스로 구별하려면 어떤 데이터(사진)를 주어야 할까요?</label>
+      <textarea id="q1Idea" rows="3" placeholder="예: 깨끗한 페트병과 라벨이 붙은 페트병 사진을 다양한 각도에서 100장 학습시켜요."></textarea>
     </div>
-    
     <button class="btn-action" onclick="saveQuest1()">임무 완료 및 저장 (⭐ +20점)</button>
   </div>
 </div>
@@ -91,19 +78,16 @@
   const studentId = localStorage.getItem("elementary_studentId");
   const studentName = localStorage.getItem("elementary_studentName");
 
-  /* ============ 2D 픽셀 방(Room) 엔진 ============ */
   const canvas = document.getElementById("roomCanvas");
   const ctx = canvas.getContext("2d");
   const guide = document.getElementById("actionGuide");
   
-  let player = { x: 300, y: 300, speed: 16, facing: "up" };
-  const desk = { x: 300, y: 120, w: 80, h: 50 }; // 상호작용 가능한 임무 책상
+  let player = { x: 300, y: 300, speed: 16 };
+  const desk = { x: 300, y: 120, w: 80, h: 50 };
   let canInteract = false;
 
   function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // 바닥 타일 (연구소 스타일)
     ctx.fillStyle = "#B0BEC5";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.strokeStyle = "#90A4AE";
@@ -111,38 +95,26 @@
     for(let x=0; x<canvas.width; x+=40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
     for(let y=0; y<canvas.height; y+=40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
 
-    // 북쪽 벽면
-    ctx.fillStyle = "#37474F";
-    ctx.fillRect(0, 0, canvas.width, 60);
-    ctx.fillStyle = "#546E7A";
-    ctx.fillRect(0, 50, canvas.width, 10);
+    ctx.fillStyle = "#37474F"; ctx.fillRect(0, 0, canvas.width, 60);
+    ctx.fillStyle = "#546E7A"; ctx.fillRect(0, 50, canvas.width, 10);
 
-    // 임무 책상 (컴퓨터 모니터 포함)
-    ctx.fillStyle = "#5D4037"; // 책상 상판
-    ctx.fillRect(desk.x - desk.w/2, desk.y - desk.h/2, desk.w, desk.h);
-    ctx.fillStyle = "#212121"; // 모니터
-    ctx.fillRect(desk.x - 20, desk.y - 20, 40, 25);
-    ctx.fillStyle = canInteract ? "#64DD17" : "#0277BD"; // 모니터 화면 (근처에 가면 빛남)
-    ctx.fillRect(desk.x - 16, desk.y - 16, 32, 17);
+    ctx.fillStyle = "#5D4037"; ctx.fillRect(desk.x - desk.w/2, desk.y - desk.h/2, desk.w, desk.h);
+    ctx.fillStyle = "#212121"; ctx.fillRect(desk.x - 20, desk.y - 20, 40, 25);
+    ctx.fillStyle = canInteract ? "#64DD17" : "#0277BD"; ctx.fillRect(desk.x - 16, desk.y - 16, 32, 17);
 
-    // 플레이어
-    ctx.fillStyle = "rgba(0,0,0,0.3)"; ctx.beginPath(); ctx.ellipse(player.x, player.y + 12, 10, 5, 0, 0, Math.PI*2); ctx.fill(); // 그림자
-    ctx.fillStyle = "#e53935"; ctx.fillRect(player.x - 7, player.y - 16, 14, 6); // 모자
-    ctx.fillStyle = "#ffcc80"; ctx.fillRect(player.x - 5, player.y - 9, 10, 8);  // 얼굴
-    ctx.fillStyle = "#1e88e5"; ctx.fillRect(player.x - 6, player.y - 1, 12, 8);  // 옷
-    ctx.fillStyle = "#37474f"; ctx.fillRect(player.x - 5, player.y + 7, 10, 4);  // 바지
+    ctx.fillStyle = "rgba(0,0,0,0.3)"; ctx.beginPath(); ctx.ellipse(player.x, player.y + 12, 10, 5, 0, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = "#e53935"; ctx.fillRect(player.x - 7, player.y - 16, 14, 6);
+    ctx.fillStyle = "#ffcc80"; ctx.fillRect(player.x - 5, player.y - 9, 10, 8);
+    ctx.fillStyle = "#1e88e5"; ctx.fillRect(player.x - 6, player.y - 1, 12, 8);
+    ctx.fillStyle = "#37474f"; ctx.fillRect(player.x - 5, player.y + 7, 10, 4);
   }
 
   function move(dx, dy) {
     player.x = Math.max(20, Math.min(canvas.width - 20, player.x + dx));
     player.y = Math.max(70, Math.min(canvas.height - 20, player.y + dy));
-    
-    // 책상과의 거리 계산
-    const dist = Math.hypot(player.x - desk.x, player.y - desk.y);
-    canInteract = dist < 55;
+    canInteract = Math.hypot(player.x - desk.x, player.y - desk.y) < 55;
     guide.textContent = canInteract ? "🌟 스페이스바를 눌러 퀘스트를 시작하세요!" : "🎮 방향키로 이동하여 [임무 책상] 앞으로 가세요.";
     guide.style.color = canInteract ? "#FFEB3B" : "#cfd8dc";
-    
     render();
   }
 
@@ -162,11 +134,9 @@
 
   window.closeModal = function() {
     document.getElementById("missionModal").classList.remove("active");
-    player.y += 20; // 스페이스바 연속 클릭 방지용 밀어내기
-    move(0,0);
+    player.y += 20; move(0,0);
   };
 
-  /* ============ Firebase 저장 함수 (퀘스트별 변경) ============ */
   window.saveQuest1 = async function() {
     const prob = document.getElementById("q1Problem").value;
     const idea = document.getElementById("q1Idea").value.trim();
@@ -176,7 +146,7 @@
       await addDoc(collection(db, "quest1_records"), { studentId, studentName, problem: prob, dataIdea: idea, createdAt: serverTimestamp() });
       await updateDoc(doc(db, "students", studentId), { score: increment(20) });
       localStorage.setItem("elementary_score", parseInt(localStorage.getItem("elementary_score")||"0") + 20);
-      alert("🎉 Quest 1 임무 완료! (⭐ +20점)");
+      alert("🎉 Quest 1 완료! (⭐ +20점)");
       window.location.href = "main.html";
     } catch(e) { console.error(e); alert("저장 실패"); }
   };
