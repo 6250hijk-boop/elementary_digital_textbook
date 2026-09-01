@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quest 4 - 데이터 라벨링</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    body { background-color: #F0F4F8; color: #2C3E50; padding: 20px; }
+    .card { max-width: 650px; margin: 0 auto; background: white; border-radius: 20px; padding: 25px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); text-align: center; }
+    h2 { color: #2E7D32; margin-bottom: 12px; }
+    .guide-box { background: #E8F5E9; border-left: 5px solid #4CAF50; padding: 12px; border-radius: 8px; margin-bottom: 18px; font-size: 14px; line-height: 1.5; text-align: left; }
+    .item-box { border: 2px dashed #BDBDBD; border-radius: 16px; padding: 20px; margin-bottom: 15px; }
+    .label-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+    .label-btn { padding: 12px; border: 2px solid #E0E0E0; background: white; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 15px; }
+    .label-btn:hover { border-color: #4CAF50; background: #E8F5E9; }
+    .feedback-box { margin-top: 15px; padding: 12px; border-radius: 10px; font-weight: bold; display: none; }
+    .feedback-box.correct { background: #E8F5E9; color: #2E7D32; display: block; }
+    .feedback-box.wrong { background: #FFEBEE; color: #C62828; display: block; }
+    .btn-back { display: inline-block; margin-bottom: 12px; color: #666; text-decoration: none; font-size: 14px; font-weight: bold; float: left; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <a href="main.html" class="btn-back">⬅️ 메인 월드로 돌아가기</a>
+  <div style="clear: both;"></div>
+  <h2>🏷️ [Quest 4] 이미지 데이터 라벨링 미션</h2>
+  <div class="guide-box">AI는 사람이 붙여준 이름표(라벨)를 보고 학습합니다. 물건에 알맞은 올바른 분류 이름표를 붙여주세요!</div>
+
+  <div class="item-box">
+    <div style="font-size: 60px;">🥛</div>
+    <div style="font-size: 18px; font-weight: bold; margin-top: 8px;">다 마시고 깨끗이 씻어 펼친 우유팩</div>
+    <div class="label-options">
+      <button class="label-btn" onclick="labelItem('종이류')">종이류</button>
+      <button class="label-btn" onclick="labelItem('우유팩(종이팩)')">우유팩(종이팩)</button>
+      <button class="label-btn" onclick="labelItem('일반쓰레기')">일반쓰레기</button>
+      <button class="label-btn" onclick="labelItem('플라스틱')">플라스틱</button>
+    </div>
+    <div id="feedback" class="feedback-box"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+    authDomain: "elemeelementary-textbook.firebaseapp.com",
+    projectId: "elemeelementary-textbook",
+    storageBucket: "elemeelementary-textbook.firebasestorage.app",
+    messagingSenderId: "713149004420",
+    appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
+    measurementId: "G-TZT282J9E8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const studentId = localStorage.getItem("elementary_studentId");
+  const studentName = localStorage.getItem("elementary_studentName");
+
+  window.labelItem = async function(ans) {
+    const fb = document.getElementById("feedback");
+    const isCorrect = (ans === "우유팩(종이팩)");
+
+    if (isCorrect) {
+      fb.className = "feedback-box correct";
+      fb.innerHTML = "🎉 정답! 코팅된 우유팩은 따로 모아야 고급 화장지로 재활용돼요. (⭐ +30점)";
+      let score = parseInt(localStorage.getItem("elementary_score") || "10", 10) + 30;
+      localStorage.setItem("elementary_score", score.toString());
+    } else {
+      fb.className = "feedback-box wrong";
+      fb.innerHTML = "❌ 우유팩은 안팎 코팅 때문에 일반 종이와 섞이면 재활용되지 않아요!";
+    }
+
+    try {
+      await addDoc(collection(db, "quest4_labeling"), {
+        studentId, studentName, selectedLabel: ans, isCorrect, createdAt: serverTimestamp()
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+</script>
+</body>
+</html>
