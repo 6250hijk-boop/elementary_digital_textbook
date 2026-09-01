@@ -28,7 +28,7 @@
 
     .container {
       width: 100%;
-      max-width: 860px;
+      max-width: 900px;
       background: var(--poke-panel);
       border-radius: 18px;
       border: 4px solid var(--poke-border);
@@ -83,7 +83,7 @@
       overflow: hidden;
       background: #78c850;
       width: 100%;
-      max-width: 640px;
+      max-width: 800px;
     }
     canvas {
       display: block;
@@ -92,13 +92,13 @@
       image-rendering: pixelated;
     }
 
-    /* 모바일 컨트롤러 (조이스틱 패드 + 스페이스/A 버튼) */
+    /* 모바일 컨트롤러 */
     .mobile-controls {
       display: flex;
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      max-width: 640px;
+      max-width: 800px;
       margin-top: 12px;
       padding: 10px 15px;
       background: #1e282d;
@@ -139,7 +139,7 @@
     .d-right { grid-column: 3; grid-row: 2; }
     .d-down { grid-column: 2; grid-row: 3; }
 
-    /* 대형 액션/스페이스바 버튼 */
+    /* 대형 액션 버튼 */
     .action-group {
       display: flex;
       flex-direction: column;
@@ -199,12 +199,11 @@
 
   <div class="game-wrapper">
     <div class="canvas-container">
-      <canvas id="mapCanvas" width="640" height="420"></canvas>
+      <canvas id="mapCanvas" width="800" height="420"></canvas>
     </div>
 
-    <!-- 모바일 터치 컨트롤러 -->
+    <!-- 모바일 컨트롤러 -->
     <div class="mobile-controls">
-      <!-- 방향키 조이스틱 -->
       <div class="d-pad">
         <button class="d-btn d-up" onpointerdown="startMove(0, -18, 'up')" onpointerup="stopMove()" onpointerleave="stopMove()">▲</button>
         <button class="d-btn d-left" onpointerdown="startMove(-18, 0, 'left')" onpointerup="stopMove()" onpointerleave="stopMove()">◀</button>
@@ -213,7 +212,6 @@
         <button class="d-btn d-down" onpointerdown="startMove(0, 18, 'down')" onpointerup="stopMove()" onpointerleave="stopMove()">▼</button>
       </div>
 
-      <!-- 액션 버튼 (Space / A) -->
       <div class="action-group">
         <button id="actionBtn" class="btn-action-a" onclick="enterBuilding()">
           A
@@ -281,28 +279,28 @@
   const ctx = canvas.getContext("2d");
   const actionBtn = document.getElementById("actionBtn");
 
-  // 캐릭터 상태 (기존보다 크기와 속도를 키움)
   let player = {
-    x: 320,
+    x: 390,
     y: 210,
     speed: 18,
     facing: "down"
   };
 
-  // 6개 차시 건물 (간판 영역 확보 및 문 위치 최적화)
+  // 6개 차시 건물 + 맨 오른쪽 진도 대시보드 건물(7개 배치)
   const buildings = [
-    { id: "quest1.html", name: "1. AI 시선관",     x: 50,  y: 45,  w: 130, h: 85, roofColor: "#d32f2f", roofShadow: "#9a0007", wallColor: "#fff9c4", doorX: 115, doorY: 130 },
-    { id: "quest2.html", name: "2. 기준 연구소",   x: 255, y: 45,  w: 130, h: 85, roofColor: "#1976d2", roofShadow: "#004ba0", wallColor: "#e1f5fe", doorX: 320, doorY: 130 },
-    { id: "quest3.html", name: "3. 데이터 선별소", x: 460, y: 45,  w: 130, h: 85, roofColor: "#388e3c", roofShadow: "#00600f", wallColor: "#e8f5e9", doorX: 525, doorY: 130 },
-    { id: "quest4.html", name: "4. 라벨링 체육관", x: 50,  y: 270, w: 130, h: 85, roofColor: "#f57c00", roofShadow: "#bb4d00", wallColor: "#fff3e0", doorX: 115, doorY: 270 },
-    { id: "quest5.html", name: "5. 탐지 실험실",   x: 255, y: 270, w: 130, h: 85, roofColor: "#7b1fa2", roofShadow: "#4a0072", wallColor: "#f3e5f5", doorX: 320, doorY: 270 },
-    { id: "quest6.html", name: "6. 규약 리그 본부", x: 460, y: 270, w: 130, h: 85, roofColor: "#00796b", roofShadow: "#004c40", wallColor: "#e0f2f1", doorX: 525, doorY: 270 }
+    { id: "quest1.html",    name: "1. AI 시선관",     x: 30,  y: 45,  w: 120, h: 85, roofColor: "#d32f2f", roofShadow: "#9a0007", wallColor: "#fff9c4", doorX: 90,  doorY: 130 },
+    { id: "quest2.html",    name: "2. 기준 연구소",   x: 220, y: 45,  w: 120, h: 85, roofColor: "#1976d2", roofShadow: "#004ba0", wallColor: "#e1f5fe", doorX: 280, doorY: 130 },
+    { id: "quest3.html",    name: "3. 데이터 선별소", x: 410, y: 45,  w: 120, h: 85, roofColor: "#388e3c", roofShadow: "#00600f", wallColor: "#e8f5e9", doorX: 470, doorY: 130 },
+    { id: "quest4.html",    name: "4. 라벨링 체육관", x: 30,  y: 270, w: 120, h: 85, roofColor: "#f57c00", roofShadow: "#bb4d00", wallColor: "#fff3e0", doorX: 90,  doorY: 270 },
+    { id: "quest5.html",    name: "5. 탐지 실험실",   x: 220, y: 270, w: 120, h: 85, roofColor: "#7b1fa2", roofShadow: "#4a0072", wallColor: "#f3e5f5", doorX: 280, doorY: 270 },
+    { id: "quest6.html",    name: "6. 규약 리그 본부", x: 410, y: 270, w: 120, h: 85, roofColor: "#00796b", roofShadow: "#004c40", wallColor: "#e0f2f1", doorX: 470, doorY: 270 },
+    // 맨 오른쪽에 위치한 진도 대시보드 건물
+    { id: "dashboard.html", name: "📊 진도 대시보드", x: 630, y: 155, w: 135, h: 90, roofColor: "#fbc02d", roofShadow: "#c49000", wallColor: "#fffde7", doorX: 695, doorY: 245 }
   ];
 
   let currentTargetBuilding = null;
   let moveInterval = null;
 
-  // 바닥 및 도로 렌더링
   function drawMapBase() {
     ctx.fillStyle = "#78c850";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -315,19 +313,19 @@
       }
     }
 
-    // 모래/자갈 도로
+    // 모래/자갈 도로망
     ctx.fillStyle = "#d8b068";
-    ctx.fillRect(0, 175, canvas.width, 50);
-    ctx.fillRect(95, 125, 40, 150);
-    ctx.fillRect(300, 125, 40, 150);
-    ctx.fillRect(505, 125, 40, 150);
+    ctx.fillRect(0, 175, canvas.width, 50);          // 메인 가로 도로 (우측 끝까지 연결)
+    ctx.fillRect(70, 125, 40, 150);                  // Q1-Q4 도로
+    ctx.fillRect(260, 125, 40, 150);                 // Q2-Q5 도로
+    ctx.fillRect(450, 125, 40, 150);                 // Q3-Q6 도로
+    ctx.fillRect(675, 175, 40, 80);                  // 대시보드 진입로
 
     ctx.fillStyle = "#b89048";
     ctx.fillRect(0, 175, canvas.width, 3);
     ctx.fillRect(0, 222, canvas.width, 3);
   }
 
-  // 건물 렌더링 (확대된 대형 간판 적용)
   function drawBuildings() {
     buildings.forEach(b => {
       // 건물 본체
@@ -351,45 +349,43 @@
 
       // 창문
       ctx.fillStyle = "#81d4fa";
-      ctx.fillRect(b.x + 14, b.y + 38, 22, 18);
-      ctx.fillRect(b.x + b.w - 36, b.y + 38, 22, 18);
-      ctx.strokeRect(b.x + 14, b.y + 38, 22, 18);
-      ctx.strokeRect(b.x + b.w - 36, b.y + 38, 22, 18);
+      ctx.fillRect(b.x + 10, b.y + 38, 20, 18);
+      ctx.fillRect(b.x + b.w - 30, b.y + 38, 20, 18);
+      ctx.strokeRect(b.x + 10, b.y + 38, 20, 18);
+      ctx.strokeRect(b.x + b.w - 30, b.y + 38, 20, 18);
 
-      // ★ 대형 간판 보드 (글씨 크기 및 가독성 대폭 향상)
+      // 대형 간판 보드
       ctx.fillStyle = "#1e282d";
       ctx.fillRect(b.x - 6, b.y - 24, b.w + 12, 22);
-      ctx.strokeStyle = "#ffd54f";
+      ctx.strokeStyle = (b.id === "dashboard.html") ? "#ffeb3b" : "#ffd54f";
       ctx.lineWidth = 2;
       ctx.strokeRect(b.x - 6, b.y - 24, b.w + 12, 22);
 
       ctx.font = "bold 13px 'Pretendard'";
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = (b.id === "dashboard.html") ? "#ffeb3b" : "#ffffff";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(b.name, b.x + b.w / 2, b.y - 13);
     });
   }
 
-  // ★ 확대된 포켓몬 트레이너 캐릭터 그리기 (약 1.5배 확대)
   function drawPlayer(x, y) {
-    // 발밑 그림자
     ctx.fillStyle = "rgba(0,0,0,0.3)";
     ctx.beginPath();
     ctx.ellipse(x, y + 16, 14, 6, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // 트레이너 모자
+    // 모자
     ctx.fillStyle = "#e53935";
     ctx.fillRect(x - 11, y - 24, 22, 9);
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(x - 13, y - 16, 26, 3); // 챙
+    ctx.fillRect(x - 13, y - 16, 26, 3);
 
     // 얼굴
     ctx.fillStyle = "#ffcc80";
     ctx.fillRect(x - 8, y - 13, 16, 12);
 
-    // 눈 (바라보는 방향)
+    // 눈
     ctx.fillStyle = "#212121";
     if (player.facing === "down") {
       ctx.fillRect(x - 5, y - 9, 3, 4);
@@ -400,7 +396,7 @@
       ctx.fillRect(x + 3, y - 9, 3, 4);
     }
 
-    // 몸통 옷 (트레이너 조끼)
+    // 몸통
     ctx.fillStyle = "#1e88e5";
     ctx.fillRect(x - 9, y - 1, 18, 12);
     ctx.fillStyle = "#ffffff";
@@ -413,7 +409,7 @@
     ctx.fillRect(x - 9, y + 15, 6, 5);
     ctx.fillRect(x + 3, y + 15, 6, 5);
 
-    // 머리 위 이름표
+    // 이름표
     ctx.font = "bold 12px 'Pretendard'";
     ctx.fillStyle = "#ffffff";
     ctx.strokeStyle = "#000000";
@@ -429,7 +425,6 @@
     drawPlayer(player.x, player.y);
   }
 
-  // 이동 실행
   function executeMove(dx, dy, dir) {
     player.facing = dir;
     player.x = Math.max(25, Math.min(canvas.width - 25, player.x + dx));
@@ -438,7 +433,6 @@
     render();
   }
 
-  // 터치 조이스틱 지속 이동 지원
   window.startMove = function(dx, dy, dir) {
     if (moveInterval) clearInterval(moveInterval);
     executeMove(dx, dy, dir);
@@ -454,7 +448,6 @@
     }
   };
 
-  // 문 앞 도달 검사
   function checkBuildingEntrance() {
     currentTargetBuilding = null;
     buildings.forEach(b => {
@@ -471,14 +464,12 @@
     }
   }
 
-  // 건물 들어가기
   window.enterBuilding = function() {
     if (currentTargetBuilding) {
       window.location.href = currentTargetBuilding.id;
     }
   };
 
-  // 키보드 조작 이벤트
   window.addEventListener("keydown", (e) => {
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
       e.preventDefault();
