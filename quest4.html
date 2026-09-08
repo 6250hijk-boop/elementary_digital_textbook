@@ -461,6 +461,8 @@
     renderPracticeClassBtns();
   }
 
+  let practiceBgImage = null;
+
   function setupPracticeCanvas() {
     const ic = document.getElementById('practice-img-canvas');
     const dc = document.getElementById('practice-draw-canvas');
@@ -468,11 +470,42 @@
     ic.height = dc.height = 360;
 
     const ctx = ic.getContext('2d');
-    ctx.fillStyle = '#263238'; ctx.fillRect(0,0,600,360);
+    ctx.fillStyle = '#263238'; ctx.fillRect(0, 0, ic.width, ic.height);
     ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 20px Pretendard'; ctx.textAlign = 'center';
-    ctx.fillText('📦 예시: 페트병과 우유팩 수집 사진', 300, 180);
-    ctx.fillStyle = '#B0BEC5'; ctx.font = '14px Pretendard';
-    ctx.fillText('마우스/손가락으로 드래그해서 상자를 그려보세요!', 300, 210);
+    ctx.fillText('📦 예시: 페트병과 우유팩 수집 사진 불러오는 중...', 300, 180);
+
+    const img = new Image();
+    img.onload = () => {
+      practiceBgImage = img;
+      ctx.clearRect(0, 0, ic.width, ic.height);
+      ctx.fillStyle = '#111111';
+      ctx.fillRect(0, 0, ic.width, ic.height);
+
+      // 600x360 캔버스에 가로세로 비율 유지하며 중앙 맞춤 렌더링
+      const s = Math.min(ic.width / img.width, ic.height / img.height);
+      const dw = img.width * s;
+      const dh = img.height * s;
+      const dx = (ic.width - dw) / 2;
+      const dy = (ic.height - dh) / 2;
+      ctx.drawImage(img, dx, dy, dw, dh);
+      redrawPractice();
+    };
+
+    img.onerror = () => {
+      // 대소문자 경로 호환 (Images/labelex.png)
+      if (!img.src.includes('Images/')) {
+        img.src = 'Images/labelex.png';
+      } else {
+        ctx.fillStyle = '#263238'; ctx.fillRect(0, 0, 600, 360);
+        ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 20px Pretendard'; ctx.textAlign = 'center';
+        ctx.fillText('📦 예시: 페트병과 우유팩 수집 사진', 300, 180);
+        ctx.fillStyle = '#B0BEC5'; ctx.font = '14px Pretendard';
+        ctx.fillText('마우스/손가락으로 드래그해서 상자를 그려보세요!', 300, 210);
+        redrawPractice();
+      }
+    };
+
+    img.src = 'images/labelex.png';
     redrawPractice();
   }
 
