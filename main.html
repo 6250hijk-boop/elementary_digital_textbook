@@ -16,11 +16,18 @@
       --primary-light: #E8F5E9;
       --accent: #FFB300;
       --card-bg: #FFFFFF;
-      --text: #1B5E20;
       --text-dark: #263238;
+      --border: #C8E6C9;
+      --muted: #558B2F;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     body {
       background: #F1F8E9;
@@ -30,6 +37,7 @@
       flex-direction: column;
       align-items: center;
       padding: 16px;
+      font-size: 18px;
     }
 
     .app-container {
@@ -51,7 +59,7 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 16px;
     }
 
     .user-profile {
@@ -61,27 +69,28 @@
     }
 
     .avatar-box {
-      font-size: 42px;
+      font-size: 44px;
       background: var(--primary-light);
-      padding: 8px 14px;
-      border-radius: 18px;
+      padding: 10px 16px;
+      border-radius: 20px;
     }
 
     .user-info h2 {
       font-family: 'Jua', sans-serif;
-      font-size: 26px;
+      font-size: 28px;
       color: var(--primary);
     }
 
     .user-info p {
-      font-size: 15px;
+      font-size: 17px;
       font-weight: 600;
       color: #558B2F;
     }
 
     .status-badges {
       display: flex;
-      gap: 12px;
+      gap: 10px;
+      align-items: center;
       flex-wrap: wrap;
     }
 
@@ -98,16 +107,118 @@
       gap: 6px;
     }
 
+    .badge-team {
+      background: #E1F5FE;
+      border: 2px solid #4FC3F7;
+      color: #0277BD;
+    }
+
+    .btn-team {
+      background: linear-gradient(135deg, #0288D1, #0277BD);
+      border: none;
+      color: white;
+      font-family: 'Jua', sans-serif;
+      font-size: 18px;
+      padding: 10px 18px;
+      border-radius: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(2, 119, 189, 0.25);
+      transition: transform 0.1s;
+    }
+
+    .btn-team:active {
+      transform: scale(0.96);
+    }
+
     .btn-logout {
       background: #FFEBEE;
       border: 2px solid #FFCDD2;
       color: #C62828;
       font-family: 'Jua', sans-serif;
-      font-size: 16px;
-      padding: 8px 16px;
+      font-size: 17px;
+      padding: 9px 16px;
       border-radius: 16px;
       cursor: pointer;
       transition: all 0.2s;
+    }
+
+    /* 팀 코드 입력 모달 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.6);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: #FFFFFF;
+      border-radius: 24px;
+      max-width: 440px;
+      width: 100%;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      text-align: center;
+    }
+
+    .modal-card h3 {
+      font-family: 'Jua', sans-serif;
+      font-size: 26px;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .modal-card p {
+      font-size: 16px;
+      color: #546E7A;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 20px;
+      font-weight: 700;
+      border: 3px solid #A5D6A7;
+      border-radius: 16px;
+      text-align: center;
+      outline: none;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .modal-input:focus {
+      border-color: var(--primary);
+    }
+
+    .modal-btns {
+      display: flex;
+      gap: 12px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 16px;
+      font-family: 'Jua', sans-serif;
+      font-size: 20px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .modal-btn.cancel {
+      background: #ECEFF1;
+      color: #455A64;
+    }
+
+    .modal-btn.save {
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: white;
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
     }
 
     /* 빠른 메뉴 바 (설문조사 & 대시보드) */
@@ -146,7 +257,7 @@
     }
 
     .banner-text p {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 500;
       opacity: 0.95;
     }
@@ -155,7 +266,7 @@
       font-size: 40px;
     }
 
-    /* 메인 퀘스트 그리드 (웨일북 & 태블릿 & 스마트폰 완벽 대응) */
+    /* 메인 퀘스트 그리드 */
     .section-title {
       font-family: 'Jua', sans-serif;
       font-size: 28px;
@@ -207,18 +318,18 @@
 
     .quest-title-wrap h4 {
       font-family: 'Jua', sans-serif;
-      font-size: 22px;
+      font-size: 24px;
       color: var(--primary);
     }
 
     .quest-title-wrap span {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: #81C784;
     }
 
     .quest-desc {
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 600;
       color: #455A64;
       line-height: 1.5;
@@ -234,7 +345,7 @@
       border: none;
       border-radius: 18px;
       font-family: 'Jua', sans-serif;
-      font-size: 20px;
+      font-size: 22px;
       cursor: pointer;
       text-decoration: none;
       text-align: center;
@@ -253,9 +364,9 @@
       background: #FFFFFF;
       border: 2px solid #C8E6C9;
       border-radius: 20px;
-      padding: 16px 20px;
+      padding: 18px 22px;
       text-align: center;
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 600;
       color: #37474F;
     }
@@ -263,15 +374,14 @@
     footer strong {
       color: var(--primary);
       font-family: 'Jua', sans-serif;
-      font-size: 18px;
+      font-size: 20px;
     }
 
-    /* 반응형 레이아웃 조정 */
     @media (max-width: 600px) {
       header { padding: 16px; flex-direction: column; align-items: flex-start; }
-      .user-info h2 { font-size: 22px; }
+      .user-info h2 { font-size: 24px; }
       .quest-grid { grid-template-columns: 1fr; }
-      .btn-quest-start { font-size: 18px; padding: 14px; }
+      .btn-quest-start { font-size: 20px; padding: 14px; }
     }
   </style>
 </head>
@@ -292,9 +402,24 @@
     <div class="status-badges">
       <div class="badge-pill" id="dispScore">⭐ 10점</div>
       <div class="badge-pill" id="dispBadge">🏅 신입 탐정</div>
+      <div class="badge-pill badge-team" id="dispTeamBadge">👥 팀: 없음</div>
+      <button class="btn-team" id="team-code-btn">🏷️ 팀코드 입력</button>
       <button class="btn-logout" onclick="logout()">로그아웃</button>
     </div>
   </header>
+
+  <!-- 팀 코드 입력 모달 -->
+  <div id="team-modal" class="modal-overlay">
+    <div class="modal-card">
+      <h3>👥 우리 모둠 팀코드 입력</h3>
+      <p>선생님이나 모둠 친구와 함께 정한<br>팀코드를 입력하면 수집한 데이터를 공유할 수 있어요!</p>
+      <input type="text" id="team-code-input" class="modal-input" placeholder="예: 1모둠 또는 TEAM-A" maxlength="20" />
+      <div class="modal-btns">
+        <button id="team-cancel-btn" class="modal-btn cancel">취소</button>
+        <button id="team-save-btn" class="modal-btn save">저장하기</button>
+      </div>
+    </div>
+  </div>
 
   <!-- 설문조사 & 대시보드 빠른 이동 바 -->
   <div class="quick-bar">
@@ -422,7 +547,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, onSnapshot, collection, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, onSnapshot, collection, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
@@ -445,6 +570,58 @@
     window.location.href = "index.html";
   }
 
+  // 팀 코드 UI 제어
+  const teamBtn = document.getElementById('team-code-btn');
+  const teamModal = document.getElementById('team-modal');
+  const teamInput = document.getElementById('team-code-input');
+  const saveBtn = document.getElementById('team-save-btn');
+  const cancelBtn = document.getElementById('team-cancel-btn');
+  const dispTeamBadge = document.getElementById('dispTeamBadge');
+
+  function updateTeamDisplay(code) {
+    if (code) {
+      dispTeamBadge.textContent = `👥 팀: ${code}`;
+      dispTeamBadge.style.display = 'inline-flex';
+    } else {
+      dispTeamBadge.textContent = `👥 팀: 없음`;
+    }
+  }
+
+  // 초기 팀코드 표시
+  const currentTeamCode = localStorage.getItem('elementary_teamCode') || '';
+  updateTeamDisplay(currentTeamCode);
+
+  teamBtn.addEventListener('click', () => {
+    teamInput.value = localStorage.getItem('elementary_teamCode') || '';
+    teamModal.style.display = 'flex';
+    teamInput.focus();
+  });
+
+  cancelBtn.addEventListener('click', () => {
+    teamModal.style.display = 'none';
+  });
+
+  saveBtn.addEventListener('click', async () => {
+    const code = teamInput.value.trim();
+    if (!code) {
+      alert('팀 코드를 입력해주세요!');
+      return;
+    }
+    localStorage.setItem('elementary_teamCode', code);
+    updateTeamDisplay(code);
+
+    try {
+      if (studentId) {
+        const userRef = doc(db, 'students', studentId);
+        await setDoc(userRef, { teamCode: code }, { merge: true });
+      }
+      alert(`🎉 '${code}' 팀코드가 등록되었습니다!`);
+    } catch (e) {
+      console.error("팀코드 저장 에러:", e);
+    }
+    teamModal.style.display = 'none';
+  });
+
   // 실시간 학생 데이터 동기화
   onSnapshot(doc(db, "students", studentId), (docSnap) => {
     if (docSnap.exists()) {
@@ -453,6 +630,10 @@
       document.getElementById("dispAiName").textContent = `🤖 AI 파트너: ${d.aiPartnerName || aiName}`;
       document.getElementById("dispScore").textContent = `⭐ ${d.score || 0}점`;
       document.getElementById("dispBadge").textContent = `🏅 ${d.badge || '신입 탐정'}`;
+      if (d.teamCode) {
+        localStorage.setItem('elementary_teamCode', d.teamCode);
+        updateTeamDisplay(d.teamCode);
+      }
     } else {
       document.getElementById("dispStudent").textContent = `${studentName} (${studentId})`;
       document.getElementById("dispAiName").textContent = `🤖 AI 파트너: ${aiName}`;

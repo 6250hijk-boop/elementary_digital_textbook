@@ -21,7 +21,13 @@
       --muted: #558B2F;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     body {
       background: #F1F8E9;
@@ -31,11 +37,12 @@
       flex-direction: column;
       align-items: center;
       padding: 16px;
+      font-size: 18px;
     }
 
     .page-wrap {
       width: 100%;
-      max-width: 800px;
+      max-width: 840px;
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -56,11 +63,11 @@
       background: #E8F5E9;
       border: 2px solid #A5D6A7;
       color: #2E7D32;
-      padding: 8px 16px;
+      padding: 10px 18px;
       border-radius: 14px;
       text-decoration: none;
       font-family: 'Jua', sans-serif;
-      font-size: 16px;
+      font-size: 18px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -69,22 +76,22 @@
     .header-score {
       background: #FFF9C4;
       border: 2px solid #FBC02D;
-      padding: 6px 16px;
+      padding: 8px 18px;
       border-radius: 16px;
       font-family: 'Jua', sans-serif;
-      font-size: 18px;
+      font-size: 20px;
       color: #F57F17;
     }
 
     .page-title {
       font-family: 'Jua', sans-serif;
-      font-size: 28px;
+      font-size: 30px;
       color: var(--primary);
       margin-top: 6px;
     }
 
     .page-desc {
-      font-size: 16px;
+      font-size: 17px;
       color: #455A64;
       font-weight: 600;
       line-height: 1.5;
@@ -94,15 +101,15 @@
       background: var(--card-bg);
       border: 3px solid var(--border);
       border-radius: 20px;
-      padding: 20px;
+      padding: 22px;
       box-shadow: 0 6px 16px rgba(0,0,0,0.04);
     }
 
     .card h3 {
       font-family: 'Jua', sans-serif;
-      font-size: 22px;
+      font-size: 24px;
       color: var(--primary);
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -111,7 +118,7 @@
     .upload-zone {
       border: 3px dashed #81C784;
       border-radius: 18px;
-      padding: 30px 20px;
+      padding: 36px 20px;
       text-align: center;
       cursor: pointer;
       transition: all .2s;
@@ -124,9 +131,9 @@
       transform: scale(1.01);
     }
 
-    .upload-zone .icon { font-size: 48px; margin-bottom: 8px; }
-    .upload-zone h4 { font-family: 'Jua', sans-serif; font-size: 22px; color: var(--primary); margin-bottom: 6px; }
-    .upload-zone p { font-size: 14px; font-weight: 600; color: #666; }
+    .upload-zone .icon { font-size: 52px; margin-bottom: 10px; }
+    .upload-zone h4 { font-family: 'Jua', sans-serif; font-size: 24px; color: var(--primary); margin-bottom: 8px; }
+    .upload-zone p { font-size: 16px; font-weight: 600; color: #558B2F; }
 
     #file-input { display: none; }
 
@@ -137,7 +144,7 @@
       gap: 6px;
       padding: 12px 20px;
       border: none;
-      border-radius: 14px;
+      border-radius: 16px;
       font-family: 'Jua', sans-serif;
       font-size: 18px;
       cursor: pointer;
@@ -153,25 +160,43 @@
 
     .btn-primary:active { transform: translateY(2px); }
 
+    .btn-info {
+      background: linear-gradient(135deg, #0288D1, #0277BD);
+      color: white;
+      box-shadow: 0 4px 12px rgba(2, 119, 189, 0.2);
+    }
+
     .btn-ghost {
       background: #FFFFFF;
       border: 2px solid #C8E6C9;
       color: #2E7D32;
     }
 
+    .btn-tab {
+      background: #ECEFF1;
+      color: #455A64;
+      border: 2px solid transparent;
+    }
+
+    .btn-tab.active {
+      background: #E8F5E9;
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .preview-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-      gap: 10px;
-      margin-top: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
     }
 
     .preview-item {
       position: relative;
       aspect-ratio: 1;
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
       border: 2px solid var(--border);
       background: #eee;
@@ -191,10 +216,10 @@
       background: rgba(229, 57, 53, 0.9);
       border: none;
       border-radius: 50%;
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       color: white;
-      font-size: 14px;
+      font-size: 16px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -204,8 +229,8 @@
     .status-badge {
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      padding: 3px 4px;
-      font-size: 11px;
+      padding: 4px;
+      font-size: 12px;
       font-weight: bold;
       text-align: center;
     }
@@ -217,9 +242,9 @@
     .progress-wrap {
       background: #E0E0E0;
       border-radius: 20px;
-      height: 14px;
+      height: 16px;
       overflow: hidden;
-      margin: 12px 0 6px 0;
+      margin: 14px 0 8px 0;
     }
 
     .progress-bar {
@@ -230,46 +255,54 @@
     }
 
     .progress-text {
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 600;
       color: #2E7D32;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
     }
 
     .uploaded-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 10px 14px;
+      gap: 14px;
+      padding: 12px 16px;
       background: #F9FBE7;
-      border: 1px solid #DCEDC8;
-      border-radius: 12px;
-      margin-bottom: 8px;
+      border: 2px solid #DCEDC8;
+      border-radius: 16px;
+      margin-bottom: 10px;
     }
 
     .uploaded-thumb {
-      width: 50px;
-      height: 50px;
-      border-radius: 8px;
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
       object-fit: cover;
       flex-shrink: 0;
+      border: 1px solid #C8E6C9;
     }
 
     .del-btn {
       background: #FFEBEE;
       border: 1px solid #FFCDD2;
-      border-radius: 8px;
-      padding: 6px 12px;
+      border-radius: 10px;
+      padding: 8px 14px;
       color: #C62828;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: bold;
       cursor: pointer;
     }
 
     .alert {
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-size: 15px;
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 16px;
       font-weight: 600;
       margin-bottom: 12px;
     }
@@ -281,7 +314,7 @@
 
 <div class="page-wrap">
   <header>
-    <a href="main.html" class="btn-back">⬅ 마을로</a>
+    <a href="main.html" class="btn-back">⬅ 메인화면</a>
     <div class="header-score" id="dispScore">⭐ 0점</div>
   </header>
 
@@ -299,17 +332,17 @@
       onclick="document.getElementById('file-input').click()"
       ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFiles(event)">
       <div class="icon">📸</div>
-      <h4>사진을 여기에 드래그하거나 클릭하여 선택하세요!</h4>
+      <h4>사진을 여기에 끌어다 놓거나 클릭하여 선택하세요!</h4>
       <p>JPG, PNG, WEBP 지원 · 600×600 자동 변환 · 최대 20장</p>
     </div>
     <input type="file" id="file-input" accept="image/*" multiple onchange="handleFiles(this.files)">
 
     <div id="pending-card" style="display:none; margin-top:16px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-        <span style="font-size:15px; font-weight:bold; color:#2E7D32;">대기 중인 사진: <strong id="pending-count">0</strong>장</span>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+        <span style="font-size:17px; font-weight:bold; color:#2E7D32;">대기 중인 사진: <strong id="pending-count">0</strong>장</span>
         <div style="display:flex; gap:8px;">
-          <button class="btn btn-primary" id="upload-btn" onclick="uploadAll()" style="padding:8px 16px; font-size:16px;">☁️ 업로드 시작</button>
-          <button class="btn btn-ghost" onclick="clearPending()" style="padding:8px 12px; font-size:14px;">초기화</button>
+          <button class="btn btn-primary" id="upload-btn" onclick="uploadAll()">☁️ 업로드 시작</button>
+          <button class="btn btn-ghost" onclick="clearPending()">초기화</button>
         </div>
       </div>
 
@@ -322,16 +355,22 @@
     </div>
   </div>
 
-  <!-- 올린 사진 목록 -->
+  <!-- 올린 사진 목록 및 팀 활동 내역 -->
   <div class="card">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
-      <h3 style="margin:0;">☁️ 내가 등록한 사진 목록 (<span id="my-count">0</span>장)</h3>
-      <div style="display:flex; gap:8px;">
-        <button class="btn btn-ghost" style="font-size:14px; padding:6px 12px;" onclick="loadMyUploads()">🔄 새로고침</button>
-        <a href="quest4.html" class="btn btn-primary" style="font-size:16px; padding:8px 16px;">라벨링 체육관 가기 🏷️</a>
-      </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+      <h3 style="margin:0;">☁️ 사진 데이터 목록 (<span id="my-count">0</span>장)</h3>
+      <a href="quest4.html" class="btn btn-primary" style="font-size:17px;">라벨링 체육관 가기 🏷️</a>
     </div>
-    <div id="my-uploads"><div style="text-align:center; padding:20px; color:#78909C;">데이터를 로딩 중입니다...</div></div>
+
+    <!-- 탭 전환 바 (내 사진 / 팀 모둠 사진) -->
+    <div class="filter-bar">
+      <button class="btn btn-tab active" id="tab-my" onclick="switchView('my')">👤 내가 올린 사진</button>
+      <button class="btn btn-tab" id="tab-team" onclick="switchView('team')">👥 팀 활동 내역 보기</button>
+    </div>
+
+    <div id="my-uploads">
+      <div style="text-align:center; padding:24px; color:#78909C;">데이터를 로딩 중입니다...</div>
+    </div>
   </div>
 </div>
 
@@ -368,14 +407,18 @@
   }
 
   let pendingFiles = [];
+  let currentMode = 'my'; // 'my' or 'team'
 
   // 초기 로그인 유저 정보 및 점수 로드
   async function initUser() {
     try {
-      const docSnap = await db.collection("students").doc(studentId).get();
+      const docSnap = await db.collection('students').doc(studentId).get();
       if (docSnap.exists) {
         const d = docSnap.data();
         document.getElementById('dispScore').textContent = `⭐ ${d.score || 0}점`;
+        if (d.teamCode) {
+          localStorage.setItem('elementary_teamCode', d.teamCode);
+        }
       } else {
         const score = localStorage.getItem("elementary_score") || "0";
         document.getElementById('dispScore').textContent = `⭐ ${score}점`;
@@ -383,7 +426,22 @@
     } catch(e) {
       console.error(e);
     }
-    loadMyUploads();
+    loadCurrentView();
+  }
+
+  function switchView(mode) {
+    currentMode = mode;
+    document.getElementById('tab-my').classList.toggle('active', mode === 'my');
+    document.getElementById('tab-team').classList.toggle('active', mode === 'team');
+    loadCurrentView();
+  }
+
+  function loadCurrentView() {
+    if (currentMode === 'team') {
+      loadTeamUploads();
+    } else {
+      loadMyUploads();
+    }
   }
 
   // 600×600 리사이징 -> Blob
@@ -482,6 +540,7 @@
     document.getElementById('progress-wrap').style.display = 'block';
 
     let done = 0; const total = toUpload.length;
+    const teamCode = localStorage.getItem('elementary_teamCode') || '';
 
     const updateStatus = () => {
       document.getElementById('progress-bar').style.width = (done / total * 100) + '%';
@@ -512,7 +571,8 @@
             labeled: false,
             width: TARGET_SIZE,
             height: TARGET_SIZE,
-            created_at: new Date().toISOString()
+            created_at: new Date().toISOString(),
+            teamCode: teamCode
           });
 
           pf.status = 'done';
@@ -531,7 +591,7 @@
     document.getElementById('upload-status').textContent = `✅ ${done}장 업로드 완료!`;
     document.getElementById('progress-bar').style.width = '100%';
     btn.disabled = false;
-    loadMyUploads();
+    loadCurrentView();
 
     // 점수 보상 (+20점)
     try {
@@ -555,6 +615,7 @@
     }
   }
 
+  // 내가 올린 사진 목록
   async function loadMyUploads() {
     try {
       const snap = await db.collection('uploads')
@@ -564,7 +625,7 @@
       document.getElementById('my-count').textContent = snap.size;
       if (snap.empty) {
         document.getElementById('my-uploads').innerHTML =
-          `<div style="text-align:center; padding:20px; color:#78909C; font-weight:600;">아직 수집한 사진이 없습니다. 상단에서 사진을 올려보세요! 📸</div>`;
+          `<div style="text-align:center; padding:24px; color:#78909C; font-weight:600;">아직 수집한 사진이 없습니다. 상단에서 사진을 올려보세요! 📸</div>`;
         return;
       }
 
@@ -574,15 +635,79 @@
         return `<div class="uploaded-item">
           <img class="uploaded-thumb" src="${d.url}" onerror="this.style.opacity='0.3'">
           <div style="flex:1; min-width:80px; overflow:hidden;">
-            <div style="font-size:15px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${d.originalName || '사진 데이터'}</div>
-            <div style="font-size:12px; color:#666;">규격: ${d.width || 600}×${d.height || 600}px</div>
+            <div style="font-size:16px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${d.originalName || '사진 데이터'}</div>
+            <div style="font-size:13px; color:#666;">규격: ${d.width || 600}×${d.height || 600}px</div>
           </div>
-          <div style="font-size:13px; font-weight:bold; padding:4px 10px; border-radius:8px; flex-shrink:0;
+          <div style="font-size:14px; font-weight:bold; padding:6px 12px; border-radius:10px; flex-shrink:0;
             ${d.labeled ? 'background:#E8F5E9; color:#2E7D32;' : 'background:#FFF8E1; color:#F57F17;'}">
             ${d.labeled ? '✅ 라벨링 완료' : '⏳ 미완료'}
           </div>
-          <div style="font-size:12px; color:#999; flex-shrink:0;">${date}</div>
-          <button class="del-btn" onclick="deleteUpload('${doc.id}')">🗑️</button>
+          <div style="font-size:13px; color:#999; flex-shrink:0;">${date}</div>
+          <button class="del-btn" onclick="deleteUpload('${doc.id}')">🗑️ 삭제</button>
+        </div>`;
+      }).join('');
+
+    } catch (e) {
+      document.getElementById('my-uploads').innerHTML =
+        `<div style="color:#C62828; padding:16px; font-weight:bold;">로딩 오류: ${e.message}</div>`;
+    }
+  }
+
+  // 팀 활동 내역 조회
+  async function loadTeamUploads() {
+    const teamCode = localStorage.getItem('elementary_teamCode');
+    if (!teamCode) {
+      document.getElementById('my-uploads').innerHTML =
+        `<div style="text-align:center; padding:24px; color:#E65100; font-weight:bold;">
+          ⚠️ 아직 팀 코드가 등록되지 않았습니다.<br>
+          <a href="main.html" style="color:#0277BD; text-decoration:underline;">메인 화면으로 가서 팀 코드를 입력</a>해주세요!
+        </div>`;
+      document.getElementById('my-count').textContent = '0';
+      return;
+    }
+
+    try {
+      const snap = await db.collection('uploads')
+        .where('teamCode', '==', teamCode)
+        .get();
+
+      document.getElementById('my-count').textContent = snap.size;
+      if (snap.empty) {
+        document.getElementById('my-uploads').innerHTML =
+          `<div style="text-align:center; padding:24px; color:#78909C; font-weight:600;">
+            👥 우리 모둠('${teamCode}') 친구들이 아직 등록한 사진이 없습니다.<br>친구들과 함께 사진을 올려보세요!
+          </div>`;
+        return;
+      }
+
+      // 날짜 내림차순 정렬
+      const docs = snap.docs.sort((a, b) => {
+        const da = a.data().created_at || '';
+        const db = b.data().created_at || '';
+        return db.localeCompare(da);
+      });
+
+      document.getElementById('my-uploads').innerHTML = docs.map(doc => {
+        const d = doc.data();
+        const date = d.created_at ? d.created_at.slice(0, 16).replace('T', ' ') : '';
+        const isMine = d.userId === studentId;
+        const uploaderLabel = isMine ? '나' : (d.userName || '모둠원');
+        return `<div class="uploaded-item" style="${isMine ? 'border-color:#81C784;' : 'border-color:#90CAF9; background:#F0F8FF;'}">
+          <img class="uploaded-thumb" src="${d.url}" onerror="this.style.opacity='0.3'">
+          <div style="flex:1; min-width:80px; overflow:hidden;">
+            <div style="font-size:16px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+              ${d.originalName || '사진 데이터'}
+            </div>
+            <div style="font-size:13px; color:#546E7A; font-weight:600;">
+              👤 올린이: <strong style="color:${isMine ? '#2E7D32' : '#0277BD'}">${uploaderLabel}</strong> (${d.width || 600}×${d.height || 600}px)
+            </div>
+          </div>
+          <div style="font-size:14px; font-weight:bold; padding:6px 12px; border-radius:10px; flex-shrink:0;
+            ${d.labeled ? 'background:#E8F5E9; color:#2E7D32;' : 'background:#FFF8E1; color:#F57F17;'}">
+            ${d.labeled ? '✅ 라벨링 완료' : '⏳ 미완료'}
+          </div>
+          <div style="font-size:13px; color:#999; flex-shrink:0;">${date}</div>
+          ${isMine ? `<button class="del-btn" onclick="deleteUpload('${doc.id}')">🗑️ 삭제</button>` : ''}
         </div>`;
       }).join('');
 
@@ -596,7 +721,7 @@
     if (!confirm('이 사진을 정말 삭제할까요?')) return;
     try {
       await db.collection('uploads').doc(docId).delete();
-      loadMyUploads();
+      loadCurrentView();
     } catch(e) {
       alert('삭제 실패: ' + e.message);
     }

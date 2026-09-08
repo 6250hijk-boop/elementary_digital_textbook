@@ -230,13 +230,13 @@
 
       // 설문 완료 플래그 로컬 저장
       localStorage.setItem("elementary_surveyDone", "true");
-      alert("사전 설문조사가 완료되었습니다! 탐정 마을로 이동합니다.");
+      alert("사전 설문조사가 완료되었습니다! 메인화면으로 이동합니다.");
       window.location.href = "main.html";
     } catch (err) {
       console.error(err);
       alert("설문 저장 중 오류가 발생했습니다: " + err.message);
       submitBtn.disabled = false;
-      submitBtn.textContent = "설문 제출하고 탐정 마을 입장하기 🚀";
+      submitBtn.textContent = "설문 제출하고 메인화면 입장하기 🚀";
     }
   });
 </script>
