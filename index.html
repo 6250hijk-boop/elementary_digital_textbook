@@ -142,13 +142,6 @@
       box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.15);
     }
 
-    .btn-group {
-      margin-top: 22px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
     .btn-start {
       width: 100%;
       padding: 18px;
@@ -161,6 +154,7 @@
       cursor: pointer;
       box-shadow: 0 6px 16px rgba(46, 125, 50, 0.3);
       transition: all 0.2s;
+      margin-top: 10px;
     }
 
     .btn-start:active {
@@ -168,21 +162,14 @@
       box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3);
     }
 
-    .btn-guest {
-      width: 100%;
-      padding: 15px;
-      background-color: #ECEFF1;
-      color: #37474F;
-      border: 2px solid #CFD8DC;
-      border-radius: 18px;
-      font-family: 'Jua', sans-serif;
-      font-size: 19px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-guest:active {
-      background-color: #CFD8DC;
+    .admin-hint {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #78909C;
+      background: #F5F5F5;
+      padding: 8px 12px;
+      border-radius: 12px;
+      display: inline-block;
     }
 
     @media (max-width: 480px) {
@@ -192,7 +179,6 @@
       label { font-size: 16px; }
       input[type="text"], input[type="password"] { font-size: 16px; padding: 14px; }
       .btn-start { font-size: 19px; padding: 16px; }
-      .btn-guest { font-size: 17px; padding: 14px; }
     }
   </style>
 </head>
@@ -219,7 +205,7 @@
       <label for="loginPw">🔒 비밀번호</label>
       <input type="password" id="loginPw" placeholder="비밀번호 입력">
     </div>
-    <button class="btn-start" id="loginSubmitBtn">🚀 로그인하고 탐정 마을 입장</button>
+    <button class="btn-start" id="loginSubmitBtn">🚀 로그인하고 입장하기</button>
   </div>
 
   <!-- 2. 계정 생성 (회원가입) 폼 -->
@@ -247,9 +233,8 @@
     <button class="btn-start" id="signupSubmitBtn">🎉 계정 생성 및 바로 입장</button>
   </div>
 
-  <!-- 체험용 임시 입장 버튼 -->
-  <div class="btn-group">
-    <button class="btn-guest" id="guestBtn">⚡ 체험용 임시 입장 (로그인 없이 바로 시작)</button>
+  <div class="admin-hint">
+    👑 관리자 접속: 아이디 <b>admin</b> / 비밀번호 <b>admin</b>
   </div>
 </div>
 
@@ -290,7 +275,7 @@
     }
   };
 
-  // 1. 로그인 처리
+  // 1. 로그인 처리 (admin/admin 시 관리자 페이지로 이동)
   document.getElementById("loginSubmitBtn").addEventListener("click", async () => {
     const uId = document.getElementById("loginId").value.trim();
     const uPw = document.getElementById("loginPw").value.trim();
@@ -299,6 +284,17 @@
       return alert("아이디와 비밀번호를 모두 입력해주세요!");
     }
 
+    // 👑 관리자 로그인 처리 (admin / admin)
+    if (uId === "admin" && uPw === "admin") {
+      localStorage.setItem("elementary_studentId", "admin");
+      localStorage.setItem("elementary_studentName", "관리자");
+      localStorage.setItem("elementary_isAdmin", "true");
+      alert("👑 관리자 계정으로 로그인했습니다!\n관리자 페이지로 이동합니다.");
+      window.location.href = "admin.html";
+      return;
+    }
+
+    // 일반 학생 로그인 처리
     try {
       const userRef = doc(db, "students", uId);
       const userSnap = await getDoc(userRef);
@@ -316,6 +312,7 @@
       localStorage.setItem("elementary_studentId", uId);
       localStorage.setItem("elementary_studentName", userData.studentName || uId);
       localStorage.setItem("elementary_aiName", userData.aiPartnerName || "에코봇");
+      localStorage.removeItem("elementary_isAdmin");
 
       window.location.href = "main.html";
     } catch (e) {
@@ -345,7 +342,7 @@
         return alert("이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요!");
       }
 
-      // Firestore에 새 사용자 계정 생성
+      // Firestore에 새 사용자 계정 생성 (비밀번호 및 기본 정보 포함)
       await setDoc(userRef, {
         studentId: sId,
         password: sPw,
@@ -353,6 +350,7 @@
         aiPartnerName: aiName,
         score: 10,
         badge: "신입 탐정",
+        questsDone: 0,
         createdAt: serverTimestamp(),
         lastActive: serverTimestamp()
       });
@@ -360,6 +358,7 @@
       localStorage.setItem("elementary_studentId", sId);
       localStorage.setItem("elementary_studentName", nickname);
       localStorage.setItem("elementary_aiName", aiName);
+      localStorage.removeItem("elementary_isAdmin");
 
       alert(`🎉 계정이 성공적으로 생성되었습니다!\n환영합니다, ${nickname} 탐정님!`);
       window.location.href = "main.html";
@@ -367,16 +366,6 @@
       console.error(e);
       alert("계정 생성 중 오류가 발생했습니다: " + e.message);
     }
-  });
-
-  // 3. 체험용 임시 입장
-  document.getElementById("guestBtn").addEventListener("click", () => {
-    const guestId = "Guest_" + Math.floor(Math.random() * 1000);
-    localStorage.setItem("elementary_studentId", guestId);
-    localStorage.setItem("elementary_studentName", "체험탐정");
-    localStorage.setItem("elementary_aiName", "에코봇");
-    
-    window.location.href = "main.html";
   });
 </script>
 </body>

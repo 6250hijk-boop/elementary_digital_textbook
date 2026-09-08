@@ -1,1 +1,594 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI 자원순환 탐정단 - 관리자 페이지</title>
+  <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua 사용 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 
+  <style>
+    :root {
+      --primary: #2E7D32;
+      --primary-light: #E8F5E9;
+      --accent: #FFB300;
+      --card-bg: #FFFFFF;
+      --text: #1B5E20;
+      --text-dark: #263238;
+      --border: #C8E6C9;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background: #F1F8E9;
+      color: var(--text-dark);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .admin-container {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* 상단 헤더 */
+    header {
+      background: #FFFFFF;
+      border: 3px solid #A5D6A7;
+      border-radius: 24px;
+      padding: 20px 24px;
+      box-shadow: 0 8px 20px rgba(46, 125, 50, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .admin-title-area h1 {
+      font-family: 'Jua', sans-serif;
+      font-size: 28px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .admin-title-area p {
+      font-size: 14px;
+      color: #558B2F;
+      font-weight: 600;
+    }
+
+    .header-btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      padding: 10px 18px;
+      border-radius: 14px;
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-green {
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: white;
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+    }
+
+    .btn-ghost {
+      background: #FFFFFF;
+      border: 2px solid #C8E6C9;
+      color: #2E7D32;
+    }
+
+    .btn-ghost:hover {
+      background: #E8F5E9;
+    }
+
+    /* 요약 통계 카드 */
+    .stat-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: #FFFFFF;
+      border: 2px solid #C8E6C9;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Jua', sans-serif;
+      font-size: 32px;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #558B2F;
+      margin-top: 4px;
+    }
+
+    /* 학생 정보 & 진도 현황 섹션 */
+    .table-section {
+      background: #FFFFFF;
+      border: 3px solid #A5D6A7;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .section-header h2 {
+      font-family: 'Jua', sans-serif;
+      font-size: 24px;
+      color: var(--primary);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+      text-align: left;
+    }
+
+    th {
+      background: #E8F5E9;
+      color: #1B5E20;
+      font-family: 'Jua', sans-serif;
+      font-size: 17px;
+      padding: 14px;
+      border-bottom: 2px solid #C8E6C9;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 14px;
+      border-bottom: 1px solid #E0E0E0;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    tr:hover {
+      background: #F9FBE7;
+    }
+
+    .code-tag {
+      font-family: monospace;
+      background: #EFEBE9;
+      color: #4E342E;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .badge-tag {
+      background: #FFF9C4;
+      color: #F57F17;
+      border: 1px solid #FBC02D;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .progress-bar-wrap {
+      width: 120px;
+      height: 10px;
+      background: #E0E0E0;
+      border-radius: 6px;
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #81C784, #388E3C);
+      border-radius: 6px;
+    }
+
+    .btn-sm-action {
+      padding: 4px 10px;
+      font-size: 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-sm-reset { background: #E1F5FE; color: #0288D1; border: 1px solid #81D4FA; }
+    .btn-sm-del { background: #FFEBEE; color: #C62828; border: 1px solid #FFCDD2; margin-left: 4px; }
+
+    /* 노션 연동 모달 */
+    #notion-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(0,0,0,0.75);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: #FFFFFF;
+      border-radius: 24px;
+      max-width: 520px;
+      width: 100%;
+      padding: 28px;
+      border: 3px solid #A5D6A7;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+  </style>
+</head>
+<body>
+
+<div class="admin-container">
+
+  <!-- 헤더 -->
+  <header>
+    <div class="admin-title-area">
+      <h1>👑 관리자 페이지 (학생 관리 & 진도 현황)</h1>
+      <p>AI 자원순환 탐정단 초등 5학년 교육용 교과서</p>
+    </div>
+
+    <div class="header-btns">
+      <button onclick="openNotionModal()" class="btn-action btn-green">📝 노션(Notion) 연동</button>
+      <a href="main.html" class="btn-action btn-ghost">🏠 메인 화면</a>
+      <button onclick="logoutAdmin()" class="btn-action btn-ghost" style="color:#C62828;border-color:#FFCDD2;">🚪 로그아웃</button>
+    </div>
+  </header>
+
+  <!-- 통계 카드 -->
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="stat-num" id="statTotalStudents">0명</div>
+      <div class="stat-label">👥 총 등록 학생 수</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statActiveStudents">0명</div>
+      <div class="stat-label">🚀 퀘스트 수행 학생 수</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statAvgScore">0점</div>
+      <div class="stat-label">⭐ 전체 평균 점수</div>
+    </div>
+  </div>
+
+  <!-- 학생 목록 & 진도 표 -->
+  <div class="table-section">
+    <div class="section-header">
+      <h2>📋 학생 아이디, 비밀번호 & 학습 진도 현황</h2>
+      <div style="display:flex;gap:8px;">
+        <button onclick="loadAdminStudents()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;">🔄 새로고침</button>
+        <button onclick="downloadNotionCSV()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;color:#0288D1;border-color:#81D4FA;">📥 노션전용 CSV 다운로드</button>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>학생 닉네임</th>
+            <th>아이디</th>
+            <th>비밀번호</th>
+            <th>AI 파트너</th>
+            <th>점수</th>
+            <th>배지</th>
+            <th>학습 진도 (퀘스트)</th>
+            <th>가입일</th>
+            <th>관리</th>
+          </tr>
+        </thead>
+        <tbody id="studentTableBody">
+          <tr><td colspan="9" style="text-align:center;padding:30px;color:#78909C;">학생 데이터를 불러오는 중입니다...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- 노션 연동 모달 -->
+<div id="notion-modal">
+  <div class="modal-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h3 style="font-family:'Jua',sans-serif;font-size:22px;color:#2E7D32;">📝 노션(Notion) 학생 데이터 연동</h3>
+      <button onclick="closeNotionModal()" style="background:none;border:none;font-size:24px;cursor:pointer;color:#999;">✕</button>
+    </div>
+
+    <p style="font-size:14px;color:#558B2F;margin-bottom:18px;line-height:1.5;">
+      학생 아이디, 비밀번호, 닉네임, 학습 진도 및 점수를 노션 데이터베이스로 동기화합니다.
+    </p>
+
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+      <div>
+        <label style="display:block;font-size:13px;font-weight:bold;color:#2E7D32;margin-bottom:4px;">🔑 Notion API Key (Integration Secret)</label>
+        <input id="notion-token" type="password" placeholder="secret_..." style="width:100%;padding:12px;border:2px solid #C8E6C9;border-radius:12px;font-family:monospace;outline:none;">
+      </div>
+      <div>
+        <label style="display:block;font-size:13px;font-weight:bold;color:#2E7D32;margin-bottom:4px;">📊 Notion Database ID (32자리 문자열)</label>
+        <input id="notion-db-id" type="text" placeholder="예: 1aa2bb3cc4dd5ee6ff7gg8hh9ii0jj1k" style="width:100%;padding:12px;border:2px solid #C8E6C9;border-radius:12px;font-family:monospace;outline:none;">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <button onclick="saveNotionConfig()" class="btn-action btn-ghost" style="flex:1;">💾 설정 저장</button>
+      <button onclick="syncToNotion()" id="syncBtn" class="btn-action btn-green" style="flex:2;justify-content:center;">🚀 노션으로 데이터 일괄 전송</button>
+    </div>
+
+    <div style="border-top:1px dashed #C8E6C9;padding-top:14px;">
+      <p style="font-size:13px;color:#558B2F;margin-bottom:8px;">✨ CORS 제약 없이 1초 만에 가져오는 가장 쉬운 해결책:</p>
+      <button onclick="downloadNotionCSV()" class="btn-action btn-green" style="width:100%;justify-content:center;font-size:15px;padding:12px;">📥 지금 바로 노션 가져오기 전용 CSV 다운로드</button>
+    </div>
+
+    <div id="notion-status" style="display:none;margin-top:14px;padding:12px;background:#F1F8E9;border-radius:12px;font-size:13px;line-height:1.5;"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+    authDomain: "elemeelementary-textbook.firebaseapp.com",
+    projectId: "elemeelementary-textbook",
+    storageBucket: "elemeelementary-textbook.firebasestorage.app",
+    messagingSenderId: "713149004420",
+    appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
+    measurementId: "G-TZT282J9E8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  let cachedStudents = [];
+
+  window.loadAdminStudents = async function() {
+    const tbody = document.getElementById("studentTableBody");
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:#78909C;">파이어베이스에서 학생 데이터를 로딩 중입니다...</td></tr>';
+
+    try {
+      const snap = await getDocs(collection(db, "students"));
+      cachedStudents = [];
+
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        cachedStudents.push({
+          id: docSnap.id,
+          ...d
+        });
+      });
+
+      // 통계 계산
+      const totalCount = cachedStudents.length;
+      const activeCount = cachedStudents.filter(s => (s.score || 0) > 10 || (s.questsDone || 0) > 0).length;
+      const totalScore = cachedStudents.reduce((acc, s) => acc + (s.score || 0), 0);
+      const avgScore = totalCount ? Math.round(totalScore / totalCount) : 0;
+
+      document.getElementById("statTotalStudents").textContent = totalCount + "명";
+      document.getElementById("statActiveStudents").textContent = activeCount + "명";
+      document.getElementById("statAvgScore").textContent = avgScore + "점";
+
+      if (cachedStudents.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:#78909C;">등록된 학생 계정이 없습니다.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = cachedStudents.map(s => {
+        const qDone = s.questsDone || 0;
+        const pct = Math.round((qDone / 6) * 100);
+        const createdStr = s.createdAt ? new Date(s.createdAt.seconds * 1000).toISOString().slice(0, 10) : '-';
+
+        return `
+          <tr>
+            <td><strong>${s.studentName || '익명'}</strong></td>
+            <td><span class="code-tag">${s.studentId || s.id}</span></td>
+            <td><span class="code-tag" style="background:#FFF3E0;color:#E65100;">${s.password || '미설정'}</span></td>
+            <td>🤖 ${s.aiPartnerName || '에코봇'}</td>
+            <td><strong style="color:#2E7D32;">${s.score || 0}점</strong></td>
+            <td><span class="badge-tag">🏅 ${s.badge || '신입 탐정'}</span></td>
+            <td>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" style="width: ${pct}%"></div>
+              </div>
+              <strong style="font-size:13px;color:#2E7D32;">${qDone}/6 완료</strong>
+            </td>
+            <td style="font-size:13px;color:#78909C;">${createdStr}</td>
+            <td>
+              <button onclick="resetUserPw('${s.id}')" class="btn-sm-action btn-sm-reset">🔑 비번 초기화</button>
+              <button onclick="deleteUserAccount('${s.id}', '${s.studentName||s.id}')" class="btn-sm-action btn-sm-del">🗑️ 삭제</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+    } catch (e) {
+      console.error(e);
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:30px;color:#C62828;">데이터 로딩 오류: ${e.message}</td></tr>`;
+    }
+  };
+
+  // 비번 초기화 (1234로)
+  window.resetUserPw = async function(id) {
+    if (!confirm(`'${id}' 계정의 비밀번호를 '1234'로 초기화할까요?`)) return;
+    try {
+      await updateDoc(doc(db, "students", id), { password: "1234" });
+      alert("✅ 비밀번호가 '1234'로 초기화되었습니다.");
+      loadAdminStudents();
+    } catch (e) {
+      alert("초기화 실패: " + e.message);
+    }
+  };
+
+  // 학생 삭제
+  window.deleteUserAccount = async function(id, name) {
+    if (!confirm(`'${name}' (${id}) 학생 계정을 정말 삭제할까요?`)) return;
+    try {
+      await deleteDoc(doc(db, "students", id));
+      alert("✅ 삭제되었습니다.");
+      loadAdminStudents();
+    } catch (e) {
+      alert("삭제 실패: " + e.message);
+    }
+  };
+
+  // 노션전용 CSV 다운로드
+  window.downloadNotionCSV = function() {
+    if (!cachedStudents.length) {
+      alert("다운로드할 학생 데이터가 없습니다.");
+      return;
+    }
+
+    const header = "학생 닉네임,아이디,비밀번호,AI 파트너,점수,배지,퀘스트 완료수(진도),가입일";
+    const rows = cachedStudents.map(s => {
+      const qDone = s.questsDone || 0;
+      const createdStr = s.createdAt ? new Date(s.createdAt.seconds * 1000).toISOString().slice(0, 10) : '';
+      const cleanName = (s.studentName || '').replace(/"/g, '""');
+      const cleanId = (s.studentId || s.id || '').replace(/"/g, '""');
+      const cleanPw = (s.password || '').replace(/"/g, '""');
+      const cleanAi = (s.aiPartnerName || '에코봇').replace(/"/g, '""');
+      const cleanBadge = (s.badge || '신입 탐정').replace(/"/g, '""');
+      return `"${cleanName}","${cleanId}","${cleanPw}","${cleanAi}",${s.score||0},"${cleanBadge}","${qDone}/6 완료","${createdStr}"`;
+    });
+
+    const csv = '\uFEFF' + [header, ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `노션_학생계정및진도_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+  };
+
+  // 노션 API 동기화
+  window.openNotionModal = function() {
+    document.getElementById("notion-modal").style.display = "flex";
+    document.getElementById("notion-token").value = localStorage.getItem("NOTION_API_KEY") || "";
+    document.getElementById("notion-db-id").value = localStorage.getItem("NOTION_DATABASE_ID") || "";
+  };
+
+  window.closeNotionModal = function() {
+    document.getElementById("notion-modal").style.display = "none";
+  };
+
+  window.saveNotionConfig = function() {
+    const token = document.getElementById("notion-token").value.trim();
+    const dbId = document.getElementById("notion-db-id").value.trim();
+    localStorage.setItem("NOTION_API_KEY", token);
+    localStorage.setItem("NOTION_DATABASE_ID", dbId);
+    alert("✅ 노션 설정이 로컬에 저장되었습니다.");
+  };
+
+  window.syncToNotion = async function() {
+    const token = document.getElementById("notion-token").value.trim();
+    const dbId = document.getElementById("notion-db-id").value.trim().replace(/-/g, '');
+
+    if (!token || !dbId) return alert("API Key와 Database ID를 모두 입력해주세요.");
+    if (!cachedStudents.length) return alert("전송할 학생 데이터가 없습니다.");
+
+    const statusEl = document.getElementById("notion-status");
+    const syncBtn = document.getElementById("syncBtn");
+    syncBtn.disabled = true;
+    statusEl.style.display = "block";
+    statusEl.innerHTML = "<div style='color:#0288D1;'>🚀 노션으로 전송 중...</div>";
+
+    let success = 0, fail = 0;
+    const corsProxy = 'https://corsproxy.io/?';
+
+    for (let i = 0; i < cachedStudents.length; i++) {
+      const s = cachedStudents[i];
+      statusEl.innerHTML = `<div style='color:#0288D1;'>전송 중 (${i+1}/${cachedStudents.length}): ${s.studentName || s.id}</div>`;
+
+      const payload = {
+        parent: { database_id: dbId },
+        properties: {
+          "학생 닉네임": { title: [{ text: { content: s.studentName || s.id || "익명" } }] },
+          "아이디": { rich_text: [{ text: { content: s.studentId || s.id || "" } }] },
+          "비밀번호": { rich_text: [{ text: { content: String(s.password || "") } }] },
+          "AI 파트너": { rich_text: [{ text: { content: s.aiPartnerName || "에코봇" } }] },
+          "점수": { number: Number(s.score || 0) },
+          "학습 진도": { rich_text: [{ text: { content: `${s.questsDone || 0}/6 완료` } }] }
+        }
+      };
+
+      try {
+        const res = await fetch(corsProxy + encodeURIComponent("https://api.notion.com/v1/pages"), {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Notion-Version": "2022-06-28",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) success++;
+        else fail++;
+      } catch (err) {
+        fail++;
+      }
+
+      await new Promise(r => setTimeout(r, 200));
+    }
+
+    syncBtn.disabled = false;
+    if (fail === 0) {
+      statusEl.innerHTML = `<div style='color:#2E7D32;font-weight:bold;'>✅ 총 ${success}명의 학생 데이터가 성공적으로 동기화되었습니다!</div>`;
+    } else {
+      statusEl.innerHTML = `<div style='color:#C62828;font-weight:bold;'>⚠️ 전송 완료 (성공: ${success}건, 실패: ${fail}건)<br>웹 브라우저 CORS 제약 시 아래 [📥 노션 가져오기 전용 CSV 다운로드] 버튼으로 1초 만에 노션에 올리실 수 있습니다.</div>`;
+    }
+  };
+
+  window.logoutAdmin = function() {
+    localStorage.removeItem("elementary_isAdmin");
+    localStorage.removeItem("elementary_studentId");
+    window.location.href = "index.html";
+  };
+
+  // 초기 실행
+  loadAdminStudents();
+</script>
+</body>
+</html>
