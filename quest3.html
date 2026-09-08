@@ -2,142 +2,616 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quest 3 - 데이터 선별소</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Quest 3 - 데이터 선별소 (사진 업로드)</title>
+  <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua 사용 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
   <style>
-    :root { --bg: #2b3a42; --panel: #3f5159; --border: #182328; }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
-    body { background-color: var(--bg); color: #fff; display: flex; flex-direction: column; align-items: center; padding: 15px; min-height: 100vh; }
-    .container { width: 100%; max-width: 860px; background: var(--panel); border-radius: 18px; border: 5px solid var(--border); overflow: hidden; display: flex; flex-direction: column; align-items: center; }
-    header { width: 100%; background: #1e282d; padding: 14px 20px; border-bottom: 4px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .btn-back { background: #546e7a; color: white; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; border: 2px solid #263238; }
-    h1 { font-size: 18px; color: #ffeb3b; text-shadow: 2px 2px 0px #000; margin: 0; }
-    .game-wrapper { padding: 18px 15px; display: flex; flex-direction: column; align-items: center; width: 100%; }
-    .canvas-container { border: 5px solid #263238; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
-    canvas { display: block; image-rendering: pixelated; }
-    .guide-text { font-size: 13px; font-weight: bold; color: #cfd8dc; background: rgba(0,0,0,0.3); padding: 8px 14px; border-radius: 8px; margin-top: 10px; }
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
-    .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease-in-out; }
-    .modal-content { background: white; color: #333; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; border: 4px solid #00796B; }
-    .btn-close { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: #888; }
-    h2 { font-size: 19px; margin-bottom: 12px; color: #00796B; }
-    .guide-box { background: #E0F2F1; border-left: 5px solid #00796B; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; line-height: 1.5; }
-    .choice-item { border: 2px solid #E0E0E0; border-radius: 10px; padding: 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
-    .choice-item input { transform: scale(1.3); }
-    .btn-action { width: 100%; padding: 12px; background: #00796B; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 8px; }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    :root {
+      --primary: #2E7D32;
+      --primary-light: #E8F5E9;
+      --accent: #FFB300;
+      --card-bg: #FFFFFF;
+      --text-dark: #263238;
+      --border: #C8E6C9;
+      --muted: #558B2F;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background: #F1F8E9;
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .page-wrap {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      background: #FFFFFF;
+      border: 3px solid #A5D6A7;
+      border-radius: 20px;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 6px 16px rgba(46, 125, 50, 0.1);
+    }
+
+    .btn-back {
+      background: #E8F5E9;
+      border: 2px solid #A5D6A7;
+      color: #2E7D32;
+      padding: 8px 16px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-score {
+      background: #FFF9C4;
+      border: 2px solid #FBC02D;
+      padding: 6px 16px;
+      border-radius: 16px;
+      font-family: 'Jua', sans-serif;
+      font-size: 18px;
+      color: #F57F17;
+    }
+
+    .page-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 28px;
+      color: var(--primary);
+      margin-top: 6px;
+    }
+
+    .page-desc {
+      font-size: 16px;
+      color: #455A64;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 3px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+    }
+
+    .card h3 {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      color: var(--primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .upload-zone {
+      border: 3px dashed #81C784;
+      border-radius: 18px;
+      padding: 30px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      background: #F1F8E9;
+    }
+
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--primary);
+      background: #E8F5E9;
+      transform: scale(1.01);
+    }
+
+    .upload-zone .icon { font-size: 48px; margin-bottom: 8px; }
+    .upload-zone h4 { font-family: 'Jua', sans-serif; font-size: 22px; color: var(--primary); margin-bottom: 6px; }
+    .upload-zone p { font-size: 14px; font-weight: 600; color: #666; }
+
+    #file-input { display: none; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 14px;
+      font-family: 'Jua', sans-serif;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all .2s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: white;
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+    }
+
+    .btn-primary:active { transform: translateY(2px); }
+
+    .btn-ghost {
+      background: #FFFFFF;
+      border: 2px solid #C8E6C9;
+      color: #2E7D32;
+    }
+
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .preview-item {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid var(--border);
+      background: #eee;
+    }
+
+    .preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(229, 57, 53, 0.9);
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .status-badge {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 3px 4px;
+      font-size: 11px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .status-pending { background: #FFE082; color: #5D4037; }
+    .status-done { background: #A5D6A7; color: #1B5E20; }
+    .status-error { background: #EF9A9A; color: #B71C1C; }
+
+    .progress-wrap {
+      background: #E0E0E0;
+      border-radius: 20px;
+      height: 14px;
+      overflow: hidden;
+      margin: 12px 0 6px 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #81C784, #388E3C);
+      border-radius: 20px;
+      transition: width .2s;
+    }
+
+    .progress-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2E7D32;
+      margin-bottom: 10px;
+    }
+
+    .uploaded-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: #F9FBE7;
+      border: 1px solid #DCEDC8;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+
+    .uploaded-thumb {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .del-btn {
+      background: #FFEBEE;
+      border: 1px solid #FFCDD2;
+      border-radius: 8px;
+      padding: 6px 12px;
+      color: #C62828;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .alert {
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .alert-success { background: #E8F5E9; border: 2px solid #81C784; color: #2E7D32; }
+    .alert-error { background: #FFEBEE; border: 2px solid #E57373; color: #C62828; }
   </style>
 </head>
 <body>
-<div class="container">
+
+<div class="page-wrap">
   <header>
     <a href="main.html" class="btn-back">⬅ 마을로</a>
-    <h1>📸 Quest 3: 데이터 선별소</h1>
-    <div style="width: 70px;"></div>
+    <div class="header-score" id="dispScore">⭐ 0점</div>
   </header>
-  <div class="game-wrapper">
-    <div class="canvas-container">
-      <canvas id="roomCanvas" width="600" height="360"></canvas>
+
+  <div>
+    <div class="page-title">🧹 Quest 3: 데이터 선별소</div>
+    <div class="page-desc">AI 학습에 사용할 수집 사진을 직접 올려보세요!<br>사진은 AI 표준 규격인 600×600px로 자동 변환됩니다.</div>
+  </div>
+
+  <div id="main-alert"></div>
+
+  <!-- 사진 업로드 존 -->
+  <div class="card">
+    <h3>📸 사진 업로드</h3>
+    <div class="upload-zone" id="upload-zone"
+      onclick="document.getElementById('file-input').click()"
+      ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFiles(event)">
+      <div class="icon">📸</div>
+      <h4>사진을 여기에 드래그하거나 클릭하여 선택하세요!</h4>
+      <p>JPG, PNG, WEBP 지원 · 600×600 자동 변환 · 최대 20장</p>
     </div>
-    <div class="guide-text" id="actionGuide">🎮 방향키로 이동하여 [임무 책상] 앞에서 스페이스바를 누르세요.</div>
+    <input type="file" id="file-input" accept="image/*" multiple onchange="handleFiles(this.files)">
+
+    <div id="pending-card" style="display:none; margin-top:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-size:15px; font-weight:bold; color:#2E7D32;">대기 중인 사진: <strong id="pending-count">0</strong>장</span>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-primary" id="upload-btn" onclick="uploadAll()" style="padding:8px 16px; font-size:16px;">☁️ 업로드 시작</button>
+          <button class="btn btn-ghost" onclick="clearPending()" style="padding:8px 12px; font-size:14px;">초기화</button>
+        </div>
+      </div>
+
+      <div class="preview-grid" id="preview-grid"></div>
+
+      <div class="progress-wrap" id="progress-wrap" style="display:none;">
+        <div class="progress-bar" id="progress-bar" style="width:0%;"></div>
+      </div>
+      <div class="progress-text" id="upload-status"></div>
+    </div>
+  </div>
+
+  <!-- 올린 사진 목록 -->
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+      <h3 style="margin:0;">☁️ 내가 등록한 사진 목록 (<span id="my-count">0</span>장)</h3>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-ghost" style="font-size:14px; padding:6px 12px;" onclick="loadMyUploads()">🔄 새로고침</button>
+        <a href="quest4.html" class="btn btn-primary" style="font-size:16px; padding:8px 16px;">라벨링 체육관 가기 🏷️</a>
+      </div>
+    </div>
+    <div id="my-uploads"><div style="text-align:center; padding:20px; color:#78909C;">데이터를 로딩 중입니다...</div></div>
   </div>
 </div>
 
-<div id="missionModal" class="modal-overlay">
-  <div class="modal-content">
-    <button class="btn-close" onclick="closeModal()">✖</button>
-    <h2>📸 [3차시] AI 학습에 적합한 좋은 데이터</h2>
-    <div class="guide-box">AI가 사진을 보고 잘 배우기 위해 필요한 <strong>좋은 데이터 조건</strong>을 모두 선택하세요!</div>
-    <label class="choice-item"><input type="checkbox" name="q3Data" value="선명한 사진"> ☀️ 그림자가 짙지 않고 물체가 선명하게 나온 사진</label>
-    <label class="choice-item"><input type="checkbox" name="q3Data" value="다양한 각도"> 🔄 단일 방향이 아닌 다양한 각도와 배경에서 찍은 사진</label>
-    <label class="choice-item"><input type="checkbox" name="q3Data" value="실제 상태"> 🥫 약간 찌그러지거나 라벨이 떼어진 실제 형태의 사진</label>
-    <button class="btn-action" onclick="saveQuest3()">선택 완료 및 저장 (⭐ +20점)</button>
-  </div>
-</div>
+<!-- Firebase compat SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+    authDomain: "elemeelementary-textbook.firebaseapp.com",
+    projectId: "elemeelementary-textbook",
+    storageBucket: "elemeelementary-textbook.firebasestorage.app",
+    messagingSenderId: "713149004420",
+    appId: "1:713149004420:web:8483273681e16f5a8fa0d1"
+  };
 
-  const firebaseConfig = { apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00", authDomain: "elemeelementary-textbook.firebaseapp.com", projectId: "elemeelementary-textbook", storageBucket: "elemeelementary-textbook.firebasestorage.app", messagingSenderId: "713149004420", appId: "1:713149004420:web:8483273681e16f5a8fa0d1" };
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const db = firebase.firestore();
+
+  const CLOUDINARY_NAME   = 'dbthgzdfu';
+  const CLOUDINARY_PRESET = 'vxhz699w';
+  const TARGET_SIZE = 600;
+  const QUALITY     = 0.75;
+  const PARALLEL    = 5;
 
   const studentId = localStorage.getItem("elementary_studentId");
-  const studentName = localStorage.getItem("elementary_studentName");
+  const studentName = localStorage.getItem("elementary_studentName") || "학생 탐정";
 
-  const canvas = document.getElementById("roomCanvas");
-  const ctx = canvas.getContext("2d");
-  const guide = document.getElementById("actionGuide");
-  
-  let player = { x: 300, y: 300, speed: 16 };
-  const desk = { x: 300, y: 120, w: 80, h: 50 };
-  let canInteract = false;
-
-  function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#B2DFDB"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "#80CBC4"; ctx.lineWidth = 2;
-    for(let x=0; x<canvas.width; x+=40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
-    for(let y=0; y<canvas.height; y+=40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
-
-    ctx.fillStyle = "#004D40"; ctx.fillRect(0, 0, canvas.width, 60);
-    ctx.fillStyle = "#00695C"; ctx.fillRect(0, 50, canvas.width, 10);
-
-    ctx.fillStyle = "#4E342E"; ctx.fillRect(desk.x - desk.w/2, desk.y - desk.h/2, desk.w, desk.h);
-    ctx.fillStyle = "#212121"; ctx.fillRect(desk.x - 20, desk.y - 20, 40, 25);
-    ctx.fillStyle = canInteract ? "#64DD17" : "#009688"; ctx.fillRect(desk.x - 16, desk.y - 16, 32, 17);
-
-    ctx.fillStyle = "rgba(0,0,0,0.3)"; ctx.beginPath(); ctx.ellipse(player.x, player.y + 12, 10, 5, 0, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = "#e53935"; ctx.fillRect(player.x - 7, player.y - 16, 14, 6);
-    ctx.fillStyle = "#ffcc80"; ctx.fillRect(player.x - 5, player.y - 9, 10, 8);
-    ctx.fillStyle = "#1e88e5"; ctx.fillRect(player.x - 6, player.y - 1, 12, 8);
-    ctx.fillStyle = "#37474f"; ctx.fillRect(player.x - 5, player.y + 7, 10, 4);
+  if (!studentId) {
+    window.location.href = "index.html";
   }
 
-  function move(dx, dy) {
-    player.x = Math.max(20, Math.min(canvas.width - 20, player.x + dx));
-    player.y = Math.max(70, Math.min(canvas.height - 20, player.y + dy));
-    canInteract = Math.hypot(player.x - desk.x, player.y - desk.y) < 55;
-    guide.textContent = canInteract ? "🌟 스페이스바를 눌러 퀘스트를 시작하세요!" : "🎮 방향키로 이동하여 [임무 책상] 앞으로 가세요.";
-    guide.style.color = canInteract ? "#FFEB3B" : "#cfd8dc";
-    render();
-  }
+  let pendingFiles = [];
 
-  window.addEventListener("keydown", (e) => {
-    if (document.getElementById("missionModal").classList.contains("active")) return;
-    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
-      e.preventDefault();
-      if (e.key === "ArrowUp") move(0, -player.speed);
-      if (e.key === "ArrowDown") move(0, player.speed);
-      if (e.key === "ArrowLeft") move(-player.speed, 0);
-      if (e.key === "ArrowRight") move(player.speed, 0);
-    } else if (e.code === "Space") {
-      e.preventDefault();
-      if (canInteract) document.getElementById("missionModal").classList.add("active");
-    }
-  });
-
-  window.closeModal = function() {
-    document.getElementById("missionModal").classList.remove("active");
-    player.y += 20; move(0,0);
-  };
-
-  window.saveQuest3 = async function() {
-    const selected = Array.from(document.querySelectorAll("input[name='q3Data']:checked")).map(e => e.value);
-    if (!selected.length) return alert("최소 1개 이상 선택하세요!");
-
+  // 초기 로그인 유저 정보 및 점수 로드
+  async function initUser() {
     try {
-      await addDoc(collection(db, "quest3_data"), { studentId, studentName, conditions: selected, createdAt: serverTimestamp() });
-      await updateDoc(doc(db, "students", studentId), { score: increment(20) });
-      localStorage.setItem("elementary_score", parseInt(localStorage.getItem("elementary_score")||"0") + 20);
-      alert("🎉 Quest 3 완료! (⭐ +20점)");
-      window.location.href = "main.html";
-    } catch(e) { console.error(e); alert("저장 실패"); }
-  };
+      const docSnap = await db.collection("students").doc(studentId).get();
+      if (docSnap.exists) {
+        const d = docSnap.data();
+        document.getElementById('dispScore').textContent = `⭐ ${d.score || 0}점`;
+      } else {
+        const score = localStorage.getItem("elementary_score") || "0";
+        document.getElementById('dispScore').textContent = `⭐ ${score}점`;
+      }
+    } catch(e) {
+      console.error(e);
+    }
+    loadMyUploads();
+  }
 
-  render();
+  // 600×600 리사이징 -> Blob
+  function resizeToBlob(file) {
+    return new Promise(resolve => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        const c = document.createElement('canvas');
+        c.width = c.height = TARGET_SIZE;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, TARGET_SIZE, TARGET_SIZE);
+        const s = Math.min(TARGET_SIZE / img.width, TARGET_SIZE / img.height);
+        const dw = img.width * s, dh = img.height * s;
+        ctx.drawImage(img, (TARGET_SIZE - dw)/2, (TARGET_SIZE - dh)/2, dw, dh);
+        URL.revokeObjectURL(url);
+        c.toBlob(blob => resolve(blob), 'image/jpeg', QUALITY);
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+      img.src = url;
+    });
+  }
+
+  // Cloudinary 업로드
+  async function uploadToCloudinary(blob, fileName) {
+    const form = new FormData();
+    form.append('file', blob, fileName);
+    form.append('upload_preset', CLOUDINARY_PRESET);
+    form.append('folder', `elementary-textbook/${studentId}`);
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/image/upload`,
+      { method: 'POST', body: form }
+    );
+    if (!res.ok) throw new Error('Cloudinary 업로드 실패: ' + res.status);
+    return await res.json();
+  }
+
+  // 드래그 앤 드롭
+  function dragOver(e) { e.preventDefault(); document.getElementById('upload-zone').classList.add('dragover'); }
+  function dragLeave(e) { document.getElementById('upload-zone').classList.remove('dragover'); }
+  function dropFiles(e) {
+    e.preventDefault();
+    document.getElementById('upload-zone').classList.remove('dragover');
+    handleFiles(e.dataTransfer.files);
+  }
+
+  function handleFiles(files) {
+    const arr = Array.from(files).filter(f => f.type.startsWith('image/'));
+    if (!arr.length) { showAlert('이미지 파일만 선택 가능합니다.', 'error'); return; }
+    if (pendingFiles.length + arr.length > 20) { showAlert('한 번에 최대 20장까지 올려주세요.', 'error'); return; }
+    
+    arr.forEach(file => {
+      const id = 'f' + Date.now() + Math.random().toString(36).slice(2);
+      pendingFiles.push({ id, file, status: 'pending', blob: null });
+    });
+    renderPreview();
+    document.getElementById('pending-card').style.display = 'block';
+
+    pendingFiles.filter(f => !f.blob && f.status === 'pending').forEach(async pf => {
+      pf.blob = await resizeToBlob(pf.file);
+    });
+  }
+
+  function renderPreview() {
+    document.getElementById('pending-count').textContent = pendingFiles.length;
+    document.getElementById('preview-grid').innerHTML = pendingFiles.map(pf => {
+      const url = URL.createObjectURL(pf.file);
+      const sc = pf.status === 'done' ? 'status-done' : pf.status === 'error' ? 'status-error' : 'status-pending';
+      const st = pf.status === 'done' ? '✅ 완료' : pf.status === 'error' ? '❌ 오류' : '⏳ 대기';
+      return `<div class="preview-item">
+        <img src="${url}">
+        ${pf.status === 'pending' ? `<button class="remove-btn" onclick="removeFile('${pf.id}')">✕</button>` : ''}
+        <div class="status-badge ${sc}" id="badge-${pf.id}">${st}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function removeFile(id) {
+    pendingFiles = pendingFiles.filter(f => f.id !== id);
+    if (!pendingFiles.length) document.getElementById('pending-card').style.display = 'none';
+    else renderPreview();
+  }
+
+  function clearPending() {
+    pendingFiles = [];
+    document.getElementById('pending-card').style.display = 'none';
+  }
+
+  async function uploadAll() {
+    const toUpload = pendingFiles.filter(f => f.status === 'pending');
+    if (!toUpload.length) return;
+
+    const btn = document.getElementById('upload-btn');
+    btn.disabled = true;
+    document.getElementById('progress-wrap').style.display = 'block';
+
+    let done = 0; const total = toUpload.length;
+
+    const updateStatus = () => {
+      document.getElementById('progress-bar').style.width = (done / total * 100) + '%';
+      document.getElementById('upload-status').textContent =
+        `☁️ 사진 변환 및 업로드 중... ${done}/${total}장 (${Math.round(done/total*100)}%)`;
+    };
+    updateStatus();
+
+    for (let i = 0; i < toUpload.length; i += PARALLEL) {
+      const chunk = toUpload.slice(i, i + PARALLEL);
+      await Promise.all(chunk.map(async pf => {
+        try {
+          const badge = document.getElementById('badge-' + pf.id);
+          if (badge) { badge.className = 'status-badge status-pending'; badge.textContent = '⚙️ 변환중'; }
+          const blob = pf.blob || await resizeToBlob(pf.file);
+          if (!blob) throw new Error('변환 실패');
+          if (badge) { badge.textContent = '☁️ 업로드'; }
+          const fileName = `${Date.now()}_${pf.file.name.replace(/\s/g, '_')}`;
+          const result = await uploadToCloudinary(blob, fileName);
+
+          await db.collection('uploads').add({
+            userId: studentId,
+            userName: studentName,
+            fileName: result.public_id,
+            originalName: pf.file.name,
+            url: result.secure_url,
+            cloudinaryId: result.public_id,
+            labeled: false,
+            width: TARGET_SIZE,
+            height: TARGET_SIZE,
+            created_at: new Date().toISOString()
+          });
+
+          pf.status = 'done';
+          if (badge) { badge.className = 'status-badge status-done'; badge.textContent = '✅ 완료'; }
+        } catch (e) {
+          pf.status = 'error';
+          const badge = document.getElementById('badge-' + pf.id);
+          if (badge) { badge.className = 'status-badge status-error'; badge.textContent = '❌ 오류'; }
+          console.error(e);
+        }
+        done++;
+        updateStatus();
+      }));
+    }
+
+    document.getElementById('upload-status').textContent = `✅ ${done}장 업로드 완료!`;
+    document.getElementById('progress-bar').style.width = '100%';
+    btn.disabled = false;
+    loadMyUploads();
+
+    // 점수 보상 (+20점)
+    try {
+      const userRef = db.collection('students').doc(studentId);
+      const userDoc = await userRef.get();
+      const currentScore = userDoc.exists ? (userDoc.data().score || 0) : 0;
+      const questsDone = userDoc.exists ? (userDoc.data().questsDone || 0) : 0;
+
+      await userRef.set({
+        score: currentScore + 20,
+        questsDone: Math.max(questsDone, 3),
+        q3_done: true
+      }, { merge: true });
+
+      const newScore = currentScore + 20;
+      localStorage.setItem("elementary_score", newScore);
+      document.getElementById('dispScore').textContent = `⭐ ${newScore}점`;
+      showAlert('🎉 퀘스트 3 완료! +20점 획득!', 'success');
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
+  async function loadMyUploads() {
+    try {
+      const snap = await db.collection('uploads')
+        .where('userId', '==', studentId)
+        .orderBy('created_at', 'desc').get();
+
+      document.getElementById('my-count').textContent = snap.size;
+      if (snap.empty) {
+        document.getElementById('my-uploads').innerHTML =
+          `<div style="text-align:center; padding:20px; color:#78909C; font-weight:600;">아직 수집한 사진이 없습니다. 상단에서 사진을 올려보세요! 📸</div>`;
+        return;
+      }
+
+      document.getElementById('my-uploads').innerHTML = snap.docs.map(doc => {
+        const d = doc.data();
+        const date = d.created_at ? d.created_at.slice(0, 16).replace('T', ' ') : '';
+        return `<div class="uploaded-item">
+          <img class="uploaded-thumb" src="${d.url}" onerror="this.style.opacity='0.3'">
+          <div style="flex:1; min-width:80px; overflow:hidden;">
+            <div style="font-size:15px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${d.originalName || '사진 데이터'}</div>
+            <div style="font-size:12px; color:#666;">규격: ${d.width || 600}×${d.height || 600}px</div>
+          </div>
+          <div style="font-size:13px; font-weight:bold; padding:4px 10px; border-radius:8px; flex-shrink:0;
+            ${d.labeled ? 'background:#E8F5E9; color:#2E7D32;' : 'background:#FFF8E1; color:#F57F17;'}">
+            ${d.labeled ? '✅ 라벨링 완료' : '⏳ 미완료'}
+          </div>
+          <div style="font-size:12px; color:#999; flex-shrink:0;">${date}</div>
+          <button class="del-btn" onclick="deleteUpload('${doc.id}')">🗑️</button>
+        </div>`;
+      }).join('');
+
+    } catch (e) {
+      document.getElementById('my-uploads').innerHTML =
+        `<div style="color:#C62828; padding:16px; font-weight:bold;">로딩 오류: ${e.message}</div>`;
+    }
+  }
+
+  async function deleteUpload(docId) {
+    if (!confirm('이 사진을 정말 삭제할까요?')) return;
+    try {
+      await db.collection('uploads').doc(docId).delete();
+      loadMyUploads();
+    } catch(e) {
+      alert('삭제 실패: ' + e.message);
+    }
+  }
+
+  function showAlert(msg, type = 'success') {
+    const c = { success: 'alert-success', error: 'alert-error' };
+    document.getElementById('main-alert').innerHTML = `<div class="alert ${c[type] || ''}">${msg}</div>`;
+    setTimeout(() => {
+      const el = document.getElementById('main-alert');
+      if (el) el.innerHTML = '';
+    }, 5000);
+  }
+
+  initUser();
 </script>
 </body>
 </html>

@@ -2,147 +2,951 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quest 4 - 라벨링 체육관</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Quest 4 - 라벨링 체육관 (데이터 바운딩 박스)</title>
+  <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua 사용 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
   <style>
-    :root { --bg: #2b3a42; --panel: #3f5159; --border: #182328; }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
-    body { background-color: var(--bg); color: #fff; display: flex; flex-direction: column; align-items: center; padding: 15px; min-height: 100vh; }
-    .container { width: 100%; max-width: 860px; background: var(--panel); border-radius: 18px; border: 5px solid var(--border); overflow: hidden; display: flex; flex-direction: column; align-items: center; }
-    header { width: 100%; background: #1e282d; padding: 14px 20px; border-bottom: 4px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .btn-back { background: #546e7a; color: white; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; border: 2px solid #263238; }
-    h1 { font-size: 18px; color: #ffeb3b; text-shadow: 2px 2px 0px #000; margin: 0; }
-    .game-wrapper { padding: 18px 15px; display: flex; flex-direction: column; align-items: center; width: 100%; }
-    .canvas-container { border: 5px solid #263238; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
-    canvas { display: block; image-rendering: pixelated; }
-    .guide-text { font-size: 13px; font-weight: bold; color: #cfd8dc; background: rgba(0,0,0,0.3); padding: 8px 14px; border-radius: 8px; margin-top: 10px; }
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
-    .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease-in-out; }
-    .modal-content { background: white; color: #333; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; border: 4px solid #2E7D32; text-align: center; }
-    .btn-close { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: #888; }
-    h2 { font-size: 19px; margin-bottom: 12px; color: #2E7D32; }
-    .guide-box { background: #E8F5E9; border-left: 5px solid #2E7D32; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; line-height: 1.5; text-align: left; }
-    .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-    .opt-btn { padding: 14px; border: 2px solid #C8E6C9; background: #FAFAFA; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-    .opt-btn:hover { background: #E8F5E9; border-color: #2E7D32; }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    :root {
+      --primary: #2E7D32;
+      --primary-light: #E8F5E9;
+      --accent: #FFB300;
+      --card-bg: #FFFFFF;
+      --text-dark: #263238;
+      --border: #C8E6C9;
+      --muted: #558B2F;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background: #F1F8E9;
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    /* ── 선택 화면 ── */
+    .select-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .select-header {
+      background: #FFFFFF;
+      border: 3px solid #A5D6A7;
+      border-radius: 20px;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 6px 16px rgba(46, 125, 50, 0.1);
+    }
+
+    .btn-back {
+      background: #E8F5E9;
+      border: 2px solid #A5D6A7;
+      color: #2E7D32;
+      padding: 8px 16px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .select-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 28px;
+      color: var(--primary);
+    }
+
+    .select-desc {
+      font-size: 16px;
+      color: #455A64;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .menu-card {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      background: #FFFFFF;
+      border: 3px solid #C8E6C9;
+      border-radius: 20px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all .2s;
+      text-decoration: none;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+    }
+
+    .menu-card:hover {
+      border-color: var(--primary);
+      background: #F9FBE7;
+      transform: translateY(-2px);
+    }
+
+    .menu-icon { font-size: 44px; flex-shrink: 0; }
+    .menu-num { font-family: 'Jua', sans-serif; font-size: 14px; color: #388E3C; margin-bottom: 2px; }
+    .menu-name { font-family: 'Jua', sans-serif; font-size: 22px; color: var(--primary); margin-bottom: 4px; }
+    .menu-desc { font-size: 14px; font-weight: 600; color: #666; }
+    .menu-arrow { margin-left: auto; font-size: 24px; color: var(--primary); font-weight: bold; }
+
+    /* ── 라벨링 도구 전체 레이아웃 ── */
+    .labeler-layout { display: flex; height: 100vh; flex-direction: column; background: #263238; color: white; }
+    .top-bar { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: #1B5E20; flex-shrink: 0; flex-wrap: wrap; }
+    .top-bar .title { font-family: 'Jua', sans-serif; font-size: 20px; color: #FFF9C4; }
+    .content-area { display: flex; flex: 1; overflow: hidden; }
+    .img-sidebar { width: 140px; background: #37474F; border-right: 2px solid #455A64; overflow-y: auto; flex-shrink: 0; }
+    .img-thumb { cursor: pointer; border-bottom: 1px solid #455A64; position: relative; }
+    .img-thumb img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+    .img-thumb.active { outline: 4px solid #81C784; }
+    .img-thumb .labeled-dot { position: absolute; top: 6px; right: 6px; width: 12px; height: 12px; border-radius: 50%; background: #66BB6A; border: 2px solid white; }
+    .img-thumb .num { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; font-size: 11px; padding: 2px 4px; text-align: center; }
+
+    .canvas-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; background: #121212; }
+    .canvas-wrap { flex: 1; position: relative; overflow: hidden; background: #000; cursor: crosshair; }
+    #img-canvas { position: absolute; top: 0; left: 0; }
+    #draw-canvas { position: absolute; top: 0; left: 0; cursor: crosshair; }
+
+    .right-panel { width: 220px; background: #263238; border-left: 2px solid #37474F; display: flex; flex-direction: column; overflow: hidden; }
+    .panel-section { padding: 12px; border-bottom: 1px solid #37474F; }
+    .panel-title { font-family: 'Jua', sans-serif; font-size: 16px; color: #A5D6A7; margin-bottom: 8px; }
+    .class-btn { width: 100%; padding: 10px 12px; margin-bottom: 6px; border: 2px solid transparent; border-radius: 12px; color: white; font-size: 14px; font-weight: bold; cursor: pointer; text-align: left; transition: all .2s; display: flex; align-items: center; gap: 8px; }
+    .class-btn.active { border-color: white; font-weight: 700; transform: scale(1.02); }
+    .class-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+    .boxes-list { flex: 1; overflow-y: auto; padding: 10px; }
+    .box-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; margin-bottom: 6px; cursor: pointer; font-size: 13px; font-weight: 600; background: rgba(255,255,255,0.08); }
+    .box-item.selected { background: rgba(129,199,132,0.25); border: 1px solid #81C784; }
+    .box-del { margin-left: auto; background: #EF5350; border: none; border-radius: 6px; padding: 4px 8px; color: white; font-size: 12px; cursor: pointer; }
+
+    .bottom-bar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #1B5E20; flex-shrink: 0; flex-wrap: wrap; }
+    .tool-btn { padding: 8px 14px; border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; background: rgba(255,255,255,0.15); color: white; font-family: 'Jua', sans-serif; font-size: 15px; cursor: pointer; transition: all .2s; }
+    .tool-btn:hover { background: rgba(255,255,255,0.25); }
+    .tool-btn.active { background: #81C784; color: #1B5E20; font-weight: bold; }
+    .save-status { font-size: 14px; font-weight: bold; color: #FFF9C4; margin-left: auto; }
+    .empty-canvas { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px; color: #90A4AE; font-size: 18px; font-weight: bold; }
+
+    /* ── 튜토리얼 & 연습하기 서브 레이아웃 ── */
+    .tutorial-wrap, .practice-wrap { max-width: 720px; margin: 0 auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 16px; }
+    .tutorial-step { background: #FFFFFF; border: 3px solid #C8E6C9; border-radius: 20px; padding: 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.04); }
+    .tutorial-step h3 { font-family: 'Jua', sans-serif; font-size: 22px; margin-bottom: 10px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    .tutorial-step p { font-size: 15px; color: #455A64; line-height: 1.6; font-weight: 600; margin-bottom: 10px; }
+    .tip-box { background: #E8F5E9; border-left: 5px solid #2E7D32; border-radius: 10px; padding: 12px 14px; font-size: 14px; color: #1B5E20; font-weight: 600; margin-top: 8px; }
+
+    .practice-canvas-wrap { position: relative; width: 100%; border-radius: 16px; overflow: hidden; background: #000; margin-bottom: 14px; border: 3px solid #37474F; }
+    .practice-canvas-wrap canvas { width: 100%; display: block; }
+    .practice-guide { background: #E8F5E9; border: 2px solid #A5D6A7; border-radius: 14px; padding: 14px; font-size: 15px; font-weight: bold; color: #1B5E20; margin-bottom: 12px; line-height: 1.5; }
+
+    @media (max-width: 600px) {
+      .right-panel { width: 160px; }
+      .img-sidebar { width: 90px; }
+      .select-title { font-size: 24px; }
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <header>
-    <a href="main.html" class="btn-back">⬅ 마을로</a>
-    <h1>🏷️ Quest 4: 라벨링 체육관</h1>
-    <div style="width: 70px;"></div>
-  </header>
-  <div class="game-wrapper">
-    <div class="canvas-container">
-      <canvas id="roomCanvas" width="600" height="360"></canvas>
+
+<!-- ════════════════════════════════════════ -->
+<!--  화면 1: 메뉴 선택                         -->
+<!-- ════════════════════════════════════════ -->
+<div id="screen-select">
+  <div class="select-wrap">
+    <div class="select-header">
+      <a href="main.html" class="btn-back">⬅ 마을로</a>
+      <div style="font-family:'Jua',sans-serif; font-size:18px; color:#2E7D32;" id="dispScore">⭐ 0점</div>
     </div>
-    <div class="guide-text" id="actionGuide">🎮 방향키로 이동하여 [임무 책상] 앞에서 스페이스바를 누르세요.</div>
+
+    <div>
+      <div class="select-title">🏷️ Quest 4: 라벨링 체육관</div>
+      <div class="select-desc">AI가 물체를 제대로 알아볼 수 있도록 사진 속 재활용품에 네모 상자를 그려 알려줘요!</div>
+    </div>
+
+    <div class="menu-card" onclick="showScreen('tutorial')">
+      <div class="menu-icon">📖</div>
+      <div>
+        <div class="menu-num">1단계</div>
+        <div class="menu-name">라벨링 튜토리얼 (방법 배우기)</div>
+        <div class="menu-desc">바운딩박스 라벨링이 무엇이고 왜 필요한지 배워요</div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
+
+    <div class="menu-card" onclick="showScreen('practice')">
+      <div class="menu-icon">✏️</div>
+      <div>
+        <div class="menu-num">2단계</div>
+        <div class="menu-name">라벨링 연습하기 (도구 익히기)</div>
+        <div class="menu-desc">샘플 사진에 직접 네모 상자를 드래그해서 그려봐요</div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
+
+    <div class="menu-card" onclick="showScreen('labeler')">
+      <div class="menu-icon">🎯</div>
+      <div>
+        <div class="menu-num">3단계</div>
+        <div class="menu-name">실전 라벨링하기 (나의 수집 데이터)</div>
+        <div class="menu-desc">3차시에서 직접 등록한 수집 사진에 라벨을 붙여요</div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
   </div>
 </div>
 
-<div id="missionModal" class="modal-overlay">
-  <div class="modal-content">
-    <button class="btn-close" onclick="closeModal()">✖</button>
-    <h2>🏷️ [4차시] 이미지 데이터 라벨링</h2>
-    <div class="guide-box">AI에게 바른 학습 데이터를 주기 위해 물건에 알맞은 올바른 이름표(라벨)를 붙여주세요![cite: 1]</div>
-    <div style="font-size: 60px; margin: 10px 0;">🥛</div>
-    <div style="font-size: 17px; font-weight: bold;">다 마시고 깨끗이 씻어 말린 우유팩</div>
-    <div class="opt-grid">
-      <button class="opt-btn" onclick="saveQuest4('종이류')">종이류</button>
-      <button class="opt-btn" onclick="saveQuest4('우유팩(종이팩)')">우유팩(종이팩)</button>
-      <button class="opt-btn" onclick="saveQuest4('일반쓰레기')">일반쓰레기</button>
-      <button class="opt-btn" onclick="saveQuest4('플라스틱')">플라스틱</button>
+<!-- ════════════════════════════════════════ -->
+<!--  화면 2: 튜토리얼                          -->
+<!-- ════════════════════════════════════════ -->
+<div id="screen-tutorial" style="display:none;">
+  <div class="tutorial-wrap">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <button onclick="showScreen('select')" class="btn-back" style="padding:6px 12px; font-size:14px;">← 뒤로</button>
+      <h2 style="font-family:'Jua',sans-serif; font-size:24px; color:#2E7D32;">📖 라벨링 튜토리얼</h2>
+    </div>
+
+    <div class="tutorial-step">
+      <h3>🎯 1. 데이터 라벨링(Labeling)이란?</h3>
+      <p>사진 속 물체에 이름표(라벨)를 달아 <strong>AI에게 정답을 가르쳐주는 작업</strong>이에요.<br>
+      AI는 정답 라벨이 표시된 데이터를 수천 장 배움으로써 사진 속 자원순환 품목을 올바르게 구별하게 됩니다!</p>
+      <div class="tip-box">💡 AI는 혼자서 물체를 인식하지 못해요. 사람이 먼저 위치와 종류를 명확히 지정해줘야 해요!</div>
+    </div>
+
+    <div class="tutorial-step">
+      <h3>📦 2. 바운딩 박스 (Bounding Box)</h3>
+      <p>사진 속 물체를 꽉 감싸는 <strong>직사각형 사각형 박스</strong>를 바운딩 박스라고 해요.<br>
+      마우스나 손가락으로 드래그해서 물체 크기에 맞게 그립니다.</p>
+
+      <div style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
+        <div style="background:#E8F5E9; border:2px solid #81C784; border-radius:12px; padding:12px 14px;">
+          <div style="font-weight:bold; font-size:16px; color:#2E7D32; margin-bottom:4px;">📄 종이류 / 우유팩</div>
+          <div style="font-size:14px; color:#37474F;">펼쳐진 종이 상자나 우유팩 전체를 바운딩 박스로 감싸요.</div>
+        </div>
+        <div style="background:#E1F5FE; border:2px solid #4FC3F7; border-radius:12px; padding:12px 14px;">
+          <div style="font-weight:bold; font-size:16px; color:#0288D1; margin-bottom:4px;">🥤 플라스틱</div>
+          <div style="font-size:14px; color:#37474F;">투명 페트병, 음료 용기의 뚜껑부터 바닥까지 전체가 들어가게 그립니다.</div>
+        </div>
+        <div style="background:#FFF3E0; border:2px solid #FFB74D; border-radius:12px; padding:12px 14px;">
+          <div style="font-weight:bold; font-size:16px; color:#E65100; margin-bottom:4px;">🥫 캔 / 고철</div>
+          <div style="font-size:14px; color:#37474F;">음료수 캔, 통조림 캔 등 금속 용기 전체를 감싸요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tutorial-step">
+      <h3>⚠️ 3. 올바른 라벨링 규칙</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;">
+        <div style="background:#E8F5E9; border:2px solid #66BB6A; border-radius:14px; padding:14px; text-align:center;">
+          <div style="font-size:16px; font-weight:bold; color:#2E7D32; margin-bottom:6px;">✅ 좋은 예시</div>
+          <div style="font-size:13px; color:#555; line-height:1.5;">물체의 가장자리에딱 맞게 그리기<br>여백이 최소화되도록 감싸기</div>
+        </div>
+        <div style="background:#FFEBEE; border:2px solid #EF5350; border-radius:14px; padding:14px; text-align:center;">
+          <div style="font-size:16px; font-weight:bold; color:#C62828; margin-bottom:6px;">❌ 나쁜 예시</div>
+          <div style="font-size:13px; color:#555; line-height:1.5;">너무 크게 그려 여백 남기기<br>물체 일부가 잘리게 그리기</div>
+        </div>
+      </div>
+    </div>
+
+    <button onclick="showScreen('practice')" class="btn-back" style="width:100%; justify-content:center; padding:14px; background:linear-gradient(135deg,#4CAF50,#2E7D32); color:white; font-size:18px;">
+      연습하러 가기 ✏️
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!--  화면 3: 연습하기                          -->
+<!-- ════════════════════════════════════════ -->
+<div id="screen-practice" style="display:none;">
+  <div class="practice-wrap">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <button onclick="showScreen('select')" class="btn-back" style="padding:6px 12px; font-size:14px;">← 뒤로</button>
+      <h2 style="font-family:'Jua',sans-serif; font-size:24px; color:#2E7D32;">✏️ 라벨링 연습하기</h2>
+    </div>
+
+    <div class="practice-guide" id="practice-guide">
+      📌 아래 품목 중 <strong>클래스를 선택</strong>하고 마우스나 손가락으로 사진 위를 드래그해서 네모 박스를 그려보세요!
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <div style="font-size:14px; font-weight:bold; color:#2E7D32; margin-bottom:6px;">① 클래스(종류) 선택:</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;" id="practice-class-btns"></div>
+    </div>
+
+    <div style="font-size:14px; font-weight:bold; color:#2E7D32; margin-bottom:6px;">② 드래그하여 박스 그리기:</div>
+    <div class="practice-canvas-wrap">
+      <canvas id="practice-img-canvas"></canvas>
+      <canvas id="practice-draw-canvas" style="position:absolute; top:0; left:0;"
+        onmousedown="practiceStartDraw(event)" onmousemove="practiceMoveDraw(event)" onmouseup="practiceEndDraw(event)"
+        ontouchstart="practiceTouchStart(event)" ontouchmove="practiceTouchMove(event)" ontouchend="practiceTouchEnd(event)">
+      </canvas>
+    </div>
+
+    <div style="display:flex; gap:10px; align-items:center;">
+      <button onclick="practiceUndo()" class="tool-btn" style="background:#37474F; border:none;">↩️ 되돌리기</button>
+      <button onclick="practiceClear()" class="tool-btn" style="background:#C62828; border:none;">🗑️ 전체삭제</button>
+      <div id="practice-box-count" style="font-size:15px; font-weight:bold; color:#2E7D32; margin-left:auto;">박스: 0개</div>
+    </div>
+
+    <div id="practice-box-list" style="display:flex; flex-direction:column; gap:6px; margin-top:8px;"></div>
+
+    <div id="practice-complete-msg" style="display:none; background:#E8F5E9; border:2px solid #81C784; border-radius:14px; padding:14px; font-size:16px; font-weight:bold; color:#2E7D32; text-align:center;">
+      🎉 참 잘했어요! 이제 나의 실전 수집 사진으로 라벨링을 시작해봅시다!
+    </div>
+
+    <button onclick="showScreen('labeler')" class="btn-back" style="width:100%; justify-content:center; padding:14px; background:linear-gradient(135deg,#4CAF50,#2E7D32); color:white; font-size:18px; margin-top:10px;">
+      실전 라벨링하러 가기 🎯
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!--  화면 4: 실전 라벨링                       -->
+<!-- ════════════════════════════════════════ -->
+<div id="screen-labeler" style="display:none;" class="labeler-layout">
+  <div class="top-bar">
+    <button onclick="showScreen('select')" class="tool-btn" style="padding:6px 12px; font-size:13px;">← 뒤로</button>
+    <a href="main.html" class="tool-btn" style="padding:6px 12px; font-size:13px; text-decoration:none;">🏠 메인</a>
+    <div class="title">🎯 라벨링 체육관 (실전)</div>
+
+    <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+      <span id="progress-label" style="font-size:14px; font-weight:bold; color:#FFF9C4;"></span>
+      <button onclick="downloadAllLabels()" class="tool-btn" style="font-size:13px;">⬇️ txt만</button>
+      <button onclick="downloadZip()" class="tool-btn" style="font-size:13px; background:#FFB300; color:#000;">📦 ZIP 다운로드</button>
+    </div>
+  </div>
+
+  <div class="content-area">
+    <!-- 왼쪽 수집 사진 사이드바 -->
+    <div class="img-sidebar" id="img-sidebar">
+      <div style="padding:10px; font-family:'Jua',sans-serif; font-size:14px; color:#A5D6A7; border-bottom:1px solid #455A64;">🖼️ 내 사진 목록</div>
+      <div id="thumb-list"></div>
+    </div>
+
+    <!-- 중앙 캔버스 영역 -->
+    <div class="canvas-area">
+      <div class="canvas-wrap" id="canvas-wrap">
+        <canvas id="img-canvas"></canvas>
+        <canvas id="draw-canvas"
+          onmousedown="startDraw(event)" onmousemove="moveDraw(event)" onmouseup="endDraw(event)"
+          onmouseleave="crosshairX=-1;crosshairY=-1;redrawCanvas(currentImg?._imageEl);"
+          ontouchstart="touchStartDraw(event)" ontouchmove="touchMoveDraw(event)" ontouchend="touchEndDraw(event)">
+        </canvas>
+        <div class="empty-canvas" id="empty-msg">
+          <div style="font-size:50px;">👈</div>
+          <div>왼쪽에서 사진을 클릭하세요</div>
+        </div>
+      </div>
+
+      <div class="bottom-bar">
+        <button class="tool-btn active" id="tool-draw" onclick="setTool('draw')">✏️ 그리기</button>
+        <button class="tool-btn" id="tool-select" onclick="setTool('select')">↖️ 선택</button>
+        <button class="tool-btn" onclick="undoLast()">↩️ 되돌리기</button>
+        <button class="tool-btn" onclick="clearBoxes()" style="background:#EF5350;">🗑️ 전체삭제</button>
+        <div class="save-status" id="save-status"></div>
+      </div>
+    </div>
+
+    <!-- 오른쪽 클래스 & 박스 사이드바 -->
+    <div class="right-panel">
+      <div class="panel-section">
+        <div class="panel-title">1. 클래스(종류) 선택</div>
+        <div id="class-buttons"></div>
+      </div>
+      <div class="panel-title" style="padding:10px 12px 0;">2. 지정된 박스 목록</div>
+      <div class="boxes-list" id="boxes-list"></div>
     </div>
   </div>
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<!-- JSZip & Firebase compat SDK -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-  const firebaseConfig = { apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00", authDomain: "elemeelementary-textbook.firebaseapp.com", projectId: "elemeelementary-textbook", storageBucket: "elemeelementary-textbook.firebasestorage.app", messagingSenderId: "713149004420", appId: "1:713149004420:web:8483273681e16f5a8fa0d1" };
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+    authDomain: "elemeelementary-textbook.firebaseapp.com",
+    projectId: "elemeelementary-textbook",
+    storageBucket: "elemeelementary-textbook.firebasestorage.app",
+    messagingSenderId: "713149004420",
+    appId: "1:713149004420:web:8483273681e16f5a8fa0d1"
+  };
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const db = firebase.firestore();
 
   const studentId = localStorage.getItem("elementary_studentId");
-  const studentName = localStorage.getItem("elementary_studentName");
+  const studentName = localStorage.getItem("elementary_studentName") || "학생 탐정";
 
-  const canvas = document.getElementById("roomCanvas");
-  const ctx = canvas.getContext("2d");
-  const guide = document.getElementById("actionGuide");
-  
-  let player = { x: 300, y: 300, speed: 16 };
-  const desk = { x: 300, y: 120, w: 80, h: 50 };
-  let canInteract = false;
-
-  function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#C8E6C9"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "#A5D6A7"; ctx.lineWidth = 2;
-    for(let x=0; x<canvas.width; x+=40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
-    for(let y=0; y<canvas.height; y+=40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
-
-    ctx.fillStyle = "#1B5E20"; ctx.fillRect(0, 0, canvas.width, 60);
-    ctx.fillStyle = "#2E7D32"; ctx.fillRect(0, 50, canvas.width, 10);
-
-    ctx.fillStyle = "#5D4037"; ctx.fillRect(desk.x - desk.w/2, desk.y - desk.h/2, desk.w, desk.h);
-    ctx.fillStyle = "#212121"; ctx.fillRect(desk.x - 20, desk.y - 20, 40, 25);
-    ctx.fillStyle = canInteract ? "#64DD17" : "#4CAF50"; ctx.fillRect(desk.x - 16, desk.y - 16, 32, 17);
-
-    ctx.fillStyle = "rgba(0,0,0,0.3)"; ctx.beginPath(); ctx.ellipse(player.x, player.y + 12, 10, 5, 0, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = "#e53935"; ctx.fillRect(player.x - 7, player.y - 16, 14, 6);
-    ctx.fillStyle = "#ffcc80"; ctx.fillRect(player.x - 5, player.y - 9, 10, 8);
-    ctx.fillStyle = "#1e88e5"; ctx.fillRect(player.x - 6, player.y - 1, 12, 8);
-    ctx.fillStyle = "#37474f"; ctx.fillRect(player.x - 5, player.y + 7, 10, 4);
+  if (!studentId) {
+    window.location.href = "index.html";
   }
 
-  function move(dx, dy) {
-    player.x = Math.max(20, Math.min(canvas.width - 20, player.x + dx));
-    player.y = Math.max(70, Math.min(canvas.height - 20, player.y + dy));
-    canInteract = Math.hypot(player.x - desk.x, player.y - desk.y) < 55;
-    guide.textContent = canInteract ? "🌟 스페이스바를 눌러 퀘스트를 시작하세요!" : "🎮 방향키로 이동하여 [임무 책상] 앞으로 가세요.";
-    guide.style.color = canInteract ? "#FFEB3B" : "#cfd8dc";
-    render();
-  }
+  // 자원순환 품목 클래스 정의
+  const DEFAULT_CLASSES = [
+    { name: "종이류/우유팩", color: "#66BB6A" },
+    { name: "플라스틱", color: "#29B6F6" },
+    { name: "캔/고철", color: "#FFA726" },
+    { name: "유리병", color: "#AB47BC" },
+    { name: "비닐류", color: "#FF7043" },
+    { name: "기타", color: "#90A4AE" }
+  ];
 
-  window.addEventListener("keydown", (e) => {
-    if (document.getElementById("missionModal").classList.contains("active")) return;
-    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
-      e.preventDefault();
-      if (e.key === "ArrowUp") move(0, -player.speed);
-      if (e.key === "ArrowDown") move(0, player.speed);
-      if (e.key === "ArrowLeft") move(-player.speed, 0);
-      if (e.key === "ArrowRight") move(player.speed, 0);
-    } else if (e.code === "Space") {
-      e.preventDefault();
-      if (canInteract) document.getElementById("missionModal").classList.add("active");
+  // 화면 전환 함수
+  function showScreen(name) {
+    ['select','tutorial','practice','labeler'].forEach(s => {
+      const el = document.getElementById('screen-' + s);
+      if (el) el.style.display = 'none';
+    });
+    const target = document.getElementById('screen-' + name);
+    if (target) {
+      target.style.display = (name === 'labeler') ? 'flex' : 'block';
     }
-  });
+    if (name === 'practice') initPractice();
+    if (name === 'labeler') initLabeler();
+  }
 
-  window.closeModal = function() {
-    document.getElementById("missionModal").classList.remove("active");
-    player.y += 20; move(0,0);
-  };
+  // 초기 유저 점수 로드
+  async function initUser() {
+    try {
+      const docSnap = await db.collection("students").doc(studentId).get();
+      if (docSnap.exists) {
+        document.getElementById('dispScore').textContent = `⭐ ${docSnap.data().score || 0}점`;
+      } else {
+        const score = localStorage.getItem("elementary_score") || "0";
+        document.getElementById('dispScore').textContent = `⭐ ${score}점`;
+      }
+    } catch(e) { console.error(e); }
+  }
 
-  window.saveQuest4 = async function(ans) {
-    const isCorrect = (ans === "우유팩(종이팩)");
-    alert(isCorrect ? "🎉 정답! 코팅된 우유팩은 따로 모아야 고급 화장지로 재활용됩니다. (⭐ +30점)" : "❌ 오답! 우유팩은 안팎 코팅 때문에 일반 종이와 섞이면 안 돼요.");
+  // ════════════════════════════════════════
+  //  2단계: 연습하기 캔버스 로직
+  // ════════════════════════════════════════
+  let practiceSelectedClass = 0;
+  let practiceBoxes = [], practiceIsDrawing = false;
+  let practiceStartX = 0, practiceStartY = 0, practiceCurrentBox = null;
+
+  function initPractice() {
+    renderPracticeClassBtns();
+    setupPracticeCanvas();
+  }
+
+  function renderPracticeClassBtns() {
+    document.getElementById('practice-class-btns').innerHTML = DEFAULT_CLASSES.map((c, i) => `
+      <button onclick="practiceSelectClass(${i})"
+        style="padding:8px 14px; border:2px solid ${i === practiceSelectedClass ? c.color : '#CCCCCC'};
+               border-radius:20px; background:${i === practiceSelectedClass ? c.color + '22' : 'white'};
+               color:${i === practiceSelectedClass ? c.color : '#555'};
+               font-size:14px; font-weight:bold; cursor:pointer; display:flex; align-items:center; gap:6px;">
+        <span style="width:12px; height:12px; border-radius:3px; background:${c.color};"></span>
+        [${i}] ${c.name}
+      </button>`).join('');
+  }
+
+  function practiceSelectClass(i) {
+    practiceSelectedClass = i;
+    renderPracticeClassBtns();
+  }
+
+  function setupPracticeCanvas() {
+    const ic = document.getElementById('practice-img-canvas');
+    const dc = document.getElementById('practice-draw-canvas');
+    ic.width = dc.width = 600;
+    ic.height = dc.height = 360;
+
+    const ctx = ic.getContext('2d');
+    ctx.fillStyle = '#263238'; ctx.fillRect(0,0,600,360);
+    ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 20px Pretendard'; ctx.textAlign = 'center';
+    ctx.fillText('📦 예시: 페트병과 우유팩 수집 사진', 300, 180);
+    ctx.fillStyle = '#B0BEC5'; ctx.font = '14px Pretendard';
+    ctx.fillText('마우스/손가락으로 드래그해서 상자를 그려보세요!', 300, 210);
+    redrawPractice();
+  }
+
+  function redrawPractice() {
+    const dc = document.getElementById('practice-draw-canvas');
+    const dctx = dc.getContext('2d');
+    dctx.clearRect(0,0,dc.width,dc.height);
+
+    practiceBoxes.forEach((box, i) => {
+      const cls = DEFAULT_CLASSES[box.classIdx] || { color: '#FFF', name: '?' };
+      dctx.strokeStyle = cls.color; dctx.lineWidth = 3;
+      dctx.strokeRect(box.x, box.y, box.w, box.h);
+      dctx.fillStyle = cls.color + '33'; dctx.fillRect(box.x, box.y, box.w, box.h);
+      dctx.fillStyle = cls.color; dctx.font = 'bold 13px Pretendard';
+      dctx.fillRect(box.x, box.y - 20, Math.max(70, cls.name.length * 12), 20);
+      dctx.fillStyle = '#FFFFFF'; dctx.fillText('[' + box.classIdx + '] ' + cls.name, box.x + 4, box.y - 5);
+    });
+
+    if (practiceCurrentBox) {
+      const cls = DEFAULT_CLASSES[practiceSelectedClass] || { color: '#FFF' };
+      dctx.strokeStyle = cls.color; dctx.lineWidth = 2; dctx.setLineDash([6, 4]);
+      dctx.strokeRect(practiceCurrentBox.x, practiceCurrentBox.y, practiceCurrentBox.w, practiceCurrentBox.h);
+      dctx.setLineDash([]);
+    }
+    renderPracticeBoxList();
+  }
+
+  function getPracticePos(e) {
+    const c = document.getElementById('practice-draw-canvas');
+    const rect = c.getBoundingClientRect();
+    const scaleX = c.width / rect.width, scaleY = c.height / rect.height;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+  }
+
+  function practiceStartDraw(e) {
+    const pos = getPracticePos(e);
+    practiceIsDrawing = true; practiceStartX = pos.x; practiceStartY = pos.y;
+    practiceCurrentBox = { x: pos.x, y: pos.y, w: 0, h: 0 };
+  }
+  function practiceMoveDraw(e) {
+    if (!practiceIsDrawing) return;
+    const pos = getPracticePos(e);
+    practiceCurrentBox = { x: Math.min(practiceStartX, pos.x), y: Math.min(practiceStartY, pos.y), w: Math.abs(pos.x - practiceStartX), h: Math.abs(pos.y - practiceStartY) };
+    redrawPractice();
+  }
+  function practiceEndDraw(e) {
+    if (!practiceIsDrawing) return;
+    practiceIsDrawing = false;
+    if (practiceCurrentBox && practiceCurrentBox.w > 15 && practiceCurrentBox.h > 15) {
+      practiceBoxes.push({ ...practiceCurrentBox, classIdx: practiceSelectedClass });
+      if (practiceBoxes.length >= 2) {
+        document.getElementById('practice-complete-msg').style.display = 'block';
+      }
+    }
+    practiceCurrentBox = null;
+    redrawPractice();
+  }
+
+  function practiceTouchStart(e) { e.preventDefault(); practiceStartDraw(e); }
+  function practiceTouchMove(e) { e.preventDefault(); practiceMoveDraw(e); }
+  function practiceTouchEnd(e) { e.preventDefault(); practiceEndDraw(e); }
+
+  function practiceUndo() { practiceBoxes.pop(); redrawPractice(); }
+  function practiceClear() {
+    practiceBoxes = [];
+    document.getElementById('practice-complete-msg').style.display = 'none';
+    redrawPractice();
+  }
+
+  function renderPracticeBoxList() {
+    document.getElementById('practice-box-count').textContent = `박스: ${practiceBoxes.length}개`;
+    document.getElementById('practice-box-list').innerHTML = practiceBoxes.map((b, i) => {
+      const cls = DEFAULT_CLASSES[b.classIdx] || { color: '#FFF', name: '?' };
+      return `<div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:white; border-radius:10px; border:2px solid ${cls.color}; font-weight:bold;">
+        <span style="width:12px; height:12px; border-radius:3px; background:${cls.color};"></span>
+        <span>[${b.classIdx}] ${cls.name}</span>
+        <button onclick="practiceDeleteBox(${i})" style="margin-left:auto; background:#FFEBEE; border:none; border-radius:6px; padding:4px 8px; color:#C62828; font-weight:bold; cursor:pointer;">✕ 삭제</button>
+      </div>`;
+    }).join('');
+  }
+
+  function practiceDeleteBox(i) { practiceBoxes.splice(i, 1); redrawPractice(); }
+
+  // ════════════════════════════════════════
+  //  3단계: 실전 라벨링 로직
+  // ════════════════════════════════════════
+  let myImages = [], currentImgIdx = -1, currentImg = null;
+  let allBoxes = {};
+  let isDrawing = false, startX = 0, startY = 0, currentBox = null;
+  let selectedClassIdx = 0, selectedBoxIdx = -1, currentTool = 'draw';
+  let scale = 1, offsetX = 0, offsetY = 0;
+  let crosshairX = -1, crosshairY = -1;
+  let labelerInited = false;
+
+  async function initLabeler() {
+    if (labelerInited) return;
+    labelerInited = true;
+    renderClassButtons();
+    await loadMyImages();
+    setupResize();
+  }
+
+  function renderClassButtons() {
+    document.getElementById('class-buttons').innerHTML = DEFAULT_CLASSES.map((c, i) => `
+      <button class="class-btn ${i === selectedClassIdx ? 'active' : ''}"
+        style="background:${c.color}33; border-color:${i === selectedClassIdx ? c.color : 'transparent'};"
+        onclick="selectClass(${i})">
+        <span class="class-dot" style="background:${c.color};"></span>
+        [${i}] ${c.name}
+      </button>`).join('');
+  }
+
+  function selectClass(i) {
+    selectedClassIdx = i;
+    renderClassButtons();
+  }
+
+  async function loadMyImages() {
+    try {
+      const snap = await db.collection('uploads')
+        .where('userId', '==', studentId)
+        .orderBy('created_at', 'desc').get();
+      myImages = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch(e) {
+      const snap = await db.collection('uploads').where('userId', '==', studentId).get();
+      myImages = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      myImages.sort((a,b) => (b.created_at || '').localeCompare(a.created_at || ''));
+    }
 
     try {
-      await addDoc(collection(db, "quest4_labeling"), { studentId, studentName, answer: ans, isCorrect, createdAt: serverTimestamp() });
-      if (isCorrect) {
-        await updateDoc(doc(db, "students", studentId), { score: increment(30) });
-        localStorage.setItem("elementary_score", parseInt(localStorage.getItem("elementary_score")||"0") + 30);
-      }
-      window.location.href = "main.html";
-    } catch(e) { console.error(e); }
-  };
+      const labelSnap = await db.collection('labels').where('userId', '==', studentId).get();
+      labelSnap.docs.forEach(d => {
+        const data = d.data();
+        allBoxes[data.imageId] = data.boxes || [];
+      });
+    } catch(e) {}
 
-  render();
+    updateProgress();
+
+    document.getElementById('thumb-list').innerHTML = myImages.map((img, i) => `
+      <div class="img-thumb ${i === currentImgIdx ? 'active' : ''}" id="thumb-${i}" onclick="selectImage(${i})">
+        <img src="${img.url}" onerror="this.style.display='none'">
+        ${allBoxes[img.id]?.length ? '<div class="labeled-dot"></div>' : ''}
+        <div class="num">${i+1}</div>
+      </div>`).join('');
+
+    if (myImages.length > 0) selectImage(0);
+    else document.getElementById('empty-msg').style.display = 'flex';
+  }
+
+  function updateProgress() {
+    const labeled = myImages.filter(img => allBoxes[img.id]?.length > 0).length;
+    document.getElementById('progress-label').textContent = `${labeled}/${myImages.length} 완료`;
+  }
+
+  function selectImage(idx) {
+    currentImgIdx = idx;
+    const img = myImages[idx];
+    currentImg = img;
+    document.getElementById('empty-msg').style.display = 'none';
+    document.querySelectorAll('.img-thumb').forEach((el, i) => el.classList.toggle('active', i === idx));
+    renderBoxList();
+
+    const image = new Image();
+    image.crossOrigin = 'anonymous';
+    image.onload = () => { fitImageToCanvas(image); redrawCanvas(image); };
+    image.onerror = () => {
+      const img2 = new Image();
+      img2.onload = () => { fitImageToCanvas(img2); redrawCanvas(img2); };
+      img2.src = img.url + '?t=' + Date.now();
+      currentImg._imageEl = img2;
+    };
+    image.src = img.url;
+    currentImg._imageEl = image;
+  }
+
+  function fitImageToCanvas(image) {
+    const wrap = document.getElementById('canvas-wrap');
+    const cw = wrap.clientWidth, ch = wrap.clientHeight;
+    scale = Math.min(cw / image.width, ch / image.height, 1);
+    const dw = image.width * scale, dh = image.height * scale;
+    offsetX = (cw - dw) / 2; offsetY = (ch - dh) / 2;
+    ['img-canvas','draw-canvas'].forEach(id => {
+      const c = document.getElementById(id);
+      c.width = cw; c.height = ch;
+    });
+  }
+
+  function redrawCanvas(imageEl) {
+    if (!imageEl) return;
+    const imgC = document.getElementById('img-canvas');
+    const drawC = document.getElementById('draw-canvas');
+    const ic = imgC.getContext('2d');
+    const dc = drawC.getContext('2d');
+
+    ic.clearRect(0, 0, imgC.width, imgC.height);
+    dc.clearRect(0, 0, drawC.width, drawC.height);
+
+    ic.fillStyle = '#111111';
+    ic.fillRect(0, 0, imgC.width, imgC.height);
+    ic.drawImage(imageEl, offsetX, offsetY, imageEl.width * scale, imageEl.height * scale);
+
+    const boxes = allBoxes[currentImg.id] || [];
+    boxes.forEach((box, i) => {
+      const cls = DEFAULT_CLASSES[box.classIdx] || { color: '#FFF', name: '?' };
+      const x = offsetX + box.x * scale, y = offsetY + box.y * scale;
+      const w = box.w * scale, h = box.h * scale;
+
+      dc.strokeStyle = cls.color; dc.lineWidth = (i === selectedBoxIdx) ? 4 : 2.5;
+      dc.strokeRect(x, y, w, h);
+      dc.fillStyle = cls.color + '44'; dc.fillRect(x, y, w, h);
+      dc.fillStyle = cls.color; dc.font = 'bold 13px Pretendard';
+      dc.fillRect(x, y - 18, Math.max(70, cls.name.length * 10), 18);
+      dc.fillStyle = '#FFFFFF'; dc.fillText('[' + box.classIdx + '] ' + cls.name, x + 3, y - 4);
+    });
+
+    if (currentBox) {
+      const cls = DEFAULT_CLASSES[selectedClassIdx] || { color: '#FFF' };
+      dc.strokeStyle = cls.color; dc.lineWidth = 2.5; dc.setLineDash([5, 3]);
+      dc.strokeRect(currentBox.x, currentBox.y, currentBox.w, currentBox.h);
+      dc.setLineDash([]);
+    }
+
+    // 십자선 가이드
+    if (crosshairX >= 0 && crosshairY >= 0 && !isDrawing) {
+      dc.save();
+      dc.globalAlpha = 0.8; dc.strokeStyle = '#000000'; dc.lineWidth = 3; dc.setLineDash([4, 4]);
+      dc.beginPath(); dc.moveTo(crosshairX, 0); dc.lineTo(crosshairX, drawC.height); dc.stroke();
+      dc.beginPath(); dc.moveTo(0, crosshairY); dc.lineTo(drawC.width, crosshairY); dc.stroke();
+
+      dc.globalAlpha = 1.0; dc.strokeStyle = '#FFD54F'; dc.lineWidth = 1.5;
+      dc.beginPath(); dc.moveTo(crosshairX, 0); dc.lineTo(crosshairX, drawC.height); dc.stroke();
+      dc.beginPath(); dc.moveTo(0, crosshairY); dc.lineTo(drawC.width, crosshairY); dc.stroke();
+      dc.setLineDash([]);
+      dc.restore();
+    }
+  }
+
+  function getCanvasPos(e) {
+    const c = document.getElementById('draw-canvas');
+    const rect = c.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: clientX - rect.left, y: clientY - rect.top };
+  }
+
+  function startDraw(e) {
+    if (currentTool !== 'draw' || !currentImg) return;
+    const pos = getCanvasPos(e);
+    isDrawing = true; startX = pos.x; startY = pos.y;
+    currentBox = { x: pos.x, y: pos.y, w: 0, h: 0 };
+  }
+  function moveDraw(e) {
+    const pos = getCanvasPos(e);
+    crosshairX = pos.x; crosshairY = pos.y;
+    if (!isDrawing || !currentImg) { redrawCanvas(currentImg?._imageEl); return; }
+    currentBox = { x: Math.min(startX, pos.x), y: Math.min(startY, pos.y), w: Math.abs(pos.x - startX), h: Math.abs(pos.y - startY) };
+    redrawCanvas(currentImg._imageEl);
+  }
+  function endDraw(e) {
+    if (!isDrawing) return;
+    isDrawing = false;
+    if (currentBox && currentBox.w > 10 && currentBox.h > 10) {
+      const img = currentImg._imageEl;
+      const imgBox = {
+        classIdx: selectedClassIdx,
+        x: (currentBox.x - offsetX) / scale,
+        y: (currentBox.y - offsetY) / scale,
+        w: currentBox.w / scale,
+        h: currentBox.h / scale
+      };
+      imgBox.x = Math.max(0, imgBox.x); imgBox.y = Math.max(0, imgBox.y);
+      if (img) { imgBox.w = Math.min(img.width - imgBox.x, imgBox.w); imgBox.h = Math.min(img.height - imgBox.y, imgBox.h); }
+
+      if (!allBoxes[currentImg.id]) allBoxes[currentImg.id] = [];
+      allBoxes[currentImg.id].push(imgBox);
+      renderBoxList(); saveLabels(); updateThumb(); updateProgress();
+    }
+    currentBox = null; redrawCanvas(currentImg._imageEl);
+  }
+
+  function touchStartDraw(e) { e.preventDefault(); startDraw(e); }
+  function touchMoveDraw(e) { e.preventDefault(); moveDraw(e); }
+  function touchEndDraw(e) { e.preventDefault(); endDraw(e); }
+
+  function setTool(t) {
+    currentTool = t;
+    document.getElementById('tool-draw').classList.toggle('active', t === 'draw');
+    document.getElementById('tool-select').classList.toggle('active', t === 'select');
+    document.getElementById('draw-canvas').style.cursor = (t === 'draw') ? 'crosshair' : 'default';
+  }
+
+  function undoLast() {
+    if (!currentImg || !allBoxes[currentImg.id]?.length) return;
+    allBoxes[currentImg.id].pop();
+    renderBoxList(); saveLabels(); updateThumb(); updateProgress(); redrawCanvas(currentImg._imageEl);
+  }
+
+  function clearBoxes() {
+    if (!currentImg) return;
+    if (!confirm('이 사진의 모든 박스를 삭제할까요?')) return;
+    allBoxes[currentImg.id] = [];
+    renderBoxList(); saveLabels(); updateThumb(); updateProgress(); redrawCanvas(currentImg._imageEl);
+  }
+
+  function deleteBox(i) {
+    allBoxes[currentImg.id].splice(i, 1);
+    renderBoxList(); saveLabels(); updateThumb(); updateProgress(); redrawCanvas(currentImg._imageEl);
+  }
+
+  function renderBoxList() {
+    const boxes = allBoxes[currentImg?.id] || [];
+    document.getElementById('boxes-list').innerHTML = boxes.length
+      ? boxes.map((b, i) => {
+          const cls = DEFAULT_CLASSES[b.classIdx] || { color: '#FFF', name: '?' };
+          return `<div class="box-item ${i === selectedBoxIdx ? 'selected' : ''}" onclick="selectBox(${i})">
+            <span class="box-dot" style="background:${cls.color}; width:10px; height:10px; border-radius:3px;"></span>
+            <span>[${b.classIdx}] ${cls.name}</span>
+            <button class="box-del" onclick="event.stopPropagation();deleteBox(${i})">✕</button>
+          </div>`;
+        }).join('')
+      : `<div style="font-size:13px; color:#90A4AE; padding:8px;">상자를 그려주세요</div>`;
+  }
+
+  function selectBox(i) {
+    selectedBoxIdx = (i === selectedBoxIdx) ? -1 : i;
+    renderBoxList(); redrawCanvas(currentImg._imageEl);
+  }
+
+  async function saveLabels() {
+    if (!currentImg) return;
+    document.getElementById('save-status').textContent = '저장 중...';
+    try {
+      const boxes = allBoxes[currentImg.id] || [];
+      const snap = await db.collection('labels').where('userId', '==', studentId).where('imageId', '==', currentImg.id).get();
+
+      if (snap.empty) {
+        await db.collection('labels').add({ userId: studentId, imageId: currentImg.id, imageUrl: currentImg.url, boxes, updated_at: new Date().toISOString() });
+      } else {
+        await snap.docs[0].ref.update({ boxes, updated_at: new Date().toISOString() });
+      }
+
+      await db.collection('uploads').doc(currentImg.id).update({ labeled: boxes.length > 0 });
+      document.getElementById('save-status').textContent = '✅ 저장됨';
+      setTimeout(() => document.getElementById('save-status').textContent = '', 2000);
+
+      // 점수 보상 (+30점)
+      if (boxes.length > 0) {
+        const userRef = db.collection('students').doc(studentId);
+        const userDoc = await userRef.get();
+        if (userDoc.exists) {
+          const data = userDoc.data();
+          if (!data.q4_done) {
+            const currentScore = data.score || 0;
+            const questsDone = data.questsDone || 0;
+            await userRef.set({
+              score: currentScore + 30,
+              questsDone: Math.max(questsDone, 4),
+              q4_done: true
+            }, { merge: true });
+            localStorage.setItem("elementary_score", currentScore + 30);
+            alert("🎉 Quest 4 라벨링 성공! (+30점 획득)");
+          }
+        }
+      }
+    } catch(e) {
+      console.error(e);
+      document.getElementById('save-status').textContent = '❌ 저장 실패';
+    }
+  }
+
+  function updateThumb() {
+    const thumb = document.getElementById('thumb-' + currentImgIdx);
+    if (!thumb) return;
+    const dot = thumb.querySelector('.labeled-dot');
+    if (allBoxes[currentImg.id]?.length) {
+      if (!dot) {
+        const d = document.createElement('div');
+        d.className = 'labeled-dot';
+        thumb.appendChild(d);
+      }
+    } else {
+      dot?.remove();
+    }
+  }
+
+  function downloadAllLabels() {
+    const labeled = Object.entries(allBoxes).filter(([id, boxes]) => boxes.length > 0);
+    if (!labeled.length) { alert('라벨링된 사진이 없습니다!'); return; }
+    const classesContent = DEFAULT_CLASSES.map(c => c.name).join('\n');
+    downloadText('classes.txt', classesContent);
+
+    labeled.forEach(([imgId, boxes]) => {
+      const img = myImages.find(i => i.id === imgId);
+      if (!img) return;
+      const iw = img.width || 600, ih = img.height || 600;
+      const content = boxes.map(b => {
+        const cx = (b.x + b.w / 2) / iw, cy = (b.y + b.h / 2) / ih, bw = b.w / iw, bh = b.h / ih;
+        return `${b.classIdx} ${cx.toFixed(6)} ${cy.toFixed(6)} ${bw.toFixed(6)} ${bh.toFixed(6)}`;
+      }).join('\n');
+      const rawName = img.originalName || img.fileName || imgId;
+      const fname = rawName.replace(/\.[^.]+$/, '') + '.txt';
+      downloadText(fname, content);
+    });
+    alert(`✅ ${labeled.length}개 텍스트 파일과 classes.txt 다운로드 완료!`);
+  }
+
+  async function downloadZip() {
+    const labeled = Object.entries(allBoxes).filter(([id, boxes]) => boxes.length > 0);
+    if (!labeled.length) { alert('라벨링된 사진이 없습니다!'); return; }
+    const btn = document.querySelector('[onclick="downloadZip()"]');
+    if (btn) { btn.textContent = '⏳ 준비 중...'; btn.disabled = true; }
+
+    try {
+      const zip = new JSZip();
+      const imgFolder = zip.folder('images');
+      const lblFolder = zip.folder('labels');
+      zip.file('classes.txt', DEFAULT_CLASSES.map(c => c.name).join('\n'));
+
+      let done = 0; const total = labeled.length;
+      for (const [imgId, boxes] of labeled) {
+        const img = myImages.find(i => i.id === imgId);
+        if (!img) continue;
+        const iw = img.width || 600, ih = img.height || 600;
+        const rawName = img.originalName || img.fileName || imgId;
+        const baseName = rawName.replace(/\.[^.]+$/, '');
+        const imgExt = rawName.split('.').pop() || 'jpg';
+
+        const txtContent = boxes.map(b => {
+          const cx = (b.x + b.w / 2) / iw, cy = (b.y + b.h / 2) / ih, bw = b.w / iw, bh = b.h / ih;
+          return `${b.classIdx} ${cx.toFixed(6)} ${cy.toFixed(6)} ${bw.toFixed(6)} ${bh.toFixed(6)}`;
+        }).join('\n');
+        lblFolder.file(`${baseName}.txt`, txtContent);
+
+        try {
+          const r = await fetch(img.url);
+          const blob = await r.blob();
+          imgFolder.file(`${baseName}.${imgExt}`, blob);
+        } catch(e) {}
+        done++;
+        if (btn) btn.textContent = `⏳ ${done}/${total}장...`;
+      }
+
+      const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(zipBlob);
+      a.download = `elementary-labels-${Date.now()}.zip`;
+      a.click();
+      alert(`✅ ZIP 압축다운로드 완료!\n사진: ${done}장\n라벨: ${done}개`);
+    } catch(e) {
+      alert('ZIP 생성 실패: ' + e.message);
+    } finally {
+      if (btn) { btn.textContent = '📦 ZIP 다운로드'; btn.disabled = false; }
+    }
+  }
+
+  function downloadText(filename, content) {
+    const blob = new Blob([content], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+  }
+
+  function setupResize() {
+    window.addEventListener('resize', () => {
+      if (currentImg?._imageEl) fitImageToCanvas(currentImg._imageEl);
+      redrawCanvas(currentImg?._imageEl);
+    });
+  }
+
+  initUser();
 </script>
 </body>
 </html>
