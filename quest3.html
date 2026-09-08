@@ -620,7 +620,7 @@
     try {
       const snap = await db.collection('uploads')
         .where('userId', '==', studentId)
-        .orderBy('created_at', 'desc').get();
+        .get();
 
       document.getElementById('my-count').textContent = snap.size;
       if (snap.empty) {
@@ -629,7 +629,14 @@
         return;
       }
 
-      document.getElementById('my-uploads').innerHTML = snap.docs.map(doc => {
+      // 클라이언트 사이드 날짜 내림차순 정렬 (복합 색인 오류 방지)
+      const docs = snap.docs.sort((a, b) => {
+        const da = a.data().created_at || '';
+        const db = b.data().created_at || '';
+        return db.localeCompare(da);
+      });
+
+      document.getElementById('my-uploads').innerHTML = docs.map(doc => {
         const d = doc.data();
         const date = d.created_at ? d.created_at.slice(0, 16).replace('T', ' ') : '';
         return `<div class="uploaded-item">
