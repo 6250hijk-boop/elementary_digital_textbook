@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AI 자원순환 탐정단 - 입장</title>
-  <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua -->
+  <title>AI 자원순환 탐정단 - 로그인 및 계정 생성</title>
+  <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua 사용 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,7 @@
       --accent-color: #FFB300;
       --bg-color: #E8F5E9;
       --card-bg: #FFFFFF;
-      --text-main: #1A237E;
+      --text-main: #1B5E20;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -44,7 +44,7 @@
 
     .badge-icon {
       font-size: 60px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       animation: bounce 2s infinite ease-in-out;
     }
 
@@ -62,14 +62,52 @@
     }
 
     p.sub {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       color: #558B2F;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       background: #F1F8E9;
       padding: 8px 16px;
       border-radius: 20px;
       display: inline-block;
+    }
+
+    /* 로그인 / 회원가입 탭 토글 */
+    .tab-group {
+      display: flex;
+      background: #E8F5E9;
+      border-radius: 18px;
+      padding: 6px;
+      margin-bottom: 22px;
+      gap: 6px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      font-family: 'Jua', sans-serif;
+      font-size: 20px;
+      color: #558B2F;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: #FFFFFF;
+      color: var(--primary-color);
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.15);
+    }
+
+    /* 폼 영역 */
+    .form-content {
+      display: none;
+    }
+
+    .form-content.active {
+      display: block;
     }
 
     .form-group {
@@ -85,7 +123,7 @@
       margin-bottom: 6px;
     }
 
-    input[type="text"] {
+    input[type="text"], input[type="password"] {
       width: 100%;
       padding: 16px 18px;
       border: 3px solid #C8E6C9;
@@ -98,14 +136,14 @@
       background: #FAFAFA;
     }
 
-    input[type="text"]:focus {
+    input[type="text"]:focus, input[type="password"]:focus {
       border-color: var(--primary-color);
       background: #FFFFFF;
       box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.15);
     }
 
     .btn-group {
-      margin-top: 24px;
+      margin-top: 22px;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -132,13 +170,13 @@
 
     .btn-guest {
       width: 100%;
-      padding: 16px;
+      padding: 15px;
       background-color: #ECEFF1;
       color: #37474F;
       border: 2px solid #CFD8DC;
       border-radius: 18px;
       font-family: 'Jua', sans-serif;
-      font-size: 20px;
+      font-size: 19px;
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -147,12 +185,12 @@
       background-color: #CFD8DC;
     }
 
-    /* 웨일북 및 스마트기기 대응 레이아웃 */
     @media (max-width: 480px) {
       .login-card { padding: 24px 18px; }
       h1 { font-size: 26px; }
+      .tab-btn { font-size: 17px; padding: 12px; }
       label { font-size: 16px; }
-      input[type="text"] { font-size: 16px; padding: 14px; }
+      input[type="text"], input[type="password"] { font-size: 16px; padding: 14px; }
       .btn-start { font-size: 19px; padding: 16px; }
       .btn-guest { font-size: 17px; padding: 14px; }
     }
@@ -165,30 +203,59 @@
   <h1>AI 자원순환 탐정단</h1>
   <p class="sub">초등 5학년 AI 디지털 교과서</p>
 
-  <div class="form-group">
-    <label for="studentId">📌 학번 (예: 50105)</label>
-    <input type="text" id="studentId" placeholder="학년·반·번호 입력 (예: 50105)">
-  </div>
-  
-  <div class="form-group">
-    <label for="studentName">👤 학생 이름</label>
-    <input type="text" id="studentName" placeholder="이름 입력 (예: 홍길동)">
-  </div>
-  
-  <div class="form-group">
-    <label for="aiName">🤖 나만의 AI 파트너 이름</label>
-    <input type="text" id="aiName" placeholder="예: 에코봇">
+  <!-- 탭 선택: 로그인 vs 계정 생성 (회원가입) -->
+  <div class="tab-group">
+    <button class="tab-btn active" id="tabLoginBtn" onclick="switchForm('login')">🔑 로그인</button>
+    <button class="tab-btn" id="tabSignupBtn" onclick="switchForm('signup')">✨ 계정 생성 (회원가입)</button>
   </div>
 
+  <!-- 1. 로그인 폼 -->
+  <div class="form-content active" id="loginFormArea">
+    <div class="form-group">
+      <label for="loginId">🆔 아이디</label>
+      <input type="text" id="loginId" placeholder="아이디 입력">
+    </div>
+    <div class="form-group">
+      <label for="loginPw">🔒 비밀번호</label>
+      <input type="password" id="loginPw" placeholder="비밀번호 입력">
+    </div>
+    <button class="btn-start" id="loginSubmitBtn">🚀 로그인하고 탐정 마을 입장</button>
+  </div>
+
+  <!-- 2. 계정 생성 (회원가입) 폼 -->
+  <div class="form-content" id="signupFormArea">
+    <div class="form-group">
+      <label for="signupId">🆔 사용할 아이디</label>
+      <input type="text" id="signupId" placeholder="아이디 (영문 또는 숫자)">
+    </div>
+    <div class="form-group">
+      <label for="signupPw">🔒 비밀번호</label>
+      <input type="password" id="signupPw" placeholder="비밀번호 입력">
+    </div>
+    <div class="form-group">
+      <label for="signupPwConfirm">🔒 비밀번호 확인</label>
+      <input type="password" id="signupPwConfirm" placeholder="비밀번호 다시 입력">
+    </div>
+    <div class="form-group">
+      <label for="signupNickname">👤 닉네임 (학생 이름)</label>
+      <input type="text" id="signupNickname" placeholder="예: 탐정홍길동">
+    </div>
+    <div class="form-group">
+      <label for="signupAiName">🤖 나만의 AI 파트너 이름</label>
+      <input type="text" id="signupAiName" placeholder="예: 에코봇">
+    </div>
+    <button class="btn-start" id="signupSubmitBtn">🎉 계정 생성 및 바로 입장</button>
+  </div>
+
+  <!-- 체험용 임시 입장 버튼 -->
   <div class="btn-group">
-    <button class="btn-start" id="startBtn">탐정단 등록 후 탐정 마을 입장 🚀</button>
-    <button class="btn-guest" id="guestBtn">⚡ 체험용 임시 입장 (메인 화면으로 바로가기)</button>
+    <button class="btn-guest" id="guestBtn">⚡ 체험용 임시 입장 (로그인 없이 바로 시작)</button>
   </div>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
@@ -203,43 +270,112 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // 일반 탐정 등록
-  document.getElementById("startBtn").addEventListener("click", async () => {
-    const sId = document.getElementById("studentId").value.trim();
-    const sName = document.getElementById("studentName").value.trim();
-    const ai = document.getElementById("aiName").value.trim() || "에코봇";
+  // 탭 전환 헬퍼
+  window.switchForm = function(type) {
+    const loginForm = document.getElementById("loginFormArea");
+    const signupForm = document.getElementById("signupFormArea");
+    const tabLogin = document.getElementById("tabLoginBtn");
+    const tabSignup = document.getElementById("tabSignupBtn");
 
-    if (!sId || !sName) return alert("학번과 학생 이름을 입력해주세요!");
+    if (type === 'login') {
+      loginForm.classList.add("active");
+      signupForm.classList.remove("active");
+      tabLogin.classList.add("active");
+      tabSignup.classList.remove("active");
+    } else {
+      loginForm.classList.remove("active");
+      signupForm.classList.add("active");
+      tabLogin.classList.remove("active");
+      tabSignup.classList.add("active");
+    }
+  };
 
-    try {
-      await setDoc(doc(db, "students", sId), {
-        studentId: sId,
-        studentName: sName,
-        aiPartnerName: ai,
-        score: 10,
-        badge: "신입 탐정",
-        lastActive: serverTimestamp()
-      }, { merge: true });
-    } catch (e) {
-      console.error(e);
+  // 1. 로그인 처리
+  document.getElementById("loginSubmitBtn").addEventListener("click", async () => {
+    const uId = document.getElementById("loginId").value.trim();
+    const uPw = document.getElementById("loginPw").value.trim();
+
+    if (!uId || !uPw) {
+      return alert("아이디와 비밀번호를 모두 입력해주세요!");
     }
 
-    localStorage.setItem("elementary_studentId", sId);
-    localStorage.setItem("elementary_studentName", sName);
-    localStorage.setItem("elementary_aiName", ai);
-    
-    // 메인 화면으로 직접 이동
-    window.location.href = "main.html";
+    try {
+      const userRef = doc(db, "students", uId);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        return alert("존재하지 않는 아이디입니다. '계정 생성' 탭에서 새 계정을 만들어주세요!");
+      }
+
+      const userData = userSnap.data();
+      if (userData.password && userData.password !== uPw) {
+        return alert("비밀번호가 올바르지 않습니다. 다시 확인해주세요!");
+      }
+
+      // 로그인 성공 ➔ localStorage 저장
+      localStorage.setItem("elementary_studentId", uId);
+      localStorage.setItem("elementary_studentName", userData.studentName || uId);
+      localStorage.setItem("elementary_aiName", userData.aiPartnerName || "에코봇");
+
+      window.location.href = "main.html";
+    } catch (e) {
+      console.error(e);
+      alert("로그인 중 오류가 발생했습니다: " + e.message);
+    }
   });
 
-  // 체험용 임시 입장 ➔ 사전 설문 없이 메인화면으로 바로 이동
+  // 2. 계정 생성 (회원가입) 처리
+  document.getElementById("signupSubmitBtn").addEventListener("click", async () => {
+    const sId = document.getElementById("signupId").value.trim();
+    const sPw = document.getElementById("signupPw").value.trim();
+    const sPwConfirm = document.getElementById("signupPwConfirm").value.trim();
+    const nickname = document.getElementById("signupNickname").value.trim();
+    const aiName = document.getElementById("signupAiName").value.trim() || "에코봇";
+
+    if (!sId) return alert("사용할 아이디를 입력해주세요!");
+    if (!sPw) return alert("비밀번호를 입력해주세요!");
+    if (sPw !== sPwConfirm) return alert("비밀번호와 비밀번호 확인이 서로 일치하지 않습니다!");
+    if (!nickname) return alert("사용할 닉네임(학생 이름)을 입력해주세요!");
+
+    try {
+      const userRef = doc(db, "students", sId);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        return alert("이미 사용 중인 아이디입니다. 다른 아이디를 입력해주세요!");
+      }
+
+      // Firestore에 새 사용자 계정 생성
+      await setDoc(userRef, {
+        studentId: sId,
+        password: sPw,
+        studentName: nickname,
+        aiPartnerName: aiName,
+        score: 10,
+        badge: "신입 탐정",
+        createdAt: serverTimestamp(),
+        lastActive: serverTimestamp()
+      });
+
+      localStorage.setItem("elementary_studentId", sId);
+      localStorage.setItem("elementary_studentName", nickname);
+      localStorage.setItem("elementary_aiName", aiName);
+
+      alert(`🎉 계정이 성공적으로 생성되었습니다!\n환영합니다, ${nickname} 탐정님!`);
+      window.location.href = "main.html";
+    } catch (e) {
+      console.error(e);
+      alert("계정 생성 중 오류가 발생했습니다: " + e.message);
+    }
+  });
+
+  // 3. 체험용 임시 입장
   document.getElementById("guestBtn").addEventListener("click", () => {
     const guestId = "Guest_" + Math.floor(Math.random() * 1000);
     localStorage.setItem("elementary_studentId", guestId);
     localStorage.setItem("elementary_studentName", "체험탐정");
     localStorage.setItem("elementary_aiName", "에코봇");
     
-    // 사전 설문 없이 메인 화면으로 바로 이동
     window.location.href = "main.html";
   });
 </script>
