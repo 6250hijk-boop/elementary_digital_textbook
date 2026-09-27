@@ -2,156 +2,1695 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quest 1 - AI 시선관</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>1차시: 우리 학교 분리배출 사건을 찾아라 | AI 자원순환 수사대</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
   <style>
-    :root { --bg: #2b3a42; --panel: #3f5159; --border: #182328; }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
-    body { background-color: var(--bg); color: #fff; display: flex; flex-direction: column; align-items: center; padding: 15px; min-height: 100vh; }
-    .container { width: 100%; max-width: 860px; background: var(--panel); border-radius: 18px; border: 5px solid var(--border); overflow: hidden; display: flex; flex-direction: column; align-items: center; }
-    header { width: 100%; background: #1e282d; padding: 14px 20px; border-bottom: 4px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .btn-back { background: #546e7a; color: white; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; border: 2px solid #263238; }
-    h1 { font-size: 18px; color: #ffeb3b; text-shadow: 2px 2px 0px #000; margin: 0; }
-    .game-wrapper { padding: 18px 15px; display: flex; flex-direction: column; align-items: center; width: 100%; }
-    .canvas-container { border: 5px solid #263238; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
-    canvas { display: block; image-rendering: pixelated; }
-    .guide-text { font-size: 13px; font-weight: bold; color: #cfd8dc; background: rgba(0,0,0,0.3); padding: 8px 14px; border-radius: 8px; margin-top: 10px; }
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
-    .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease-in-out; }
-    .modal-content { background: white; color: #333; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; border: 4px solid #1976D2; }
-    .btn-close { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: #888; }
-    h2 { font-size: 19px; margin-bottom: 12px; color: #1976D2; }
-    .guide-box { background: #E3F2FD; border-left: 5px solid #1976D2; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; line-height: 1.5; }
-    .form-group { margin-bottom: 14px; }
-    label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 13px; }
-    input[type="text"], textarea, select { width: 100%; padding: 10px; border: 2px solid #E0E0E0; border-radius: 10px; font-size: 14px; outline: none; }
-    .btn-action { width: 100%; padding: 12px; background: #1976D2; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 8px; }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    :root {
+      --bg-dark: #0a0e1a;
+      --bg-card: rgba(18, 26, 46, 0.85);
+      --border-card: rgba(99, 179, 237, 0.3);
+      --primary: #63b3ed;
+      --primary-glow: rgba(99, 179, 237, 0.4);
+      --accent-gold: #f6ad55;
+      --accent-green: #68d391;
+      --accent-red: #fc8181;
+      --accent-purple: #b794f4;
+      --text-main: #f7fafc;
+      --text-sub: #a0aec0;
+      --text-muted: #718096;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(ellipse at 15% 15%, rgba(99, 179, 237, 0.12), transparent 45%),
+        radial-gradient(ellipse at 85% 85%, rgba(183, 148, 244, 0.1), transparent 50%),
+        linear-gradient(to bottom, #0a0e1a, #070a13);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* 상단 앱 HUD 네비게이션 */
+    .app-header {
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 14, 26, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(99, 179, 237, 0.25);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-back {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover {
+      background: rgba(99, 179, 237, 0.2);
+      border-color: var(--primary);
+    }
+
+    .header-title-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .badge-chasi {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .header-main-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 17px;
+      color: #fff;
+      letter-spacing: -0.2px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .score-badge {
+      background: rgba(246, 173, 85, 0.15);
+      border: 1px solid rgba(246, 173, 85, 0.4);
+      color: var(--accent-gold);
+      font-weight: 800;
+      font-size: 13px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 0 10px rgba(246, 173, 85, 0.15);
+    }
+
+    .btn-sound {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--text-main);
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* 메인 컨테이너 */
+    .app-container {
+      width: 100%;
+      max-width: 960px;
+      padding: 16px 16px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* 단계 네비게이터 (Progress Steps) */
+    .step-tracker {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      background: rgba(18, 26, 46, 0.7);
+      padding: 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 4px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: center;
+    }
+
+    .step-item.active {
+      background: rgba(99, 179, 237, 0.18);
+      border-color: var(--primary);
+      box-shadow: 0 0 14px rgba(99, 179, 237, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .step-item.completed {
+      background: rgba(104, 211, 145, 0.12);
+      border-color: rgba(104, 211, 145, 0.4);
+    }
+
+    .step-num {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .step-item.active .step-num {
+      color: var(--primary);
+    }
+
+    .step-item.completed .step-num {
+      color: var(--accent-green);
+    }
+
+    .step-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+
+    .step-item.active .step-name {
+      color: #fff;
+    }
+
+    .step-item.completed .step-name {
+      color: var(--accent-green);
+    }
+
+    /* 스테이지 카드 공통 */
+    .stage-card {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 20px;
+      padding: clamp(18px, 3vw, 26px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(16px);
+      animation: fadeInSlide 0.35s ease-out forwards;
+    }
+
+    .stage-card.active {
+      display: block;
+    }
+
+    @keyframes fadeInSlide {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .stage-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(99, 179, 237, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(99, 179, 237, 0.35);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .stage-title {
+      font-family: 'Jua', sans-serif;
+      font-size: clamp(20px, 3vw, 26px);
+      color: #fff;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stage-goal {
+      font-size: 14px;
+      color: var(--text-sub);
+      background: rgba(0, 0, 0, 0.25);
+      padding: 10px 14px;
+      border-radius: 10px;
+      border-left: 4px solid var(--primary);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    /* ====== Step 1: 사건 단서 포착 ====== */
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .evidence-card {
+      background: rgba(10, 14, 26, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .evidence-card:hover, .evidence-card.selected {
+      border-color: var(--primary);
+      box-shadow: 0 0 20px rgba(99, 179, 237, 0.25);
+      transform: translateY(-3px);
+    }
+
+    .evidence-card.selected::after {
+      content: '✔ 선택됨';
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--primary);
+      color: #0a0e1a;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .evidence-img-box {
+      width: 100%;
+      height: 170px;
+      background: #1a202c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .evidence-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .evidence-overlay-tag {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      backdrop-filter: blur(4px);
+    }
+
+    .evidence-info {
+      padding: 12px;
+    }
+
+    .evidence-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+
+    .evidence-desc {
+      font-size: 13px;
+      color: var(--text-sub);
+      line-height: 1.4;
+    }
+
+    .quick-tag-wrap {
+      margin: 16px 0;
+    }
+
+    .quick-tag-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .tag-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chip-btn:hover {
+      background: rgba(99, 179, 237, 0.15);
+      border-color: var(--primary);
+    }
+
+    .chip-btn.active {
+      background: var(--primary);
+      color: #0a0e1a;
+      font-weight: 700;
+      border-color: var(--primary);
+    }
+
+    .input-field-group {
+      margin-top: 16px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .text-input, .textarea-input {
+      width: 100%;
+      background: rgba(10, 14, 26, 0.8);
+      border: 1.5px solid rgba(99, 179, 237, 0.3);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+      user-select: text;
+    }
+
+    .text-input:focus, .textarea-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 12px rgba(99, 179, 237, 0.2);
+    }
+
+    /* ====== Step 2: 사건 원인 분류 (Drag/Click Matching) ====== */
+    .classify-board {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .category-dropzone {
+      background: rgba(10, 14, 26, 0.7);
+      border: 2px dashed rgba(99, 179, 237, 0.35);
+      border-radius: 14px;
+      padding: 14px;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s;
+    }
+
+    .category-dropzone.hover-target {
+      border-color: var(--accent-gold);
+      background: rgba(246, 173, 85, 0.1);
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .category-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .category-count {
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 7px;
+      border-radius: 10px;
+      color: var(--text-sub);
+    }
+
+    .category-items {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-grow: 1;
+    }
+
+    .case-card {
+      background: rgba(30, 41, 69, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #fff;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s;
+    }
+
+    .case-card:hover {
+      border-color: var(--accent-gold);
+      transform: scale(1.02);
+    }
+
+    .case-card.dragging {
+      opacity: 0.4;
+    }
+
+    .case-card.correct {
+      border-color: var(--accent-green);
+      background: rgba(104, 211, 145, 0.15);
+    }
+
+    .case-pool-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .pool-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pool-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ====== Step 3: 컴퓨터 비전 AI 원리 퀴즈 & 시뮬레이터 ====== */
+    .vision-demo-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+      background: rgba(10, 14, 26, 0.7);
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 650px) {
+      .vision-demo-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .vision-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .vision-box-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--accent-gold);
+      margin-bottom: 10px;
+    }
+
+    .pixel-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 3px;
+      width: 180px;
+      height: 180px;
+      background: #000;
+      padding: 4px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .pixel-cell {
+      background: #111;
+      border-radius: 2px;
+      font-size: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #63b3ed;
+      font-family: monospace;
+      transition: all 0.3s;
+    }
+
+    .pixel-cell.lit {
+      background: #63b3ed;
+      color: #0a0e1a;
+      font-weight: bold;
+    }
+
+    .quiz-card {
+      background: rgba(18, 26, 46, 0.9);
+      border: 1px solid rgba(99, 179, 237, 0.3);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .quiz-q {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #fff;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .opt-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .opt-btn:hover {
+      background: rgba(99, 179, 237, 0.15);
+      border-color: var(--primary);
+    }
+
+    .opt-btn.correct {
+      background: rgba(104, 211, 145, 0.2);
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+      font-weight: 700;
+    }
+
+    .opt-btn.wrong {
+      background: rgba(252, 129, 129, 0.2);
+      border-color: var(--accent-red);
+      color: var(--accent-red);
+    }
+
+    /* ====== Step 4: T-Chart (AI vs 인간) ====== */
+    .tchart-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .tchart-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .tchart-col {
+      background: rgba(10, 14, 26, 0.75);
+      border-radius: 16px;
+      padding: 16px;
+      border: 2px solid;
+      display: flex;
+      flex-direction: column;
+      min-height: 260px;
+    }
+
+    .tchart-ai {
+      border-color: rgba(99, 179, 237, 0.4);
+    }
+
+    .tchart-human {
+      border-color: rgba(246, 173, 85, 0.4);
+    }
+
+    .tchart-header {
+      font-family: 'Jua', sans-serif;
+      font-size: 17px;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tchart-ai .tchart-header {
+      color: var(--primary);
+    }
+
+    .tchart-human .tchart-header {
+      color: var(--accent-gold);
+    }
+
+    .tchart-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-grow: 1;
+    }
+
+    .tchart-card {
+      background: rgba(30, 41, 69, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-del-card {
+      background: none;
+      border: none;
+      color: var(--accent-red);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 2px 6px;
+    }
+
+    .tchart-add-box {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    /* ====== Step 5: 탐구 질문 수립 & 최종 리포트 ====== */
+    .template-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .report-card-preview {
+      background: linear-gradient(135deg, rgba(18, 26, 46, 0.95), rgba(10, 14, 26, 0.95));
+      border: 2px solid var(--accent-gold);
+      border-radius: 18px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 0 30px rgba(246, 173, 85, 0.15);
+      position: relative;
+    }
+
+    .report-badge {
+      position: absolute;
+      top: -12px;
+      right: 20px;
+      background: var(--accent-gold);
+      color: #0a0e1a;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .report-row {
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+    }
+
+    .report-label {
+      font-size: 12px;
+      color: var(--accent-gold);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .report-val {
+      font-size: 14px;
+      color: #fff;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    /* 하단 버튼 바 */
+    .action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+      gap: 12px;
+    }
+
+    .btn-nav {
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-prev-step {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .btn-prev-step:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-next-step {
+      background: linear-gradient(135deg, #63b3ed, #3182ce);
+      border: none;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(99, 179, 237, 0.35);
+      margin-left: auto;
+    }
+
+    .btn-next-step:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 179, 237, 0.5);
+    }
+
+    .btn-complete {
+      background: linear-gradient(135deg, #f6ad55, #dd6b20);
+      color: #0a0e1a;
+      font-weight: 800;
+    }
+
+    /* 모달 & 토스트 */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(18, 26, 46, 0.95);
+      border: 1px solid var(--primary);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 700;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <header>
-    <a href="main.html" class="btn-back">⬅ 메인화면</a>
-    <h1>🔍 Quest 1: AI 시선관</h1>
-    <div style="width: 70px;"></div>
+
+  <!-- 앱 헤더 -->
+  <header class="app-header">
+    <div class="header-left">
+      <a href="main.html" class="btn-back">⬅ 메인으로</a>
+      <div class="header-title-group">
+        <span class="badge-chasi">QUEST 1 • 1차시</span>
+        <h1 class="header-main-title">우리 학교 분리배출 사건을 찾아라</h1>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="score-badge" id="scoreDisplay">⭐ 0 EXP</div>
+      <button class="btn-sound" id="soundToggle" onclick="toggleSound()">🔊</button>
+    </div>
   </header>
-  <div class="game-wrapper">
-    <div class="canvas-container">
-      <canvas id="roomCanvas" width="600" height="360"></canvas>
-    </div>
-    <div class="guide-text" id="actionGuide">🎮 방향키로 이동하여 [임무 책상] 앞에서 스페이스바를 누르세요.</div>
-  </div>
-</div>
 
-<div id="missionModal" class="modal-overlay">
-  <div class="modal-content">
-    <button class="btn-close" onclick="closeModal()">✖</button>
-    <h2>🔍 [1차시] AI가 이미지를 보는 방법</h2>
-    <div class="guide-box">AI는 사진을 형태가 아닌 픽셀 숫자 데이터로 읽습니다. 우리 학교 자원순환 문제를 찾고 필요한 데이터를 생각해 보세요.</div>
-    <div class="form-group">
-      <label>1. 우리 학교 분리수거장에서 가장 자주 발생하는 문제는?</label>
-      <select id="q1Problem">
-        <option value="음식물 오염">음식물이 묻은 채로 버려짐</option>
-        <option value="라벨 미제거">페트병 비닐 라벨을 안 떼고 버림</option>
-        <option value="우유팩 혼합">우유팩을 일반 종이에 섞어 버림</option>
-        <option value="일반쓰레기 혼합">일반쓰레기와 재활용품이 한곳에 섞임</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>2. AI 로봇이 이를 스스로 구별하려면 어떤 데이터(사진)를 주어야 할까요?</label>
-      <textarea id="q1Idea" rows="3" placeholder="예: 깨끗한 페트병과 라벨이 붙은 페트병 사진을 다양한 각도에서 100장 학습시켜요."></textarea>
-    </div>
-    <button class="btn-action" onclick="saveQuest1()">임무 완료 및 저장 (⭐ +20점)</button>
-  </div>
-</div>
+  <!-- 메인 컨테이너 -->
+  <main class="app-container">
+    
+    <!-- 단계 트래커 -->
+    <nav class="step-tracker">
+      <div class="step-item active" id="stepNav-1" onclick="goToStep(1)">
+        <span class="step-num">STEP 1</span>
+        <span class="step-name">🚨 단서 포착</span>
+      </div>
+      <div class="step-item" id="stepNav-2" onclick="goToStep(2)">
+        <span class="step-num">STEP 2</span>
+        <span class="step-name">📂 원인 분류</span>
+      </div>
+      <div class="step-item" id="stepNav-3" onclick="goToStep(3)">
+        <span class="step-num">STEP 3</span>
+        <span class="step-name">🤖 AI 비전</span>
+      </div>
+      <div class="step-item" id="stepNav-4" onclick="goToStep(4)">
+        <span class="step-num">STEP 4</span>
+        <span class="step-name">⚖️ T-차트</span>
+      </div>
+      <div class="step-item" id="stepNav-5" onclick="goToStep(5)">
+        <span class="step-num">STEP 5</span>
+        <span class="step-name">💡 탐구 질문</span>
+      </div>
+    </nav>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    <!-- ==================== STEP 1: 도입 (5분) ==================== -->
+    <section class="stage-card active" id="stage-1">
+      <div class="stage-badge">1단계 • 도입 (5분)</div>
+      <h2 class="stage-title">🔍 교내 분리배출 사건 현장 단서 포착</h2>
+      <div class="stage-goal">
+        <strong>[학습 활동]</strong> 학교 분리배출함 실제 사건 사진을 관찰하고, <strong>"무엇이 문제인가?"</strong> 빠르게 찾아 핵심 단서를 기록해 보세요!
+      </div>
 
-  const firebaseConfig = { apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00", authDomain: "elemeelementary-textbook.firebaseapp.com", projectId: "elemeelementary-textbook", storageBucket: "elemeelementary-textbook.firebasestorage.app", messagingSenderId: "713149004420", appId: "1:713149004420:web:8483273681e16f5a8fa0d1" };
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+      <div class="evidence-grid">
+        <!-- 사건 1 -->
+        <div class="evidence-card" onclick="selectEvidence(1, this)">
+          <div class="evidence-img-box">
+            <svg width="100%" height="100%" viewBox="0 0 300 170" style="background:#1e293b;">
+              <!-- 배경 쓰레기통 -->
+              <rect x="30" y="40" width="70" height="110" rx="8" fill="#3b82f6" opacity="0.8"/>
+              <text x="65" y="70" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">플라스틱</text>
+              <!-- 페트병 라벨 미제거 -->
+              <rect x="45" y="85" width="40" height="55" rx="5" fill="#bae6fd"/>
+              <rect x="45" y="98" width="40" height="25" fill="#ef4444"/>
+              <text x="65" y="115" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">비닐라벨</text>
 
-  const studentId = localStorage.getItem("elementary_studentId");
-  const studentName = localStorage.getItem("elementary_studentName");
+              <rect x="115" y="40" width="70" height="110" rx="8" fill="#22c55e" opacity="0.8"/>
+              <text x="150" y="70" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">캔/고철</text>
+              <!-- 덜 비운 캔 -->
+              <rect x="135" y="85" width="30" height="45" rx="4" fill="#cbd5e1"/>
+              <circle cx="150" cy="140" r="10" fill="#991b1b" opacity="0.8"/>
+              <text x="150" y="143" fill="#fff" font-size="8" text-anchor="middle">음료얼룩</text>
 
-  const canvas = document.getElementById("roomCanvas");
-  const ctx = canvas.getContext("2d");
-  const guide = document.getElementById("actionGuide");
-  
-  let player = { x: 300, y: 300, speed: 16 };
-  const desk = { x: 300, y: 120, w: 80, h: 50 };
-  let canInteract = false;
+              <rect x="200" y="40" width="70" height="110" rx="8" fill="#f59e0b" opacity="0.8"/>
+              <text x="235" y="70" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">종이류</text>
+              <!-- 종이함에 컵라면 용기 -->
+              <path d="M 215 90 L 255 90 L 245 130 L 225 130 Z" fill="#fecdd3"/>
+              <text x="235" y="112" fill="#e11d48" font-size="9" font-weight="bold" text-anchor="middle">컵라면</text>
+            </svg>
+            <span class="evidence-overlay-tag">사건 #01 교실 앞 분리수거함</span>
+          </div>
+          <div class="evidence-info">
+            <h3 class="evidence-title">사건 현장 A: 뒤섞인 쓰레기통</h3>
+            <p class="evidence-desc">라벨 안 뗀 페트병과 국물이 묻은 컵라면 용기가 섞여 있습니다.</p>
+          </div>
+        </div>
 
-  function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#B0BEC5";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "#90A4AE";
-    ctx.lineWidth = 2;
-    for(let x=0; x<canvas.width; x+=40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
-    for(let y=0; y<canvas.height; y+=40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
+        <!-- 사건 2 -->
+        <div class="evidence-card" onclick="selectEvidence(2, this)">
+          <div class="evidence-img-box">
+            <svg width="100%" height="100%" viewBox="0 0 300 170" style="background:#1e293b;">
+              <!-- 찌그러진 캔과 오염된 우유팩 -->
+              <rect x="40" y="30" width="220" height="120" rx="12" fill="#0f172a" stroke="#475569" stroke-width="2"/>
+              <text x="150" y="55" fill="#f6ad55" font-size="13" font-weight="bold" text-anchor="middle">급식실 퇴식구 옆 분리대</text>
+              <rect x="70" y="75" width="50" height="60" rx="6" fill="#fed7aa"/>
+              <text x="95" y="105" fill="#9a3412" font-size="10" font-weight="bold" text-anchor="middle">우유팩</text>
+              <text x="95" y="120" fill="#dc2626" font-size="8" text-anchor="middle">(안 씻음)</text>
+              
+              <ellipse cx="190" cy="105" rx="35" ry="25" fill="#94a3b8"/>
+              <text x="190" y="110" fill="#0f172a" font-size="10" font-weight="bold" text-anchor="middle">찌그러진 캔</text>
+            </svg>
+            <span class="evidence-overlay-tag">사건 #02 급식실 퇴식구</span>
+          </div>
+          <div class="evidence-info">
+            <h3 class="evidence-title">사건 현장 B: 오염물 미세척 배출</h3>
+            <p class="evidence-desc">우유가 그대로 남아 악취가 나고 캔이 찌그러져 있습니다.</p>
+          </div>
+        </div>
+      </div>
 
-    ctx.fillStyle = "#37474F"; ctx.fillRect(0, 0, canvas.width, 60);
-    ctx.fillStyle = "#546E7A"; ctx.fillRect(0, 50, canvas.width, 10);
+      <!-- 빠른 키워드 태그 -->
+      <div class="quick-tag-wrap">
+        <span class="quick-tag-label">🏷️ 관찰된 핵심 문제 태그를 클릭하여 선택하세요:</span>
+        <div class="tag-chips">
+          <button class="chip-btn" onclick="toggleTag(this, '비닐 라벨 미제거')">#비닐 라벨 미제거</button>
+          <button class="chip-btn" onclick="toggleTag(this, '음식물/국물 오염')">#음식물/국물 오염</button>
+          <button class="chip-btn" onclick="toggleTag(this, '종이함에 이물질 투입')">#종이함에 이물질 투입</button>
+          <button class="chip-btn" onclick="toggleTag(this, '음료 잔여물 남음')">#음료 잔여물 남음</button>
+          <button class="chip-btn" onclick="toggleTag(this, '분리수거 표시 불명확')">#분리수거 표시 불명확</button>
+        </div>
+      </div>
 
-    ctx.fillStyle = "#5D4037"; ctx.fillRect(desk.x - desk.w/2, desk.y - desk.h/2, desk.w, desk.h);
-    ctx.fillStyle = "#212121"; ctx.fillRect(desk.x - 20, desk.y - 20, 40, 25);
-    ctx.fillStyle = canInteract ? "#64DD17" : "#0277BD"; ctx.fillRect(desk.x - 16, desk.y - 16, 32, 17);
+      <!-- 학생 빠른 단서 입력 -->
+      <div class="input-field-group">
+        <label class="input-label">✍️ [수사관 빠른 작성] 사진을 보고 발견한 문제점을 1줄로 요약해 보세요:</label>
+        <input type="text" id="step1ClueInput" class="text-input" placeholder="예: 페트병에 비닐 라벨이 그대로 붙어 있고, 컵라면 용기가 종이통에 잘못 버려져 있어요.">
+      </div>
 
-    ctx.fillStyle = "rgba(0,0,0,0.3)"; ctx.beginPath(); ctx.ellipse(player.x, player.y + 12, 10, 5, 0, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = "#e53935"; ctx.fillRect(player.x - 7, player.y - 16, 14, 6);
-    ctx.fillStyle = "#ffcc80"; ctx.fillRect(player.x - 5, player.y - 9, 10, 8);
-    ctx.fillStyle = "#1e88e5"; ctx.fillRect(player.x - 6, player.y - 1, 12, 8);
-    ctx.fillStyle = "#37474f"; ctx.fillRect(player.x - 5, player.y + 7, 10, 4);
-  }
+      <div class="action-bar">
+        <div></div>
+        <button class="btn-nav btn-next-step" onclick="validateAndNextStep(1)">
+          단서 등록 완료 및 원인 분류하기 ➔
+        </button>
+      </div>
+    </section>
 
-  function move(dx, dy) {
-    player.x = Math.max(20, Math.min(canvas.width - 20, player.x + dx));
-    player.y = Math.max(70, Math.min(canvas.height - 20, player.y + dy));
-    canInteract = Math.hypot(player.x - desk.x, player.y - desk.y) < 55;
-    guide.textContent = canInteract ? "🌟 스페이스바를 눌러 퀘스트를 시작하세요!" : "🎮 방향키로 이동하여 [임무 책상] 앞으로 가세요.";
-    guide.style.color = canInteract ? "#FFEB3B" : "#cfd8dc";
-    render();
-  }
+    <!-- ==================== STEP 2: 탐색 (12분) ==================== -->
+    <section class="stage-card" id="stage-2">
+      <div class="stage-badge">2단계 • 탐색 (12분)</div>
+      <h2 class="stage-title">📂 학교 분리배출 4대 원인 모둠 분류</h2>
+      <div class="stage-goal">
+        <strong>[모둠 수사 활동]</strong> 아래 8가지 실제 사건 카드를 <strong>[잘못 버림 / 오염 상태 / 표시 부족 / 통의 위치]</strong> 4가지 원인 상자로 알맞게 드래그 또는 클릭하여 분류해 보세요!
+      </div>
 
-  window.addEventListener("keydown", (e) => {
-    if (document.getElementById("missionModal").classList.contains("active")) return;
-    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
-      e.preventDefault();
-      if (e.key === "ArrowUp") move(0, -player.speed);
-      if (e.key === "ArrowDown") move(0, player.speed);
-      if (e.key === "ArrowLeft") move(-player.speed, 0);
-      if (e.key === "ArrowRight") move(player.speed, 0);
-    } else if (e.code === "Space") {
-      e.preventDefault();
-      if (canInteract) document.getElementById("missionModal").classList.add("active");
-    }
-  });
+      <!-- 대기 중인 사건 카드 풀 -->
+      <div class="case-pool-box">
+        <div class="pool-title">🗂️ 분류 대기 중인 사건 카드 (카드를 클릭하면 다음 빈 상자로 자동 이동합니다)</div>
+        <div class="pool-items" id="casePool">
+          <div class="case-card" draggable="true" data-category="wrong" data-id="c1" onclick="autoAssignCase(this)">
+            <span>📦 종이함에 비닐 코팅된 컵라면 용기 투입</span>
+          </div>
+          <div class="case-card" draggable="true" data-category="dirty" data-id="c2" onclick="autoAssignCase(this)">
+            <span>🥫 음료수가 절반 남은 캔 그대로 버림</span>
+          </div>
+          <div class="case-card" draggable="true" data-category="label" data-id="c3" onclick="autoAssignCase(this)">
+            <span>🏷️ 페트병 겉면 투명 비닐 라벨을 떼지 않음</span>
+          </div>
+          <div class="case-card" draggable="true" data-category="location" data-id="c4" onclick="autoAssignCase(this)">
+            <span>🚪 쓰레기통이 너무 구석진 어두운 복도에 위치</span>
+          </div>
+          <div class="case-card" draggable="true" data-category="dirty" data-id="c5" onclick="autoAssignCase(this)">
+            <span>🥛 우유를 헹구지 않아 악취가 나는 우유팩</span>
+          </div>
+          <div class="case-card" draggable="true" data-category="wrong" data-id="c6" onclick="autoAssignCase(this)">
+            <span>🥤 일반 쓰레기통에 깨끗한 캔을 통째로 버림</span>
+          </div>
+          <div class="case-card" draggable="true" data-category="label" data-id="c7" onclick="autoAssignCase(this)">
+            <span>❓ 분리배출 마크 글씨가 너무 작아 안 보임</span>
+          </div>
+          <div class="case-card" draggable="true" data-category="location" data-id="c8" onclick="autoAssignCase(this)">
+            <span>🗑️ 페트병 버리는 통의 입구가 너무 좁아 넘침</span>
+          </div>
+        </div>
+      </div>
 
-  window.closeModal = function() {
-    document.getElementById("missionModal").classList.remove("active");
-    player.y += 20; move(0,0);
-  };
+      <!-- 4개 분류 상자 -->
+      <div class="classify-board">
+        <div class="category-dropzone" data-target="wrong" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'wrong')">
+          <div class="category-header">
+            <span class="category-title">1️⃣ 잘못 버림 (종류 혼동)</span>
+            <span class="category-count" id="count-wrong">0개</span>
+          </div>
+          <div class="category-items" id="zone-wrong"></div>
+        </div>
 
-  window.saveQuest1 = async function() {
-    const prob = document.getElementById("q1Problem").value;
-    const idea = document.getElementById("q1Idea").value.trim();
-    if (!idea) return alert("데이터 학습 아이디어를 적어주세요!");
+        <div class="category-dropzone" data-target="dirty" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'dirty')">
+          <div class="category-header">
+            <span class="category-title" style="color:var(--accent-red);">2️⃣ 오염 상태 (미세척)</span>
+            <span class="category-count" id="count-dirty">0개</span>
+          </div>
+          <div class="category-items" id="zone-dirty"></div>
+        </div>
 
+        <div class="category-dropzone" data-target="label" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'label')">
+          <div class="category-header">
+            <span class="category-title" style="color:var(--accent-gold);">3️⃣ 표시 부족 (라벨/안내)</span>
+            <span class="category-count" id="count-label">0개</span>
+          </div>
+          <div class="category-items" id="zone-label"></div>
+        </div>
+
+        <div class="category-dropzone" data-target="location" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'location')">
+          <div class="category-header">
+            <span class="category-title" style="color:var(--accent-green);">4️⃣ 통의 위치 및 환경</span>
+            <span class="category-count" id="count-location">0개</span>
+          </div>
+          <div class="category-items" id="zone-location"></div>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn-nav btn-prev-step" onclick="goToStep(1)">⬅ 이전 단계</button>
+        <button class="btn-nav btn-next-step" onclick="validateAndNextStep(2)">
+          원인 분석 완료 & AI 비전 개념 탐구 ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== STEP 3: 개념 (8분) ==================== -->
+    <section class="stage-card" id="stage-3">
+      <div class="stage-badge">3단계 • 개념 (8분)</div>
+      <h2 class="stage-title">🤖 컴퓨터 비전 AI의 시각 탐지 원리</h2>
+      <div class="stage-goal">
+        <strong>[개념 학습]</strong> 컴퓨터 비전 AI는 사람처럼 사물을 한 번에 보지 않고, <strong>[픽셀 숫자 데이터 ➔ 윤곽선/특징(Feature) 추출 ➔ 객체 분류]</strong> 과정을 거칩니다.
+      </div>
+
+      <!-- 인터랙티브 시각화 시뮬레이터 -->
+      <div class="vision-demo-wrap">
+        <div class="vision-box">
+          <div class="vision-box-title">👤 사람의 시각 (의미 중심)</div>
+          <div style="width:180px; height:180px; background:#1e293b; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
+            <span style="font-size:50px;">🧴</span>
+            <span style="font-size:13px; font-weight:bold; color:#68d391;">"투명한 페트병이구나!"</span>
+          </div>
+          <p style="font-size:12px; color:var(--text-sub); margin-top:8px;">경험을 통해 물체의 전체적인 모양과 맥락을 바로 인식합니다.</p>
+        </div>
+
+        <div class="vision-box">
+          <div class="vision-box-title">🤖 AI의 시각 (픽셀 특징 추출)</div>
+          <div class="pixel-grid" id="pixelGrid">
+            <!-- JS로 6x6 픽셀 격자 생성 -->
+          </div>
+          <button class="btn-back" style="font-size:11px; padding:4px 8px;" onclick="animatePixelVision()">🔄 AI 특징 스캔 다시보기</button>
+          <p style="font-size:12px; color:var(--text-sub); margin-top:8px;">각 격자의 밝기/색상 수치(0~255) 차이를 분석해 윤곽선 특징을 찾습니다.</p>
+        </div>
+      </div>
+
+      <!-- 개념 확인 3단 퀴즈 -->
+      <div class="quiz-card">
+        <div class="quiz-q">
+          <span>Q1.</span>
+          <span>컴퓨터 비전 AI가 카메라로 찍힌 사진을 읽을 때 가장 기본이 되는 데이터 형태는 무엇일까요?</span>
+        </div>
+        <div class="quiz-options">
+          <button class="opt-btn" onclick="checkQuiz(1, this, false)">A. 사람의 마음과 기억</button>
+          <button class="opt-btn" onclick="checkQuiz(1, this, true)">B. 픽셀(Pixel)의 색상과 밝기를 나타내는 숫자 데이터</button>
+          <button class="opt-btn" onclick="checkQuiz(1, this, false)">C. 공기의 온도와 습도</button>
+        </div>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-q">
+          <span>Q2.</span>
+          <span>AI가 깨끗한 페트병과 라벨이 붙은 페트병을 구별하기 위해 찾는 핵심 요소를 무엇이라 부를까요?</span>
+        </div>
+        <div class="quiz-options">
+          <button class="opt-btn" onclick="checkQuiz(2, this, true)">A. 특징(Feature - 윤곽선, 색상 차이, 재질 패턴)</button>
+          <button class="opt-btn" onclick="checkQuiz(2, this, false)">B. 컴퓨터의 무게</button>
+          <button class="opt-btn" onclick="checkQuiz(2, this, false)">C. 쓰레기통의 가격</button>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn-nav btn-prev-step" onclick="goToStep(2)">⬅ 이전 단계</button>
+        <button class="btn-nav btn-next-step" onclick="validateAndNextStep(3)">
+          개념 마스터 완료 & T-차트 수사 회의 ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== STEP 4: 적용 (10분) ==================== -->
+    <section class="stage-card" id="stage-4">
+      <div class="stage-badge">4단계 • 적용 (10분)</div>
+      <h2 class="stage-title">⚖️ 역할 분담 T-Chart (AI vs 인간)</h2>
+      <div class="stage-goal">
+        <strong>[적용 활동]</strong> 완벽한 자원순환 학교를 만들기 위해 <strong>"AI가 도울 수 있는 일"</strong>과 <strong>"사람이 꼭 직접 해야 하는 일"</strong>을 나누어 작성해 보세요!
+      </div>
+
+      <div class="tchart-container">
+        <!-- AI가 도울 수 있는 일 -->
+        <div class="tchart-col tchart-ai">
+          <div class="tchart-header">🤖 AI가 도울 수 있는 일</div>
+          <div class="tchart-list" id="tchartAiList">
+            <div class="tchart-card">
+              <span>📷 버리려는 순간 비닐 라벨 미제거 감지 및 음성 경고</span>
+              <button class="btn-del-card" onclick="removeTchart(this)">✖</button>
+            </div>
+            <div class="tchart-card">
+              <span>📊 분리배출함 쓰레기 적재량 실시간 측정 및 비움 알림</span>
+              <button class="btn-del-card" onclick="removeTchart(this)">✖</button>
+            </div>
+          </div>
+          <div class="tchart-add-box">
+            <input type="text" id="addAiInput" class="text-input" style="padding:8px 10px; font-size:12px;" placeholder="AI가 도울 일 직접 추가...">
+            <button class="btn-nav btn-next-step" style="padding:8px 12px; font-size:12px; margin:0;" onclick="addTchartCard('ai')">추가</button>
+          </div>
+        </div>
+
+        <!-- 사람이 해야 하는 일 -->
+        <div class="tchart-col tchart-human">
+          <div class="tchart-header">👤 사람이 꼭 해야 하는 일</div>
+          <div class="tchart-list" id="tchartHumanList">
+            <div class="tchart-card">
+              <span>🧼 음료수 병과 우유팩을 물로 깨끗하게 헹구기</span>
+              <button class="btn-del-card" onclick="removeTchart(this)">✖</button>
+            </div>
+            <div class="tchart-card">
+              <span>✂️ 페트병의 비닐 라벨을 손으로 직접 뜯어 분리하기</span>
+              <button class="btn-del-card" onclick="removeTchart(this)">✖</button>
+            </div>
+          </div>
+          <div class="tchart-add-box">
+            <input type="text" id="addHumanInput" class="text-input" style="padding:8px 10px; font-size:12px;" placeholder="사람이 할 일 직접 추가...">
+            <button class="btn-nav btn-complete" style="padding:8px 12px; font-size:12px; margin:0;" onclick="addTchartCard('human')">추가</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn-nav btn-prev-step" onclick="goToStep(3)">⬅ 이전 단계</button>
+        <button class="btn-nav btn-next-step" onclick="validateAndNextStep(4)">
+          T-차트 완성 및 탐구 질문 생성 ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== STEP 5: 정리 (5분) ==================== -->
+    <section class="stage-card" id="stage-5">
+      <div class="stage-badge">5단계 • 정리 (5분)</div>
+      <h2 class="stage-title">💡 나만의 AI 탐구 질문 수립 & 최종 리포트</h2>
+      <div class="stage-goal">
+        <strong>[최종 미션]</strong> 1차시 수업을 마무리하며, 우리 학교 문제를 해결하기 위한 <strong>AI 탐구 질문 1개</strong>를 완성하여 제출하세요!
+      </div>
+
+      <!-- 추천 질문 템플릿 칩 -->
+      <span class="quick-tag-label">💡 질문 추천 템플릿 (클릭 시 자동 입력):</span>
+      <div class="template-chips">
+        <button class="chip-btn" onclick="applyTemplate('AI는 심하게 찌그러진 알루미늄 캔도 특징을 찾아 알아볼 수 있을까?')">
+          "AI는 찌그러진 캔도 알아볼 수 있을까?"
+        </button>
+        <button class="chip-btn" onclick="applyTemplate('AI가 투명 페트병의 비닐 라벨을 100% 감지하려면 어떤 각도의 사진이 몇 장 필요할까?')">
+          "라벨 감지에 필요한 사진 각도와 장수는?"
+        </button>
+        <button class="chip-btn" onclick="applyTemplate('국물이 묻어 오염된 종이컵과 깨끗한 종이컵을 AI 카메라는 색상 픽셀만으로 구분할 수 있을까?')">
+          "오염된 컵을 픽셀 색상으로 구분 가능할까?"
+        </button>
+      </div>
+
+      <div class="input-field-group">
+        <label class="input-label">✍️ [최종 탐구 질문] 당신의 빛나는 AI 질문을 작성하세요:</label>
+        <textarea id="finalQuestionInput" class="textarea-input" rows="3" placeholder="예: AI 카메라가 어두운 복도에서도 쓰레기 종류를 정확하게 구별할 수 있을까?"></textarea>
+      </div>
+
+      <!-- 학생 정보 입력 확인 -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:14px;">
+        <div>
+          <label class="input-label">👤 탐정 이름 (학생 이름)</label>
+          <input type="text" id="studentNameInput" class="text-input" placeholder="이름을 입력하세요">
+        </div>
+        <div>
+          <label class="input-label">🏫 학번 / 모둠 번호</label>
+          <input type="text" id="studentIdInput" class="text-input" placeholder="예: 6학년 2반 15번">
+        </div>
+      </div>
+
+      <!-- 실시간 리포트 미리보기 -->
+      <div class="report-card-preview" id="reportPreview">
+        <span class="report-badge">🏆 1차시 수사 리포트</span>
+        <h3 style="font-family:'Jua',sans-serif; color:var(--primary); font-size:18px; margin-bottom:12px;">AI 자원순환 수사대 사건 파일 #01</h3>
+        <div class="report-row">
+          <div class="report-label">포착된 문제 단서</div>
+          <div class="report-val" id="repClue">-</div>
+        </div>
+        <div class="report-row">
+          <div class="report-label">AI 핵심 이해</div>
+          <div class="report-val">컴퓨터 비전 AI는 픽셀 데이터에서 특징(Feature)을 추출하여 대상을 인식함.</div>
+        </div>
+        <div class="report-row" style="border-bottom:none;">
+          <div class="report-label">최종 수립한 AI 탐구 질문</div>
+          <div class="report-val" id="repQuestion" style="color:var(--accent-gold); font-size:15px;">-</div>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn-nav btn-prev-step" onclick="goToStep(4)">⬅ 이전 단계</button>
+        <button class="btn-nav btn-complete btn-next-step" onclick="submitFinalQuest()">
+          🎉 1차시 퀘스트 최종 완료 및 저장 (⭐ +100 EXP)
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 토스트 알림창 -->
+  <div class="toast-msg" id="toastMsg">알림 메시지</div>
+
+  <!-- Firebase 및 애플리케이션 스크립트 모듈 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, doc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // Firebase 연동 설정
+    const firebaseConfig = { 
+      apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00", 
+      authDomain: "elemeelementary-textbook.firebaseapp.com", 
+      projectId: "elemeelementary-textbook", 
+      storageBucket: "elemeelementary-textbook.firebasestorage.app", 
+      messagingSenderId: "713149004420", 
+      appId: "1:713149004420:web:8483273681e16f5a8fa0d1" 
+    };
+    
+    let db = null;
     try {
-      await addDoc(collection(db, "quest1_records"), { studentId, studentName, problem: prob, dataIdea: idea, createdAt: serverTimestamp() });
-      await updateDoc(doc(db, "students", studentId), { score: increment(20) });
-      localStorage.setItem("elementary_score", parseInt(localStorage.getItem("elementary_score")||"0") + 20);
-      alert("🎉 Quest 1 완료! (⭐ +20점)");
-      window.location.href = "main.html";
-    } catch(e) { console.error(e); alert("저장 실패"); }
-  };
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+    } catch(e) {
+      console.warn("Firebase offline or local mode:", e);
+    }
 
-  render();
-</script>
+    // 전역 상태
+    window.state = {
+      currentStep: 1,
+      score: parseInt(localStorage.getItem("elementary_score") || "0"),
+      selectedEvidence: 1,
+      selectedTags: [],
+      clueText: "",
+      quizAnswers: { q1: false, q2: false },
+      soundEnabled: true,
+      studentId: localStorage.getItem("elementary_studentId") || "",
+      studentName: localStorage.getItem("elementary_studentName") || ""
+    };
+
+    // Web Audio 효과음 발생기
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    window.playSound = function(type) {
+      if (!window.state.soundEnabled) return;
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      const now = audioCtx.currentTime;
+
+      if (type === 'click') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+        osc.start(now);
+        osc.stop(now + 0.08);
+      } else if (type === 'correct') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, now); // C5
+        osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+        osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } else if (type === 'wrong') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(200, now);
+        osc.frequency.linearRampToValueAtTime(140, now + 0.2);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      } else if (type === 'fanfare') {
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          o.frequency.setValueAtTime(freq, now + i * 0.12);
+          g.gain.setValueAtTime(0.25, now + i * 0.12);
+          g.gain.linearRampToValueAtTime(0.01, now + i * 0.12 + 0.25);
+          o.start(now + i * 0.12);
+          o.stop(now + i * 0.12 + 0.25);
+        });
+      }
+    };
+
+    window.toggleSound = function() {
+      window.state.soundEnabled = !window.state.soundEnabled;
+      document.getElementById('soundToggle').textContent = window.state.soundEnabled ? '🔊' : '🔇';
+      showToast(window.state.soundEnabled ? '소리가 켜졌습니다.' : '소리가 꺼졌습니다.');
+    };
+
+    window.showToast = function(msg) {
+      const toast = document.getElementById('toastMsg');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    };
+
+    window.addScore = function(pts) {
+      window.state.score += pts;
+      document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
+      localStorage.setItem("elementary_score", window.state.score);
+    };
+
+    // 단계 이동 제어
+    window.goToStep = function(stepNum) {
+      window.playSound('click');
+      window.state.currentStep = stepNum;
+
+      document.querySelectorAll('.stage-card').forEach((card, idx) => {
+        card.classList.toggle('active', idx + 1 === stepNum);
+      });
+
+      document.querySelectorAll('.step-item').forEach((item, idx) => {
+        item.classList.toggle('active', idx + 1 === stepNum);
+      });
+
+      // 리포트 갱신
+      if (stepNum === 5) {
+        updateReportPreview();
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // Step 1 제어
+    window.selectEvidence = function(id, el) {
+      window.playSound('click');
+      window.state.selectedEvidence = id;
+      document.querySelectorAll('.evidence-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    };
+
+    window.toggleTag = function(el, tag) {
+      window.playSound('click');
+      el.classList.toggle('active');
+      if (el.classList.contains('active')) {
+        window.state.selectedTags.push(tag);
+      } else {
+        window.state.selectedTags = window.state.selectedTags.filter(t => t !== tag);
+      }
+    };
+
+    // Step 2 드래그 & 클릭 분류 제어
+    let draggedElement = null;
+
+    document.querySelectorAll('.case-card').forEach(card => {
+      card.addEventListener('dragstart', (e) => {
+        draggedElement = card;
+        card.classList.add('dragging');
+        window.playSound('click');
+      });
+      card.addEventListener('dragend', () => {
+        if (draggedElement) draggedElement.classList.remove('dragging');
+      });
+    });
+
+    window.handleDragOver = function(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add('hover-target');
+    };
+
+    window.handleDragLeave = function(e) {
+      e.currentTarget.classList.remove('hover-target');
+    };
+
+    window.handleDrop = function(e, targetCat) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('hover-target');
+      if (!draggedElement) return;
+
+      const cardCat = draggedElement.getAttribute('data-category');
+      const targetZone = document.getElementById(`zone-${targetCat}`);
+
+      if (cardCat === targetCat) {
+        draggedElement.classList.add('correct');
+        targetZone.appendChild(draggedElement);
+        window.playSound('correct');
+        showToast('🎯 정답! 올바른 원인 상자에 분류되었습니다 (+10 EXP)');
+        window.addScore(10);
+      } else {
+        window.playSound('wrong');
+        showToast('❌ 다른 원인 상자에 더 어울리는 사건입니다!');
+      }
+      updateCounts();
+    };
+
+    // 클릭 시 바로 맞는 상자로 자동 이동
+    window.autoAssignCase = function(card) {
+      const cat = card.getAttribute('data-category');
+      const zone = document.getElementById(`zone-${cat}`);
+      if (card.parentElement.id === `zone-${cat}`) {
+        // 이미 들어가 있다면 원래 대기장소로 복귀
+        document.getElementById('casePool').appendChild(card);
+        card.classList.remove('correct');
+      } else {
+        card.classList.add('correct');
+        zone.appendChild(card);
+        window.playSound('correct');
+        window.addScore(10);
+        showToast('🎯 올바른 원인 상자로 자동 이동되었습니다!');
+      }
+      updateCounts();
+    };
+
+    function updateCounts() {
+      ['wrong', 'dirty', 'label', 'location'].forEach(cat => {
+        const count = document.getElementById(`zone-${cat}`).children.length;
+        document.getElementById(`count-${cat}`).textContent = `${count}개`;
+      });
+    }
+
+    // Step 3 픽셀 애니메이션 및 퀴즈
+    function renderPixelGrid() {
+      const grid = document.getElementById('pixelGrid');
+      grid.innerHTML = '';
+      const pattern = [
+        0, 1, 1, 1, 1, 0,
+        1, 0, 0, 0, 0, 1,
+        1, 0, 1, 1, 0, 1,
+        1, 0, 1, 1, 0, 1,
+        1, 0, 0, 0, 0, 1,
+        0, 1, 1, 1, 1, 0
+      ];
+
+      pattern.forEach((val, idx) => {
+        const cell = document.createElement('div');
+        cell.className = 'pixel-cell';
+        cell.textContent = Math.floor(Math.random() * 200 + 50);
+        if (val === 1) {
+          setTimeout(() => {
+            cell.classList.add('lit');
+            cell.textContent = '255';
+          }, idx * 40);
+        }
+        grid.appendChild(cell);
+      });
+    }
+
+    window.animatePixelVision = function() {
+      window.playSound('click');
+      renderPixelGrid();
+    };
+
+    window.checkQuiz = function(qNum, btn, isCorrect) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('correct', 'wrong'));
+
+      if (isCorrect) {
+        btn.classList.add('correct');
+        window.playSound('correct');
+        window.state.quizAnswers[`q${qNum}`] = true;
+        showToast('🎉 정답입니다! 컴퓨터 비전 핵심 원리 습득 (+15 EXP)');
+        window.addScore(15);
+      } else {
+        btn.classList.add('wrong');
+        window.playSound('wrong');
+        showToast('다시 생각해 보세요!');
+      }
+    };
+
+    // Step 4 T-Chart 제어
+    window.addTchartCard = function(type) {
+      const input = document.getElementById(type === 'ai' ? 'addAiInput' : 'addHumanInput');
+      const text = input.value.trim();
+      if (!text) return showToast('내용을 입력해 주세요!');
+
+      const list = document.getElementById(type === 'ai' ? 'tchartAiList' : 'tchartHumanList');
+      const item = document.createElement('div');
+      item.className = 'tchart-card';
+      item.innerHTML = `
+        <span>${type === 'ai' ? '🤖' : '👤'} ${text}</span>
+        <button class="btn-del-card" onclick="removeTchart(this)">✖</button>
+      `;
+      list.appendChild(item);
+      input.value = '';
+      window.playSound('correct');
+      window.addScore(10);
+      showToast('T-차트에 아이디어가 등록되었습니다! (+10 EXP)');
+    };
+
+    window.removeTchart = function(btn) {
+      window.playSound('click');
+      btn.closest('.tchart-card').remove();
+    };
+
+    // Step 5 템플릿 적용 및 리포트 갱신
+    window.applyTemplate = function(txt) {
+      window.playSound('click');
+      document.getElementById('finalQuestionInput').value = txt;
+      updateReportPreview();
+      showToast('탐구 질문 템플릿이 입력되었습니다.');
+    };
+
+    function updateReportPreview() {
+      const clue = document.getElementById('step1ClueInput').value || 
+                   (window.state.selectedTags.length > 0 ? window.state.selectedTags.join(', ') : '비닐 라벨 미제거 및 음식물 오염');
+      const question = document.getElementById('finalQuestionInput').value || 'AI는 찌그러진 캔도 알아볼 수 있을까?';
+
+      document.getElementById('repClue').textContent = clue;
+      document.getElementById('repQuestion').textContent = `💡 "${question}"`;
+    }
+
+    document.getElementById('finalQuestionInput')?.addEventListener('input', updateReportPreview);
+    document.getElementById('step1ClueInput')?.addEventListener('input', updateReportPreview);
+
+    // 각 단계 유효성 검사 및 다음 단계 이동
+    window.validateAndNextStep = function(current) {
+      if (current === 1) {
+        const clue = document.getElementById('step1ClueInput').value.trim();
+        if (!clue && window.state.selectedTags.length === 0) {
+          showToast('⚠️ 문제 태그를 선택하거나 단서 요약을 1줄 이상 적어주세요!');
+          return;
+        }
+        window.state.clueText = clue;
+        document.getElementById(`stepNav-1`).classList.add('completed');
+        window.addScore(20);
+        window.goToStep(2);
+      } else if (current === 2) {
+        document.getElementById(`stepNav-2`).classList.add('completed');
+        window.addScore(20);
+        window.goToStep(3);
+      } else if (current === 3) {
+        if (!window.state.quizAnswers.q1 && !window.state.quizAnswers.q2) {
+          showToast('⚠️ 퀴즈 문제를 풀고 정답을 확인해 보세요!');
+          return;
+        }
+        document.getElementById(`stepNav-3`).classList.add('completed');
+        window.addScore(20);
+        window.goToStep(4);
+      } else if (current === 4) {
+        document.getElementById(`stepNav-4`).classList.add('completed');
+        window.addScore(20);
+        window.goToStep(5);
+      }
+    };
+
+    // 최종 제출
+    window.submitFinalQuest = async function() {
+      const question = document.getElementById('finalQuestionInput').value.trim();
+      const sName = document.getElementById('studentNameInput').value.trim() || window.state.studentName || '학생 탐정';
+      const sId = document.getElementById('studentIdInput').value.trim() || window.state.studentId || '익명';
+
+      if (!question) {
+        showToast('⚠️ 최종 AI 탐구 질문을 작성해 주세요!');
+        return;
+      }
+
+      localStorage.setItem("elementary_studentName", sName);
+      localStorage.setItem("elementary_studentId", sId);
+      window.addScore(100);
+      window.playSound('fanfare');
+
+      // T-차트 데이터 수집
+      const aiTasks = Array.from(document.querySelectorAll('#tchartAiList .tchart-card span')).map(s => s.textContent);
+      const humanTasks = Array.from(document.querySelectorAll('#tchartHumanList .tchart-card span')).map(s => s.textContent);
+
+      const recordData = {
+        studentId: sId,
+        studentName: sName,
+        chasi: 1,
+        title: "1차시: 우리 학교 분리배출 사건을 찾아라",
+        clue: document.getElementById('step1ClueInput').value || window.state.selectedTags.join(', '),
+        aiTasks: aiTasks,
+        humanTasks: humanTasks,
+        researchQuestion: question,
+        score: window.state.score,
+        createdAt: serverTimestamp ? serverTimestamp() : new Date().toISOString()
+      };
+
+      try {
+        if (db) {
+          await addDoc(collection(db, "quest1_records"), recordData);
+          if (sId && sId !== '익명') {
+            try {
+              await updateDoc(doc(db, "students", sId), { score: increment(100) });
+            } catch(err) {
+              console.log("student doc update skip", err);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Firestore save error, saved locally:", err);
+      }
+
+      // 로컬 기록 백업
+      localStorage.setItem("quest1_completed", "true");
+      localStorage.setItem("quest1_data", JSON.stringify(recordData));
+
+      alert(`🎉 축하합니다! 1차시 [우리 학교 분리배출 사건을 찾아라] 퀘스트를 성공적으로 완료했습니다!\n\n획득 경험치: +100 EXP\n메인 화면으로 이동합니다.`);
+      window.location.href = "main.html";
+    };
+
+    // 초기화 로드
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
+      
+      const savedName = localStorage.getItem("elementary_studentName");
+      const savedId = localStorage.getItem("elementary_studentId");
+      if (savedName) document.getElementById('studentNameInput').value = savedName;
+      if (savedId) document.getElementById('studentIdInput').value = savedId;
+
+      renderPixelGrid();
+      updateCounts();
+      updateReportPreview();
+    });
+  </script>
 </body>
 </html>
