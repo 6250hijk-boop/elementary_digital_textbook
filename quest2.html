@@ -2,149 +2,1370 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quest 2 - 기준 연구소</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>2차시: AI 분류 규칙을 만들어라 | AI 자원순환 탐정단</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
   <style>
-    :root { --bg: #2b3a42; --panel: #3f5159; --border: #182328; }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
-    body { background-color: var(--bg); color: #fff; display: flex; flex-direction: column; align-items: center; padding: 15px; min-height: 100vh; }
-    .container { width: 100%; max-width: 860px; background: var(--panel); border-radius: 18px; border: 5px solid var(--border); overflow: hidden; display: flex; flex-direction: column; align-items: center; }
-    header { width: 100%; background: #1e282d; padding: 14px 20px; border-bottom: 4px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .btn-back { background: #546e7a; color: white; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; border: 2px solid #263238; }
-    h1 { font-size: 18px; color: #ffeb3b; text-shadow: 2px 2px 0px #000; margin: 0; }
-    .game-wrapper { padding: 18px 15px; display: flex; flex-direction: column; align-items: center; width: 100%; }
-    .canvas-container { border: 5px solid #263238; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
-    canvas { display: block; image-rendering: pixelated; }
-    .guide-text { font-size: 13px; font-weight: bold; color: #cfd8dc; background: rgba(0,0,0,0.3); padding: 8px 14px; border-radius: 8px; margin-top: 10px; }
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
-    .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease-in-out; }
-    .modal-content { background: white; color: #333; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; border: 4px solid #E65100; }
-    .btn-close { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: #888; }
-    h2 { font-size: 19px; margin-bottom: 12px; color: #E65100; }
-    .guide-box { background: #FFF3E0; border-left: 5px solid #E65100; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; line-height: 1.5; }
-    .form-group { margin-bottom: 14px; }
-    label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 13px; }
-    textarea { width: 100%; padding: 10px; border: 2px solid #E0E0E0; border-radius: 10px; font-size: 14px; outline: none; }
-    .btn-action { width: 100%; padding: 12px; background: #E65100; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 8px; }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    :root {
+      --bg-light: #f0f7ff;
+      --bg-card: #ffffff;
+      --border-card: #d0e4ff;
+      --primary: #2563eb;
+      --primary-light: #eff6ff;
+      --accent-gold: #f59e0b;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --accent-purple: #8b5cf6;
+      --text-main: #1e293b;
+      --text-sub: #475569;
+      --text-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: var(--bg-light);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(37, 99, 235, 0.08), transparent 35%),
+        radial-gradient(circle at 90% 90%, rgba(245, 158, 11, 0.08), transparent 35%),
+        linear-gradient(to bottom, #f0f7ff, #e8f2fc);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* 상단 앱 HUD 네비게이션 (밝고 선명한 디자인) */
+    .app-header {
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid #e2e8f0;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-back {
+      background: #f1f5f9;
+      border: 2px solid #cbd5e1;
+      color: #334155;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover {
+      background: #e2e8f0;
+      transform: translateY(-1px);
+    }
+
+    .header-title-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .badge-chasi {
+      font-size: 12px;
+      font-weight: 800;
+      color: #d97706;
+      letter-spacing: 0.5px;
+    }
+
+    .header-main-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      color: #1e3a8a;
+      letter-spacing: -0.3px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .score-badge {
+      background: #fffbeb;
+      border: 2px solid #fde68a;
+      color: #b45309;
+      font-weight: 900;
+      font-size: 16px;
+      padding: 6px 16px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+    }
+
+    .btn-sound {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* 메인 컨테이너 */
+    .app-container {
+      width: 100%;
+      max-width: 980px;
+      padding: 20px 16px 90px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* 5단계 네비게이터 (크고 읽기 쉬운 디자인) */
+    .step-tracker {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      background: #ffffff;
+      padding: 12px;
+      border-radius: 18px;
+      border: 2px solid #e2e8f0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 6px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: center;
+    }
+
+    .step-item.active {
+      background: #eff6ff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .step-item.completed {
+      background: #ecfdf5;
+      border-color: #a7f3d0;
+    }
+
+    .step-num {
+      font-size: 12px;
+      font-weight: 900;
+      color: #94a3b8;
+      margin-bottom: 2px;
+    }
+
+    .step-item.active .step-num {
+      color: var(--primary);
+    }
+
+    .step-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #475569;
+    }
+
+    .step-item.active .step-name {
+      color: #1e3a8a;
+    }
+
+    /* 스테이지 카드 공통 */
+    .stage-card {
+      display: none;
+      background: var(--bg-card);
+      border: 2px solid #e2e8f0;
+      border-radius: 24px;
+      padding: clamp(20px, 3vw, 32px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    .stage-card.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .stage-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #eff6ff;
+      color: var(--primary);
+      border: 2px solid #bfdbfe;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .stage-title {
+      font-family: 'Jua', sans-serif;
+      font-size: clamp(22px, 3.2vw, 28px);
+      color: #0f172a;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stage-goal {
+      font-size: 16px;
+      color: #334155;
+      background: #f8fafc;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border-left: 6px solid var(--primary);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    /* ========================================================
+       1단계: 도입 (4분) - 헷갈리는 쓰레기 3대 경계 사례
+       ======================================================== */
+    .confuse-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .confuse-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .confuse-card {
+      background: #ffffff;
+      border: 3px solid #e2e8f0;
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+      transition: all 0.25s ease;
+    }
+
+    .confuse-card:hover {
+      border-color: #93c5fd;
+      transform: translateY(-3px);
+    }
+
+    .confuse-img-box {
+      width: 100%;
+      height: 170px;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .confuse-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-grow: 1;
+    }
+
+    .confuse-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #1e293b;
+    }
+
+    .confuse-desc {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .btn-vote-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn-vote {
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      border: 2px solid #cbd5e1;
+      background: #f8fafc;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-vote:hover {
+      background: #e2e8f0;
+    }
+
+    .btn-vote.selected-recycle {
+      background: #ecfdf5;
+      border-color: #10b981;
+      color: #065f46;
+    }
+
+    .btn-vote.selected-trash {
+      background: #fef2f2;
+      border-color: #ef4444;
+      color: #991b1b;
+    }
+
+    /* ========================================================
+       2단계: 활동 1 (12분) - 5개 범주 상자로 사진 카드 분류
+       ======================================================== */
+    .pool-section-light {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .pool-section-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cards-scroll-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      min-height: 50px;
+    }
+
+    .waste-item-chip {
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      padding: 10px 16px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #1e293b;
+      cursor: grab;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s;
+    }
+
+    .waste-item-chip:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+    }
+
+    .waste-item-chip.selected-touch {
+      background: #eff6ff;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+
+    /* 5개 분리수거함 그리드 */
+    .five-bins-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .five-bins-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .bin-dropzone {
+      background: #ffffff;
+      border: 3px dashed #cbd5e1;
+      border-radius: 16px;
+      padding: 14px 10px;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .bin-dropzone:hover, .bin-dropzone.hover-active {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .bin-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #f1f5f9;
+      margin-bottom: 10px;
+    }
+
+    .bin-icon {
+      font-size: 28px;
+    }
+
+    .bin-name {
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      color: #0f172a;
+    }
+
+    .bin-count {
+      font-size: 12px;
+      font-weight: 800;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .bin-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-grow: 1;
+    }
+
+    .dropped-chip {
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-chip-remove {
+      background: none;
+      border: none;
+      color: #ef4444;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+
+    /* ========================================================
+       3단계: 활동 2 (15분) - 만약 ○○이면 △△로 분류한다 (AI 규칙 만들기)
+       ======================================================== */
+    .rule-builder-card {
+      background: #f0fdf4;
+      border: 3px solid #86efac;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.08);
+    }
+
+    .rule-builder-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 20px;
+      color: #166534;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rule-sentence-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 900;
+      color: #1e293b;
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 14px;
+      border: 2px solid #bbf7d0;
+      margin-bottom: 14px;
+    }
+
+    .rule-select {
+      background: #f8fafc;
+      border: 2px solid #94a3b8;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #0f172a;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .rule-select:focus {
+      border-color: #16a34a;
+    }
+
+    .btn-add-rule {
+      background: #16a34a;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .btn-add-rule:hover {
+      transform: scale(1.03);
+      background: #15803d;
+    }
+
+    .rules-history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .created-rule-item {
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* ========================================================
+       4단계: 토의 (6분) - 우리 모둠 판정 vs 정부 공식 안내 대조
+       ======================================================== */
+    .compare-table-wrap {
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      font-size: 15px;
+    }
+
+    .compare-table th {
+      background: #1e3a8a;
+      color: #ffffff;
+      padding: 14px 12px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .compare-table td {
+      padding: 14px 12px;
+      border-bottom: 1px solid #f1f5f9;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .tag-official {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1.5px solid #10b981;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    /* ========================================================
+       5단계: 정리 (3분) - 애매한 말 ➔ 구체적인 관찰 기준으로 고치기
+       ======================================================== */
+    .fix-rule-box {
+      background: #fffbeb;
+      border: 3px solid #fcd34d;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .fix-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1.4fr;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 650px) {
+      .fix-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .input-box-light {
+      width: 100%;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1e293b;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .input-box-light:focus {
+      border-color: var(--primary);
+    }
+
+    /* 하단 거대 액션 버튼 바 */
+    .action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 2px solid #f1f5f9;
+      gap: 12px;
+    }
+
+    .btn-nav-large {
+      padding: 16px 32px;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 900;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-prev {
+      background: #f1f5f9;
+      border: 2px solid #cbd5e1;
+      color: #475569;
+    }
+
+    .btn-prev:hover {
+      background: #e2e8f0;
+    }
+
+    .btn-next {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      border: none;
+      color: #ffffff;
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+      margin-left: auto;
+    }
+
+    .btn-next:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-finish {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #ffffff;
+      font-size: 20px;
+    }
+
+    /* 토스트 알림 */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      color: #ffffff;
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-size: 16px;
+      font-weight: 800;
+      z-index: 1000;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <header>
-    <a href="main.html" class="btn-back">⬅ 메인화면</a>
-    <h1>📋 Quest 2: 기준 연구소</h1>
-    <div style="width: 70px;"></div>
+
+  <!-- 앱 헤더 -->
+  <header class="app-header">
+    <div class="header-left">
+      <a href="main.html" class="btn-back">⬅ 메인으로</a>
+      <div class="header-title-group">
+        <span class="badge-chasi">QUEST 2 • 2차시</span>
+        <h1 class="header-main-title">AI 자원순환 탐정단: 분류 규칙 만들기</h1>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="score-badge" id="scoreDisplay">⭐ 0 EXP</div>
+      <button class="btn-sound" id="soundToggle" onclick="toggleSound()">🔊</button>
+    </div>
   </header>
-  <div class="game-wrapper">
-    <div class="canvas-container">
-      <canvas id="roomCanvas" width="600" height="360"></canvas>
-    </div>
-    <div class="guide-text" id="actionGuide">🎮 방향키로 이동하여 [임무 책상] 앞에서 스페이스바를 누르세요.</div>
-  </div>
-</div>
 
-<div id="missionModal" class="modal-overlay">
-  <div class="modal-content">
-    <button class="btn-close" onclick="closeModal()">✖</button>
-    <h2>📋 [2차시] 자원순환 품목 분류 기준표</h2>
-    <div class="guide-box">AI가 헷갈리지 않고 판단할 수 있도록 구체적이고 일관된 분류 규칙(알고리즘)을 작성해 보세요.</div>
-    <div class="form-group">
-      <label>1. 종이 / 플라스틱 / 캔 / 우유팩 분류 기준</label>
-      <textarea id="q2Std" rows="2" placeholder="예: 우유팩은 깨끗이 헹구고 펼쳐서 말린 것만 우유팩으로 분류함"></textarea>
-    </div>
-    <div class="form-group">
-      <label>2. 가장 헷갈리는 품목과 해결 기준</label>
-      <textarea id="q2Conf" rows="2" placeholder="예: 양념이 지워지지 않는 컵라면 용기는 일반쓰레기로 분류"></textarea>
-    </div>
-    <button class="btn-action" onclick="saveQuest2()">분류 기준 저장 (⭐ +20점)</button>
-  </div>
-</div>
+  <!-- 메인 컨테이너 -->
+  <main class="app-container">
+    
+    <!-- 5단계 네비게이터 -->
+    <nav class="step-tracker">
+      <div class="step-item active" id="stepNav-1" onclick="goToStep(1)">
+        <span class="step-num">1단계 (4분)</span>
+        <span class="step-name">🚨 헷갈리는 쓰레기</span>
+      </div>
+      <div class="step-item" id="stepNav-2" onclick="goToStep(2)">
+        <span class="step-num">2단계 (12분)</span>
+        <span class="step-name">📂 5개 상자 분류</span>
+      </div>
+      <div class="step-item" id="stepNav-3" onclick="goToStep(3)">
+        <span class="step-num">3단계 (15분)</span>
+        <span class="step-name">🤖 AI 규칙 만들기</span>
+      </div>
+      <div class="step-item" id="stepNav-4" onclick="goToStep(4)">
+        <span class="step-num">4단계 (6분)</span>
+        <span class="step-name">💬 정부 기준 대조</span>
+      </div>
+      <div class="step-item" id="stepNav-5" onclick="goToStep(5)">
+        <span class="step-num">5단계 (3분)</span>
+        <span class="step-name">💡 관찰 기준 다듬기</span>
+      </div>
+    </nav>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    <!-- ==================== 1단계: 도입 (4분) ==================== -->
+    <section class="stage-card active" id="stage-1">
+      <div class="stage-badge">1단계 • 도입 (4분)</div>
+      <h2 class="stage-title">🚨 헷갈리는 쓰레기! 재활용일까? 일반쓰레기일까?</h2>
+      <div class="stage-goal">
+        <strong>[생각 열기]</strong> 우리 주변에서 가장 헷갈리는 3가지 쓰레기를 보고, <strong>재활용이 될지 일반쓰레기일지</strong> 나의 생각을 골라보세요!
+      </div>
 
-  const firebaseConfig = { apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00", authDomain: "elemeelementary-textbook.firebaseapp.com", projectId: "elemeelementary-textbook", storageBucket: "elemeelementary-textbook.firebasestorage.app", messagingSenderId: "713149004420", appId: "1:713149004420:web:8483273681e16f5a8fa0d1" };
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+      <div class="confuse-grid">
+        <!-- 1. 컵라면 용기 -->
+        <div class="confuse-card">
+          <div class="confuse-img-box">
+            <svg width="120" height="120" viewBox="0 0 100 100">
+              <path d="M 20 25 L 80 25 L 70 85 L 30 85 Z" fill="#fee2e2" stroke="#ef4444" stroke-width="3"/>
+              <ellipse cx="50" cy="25" rx="30" ry="8" fill="#fca5a5"/>
+              <text x="50" y="55" font-size="11" font-weight="bold" fill="#b91c1c" text-anchor="middle">빨간 국물 오염</text>
+              <text x="50" y="70" font-size="9" fill="#7f1d1d" text-anchor="middle">컵라면 용기</text>
+            </svg>
+          </div>
+          <div class="confuse-body">
+            <h3 class="confuse-title">1. 빨간 국물이 묻은 컵라면</h3>
+            <p class="confuse-desc">물로 헹궈도 붉은 양념 자국이 남아있어요.</p>
+            <div class="btn-vote-group">
+              <button class="btn-vote" onclick="voteConfuse(1, 'recycle', this)">♻️ 재활용</button>
+              <button class="btn-vote" onclick="voteConfuse(1, 'trash', this)">🗑️ 일반쓰레기</button>
+            </div>
+          </div>
+        </div>
 
-  const studentId = localStorage.getItem("elementary_studentId");
-  const studentName = localStorage.getItem("elementary_studentName");
+        <!-- 2. 반짝이는 코팅 종이 -->
+        <div class="confuse-card">
+          <div class="confuse-img-box">
+            <svg width="120" height="120" viewBox="0 0 100 100">
+              <rect x="25" y="20" width="50" height="65" rx="4" fill="#fef08a" stroke="#eab308" stroke-width="3"/>
+              <path d="M 30 25 L 70 65" stroke="#ca8a04" stroke-width="2" stroke-dasharray="4"/>
+              <text x="50" y="50" font-size="10" font-weight="bold" fill="#854d0e" text-anchor="middle">비닐 코팅</text>
+              <text x="50" y="65" font-size="9" fill="#854d0e" text-anchor="middle">광고 전단지</text>
+            </svg>
+          </div>
+          <div class="confuse-body">
+            <h3 class="confuse-title">2. 겉면이 비닐 코팅된 종이</h3>
+            <p class="confuse-desc">찢어보면 투명한 비닐 막이 벗겨져요.</p>
+            <div class="btn-vote-group">
+              <button class="btn-vote" onclick="voteConfuse(2, 'recycle', this)">♻️ 재활용</button>
+              <button class="btn-vote" onclick="voteConfuse(2, 'trash', this)">🗑️ 일반쓰레기</button>
+            </div>
+          </div>
+        </div>
 
-  const canvas = document.getElementById("roomCanvas");
-  const ctx = canvas.getContext("2d");
-  const guide = document.getElementById("actionGuide");
-  
-  let player = { x: 300, y: 300, speed: 16 };
-  const desk = { x: 300, y: 120, w: 80, h: 50 };
-  let canInteract = false;
+        <!-- 3. 기름때 묻은 페트병 -->
+        <div class="confuse-card">
+          <div class="confuse-img-box">
+            <svg width="120" height="120" viewBox="0 0 100 100">
+              <rect x="35" y="30" width="30" height="55" rx="6" fill="#bfdbfe" stroke="#3b82f6" stroke-width="3"/>
+              <rect x="42" y="18" width="16" height="12" fill="#60a5fa"/>
+              <circle cx="50" cy="55" r="10" fill="#f59e0b" opacity="0.8"/>
+              <text x="50" y="58" font-size="8" font-weight="bold" fill="#fff" text-anchor="middle">식용유</text>
+              <text x="50" y="75" font-size="8" fill="#1e3a8a" text-anchor="middle">오염 페트병</text>
+            </svg>
+          </div>
+          <div class="confuse-body">
+            <h3 class="confuse-title">3. 식용유 기름이 남은 페트병</h3>
+            <p class="confuse-desc">기름때가 병 안쪽에 미끌거리게 묻어있어요.</p>
+            <div class="btn-vote-group">
+              <button class="btn-vote" onclick="voteConfuse(3, 'recycle', this)">♻️ 재활용</button>
+              <button class="btn-vote" onclick="voteConfuse(3, 'trash', this)">🗑️ 일반쓰레기</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#FFE0B2"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "#FFCC80"; ctx.lineWidth = 2;
-    for(let x=0; x<canvas.width; x+=40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
-    for(let y=0; y<canvas.height; y+=40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
+      <div class="action-bar">
+        <div></div>
+        <button class="btn-nav-large btn-next" onclick="goToStep(2)">
+          2단계: 5개 상자로 분류하기 ➔
+        </button>
+      </div>
+    </section>
 
-    ctx.fillStyle = "#4E342E"; ctx.fillRect(0, 0, canvas.width, 60);
-    ctx.fillStyle = "#6D4C41"; ctx.fillRect(0, 50, canvas.width, 10);
+    <!-- ==================== 2단계: 활동 1 (12분) ==================== -->
+    <section class="stage-card" id="stage-2">
+      <div class="stage-badge">2단계 • 활동 1 (12분)</div>
+      <h2 class="stage-title">📂 8개 사진 카드를 5개 분리수거 상자로 쏙!</h2>
+      <div class="stage-goal">
+        <strong>[모둠 분류 활동]</strong> 아래 쓰레기 카드를 터치하거나 드래그하여 <strong>5개 분리수거 상자</strong>에 알맞게 넣어보세요!
+      </div>
 
-    ctx.fillStyle = "#8D6E63"; ctx.fillRect(desk.x - desk.w/2, desk.y - desk.h/2, desk.w, desk.h);
-    ctx.fillStyle = "#212121"; ctx.fillRect(desk.x - 20, desk.y - 20, 40, 25);
-    ctx.fillStyle = canInteract ? "#64DD17" : "#FF9800"; ctx.fillRect(desk.x - 16, desk.y - 16, 32, 17);
+      <!-- 쓰레기 카드 풀 -->
+      <div class="pool-section-light">
+        <div class="pool-section-title">🗂️ 분류할 쓰레기 카드 (카드를 터치한 후 상자를 눌러도 쏙 들어갑니다!)</div>
+        <div class="cards-scroll-pool" id="wasteCardPool">
+          <div class="waste-item-chip" draggable="true" data-id="w1" data-name="신문지" ondragstart="dragWaste(event, 'w1')" onclick="touchSelectWaste('w1', this)">
+            📰 신문지
+          </div>
+          <div class="waste-item-chip" draggable="true" data-id="w2" data-name="투명 페트병(라벨제거)" ondragstart="dragWaste(event, 'w2')" onclick="touchSelectWaste('w2', this)">
+            🧴 깨끗한 투명 페트병
+          </div>
+          <div class="waste-item-chip" draggable="true" data-id="w3" data-name="과자 봉지(비닐)" ondragstart="dragWaste(event, 'w3')" onclick="touchSelectWaste('w3', this)">
+            🍿 과자 봉지
+          </div>
+          <div class="waste-item-chip" draggable="true" data-id="w4" data-name="음료수 캔" ondragstart="dragWaste(event, 'w4')" onclick="touchSelectWaste('w4', this)">
+            🥤 알루미늄 캔
+          </div>
+          <div class="waste-item-chip" draggable="true" data-id="w5" data-name="국물 묻은 컵라면" ondragstart="dragWaste(event, 'w5')" onclick="touchSelectWaste('w5', this)">
+            🍜 양념 묻은 컵라면
+          </div>
+          <div class="waste-item-chip" draggable="true" data-id="w6" data-name="코팅된 광고 전단지" ondragstart="dragWaste(event, 'w6')" onclick="touchSelectWaste('w6', this)">
+            📑 비닐 코팅 전단지
+          </div>
+          <div class="waste-item-chip" draggable="true" data-id="w7" data-name="깨끗한 택배 상자" ondragstart="dragWaste(event, 'w7')" onclick="touchSelectWaste('w7', this)">
+            📦 종이 박스
+          </div>
+          <div class="waste-item-chip" draggable="true" data-id="w8" data-name="다 쓴 치약 튜브" ondragstart="dragWaste(event, 'w8')" onclick="touchSelectWaste('w8', this)">
+            🪥 복합 플라스틱 튜브
+          </div>
+        </div>
+      </div>
 
-    ctx.fillStyle = "rgba(0,0,0,0.3)"; ctx.beginPath(); ctx.ellipse(player.x, player.y + 12, 10, 5, 0, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = "#e53935"; ctx.fillRect(player.x - 7, player.y - 16, 14, 6);
-    ctx.fillStyle = "#ffcc80"; ctx.fillRect(player.x - 5, player.y - 9, 10, 8);
-    ctx.fillStyle = "#1e88e5"; ctx.fillRect(player.x - 6, player.y - 1, 12, 8);
-    ctx.fillStyle = "#37474f"; ctx.fillRect(player.x - 5, player.y + 7, 10, 4);
-  }
+      <!-- 5개 분리수거함 -->
+      <div class="five-bins-grid">
+        <!-- 1. 종이류 -->
+        <div class="bin-dropzone" data-bin="paper" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="dropToBin(event, 'paper')" onclick="touchDropToBin('paper')">
+          <div class="bin-header">
+            <span class="bin-icon">📦</span>
+            <span class="bin-name">1. 종이류</span>
+            <span class="bin-count" id="count-paper">0개</span>
+          </div>
+          <div class="bin-items-list" id="bin-paper"></div>
+        </div>
 
-  function move(dx, dy) {
-    player.x = Math.max(20, Math.min(canvas.width - 20, player.x + dx));
-    player.y = Math.max(70, Math.min(canvas.height - 20, player.y + dy));
-    canInteract = Math.hypot(player.x - desk.x, player.y - desk.y) < 55;
-    guide.textContent = canInteract ? "🌟 스페이스바를 눌러 퀘스트를 시작하세요!" : "🎮 방향키로 이동하여 [임무 책상] 앞으로 가세요.";
-    guide.style.color = canInteract ? "#FFEB3B" : "#cfd8dc";
-    render();
-  }
+        <!-- 2. 플라스틱 -->
+        <div class="bin-dropzone" data-bin="plastic" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="dropToBin(event, 'plastic')" onclick="touchDropToBin('plastic')">
+          <div class="bin-header">
+            <span class="bin-icon">🧴</span>
+            <span class="bin-name">2. 플라스틱</span>
+            <span class="bin-count" id="count-plastic">0개</span>
+          </div>
+          <div class="bin-items-list" id="bin-plastic"></div>
+        </div>
 
-  window.addEventListener("keydown", (e) => {
-    if (document.getElementById("missionModal").classList.contains("active")) return;
-    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
-      e.preventDefault();
-      if (e.key === "ArrowUp") move(0, -player.speed);
-      if (e.key === "ArrowDown") move(0, player.speed);
-      if (e.key === "ArrowLeft") move(-player.speed, 0);
-      if (e.key === "ArrowRight") move(player.speed, 0);
-    } else if (e.code === "Space") {
-      e.preventDefault();
-      if (canInteract) document.getElementById("missionModal").classList.add("active");
-    }
-  });
+        <!-- 3. 비닐류 -->
+        <div class="bin-dropzone" data-bin="vinyl" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="dropToBin(event, 'vinyl')" onclick="touchDropToBin('vinyl')">
+          <div class="bin-header">
+            <span class="bin-icon">🛍️</span>
+            <span class="bin-name">3. 비닐류</span>
+            <span class="bin-count" id="count-vinyl">0개</span>
+          </div>
+          <div class="bin-items-list" id="bin-vinyl"></div>
+        </div>
 
-  window.closeModal = function() {
-    document.getElementById("missionModal").classList.remove("active");
-    player.y += 20; move(0,0);
-  };
+        <!-- 4. 캔/고철 -->
+        <div class="bin-dropzone" data-bin="can" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="dropToBin(event, 'can')" onclick="touchDropToBin('can')">
+          <div class="bin-header">
+            <span class="bin-icon">🥫</span>
+            <span class="bin-name">4. 캔/고철</span>
+            <span class="bin-count" id="count-can">0개</span>
+          </div>
+          <div class="bin-items-list" id="bin-can"></div>
+        </div>
 
-  window.saveQuest2 = async function() {
-    const std = document.getElementById("q2Std").value.trim();
-    const conf = document.getElementById("q2Conf").value.trim();
-    if (!std) return alert("분류 기준을 입력해주세요!");
+        <!-- 5. 일반쓰레기 -->
+        <div class="bin-dropzone" data-bin="trash" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="dropToBin(event, 'trash')" onclick="touchDropToBin('trash')">
+          <div class="bin-header">
+            <span class="bin-icon">🗑️</span>
+            <span class="bin-name">5. 일반쓰레기</span>
+            <span class="bin-count" id="count-trash">0개</span>
+          </div>
+          <div class="bin-items-list" id="bin-trash"></div>
+        </div>
+      </div>
 
+      <div class="action-bar">
+        <button class="btn-nav-large btn-prev" onclick="goToStep(1)">⬅ 이전 단계</button>
+        <button class="btn-nav-large btn-next" onclick="goToStep(3)">
+          3단계: AI 생각 규칙 만들기 ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== 3단계: 활동 2 (15분) ==================== -->
+    <section class="stage-card" id="stage-3">
+      <div class="stage-badge">3단계 • 활동 2 (15분)</div>
+      <h2 class="stage-title">🤖 "만약 ○○이면 △△로 분류한다!" AI 규칙 만들기</h2>
+      <div class="stage-goal">
+        <strong>[AI 알고리즘 규칙 만들기]</strong> AI 로봇이 스스로 쓰레기를 구별할 수 있도록 <strong>"만약 [조건] 이면 [결과] 로 분류한다"</strong> 규칙을 완성해 보세요!
+      </div>
+
+      <div class="rule-builder-card">
+        <div class="rule-builder-title">🧩 AI 생각 규칙 조립기</div>
+        
+        <div class="rule-sentence-row">
+          <span>만약</span>
+          <select id="ruleCondition" class="rule-select">
+            <option value="물로 씻기지 않는 양념이나 기름이 묻어있으면">물로 씻기지 않는 양념이나 기름이 묻어있으면</option>
+            <option value="비닐 코팅이 되어 찢어지지 않으면">비닐 코팅이 되어 찢어지지 않으면</option>
+            <option value="깨끗하게 씻은 투명 페트병이고 라벨을 뗐으면">깨끗하게 씻은 투명 페트병이고 라벨을 뗐으면</option>
+            <option value="내용물을 비우고 찌그러뜨린 알루미늄 캔이면">내용물을 비우고 찌그러뜨린 알루미늄 캔이면</option>
+            <option value="여러 재질이 섞여 분리할 수 없으면">여러 재질이 섞여 분리할 수 없으면</option>
+          </select>
+          <span>👉</span>
+          <select id="ruleResult" class="rule-select">
+            <option value="[일반쓰레기] 종량제 봉투">[일반쓰레기] 종량제 봉투</option>
+            <option value="[투명 페트병] 전용 수거함">[투명 페트병] 전용 수거함</option>
+            <option value="[캔/고철] 수거함">[캔/고철] 수거함</option>
+            <option value="[종이류] 수거함">[종이류] 수거함</option>
+            <option value="[비닐류] 수거함">[비닐류] 수거함</option>
+          </select>
+          <span>(으)로 분류한다!</span>
+        </div>
+
+        <button class="btn-add-rule" onclick="addAiRule()">➕ 이 규칙을 AI에게 가르치기 (⭐ +20 EXP)</button>
+
+        <div class="rules-history-list" id="rulesHistoryList">
+          <div class="created-rule-item">
+            <span>🤖 규칙 1: 만약 <strong>물로 씻기지 않는 양념이 묻어있으면</strong> 👉 <strong>[일반쓰레기]</strong>(으)로 분류한다.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn-nav-large btn-prev" onclick="goToStep(2)">⬅ 이전 단계</button>
+        <button class="btn-nav-large btn-next" onclick="goToStep(4)">
+          4단계: 정부 공식 기준 대조하기 ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== 4단계: 토의 (6분) ==================== -->
+    <section class="stage-card" id="stage-4">
+      <div class="stage-badge">4단계 • 토의 (6분)</div>
+      <h2 class="stage-title">💬 우리 생각 vs 환경부 공식 기준 대조하기</h2>
+      <div class="stage-goal">
+        <strong>[공식 안내 대조]</strong> 환경부에서 정한 <strong>진짜 공식 분리배출 기준</strong>을 확인하고 우리 모둠의 생각과 비교해 보세요!
+      </div>
+
+      <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>품목 사진/이름</th>
+              <th>정부 공식 분류</th>
+              <th>핵심 공식 배출 요령</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🍜 양념 묻은 컵라면 용기</td>
+              <td><span class="tag-official" style="background:#fee2e2; color:#991b1b; border-color:#ef4444;">일반쓰레기</span></td>
+              <td>오염 물질이 지워지지 않으면 재활용 불가! 종량제 봉투에 버려요.</td>
+            </tr>
+            <tr>
+              <td>📑 비닐 코팅된 전단지</td>
+              <td><span class="tag-official" style="background:#fee2e2; color:#991b1b; border-color:#ef4444;">일반쓰레기</span></td>
+              <td>비닐과 종이가 분리되지 않아 종이 재활용이 되지 않아요.</td>
+            </tr>
+            <tr>
+              <td>🧴 투명 페트병</td>
+              <td><span class="tag-official">투명 페트병 전용</span></td>
+              <td>내용물을 비우고 물로 헹군 뒤 <strong>라벨을 떼고 압착</strong>해서 배출해요.</td>
+            </tr>
+            <tr>
+              <td>🥛 우유팩 (종이팩)</td>
+              <td><span class="tag-official" style="background:#fef3c7; color:#92400e; border-color:#f59e0b;">종이팩 전용함</span></td>
+              <td>일반 종이와 재질이 다르므로 씻어서 펼쳐 말린 뒤 전용함에 넣어요.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn-nav-large btn-prev" onclick="goToStep(3)">⬅ 이전 단계</button>
+        <button class="btn-nav-large btn-next" onclick="goToStep(5)">
+          5단계: 애매한 말 고치기 ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== 5단계: 정리 (3분) ==================== -->
+    <section class="stage-card" id="stage-5">
+      <div class="stage-badge">5단계 • 정리 (3분)</div>
+      <h2 class="stage-title">💡 애매한 낱말 ➔ 구체적인 관찰 기준으로 바꾸기</h2>
+      <div class="stage-goal">
+        <strong>[최종 정리]</strong> AI 컴퓨터는 "조금 더러움", "적당히 깨끗함" 같은 애매한 말을 이해하지 못해요! <br>
+        <strong>누구나 보고 바로 알 수 있는 똑똑한 관찰 기준</strong>으로 바꿔 써보세요.
+      </div>
+
+      <div class="fix-rule-box">
+        <div class="fix-row">
+          <input type="text" class="input-box-light" value="❌ 조금 더러운 컵라면" readonly style="background:#fee2e2; color:#991b1b;">
+          <span style="font-size:22px; font-weight:900;">➔</span>
+          <input type="text" class="input-box-light" id="fixRule1" value="⭕ 물로 헹궈도 붉은 양념 얼룩이 남아있는 컵라면">
+        </div>
+
+        <div class="fix-row">
+          <input type="text" class="input-box-light" value="❌ 대충 버린 페트병" readonly style="background:#fee2e2; color:#991b1b;">
+          <span style="font-size:22px; font-weight:900;">➔</span>
+          <input type="text" class="input-box-light" id="fixRule2" value="⭕ 겉면에 비닐 라벨이 떼어지지 않은 페트병">
+        </div>
+      </div>
+
+      <!-- 최종 제출 및 점수 획득 -->
+      <div class="action-bar">
+        <button class="btn-nav-large btn-prev" onclick="goToStep(4)">⬅ 이전 단계</button>
+        <button class="btn-nav-large btn-finish btn-next" onclick="finishQuest2()">
+          🎉 2차시 퀘스트 완료 및 저장 (⭐ +100 EXP)
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 토스트 알림창 -->
+  <div class="toast-msg" id="toastMsg">알림 메시지</div>
+
+  <!-- Firebase 및 인터랙션 스크립트 모듈 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = { 
+      apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00", 
+      authDomain: "elemeelementary-textbook.firebaseapp.com", 
+      projectId: "elemeelementary-textbook", 
+      storageBucket: "elemeelementary-textbook.firebasestorage.app", 
+      messagingSenderId: "713149004420", 
+      appId: "1:713149004420:web:8483273681e16f5a8fa0d1" 
+    };
+
+    let db = null;
     try {
-      await addDoc(collection(db, "quest2_rules"), { studentId, studentName, standard: std, confusing: conf, createdAt: serverTimestamp() });
-      await updateDoc(doc(db, "students", studentId), { score: increment(20) });
-      localStorage.setItem("elementary_score", parseInt(localStorage.getItem("elementary_score")||"0") + 20);
-      alert("🎉 Quest 2 완료! (⭐ +20점)");
-      window.location.href = "main.html";
-    } catch(e) { console.error(e); alert("저장 실패"); }
-  };
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+    } catch(e) {
+      console.warn("Firebase offline or local mode:", e);
+    }
 
-  render();
-</script>
+    // 전역 상태
+    window.state = {
+      score: parseInt(localStorage.getItem("elementary_score") || "0"),
+      soundEnabled: true,
+      selectedWasteId: null,
+      bins: {
+        paper: [],
+        plastic: [],
+        vinyl: [],
+        can: [],
+        trash: []
+      },
+      rules: []
+    };
+
+    // 오디오 효과음 발생기
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    window.playSound = function(type) {
+      if (!window.state.soundEnabled) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      const now = audioCtx.currentTime;
+
+      if (type === 'click') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(500, now);
+        osc.frequency.exponentialRampToValueAtTime(900, now + 0.08);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+        osc.start(now); osc.stop(now + 0.08);
+      } else if (type === 'drop') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(350, now);
+        osc.frequency.exponentialRampToValueAtTime(700, now + 0.12);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+        osc.start(now); osc.stop(now + 0.12);
+      } else if (type === 'fanfare') {
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.connect(g); g.connect(audioCtx.destination);
+          o.frequency.setValueAtTime(freq, now + i * 0.12);
+          g.gain.setValueAtTime(0.25, now + i * 0.12);
+          g.gain.linearRampToValueAtTime(0.01, now + i * 0.12 + 0.25);
+          o.start(now + i * 0.12); o.stop(now + i * 0.12 + 0.25);
+        });
+      }
+    };
+
+    window.toggleSound = function() {
+      window.state.soundEnabled = !window.state.soundEnabled;
+      document.getElementById('soundToggle').textContent = window.state.soundEnabled ? '🔊' : '🔇';
+      showToast(window.state.soundEnabled ? '소리가 켜졌습니다.' : '소리가 꺼졌습니다.');
+    };
+
+    window.showToast = function(msg) {
+      const toast = document.getElementById('toastMsg');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    };
+
+    window.addScore = function(pts) {
+      window.state.score += pts;
+      document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
+      localStorage.setItem("elementary_score", window.state.score);
+    };
+
+    window.goToStep = function(stepNum) {
+      window.playSound('click');
+      document.querySelectorAll('.stage-card').forEach((c, idx) => {
+        c.classList.toggle('active', idx + 1 === stepNum);
+      });
+      document.querySelectorAll('.step-item').forEach((item, idx) => {
+        item.classList.toggle('active', idx + 1 === stepNum);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // 1단계 투표
+    window.voteConfuse = function(cardIdx, voteType, btn) {
+      window.playSound('click');
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.btn-vote').forEach(b => b.classList.remove('selected-recycle', 'selected-trash'));
+      btn.classList.add(voteType === 'recycle' ? 'selected-recycle' : 'selected-trash');
+      showToast('나의 생각이 선택되었습니다!');
+    };
+
+    // 2단계 드래그 & 터치 분류
+    let currentDraggingWaste = null;
+
+    window.dragWaste = function(e, id) {
+      currentDraggingWaste = id;
+      e.dataTransfer.setData('text/plain', id);
+      window.playSound('click');
+    };
+
+    window.allowDrop = function(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add('hover-active');
+    };
+
+    window.leaveDrop = function(e) {
+      e.currentTarget.classList.remove('hover-active');
+    };
+
+    window.dropToBin = function(e, binType) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('hover-active');
+      const id = e.dataTransfer.getData('text/plain') || currentDraggingWaste;
+      if (id) assignWasteToBin(id, binType);
+    };
+
+    window.touchSelectWaste = function(id, el) {
+      window.playSound('click');
+      if (window.state.selectedWasteId === id) {
+        window.state.selectedWasteId = null;
+        document.querySelectorAll('.waste-item-chip').forEach(c => c.classList.remove('selected-touch'));
+        showToast('선택이 해제되었습니다.');
+      } else {
+        window.state.selectedWasteId = id;
+        document.querySelectorAll('.waste-item-chip').forEach(c => c.classList.remove('selected-touch'));
+        el.classList.add('selected-touch');
+        showToast('카드가 선택되었습니다! 넣을 상자를 터치하세요.');
+      }
+    };
+
+    window.touchDropToBin = function(binType) {
+      if (window.state.selectedWasteId) {
+        assignWasteToBin(window.state.selectedWasteId, binType);
+        window.state.selectedWasteId = null;
+        document.querySelectorAll('.waste-item-chip').forEach(c => c.classList.remove('selected-touch'));
+      }
+    };
+
+    window.assignWasteToBin = function(wasteId, binType) {
+      const chip = document.querySelector(`.waste-item-chip[data-id="${wasteId}"]`);
+      if (!chip) return;
+
+      const wasteName = chip.getAttribute('data-name');
+      window.playSound('drop');
+
+      // 상자에 추가
+      const list = document.getElementById(`bin-${binType}`);
+      const itemEl = document.createElement('div');
+      itemEl.className = 'dropped-chip';
+      itemEl.setAttribute('data-id', wasteId);
+      itemEl.innerHTML = `
+        <span>${chip.textContent.trim()}</span>
+        <button class="btn-chip-remove" onclick="returnWasteToPool('${wasteId}', '${binType}', event)">✕</button>
+      `;
+      list.appendChild(itemEl);
+
+      // 풀에서 숨기기
+      chip.style.display = 'none';
+
+      updateBinCounts();
+      showToast(`${wasteName}이(가) 상자에 쏙 들어갔습니다!`);
+    };
+
+    window.returnWasteToPool = function(wasteId, binType, e) {
+      if (e) e.stopPropagation();
+      window.playSound('click');
+      const chipInBin = document.querySelector(`#bin-${binType} .dropped-chip[data-id="${wasteId}"]`);
+      if (chipInBin) chipInBin.remove();
+
+      const chipInPool = document.querySelector(`.waste-item-chip[data-id="${wasteId}"]`);
+      if (chipInPool) chipInPool.style.display = 'inline-flex';
+
+      updateBinCounts();
+    };
+
+    function updateBinCounts() {
+      ['paper', 'plastic', 'vinyl', 'can', 'trash'].forEach(bin => {
+        const count = document.querySelectorAll(`#bin-${bin} .dropped-chip`).length;
+        const countEl = document.getElementById(`count-${bin}`);
+        if (countEl) countEl.textContent = `${count}개`;
+      });
+    }
+
+    // 3단계 AI 규칙 추가
+    window.addAiRule = function() {
+      const cond = document.getElementById('ruleCondition').value;
+      const res = document.getElementById('ruleResult').value;
+
+      window.playSound('click');
+      window.addScore(20);
+
+      const list = document.getElementById('rulesHistoryList');
+      const item = document.createElement('div');
+      item.className = 'created-rule-item';
+      item.innerHTML = `
+        <span>🤖 새 규칙: 만약 <strong>${cond}</strong> 👉 <strong>${res}</strong>(으)로 분류한다.</span>
+      `;
+      list.appendChild(item);
+      showToast('🎉 AI에게 새 규칙을 가르쳤습니다! (⭐ +20 EXP)');
+    };
+
+    // 5단계 최종 완료
+    window.finishQuest2 = async function() {
+      window.playSound('fanfare');
+      window.addScore(100);
+
+      const r1 = document.getElementById('fixRule1').value;
+      const r2 = document.getElementById('fixRule2').value;
+
+      localStorage.setItem("quest2_completed", "true");
+
+      if (db) {
+        try {
+          await addDoc(collection(db, "quest2_submissions"), {
+            studentName: localStorage.getItem("elementary_studentName") || "학생탐정",
+            score: window.state.score,
+            rule1: r1,
+            rule2: r2,
+            completedAt: serverTimestamp()
+          });
+        } catch(e) {
+          console.log("Offline fallback");
+        }
+      }
+
+      alert(`🎉 축하합니다! 2차시 [AI 분류 규칙 만들기] 퀘스트를 성공적으로 마쳤습니다!\n\n총 획득 점수: ${window.state.score} EXP\n메인 화면으로 이동합니다.`);
+      window.location.href = 'main.html';
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
+    });
+  </script>
 </body>
 </html>

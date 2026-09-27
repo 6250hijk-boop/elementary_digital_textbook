@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>1차시: 우리 학교 분리배출 사건을 찾아라 | AI 자원순환 수사대</title>
+  <title>1차시: 우리 학교 분리배출 사건을 찾아라 | AI 자원순환 탐정단</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-dark: #0a0e1a;
-      --bg-card: rgba(18, 26, 46, 0.88);
-      --border-card: rgba(99, 179, 237, 0.3);
-      --primary: #63b3ed;
-      --primary-glow: rgba(99, 179, 237, 0.4);
-      --accent-gold: #f6ad55;
-      --accent-green: #68d391;
-      --accent-red: #fc8181;
-      --accent-purple: #b794f4;
-      --text-main: #f7fafc;
-      --text-sub: #a0aec0;
-      --text-muted: #718096;
+      --bg-light: #f0f7ff;
+      --bg-card: #ffffff;
+      --border-card: #d0e4ff;
+      --primary: #2563eb;
+      --primary-light: #eff6ff;
+      --accent-gold: #f59e0b;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --accent-purple: #8b5cf6;
+      --text-main: #1e293b;
+      --text-sub: #475569;
+      --text-muted: #64748b;
     }
 
     * {
@@ -29,15 +29,16 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
 
     body {
       font-family: 'Pretendard', sans-serif;
-      background-color: var(--bg-dark);
+      background-color: var(--bg-light);
       background-image: 
-        radial-gradient(ellipse at 15% 15%, rgba(99, 179, 237, 0.12), transparent 45%),
-        radial-gradient(ellipse at 85% 85%, rgba(183, 148, 244, 0.1), transparent 50%),
-        linear-gradient(to bottom, #0a0e1a, #070a13);
+        radial-gradient(circle at 10% 10%, rgba(37, 99, 235, 0.08), transparent 35%),
+        radial-gradient(circle at 90% 90%, rgba(245, 158, 11, 0.08), transparent 35%),
+        linear-gradient(to bottom, #f0f7ff, #e8f2fc);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -46,46 +47,46 @@
       overflow-x: hidden;
     }
 
-    /* 상단 앱 HUD 네비게이션 */
+    /* 상단 앱 HUD 네비게이션 (밝은 테마) */
     .app-header {
       width: 100%;
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(10, 14, 26, 0.94);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(99, 179, 237, 0.25);
-      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid #e2e8f0;
+      padding: 12px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .btn-back {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 600;
+      background: #f1f5f9;
+      border: 2px solid #cbd5e1;
+      color: #334155;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
       text-decoration: none;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       transition: all 0.2s;
     }
 
     .btn-back:hover {
-      background: rgba(99, 179, 237, 0.2);
-      border-color: var(--primary);
+      background: #e2e8f0;
+      transform: translateY(-1px);
     }
 
     .header-title-group {
@@ -94,18 +95,17 @@
     }
 
     .badge-chasi {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--accent-gold);
-      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 800;
+      color: #d97706;
       letter-spacing: 0.5px;
     }
 
     .header-main-title {
       font-family: 'Jua', sans-serif;
-      font-size: 17px;
-      color: #fff;
-      letter-spacing: -0.2px;
+      font-size: 22px;
+      color: #1e3a8a;
+      letter-spacing: -0.3px;
     }
 
     .header-right {
@@ -115,49 +115,48 @@
     }
 
     .score-badge {
-      background: rgba(246, 173, 85, 0.15);
-      border: 1px solid rgba(246, 173, 85, 0.4);
-      color: var(--accent-gold);
-      font-weight: 800;
-      font-size: 13px;
-      padding: 5px 12px;
-      border-radius: 20px;
+      background: #fffbeb;
+      border: 2px solid #fde68a;
+      color: #b45309;
+      font-weight: 900;
+      font-size: 16px;
+      padding: 6px 16px;
+      border-radius: 30px;
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 0 10px rgba(246, 173, 85, 0.15);
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
     }
 
     .btn-sound {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--text-main);
-      padding: 6px 10px;
-      border-radius: 10px;
-      font-size: 13px;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 16px;
       cursor: pointer;
     }
 
     /* 메인 컨테이너 */
     .app-container {
       width: 100%;
-      max-width: 960px;
-      padding: 16px 16px 80px;
+      max-width: 980px;
+      padding: 20px 16px 90px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
     }
 
-    /* 단계 네비게이터 (Progress Steps) */
+    /* 5단계 네비게이터 */
     .step-tracker {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
-      background: rgba(18, 26, 46, 0.7);
-      padding: 10px;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(10px);
+      gap: 8px;
+      background: #ffffff;
+      padding: 12px;
+      border-radius: 18px;
+      border: 2px solid #e2e8f0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
     }
 
     .step-item {
@@ -165,31 +164,31 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 8px 4px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid transparent;
+      padding: 10px 6px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 2px solid transparent;
       cursor: pointer;
       transition: all 0.25s ease;
       text-align: center;
     }
 
     .step-item.active {
-      background: rgba(99, 179, 237, 0.18);
+      background: #eff6ff;
       border-color: var(--primary);
-      box-shadow: 0 0 14px rgba(99, 179, 237, 0.3);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
       transform: translateY(-2px);
     }
 
     .step-item.completed {
-      background: rgba(104, 211, 145, 0.12);
-      border-color: rgba(104, 211, 145, 0.4);
+      background: #ecfdf5;
+      border-color: #a7f3d0;
     }
 
     .step-num {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 900;
+      color: #94a3b8;
       margin-bottom: 2px;
     }
 
@@ -197,88 +196,75 @@
       color: var(--primary);
     }
 
-    .step-item.completed .step-num {
-      color: var(--accent-green);
-    }
-
     .step-name {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-sub);
+      font-size: 14px;
+      font-weight: 800;
+      color: #475569;
     }
 
     .step-item.active .step-name {
-      color: #fff;
+      color: #1e3a8a;
     }
 
     /* 스테이지 카드 공통 */
     .stage-card {
       display: none;
       background: var(--bg-card);
-      border: 1px solid var(--border-card);
-      border-radius: 20px;
-      padding: clamp(18px, 3vw, 26px);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(16px);
-      animation: fadeInSlide 0.35s ease-out forwards;
+      border: 2px solid #e2e8f0;
+      border-radius: 24px;
+      padding: clamp(20px, 3vw, 32px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      animation: fadeIn 0.3s ease-out forwards;
     }
 
     .stage-card.active {
       display: block;
     }
 
-    @keyframes fadeInSlide {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .stage-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(99, 179, 237, 0.15);
+      background: #eff6ff;
       color: var(--primary);
-      border: 1px solid rgba(99, 179, 237, 0.35);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 800;
-      margin-bottom: 10px;
+      border: 2px solid #bfdbfe;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 900;
+      margin-bottom: 12px;
     }
 
     .stage-title {
       font-family: 'Jua', sans-serif;
-      font-size: clamp(20px, 3vw, 26px);
-      color: #fff;
-      margin-bottom: 6px;
+      font-size: clamp(22px, 3.2vw, 28px);
+      color: #0f172a;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
     .stage-goal {
-      font-size: 14px;
-      color: var(--text-sub);
-      background: rgba(0, 0, 0, 0.25);
-      padding: 10px 14px;
-      border-radius: 10px;
-      border-left: 4px solid var(--primary);
-      margin-bottom: 20px;
-      line-height: 1.5;
+      font-size: 16px;
+      color: #334155;
+      background: #f8fafc;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border-left: 6px solid var(--primary);
+      margin-bottom: 24px;
+      line-height: 1.6;
     }
 
-    /* ========================================================
-       1번 탭 (STEP 1): q1-image.jpg 관찰 & 실시간 댓글 피드
-       ======================================================== */
+    /* 1단계 레이아웃: 사진 뷰어 + 댓글 피드 */
     .photo-investigation-layout {
       display: grid;
-      grid-template-columns: 1.1fr 1fr;
+      grid-template-columns: 1.15fr 1fr;
       gap: 20px;
       margin-bottom: 20px;
     }
@@ -290,28 +276,28 @@
     }
 
     .photo-viewer-card {
-      background: rgba(10, 14, 26, 0.8);
-      border: 1px solid rgba(99, 179, 237, 0.35);
-      border-radius: 16px;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 20px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
     }
 
     .photo-header {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 10px 14px;
+      background: #f8fafc;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 2px solid #f1f5f9;
     }
 
     .photo-title {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--accent-gold);
+      font-size: 15px;
+      font-weight: 900;
+      color: #1e3a8a;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -319,8 +305,8 @@
 
     .photo-display-box {
       width: 100%;
-      height: 290px;
-      background: #0d1322;
+      height: 300px;
+      background: #f1f5f9;
       position: relative;
       overflow: hidden;
       display: flex;
@@ -332,85 +318,75 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      background: #090d16;
+      background: #f8fafc;
       transition: transform 0.3s ease;
     }
 
     .evidence-main-img:hover {
-      transform: scale(1.03);
-    }
-
-    /* 이미지 없을 때 보여주는 스마트 SVG 폴백 */
-    .img-fallback-svg {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      transform: scale(1.02);
     }
 
     .photo-scan-overlay {
       position: absolute;
-      top: 10px;
-      left: 10px;
-      background: rgba(10, 14, 26, 0.85);
-      border: 1px solid var(--primary);
+      top: 12px;
+      left: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid var(--primary);
       color: var(--primary);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 900;
+      padding: 4px 12px;
       border-radius: 20px;
-      backdrop-filter: blur(6px);
-      display: flex;
-      align-items: center;
-      gap: 5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
     .photo-footer {
-      padding: 10px 14px;
-      font-size: 12px;
-      color: var(--text-sub);
-      background: rgba(0, 0, 0, 0.3);
-      line-height: 1.4;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 12px 16px;
+      font-size: 14px;
+      color: #475569;
+      background: #f8fafc;
+      line-height: 1.5;
+      border-top: 2px solid #f1f5f9;
     }
 
-    /* 댓글 피드 & 입력 섹션 */
+    /* 댓글 피드 & 입력 창 */
     .comment-board-wrap {
       display: flex;
       flex-direction: column;
-      background: rgba(10, 14, 26, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 14px;
-      height: 400px;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 20px;
+      padding: 16px;
+      height: 420px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
     }
 
     .comment-board-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-bottom: 8px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f1f5f9;
+      margin-bottom: 12px;
     }
 
     .comment-board-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #fff;
+      font-size: 16px;
+      font-weight: 900;
+      color: #0f172a;
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
     .comment-count-badge {
-      background: rgba(99, 179, 237, 0.2);
+      background: #eff6ff;
       color: var(--primary);
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 700;
+      border: 1.5px solid #bfdbfe;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 800;
     }
 
     .comment-list-scroll {
@@ -418,25 +394,24 @@
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
       padding-right: 4px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .comment-item {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      padding: 10px;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      animation: fadeInSlide 0.25s ease-out;
+      gap: 6px;
     }
 
     .comment-item.my-comment {
-      background: rgba(99, 179, 237, 0.08);
-      border-color: rgba(99, 179, 237, 0.3);
+      background: #eff6ff;
+      border-color: #93c5fd;
     }
 
     .comment-top-row {
@@ -445,238 +420,132 @@
       justify-content: space-between;
     }
 
-    .comment-author-box {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .author-avatar {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--accent-purple));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: bold;
-      color: #0a0e1a;
-    }
-
     .author-name {
-      font-size: 12px;
-      font-weight: 700;
-      color: #e2e8f0;
-    }
-
-    .comment-time {
-      font-size: 10px;
-      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 900;
+      color: #1e293b;
     }
 
     .comment-body {
-      font-size: 13px;
-      color: var(--text-main);
-      line-height: 1.45;
-      word-break: break-all;
+      font-size: 15px;
+      color: #334155;
+      font-weight: 700;
+      line-height: 1.5;
     }
 
     .comment-action-row {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 8px;
-      margin-top: 2px;
+      gap: 10px;
     }
 
     .btn-comment-like {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 11px;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 8px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      transition: color 0.2s;
-    }
-
-    .btn-comment-like:hover, .btn-comment-like.liked {
-      color: var(--accent-red);
     }
 
     .btn-comment-del {
       background: none;
       border: none;
-      color: var(--text-muted);
-      font-size: 11px;
+      color: #ef4444;
+      font-size: 12px;
+      font-weight: 800;
       cursor: pointer;
     }
 
-    .btn-comment-del:hover {
-      color: var(--accent-red);
-    }
-
-    /* 댓글 입력 창 */
     .comment-input-box {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 8px;
-      border-radius: 12px;
-      border: 1px solid rgba(99, 179, 237, 0.25);
+      gap: 8px;
+      background: #f1f5f9;
+      padding: 10px;
+      border-radius: 14px;
+      border: 2px solid #cbd5e1;
     }
 
     .comment-input-row {
       display: flex;
-      gap: 6px;
+      gap: 8px;
     }
 
     .comment-input {
       flex: 1;
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 13px;
-      font-family: inherit;
-      outline: none;
-      padding: 4px 6px;
-    }
-
-    .btn-send-comment {
-      background: linear-gradient(135deg, var(--primary), #3182ce);
-      border: none;
-      color: #fff;
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-size: 12px;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 15px;
       font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.15s;
-      white-space: nowrap;
+      color: #1e293b;
+      outline: none;
+      font-family: inherit;
     }
 
-    .btn-send-comment:hover {
-      transform: scale(1.04);
-    }
-
-    .comment-quick-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-    }
-
-    .chip-mini {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-sub);
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .chip-mini:hover {
-      background: rgba(99, 179, 237, 0.2);
-      color: var(--primary);
+    .comment-input:focus {
       border-color: var(--primary);
     }
 
-    /* ========================================================
-       2번 탭 (STEP 2): q1-1, q1-2, q1-3 & 키워드 복제 드래그 드롭
-       ======================================================== */
+    .btn-send-comment {
+      background: var(--primary);
+      border: none;
+      color: #ffffff;
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    /* 2단계: q1-1, q1-2, q1-3 단어 복제 드래그 & 터치 */
     .drag-word-pool-section {
-      background: rgba(10, 14, 26, 0.8);
-      border: 1.5px solid rgba(99, 179, 237, 0.35);
-      border-radius: 16px;
-      padding: 14px 18px;
-      margin-bottom: 20px;
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
+      border-radius: 20px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .pool-header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .pool-title-text {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--accent-gold);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .pool-hint {
-      font-size: 11px;
-      color: var(--text-sub);
-    }
-
-    .word-cards-container {
-      display: flex;
-      flex-wrap: wrap;
       gap: 12px;
     }
 
     .draggable-word-chip {
-      background: linear-gradient(135deg, rgba(99, 179, 237, 0.2), rgba(183, 148, 244, 0.2));
-      border: 2px solid var(--primary);
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 14px;
-      font-size: 15px;
-      font-weight: 800;
+      background: #ffffff;
+      border: 3px solid var(--primary);
+      color: #1e3a8a;
+      padding: 12px 24px;
+      border-radius: 16px;
+      font-size: 17px;
+      font-weight: 900;
       cursor: grab;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      user-select: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s;
     }
 
     .draggable-word-chip:hover {
-      transform: translateY(-2px) scale(1.03);
-      border-color: #fff;
-      box-shadow: 0 6px 20px rgba(99, 179, 237, 0.5);
-    }
-
-    .draggable-word-chip:active {
-      cursor: grabbing;
-      transform: scale(0.98);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
     }
 
     .draggable-word-chip.selected-for-touch {
       background: var(--primary);
-      color: #0a0e1a;
-      box-shadow: 0 0 16px var(--primary);
-      border-color: #fff;
+      color: #ffffff;
+      border-color: #1d4ed8;
     }
 
-    .draggable-word-chip[data-word="잘못버림"] {
-      border-color: #f6ad55;
-      background: linear-gradient(135deg, rgba(246, 173, 85, 0.25), rgba(221, 107, 32, 0.25));
-    }
-    .draggable-word-chip[data-word="오염"] {
-      border-color: #fc8181;
-      background: linear-gradient(135deg, rgba(252, 129, 129, 0.25), rgba(229, 62, 62, 0.25));
-    }
-    .draggable-word-chip[data-word="표시부족"] {
-      border-color: #68d391;
-      background: linear-gradient(135deg, rgba(104, 211, 145, 0.25), rgba(56, 161, 105, 0.25));
-    }
+    .draggable-word-chip[data-word="잘못버림"] { border-color: #f59e0b; color: #b45309; }
+    .draggable-word-chip[data-word="오염"] { border-color: #ef4444; color: #b91c1c; }
+    .draggable-word-chip[data-word="표시부족"] { border-color: #10b981; color: #047857; }
 
-    /* 사진 3장 사건 카드 그리드 */
     .photo-case-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -691,46 +560,39 @@
     }
 
     .photo-case-card {
-      background: rgba(10, 14, 26, 0.75);
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
+      background: #ffffff;
+      border: 3px solid #e2e8f0;
+      border-radius: 20px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
       transition: all 0.25s;
     }
 
     .photo-case-card:hover {
-      border-color: rgba(99, 179, 237, 0.4);
-    }
-
-    .photo-case-card.drop-target-active {
-      border-color: var(--primary);
-      background: rgba(99, 179, 237, 0.12);
-      box-shadow: 0 0 20px rgba(99, 179, 237, 0.3);
+      border-color: #93c5fd;
     }
 
     .case-card-header {
-      padding: 8px 12px;
-      background: rgba(255, 255, 255, 0.04);
+      padding: 10px 14px;
+      background: #f8fafc;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 2px solid #f1f5f9;
     }
 
     .case-card-badge {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--accent-gold);
+      font-size: 13px;
+      font-weight: 900;
+      color: #d97706;
     }
 
     .case-img-box {
       width: 100%;
       height: 180px;
-      background: #0d1322;
-      position: relative;
-      overflow: hidden;
+      background: #f1f5f9;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -740,11 +602,11 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      background: #090d16;
+      background: #f8fafc;
     }
 
     .case-card-body {
-      padding: 12px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -752,440 +614,125 @@
     }
 
     .case-card-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #fff;
+      font-size: 16px;
+      font-weight: 900;
+      color: #0f172a;
     }
 
     .case-card-desc {
-      font-size: 12px;
-      color: var(--text-sub);
-      line-height: 1.4;
+      font-size: 14px;
+      color: #475569;
+      line-height: 1.5;
     }
 
-    /* 단어 드롭 존 영역 */
     .case-drop-zone {
       margin-top: auto;
-      min-height: 80px;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1.5px dashed rgba(99, 179, 237, 0.4);
-      border-radius: 12px;
-      padding: 8px;
+      min-height: 85px;
+      background: #f8fafc;
+      border: 2px dashed #94a3b8;
+      border-radius: 14px;
+      padding: 10px;
       display: flex;
       flex-wrap: wrap;
       align-content: flex-start;
-      gap: 6px;
+      gap: 8px;
       transition: all 0.2s;
     }
 
     .case-drop-zone.hovered {
-      border-color: var(--accent-gold);
-      background: rgba(246, 173, 85, 0.12);
-    }
-
-    .drop-empty-msg {
-      width: 100%;
-      text-align: center;
-      font-size: 11px;
-      color: var(--text-muted);
-      padding: 18px 4px;
-      pointer-events: none;
+      border-color: var(--primary);
+      background: #eff6ff;
     }
 
     .dropped-word-tag {
-      background: rgba(30, 41, 69, 0.95);
-      border: 1.5px solid var(--primary);
-      color: #fff;
-      padding: 4px 10px;
-      border-radius: 16px;
-      font-size: 12px;
-      font-weight: 700;
+      background: #ffffff;
+      border: 2px solid var(--primary);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 900;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      animation: fadeInSlide 0.2s ease-out;
-    }
-
-    .dropped-word-tag[data-word="잘못버림"] {
-      border-color: #f6ad55;
-      color: #fed7aa;
-    }
-    .dropped-word-tag[data-word="오염"] {
-      border-color: #fc8181;
-      color: #fecdd3;
-    }
-    .dropped-word-tag[data-word="표시부족"] {
-      border-color: #68d391;
-      color: #bbf7d0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     }
 
     .btn-remove-tag {
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 12px;
+      color: #ef4444;
+      font-size: 14px;
+      font-weight: 900;
       cursor: pointer;
-      line-height: 1;
-      transition: color 0.2s;
     }
 
-    .btn-remove-tag:hover {
-      color: var(--accent-red);
-    }
-
-    /* 공통 액션 바 */
+    /* 하단 대형 버튼 */
     .action-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 20px;
+      border-top: 2px solid #f1f5f9;
       gap: 12px;
     }
 
-    .btn-nav {
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 700;
+    .btn-nav-large {
+      padding: 16px 32px;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 900;
       font-family: inherit;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       transition: all 0.2s;
     }
 
-    .btn-prev-step {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
+    .btn-prev {
+      background: #f1f5f9;
+      border: 2px solid #cbd5e1;
+      color: #475569;
     }
 
-    .btn-prev-step:hover {
-      background: rgba(255, 255, 255, 0.15);
+    .btn-prev:hover {
+      background: #e2e8f0;
     }
 
-    .btn-next-step {
-      background: linear-gradient(135deg, #63b3ed, #3182ce);
+    .btn-next {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
       border: none;
-      color: #fff;
-      box-shadow: 0 4px 16px rgba(99, 179, 237, 0.35);
+      color: #ffffff;
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
       margin-left: auto;
     }
 
-    .btn-next-step:hover {
+    .btn-next:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(99, 179, 237, 0.5);
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
     }
 
-    .btn-complete {
-      background: linear-gradient(135deg, #f6ad55, #dd6b20);
-      color: #0a0e1a;
-      font-weight: 800;
+    .btn-finish {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #ffffff;
+      font-size: 20px;
     }
 
-    /* ====== Step 3: 개념 (AI 비전) ====== */
-    .vision-demo-wrap {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    @media (max-width: 650px) {
-      .vision-demo-wrap {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .vision-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .vision-box-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--accent-gold);
-      margin-bottom: 10px;
-    }
-
-    .pixel-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 3px;
-      width: 180px;
-      height: 180px;
-      background: #000;
-      padding: 4px;
-      border-radius: 8px;
-      margin-bottom: 8px;
-    }
-
-    .pixel-cell {
-      background: #111;
-      border-radius: 2px;
-      font-size: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #63b3ed;
-      font-family: monospace;
-      transition: all 0.3s;
-    }
-
-    .pixel-cell.lit {
-      background: #63b3ed;
-      color: #0a0e1a;
-      font-weight: bold;
-    }
-
-    .quiz-card {
-      background: rgba(18, 26, 46, 0.9);
-      border: 1px solid rgba(99, 179, 237, 0.3);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-
-    .quiz-q {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      color: #fff;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-    }
-
-    .quiz-options {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .opt-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1.5px solid rgba(255, 255, 255, 0.15);
-      color: var(--text-main);
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 14px;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .opt-btn:hover {
-      background: rgba(99, 179, 237, 0.15);
-      border-color: var(--primary);
-    }
-
-    .opt-btn.correct {
-      background: rgba(104, 211, 145, 0.2);
-      border-color: var(--accent-green);
-      color: var(--accent-green);
-      font-weight: 700;
-    }
-
-    .opt-btn.wrong {
-      background: rgba(252, 129, 129, 0.2);
-      border-color: var(--accent-red);
-      color: var(--accent-red);
-    }
-
-    /* ====== Step 4: T-Chart (AI vs 인간) ====== */
-    .tchart-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    @media (max-width: 600px) {
-      .tchart-container {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .tchart-col {
-      background: rgba(10, 14, 26, 0.75);
-      border-radius: 16px;
-      padding: 16px;
-      border: 2px solid;
-      display: flex;
-      flex-direction: column;
-      min-height: 260px;
-    }
-
-    .tchart-ai {
-      border-color: rgba(99, 179, 237, 0.4);
-    }
-
-    .tchart-human {
-      border-color: rgba(246, 173, 85, 0.4);
-    }
-
-    .tchart-header {
-      font-family: 'Jua', sans-serif;
-      font-size: 17px;
-      padding-bottom: 10px;
-      margin-bottom: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .tchart-ai .tchart-header {
-      color: var(--primary);
-    }
-
-    .tchart-human .tchart-header {
-      color: var(--accent-gold);
-    }
-
-    .tchart-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      flex-grow: 1;
-    }
-
-    .tchart-card {
-      background: rgba(30, 41, 69, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 13px;
-      line-height: 1.4;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .btn-del-card {
-      background: none;
-      border: none;
-      color: var(--accent-red);
-      font-size: 14px;
-      cursor: pointer;
-      padding: 2px 6px;
-    }
-
-    .tchart-add-box {
-      display: flex;
-      gap: 6px;
-      margin-top: 10px;
-    }
-
-    .text-input, .textarea-input {
-      width: 100%;
-      background: rgba(10, 14, 26, 0.8);
-      border: 1.5px solid rgba(99, 179, 237, 0.3);
-      border-radius: 12px;
-      padding: 12px 14px;
-      color: #fff;
-      font-size: 14px;
-      font-family: inherit;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .text-input:focus, .textarea-input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 12px rgba(99, 179, 237, 0.2);
-    }
-
-    /* ====== Step 5: 탐구 질문 수립 & 최종 리포트 ====== */
-    .template-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .chip-btn {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--text-main);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .chip-btn:hover {
-      background: rgba(99, 179, 237, 0.15);
-      border-color: var(--primary);
-    }
-
-    .report-card-preview {
-      background: rgba(10, 14, 26, 0.85);
-      border: 1.5px solid var(--accent-gold);
-      border-radius: 16px;
-      padding: 18px;
-      margin-top: 20px;
-      position: relative;
-    }
-
-    .report-badge {
-      position: absolute;
-      top: -12px;
-      right: 18px;
-      background: var(--accent-gold);
-      color: #0a0e1a;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 3px 10px;
-      border-radius: 10px;
-    }
-
-    .report-row {
-      display: flex;
-      gap: 12px;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      font-size: 13px;
-    }
-
-    .report-label {
-      width: 140px;
-      font-weight: 700;
-      color: var(--text-sub);
-      flex-shrink: 0;
-    }
-
-    .report-val {
-      color: #fff;
-      font-weight: 600;
-      flex-grow: 1;
-    }
-
-    /* 모달 & 토스트 */
+    /* 토스트 알림창 */
     .toast-msg {
       position: fixed;
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
-      background: rgba(18, 26, 46, 0.95);
-      border: 1px solid var(--primary);
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 700;
+      background: #1e293b;
+      color: #ffffff;
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-size: 16px;
+      font-weight: 800;
       z-index: 1000;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       pointer-events: none;
       opacity: 0;
@@ -1217,36 +764,36 @@
   <!-- 메인 컨테이너 -->
   <main class="app-container">
     
-    <!-- 단계 트래커 -->
+    <!-- 5단계 네비게이터 -->
     <nav class="step-tracker">
       <div class="step-item active" id="stepNav-1" onclick="goToStep(1)">
-        <span class="step-num">STEP 1</span>
+        <span class="step-num">1단계 (5분)</span>
         <span class="step-name">🚨 단서 포착</span>
       </div>
       <div class="step-item" id="stepNav-2" onclick="goToStep(2)">
-        <span class="step-num">STEP 2</span>
+        <span class="step-num">2단계 (12분)</span>
         <span class="step-name">📂 원인 분류</span>
       </div>
       <div class="step-item" id="stepNav-3" onclick="goToStep(3)">
-        <span class="step-num">STEP 3</span>
+        <span class="step-num">3단계 (8분)</span>
         <span class="step-name">🤖 AI 비전</span>
       </div>
       <div class="step-item" id="stepNav-4" onclick="goToStep(4)">
-        <span class="step-num">STEP 4</span>
+        <span class="step-num">4단계 (10분)</span>
         <span class="step-name">⚖️ T-차트</span>
       </div>
       <div class="step-item" id="stepNav-5" onclick="goToStep(5)">
-        <span class="step-num">STEP 5</span>
+        <span class="step-num">5단계 (5분)</span>
         <span class="step-name">💡 탐구 질문</span>
       </div>
     </nav>
 
-    <!-- ==================== 1번 탭 (STEP 1): q1-image.jpg 사진 관찰 & 댓글 피드 ==================== -->
+    <!-- ==================== 1단계: q1-image.jpg 관찰 & 댓글 토론 ==================== -->
     <section class="stage-card active" id="stage-1">
       <div class="stage-badge">1단계 • 사건 단서 포착 (5분)</div>
       <h2 class="stage-title">🔍 우리 학교 분리배출 현장 사진 관찰 & 수사 토론</h2>
       <div class="stage-goal">
-        <strong>[학습 활동]</strong> 학교 분리배출 현장 사진(<code>q1-image.jpg</code>)을 자세히 관찰하고, <strong>발견한 문제점을 댓글로 자유롭게 등록</strong>하여 동료 수사관들과 공유해 보세요!
+        <strong>[학습 활동]</strong> 학교 분리배출 현장 사진(<code>q1-image.jpg</code>)을 자세히 관찰하고, <strong>발견한 문제점을 댓글로 자유롭게 등록</strong>해 보세요!
       </div>
 
       <div class="photo-investigation-layout">
@@ -1254,7 +801,7 @@
         <div class="photo-viewer-card">
           <div class="photo-header">
             <span class="photo-title">📷 사건 현장 원본 사진 (q1-image.jpg)</span>
-            <span style="font-size:11px; color:var(--text-sub);">🔎 사진을 관찰해 보세요</span>
+            <span style="font-size:12px; color:var(--text-sub);">🔎 사진을 꼼꼼히 관찰하세요</span>
           </div>
           <div class="photo-display-box">
             <img 
@@ -1267,36 +814,26 @@
             <div class="photo-scan-overlay">⚡ AI 현장 증거 스캔 모드</div>
           </div>
           <div class="photo-footer">
-            💡 <strong>수사 힌트:</strong> 분리수거함 주변에 버려진 물건의 라벨, 이물질 오염 상태, 잘못 들어간 쓰레기가 있는지 찾아보세요!
+            💡 <strong>수사 힌트:</strong> 쓰레기통 주변에 라벨이 붙은 병, 양념 오염, 잘못 들어간 쓰레기가 있는지 살펴보세요!
           </div>
         </div>
 
-        <!-- 우측: 수사관 댓글 피드 & 입력 창 -->
+        <!-- 우측: 수사관 댓글 피드 -->
         <div class="comment-board-wrap">
           <div class="comment-board-header">
             <span class="comment-board-title">💬 수사관 현장 댓글 토론</span>
             <span class="comment-count-badge" id="commentCountBadge">댓글 0개</span>
           </div>
 
-          <!-- 댓글 목록 스크롤 -->
-          <div class="comment-list-scroll" id="commentListScroll">
-            <!-- 동적 댓글 아이템이 렌더링됩니다 -->
-          </div>
+          <div class="comment-list-scroll" id="commentListScroll"></div>
 
-          <!-- 댓글 입력창 -->
           <div class="comment-input-box">
-            <div class="comment-quick-chips">
-              <span class="chip-mini" onclick="addChipText('#비닐라벨 미제거')">#비닐라벨 미제거</span>
-              <span class="chip-mini" onclick="addChipText('#음식물 국물 오염')">#음식물 국물 오염</span>
-              <span class="chip-mini" onclick="addChipText('#종이함에 플라스틱')">#종이함에 플라스틱</span>
-              <span class="chip-mini" onclick="addChipText('#뚜껑 미분리')">#뚜껑 미분리</span>
-            </div>
             <div class="comment-input-row">
               <input 
                 type="text" 
                 id="commentInputText" 
                 class="comment-input" 
-                placeholder="발견한 문제점을 작성하세요... (Enter 또는 등록)"
+                placeholder="발견한 문제점을 입력하세요... (Enter 또는 등록)"
                 onkeypress="if(event.key==='Enter') submitComment()"
               >
               <button class="btn-send-comment" onclick="submitComment()">등록 (⭐+20)</button>
@@ -1307,325 +844,185 @@
 
       <div class="action-bar">
         <div></div>
-        <button class="btn-nav btn-next-step" onclick="validateAndNextStep(1)">
-          문제점 기록 완료 & 2단계 원인 분류하기 ➔
+        <button class="btn-nav-large btn-next" onclick="goToStep(2)">
+          2단계: 원인 분류하기 ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== 2번 탭 (STEP 2): q1-1, q1-2, q1-3 & 키워드 복제 드래그 놓기 ==================== -->
+    <!-- ==================== 2단계: q1-1, q1-2, q1-3 & 키워드 복제 드래그 ==================== -->
     <section class="stage-card" id="stage-2">
       <div class="stage-badge">2단계 • 원인 분류 (12분)</div>
       <h2 class="stage-title">📂 사진별 분리배출 핵심 원인 드래그 매칭</h2>
       <div class="stage-goal">
         <strong>[모둠 수사 활동]</strong> 아래 <strong>[잘못버림, 오염, 표시부족]</strong> 단어를 드래그하여 각 사진의 원인 상자에 넣어보세요! <br>
-        <span style="color:var(--accent-gold);">✨ 같은 단어를 여러 사진에 중복해서 넣을 수 있습니다. (터치/클릭으로도 넣을 수 있어요!)</span>
+        <span style="color:#b45309; font-weight:800;">✨ 같은 단어를 여러 사진에 반복해서 넣을 수 있습니다. (터치로도 넣을 수 있어요!)</span>
       </div>
 
-      <!-- 단어 카드 풀 (무한 복제 가능) -->
+      <!-- 단어 풀 (무한 복제 지원) -->
       <div class="drag-word-pool-section">
-        <div class="pool-header-row">
-          <span class="pool-title-text">🏷️ 원인 키워드 풀 (드래그하거나 터치하여 사진에 넣어보세요)</span>
-          <span class="pool-hint">※ 단어는 여러 사진에 계속 복제되어 들어갑니다!</span>
-        </div>
-        <div class="word-cards-container">
+        <div style="font-size:15px; font-weight:900; color:#1e3a8a;">🏷️ 원인 키워드 풀 (드래그하거나 터치하여 사진에 넣어보세요)</div>
+        <div style="display:flex; flex-wrap:wrap; gap:12px;">
           <div class="draggable-word-chip" draggable="true" data-word="잘못버림" ondragstart="handleWordDragStart(event, '잘못버림')" onclick="handleWordTouchSelect('잘못버림', this)">
-            <span>🚫 잘못버림</span>
+            🚫 잘못버림
           </div>
           <div class="draggable-word-chip" draggable="true" data-word="오염" ondragstart="handleWordDragStart(event, '오염')" onclick="handleWordTouchSelect('오염', this)">
-            <span>🥫 오염</span>
+            🥫 오염
           </div>
           <div class="draggable-word-chip" draggable="true" data-word="표시부족" ondragstart="handleWordDragStart(event, '표시부족')" onclick="handleWordTouchSelect('표시부족', this)">
-            <span>🏷️ 표시부족</span>
+            🏷️ 표시부족
           </div>
         </div>
       </div>
 
-      <!-- 사건 사진 3개 그리드 -->
+      <!-- 3개 사진 그리드 -->
       <div class="photo-case-grid">
-        
-        <!-- 사진 1: q1-1 -->
-        <div class="photo-case-card" id="caseCard-1" onclick="handleCardClickForTouch(1)">
+        <!-- 사건 1 -->
+        <div class="photo-case-card" onclick="handleCardClickForTouch(1)">
           <div class="case-card-header">
             <span class="case-card-badge">사건 #01 (q1-1)</span>
-            <span style="font-size:11px; color:var(--text-sub);">교실 분리수거함</span>
+            <span style="font-size:12px; color:var(--text-sub);">교실 분리수거함</span>
           </div>
           <div class="case-img-box">
-            <img 
-              src="images/q1-1.png" 
-              alt="사건 1 사진 (q1-1)" 
-              class="case-img-photo"
-              onerror="handleImageFallback(this, 'q1-1')"
-            >
+            <img src="images/q1-1.png" alt="사건 1" class="case-img-photo" onerror="handleImageFallback(this, 'q1-1')">
           </div>
           <div class="case-card-body">
             <h3 class="case-card-title">종이함에 컵라면 투입</h3>
-            <p class="case-card-desc">종이 수거함에 국물이 묻은 비닐 코팅 컵라면 용기가 섞여 있습니다.</p>
-            
-            <!-- 드롭 존 -->
-            <div 
-              class="case-drop-zone" 
-              id="dropZone-1" 
-              ondragover="handleDropZoneOver(event)" 
-              ondragleave="handleDropZoneLeave(event)" 
-              ondrop="handleWordDrop(event, 1)"
-            >
-              <div class="drop-empty-msg" id="emptyMsg-1">여기로 단어를 드래그하세요</div>
+            <p class="case-card-desc">종이 수거함에 국물이 묻은 비닐 코팅 컵라면이 섞여 있어요.</p>
+            <div class="case-drop-zone" id="dropZone-1" ondragover="handleDropZoneOver(event)" ondragleave="handleDropZoneLeave(event)" ondrop="handleWordDrop(event, 1)">
+              <div class="drop-empty-msg" id="emptyMsg-1" style="color:#94a3b8; font-size:12px; font-weight:800; padding:15px; width:100%; text-align:center;">여기로 단어를 드래그하세요</div>
             </div>
           </div>
         </div>
 
-        <!-- 사진 2: q1-2 -->
-        <div class="photo-case-card" id="caseCard-2" onclick="handleCardClickForTouch(2)">
+        <!-- 사건 2 -->
+        <div class="photo-case-card" onclick="handleCardClickForTouch(2)">
           <div class="case-card-header">
             <span class="case-card-badge">사건 #02 (q1-2)</span>
-            <span style="font-size:11px; color:var(--text-sub);">급식실 퇴식구</span>
+            <span style="font-size:12px; color:var(--text-sub);">급식실 퇴식구</span>
           </div>
           <div class="case-img-box">
-            <img 
-              src="images/q1-2.png" 
-              alt="사건 2 사진 (q1-2)" 
-              class="case-img-photo"
-              onerror="handleImageFallback(this, 'q1-2')"
-            >
+            <img src="images/q1-2.png" alt="사건 2" class="case-img-photo" onerror="handleImageFallback(this, 'q1-2')">
           </div>
           <div class="case-card-body">
             <h3 class="case-card-title">음료 남은 캔 & 덜 씻은 팩</h3>
-            <p class="case-card-desc">음료수가 남아 끈적거리는 캔과 씻지 않은 우유팩이 버려져 있습니다.</p>
-            
-            <!-- 드롭 존 -->
-            <div 
-              class="case-drop-zone" 
-              id="dropZone-2" 
-              ondragover="handleDropZoneOver(event)" 
-              ondragleave="handleDropZoneLeave(event)" 
-              ondrop="handleWordDrop(event, 2)"
-            >
-              <div class="drop-empty-msg" id="emptyMsg-2">여기로 단어를 드래그하세요</div>
+            <p class="case-card-desc">음료수가 남아 끈적거리는 캔과 씻지 않은 우유팩이 있어요.</p>
+            <div class="case-drop-zone" id="dropZone-2" ondragover="handleDropZoneOver(event)" ondragleave="handleDropZoneLeave(event)" ondrop="handleWordDrop(event, 2)">
+              <div class="drop-empty-msg" id="emptyMsg-2" style="color:#94a3b8; font-size:12px; font-weight:800; padding:15px; width:100%; text-align:center;">여기로 단어를 드래그하세요</div>
             </div>
           </div>
         </div>
 
-        <!-- 사진 3: q1-3 -->
-        <div class="photo-case-card" id="caseCard-3" onclick="handleCardClickForTouch(3)">
+        <!-- 사건 3 -->
+        <div class="photo-case-card" onclick="handleCardClickForTouch(3)">
           <div class="case-card-header">
             <span class="case-card-badge">사건 #03 (q1-3)</span>
-            <span style="font-size:11px; color:var(--text-sub);">복도 페트병 수거함</span>
+            <span style="font-size:12px; color:var(--text-sub);">복도 페트병함</span>
           </div>
           <div class="case-img-box">
-            <img 
-              src="images/q1-3.png" 
-              alt="사건 3 사진 (q1-3)" 
-              class="case-img-photo"
-              onerror="handleImageFallback(this, 'q1-3')"
-            >
+            <img src="images/q1-3.png" alt="사건 3" class="case-img-photo" onerror="handleImageFallback(this, 'q1-3')">
           </div>
           <div class="case-card-body">
             <h3 class="case-card-title">라벨 붙은 투명 페트병</h3>
-            <p class="case-card-desc">비닐 라벨을 떼지 않고 그대로 버려 재활용 선별이 어려운 상태입니다.</p>
-            
-            <!-- 드롭 존 -->
-            <div 
-              class="case-drop-zone" 
-              id="dropZone-3" 
-              ondragover="handleDropZoneOver(event)" 
-              ondragleave="handleDropZoneLeave(event)" 
-              ondrop="handleWordDrop(event, 3)"
-            >
-              <div class="drop-empty-msg" id="emptyMsg-3">여기로 단어를 드래그하세요</div>
+            <p class="case-card-desc">비닐 라벨을 떼지 않고 그대로 버려 재활용이 어려워요.</p>
+            <div class="case-drop-zone" id="dropZone-3" ondragover="handleDropZoneOver(event)" ondragleave="handleDropZoneLeave(event)" ondrop="handleWordDrop(event, 3)">
+              <div class="drop-empty-msg" id="emptyMsg-3" style="color:#94a3b8; font-size:12px; font-weight:800; padding:15px; width:100%; text-align:center;">여기로 단어를 드래그하세요</div>
             </div>
           </div>
         </div>
-
       </div>
 
       <div class="action-bar">
-        <button class="btn-nav btn-prev-step" onclick="goToStep(1)">⬅ 이전 단계</button>
-        <button class="btn-nav btn-next-step" onclick="validateAndNextStep(2)">
-          원인 분석 완료 & AI 비전 개념 탐구 ➔
+        <button class="btn-nav-large btn-prev" onclick="goToStep(1)">⬅ 이전 단계</button>
+        <button class="btn-nav-large btn-next" onclick="goToStep(3)">
+          3단계: AI 비전 개념 탐구 ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== STEP 3: 개념 (8분) ==================== -->
+    <!-- ==================== 3단계: AI 비전 개념 ==================== -->
     <section class="stage-card" id="stage-3">
       <div class="stage-badge">3단계 • 개념 (8분)</div>
-      <h2 class="stage-title">🤖 컴퓨터 비전 AI의 시각 탐지 원리</h2>
+      <h2 class="stage-title">🤖 컴퓨터 비전 AI는 어떻게 사물을 알아볼까요?</h2>
       <div class="stage-goal">
-        <strong>[개념 학습]</strong> 컴퓨터 비전 AI는 사람처럼 사물을 한 번에 보지 않고, <strong>[픽셀 숫자 데이터 ➔ 윤곽선/특징(Feature) 추출 ➔ 객체 분류]</strong> 과정을 거칩니다.
+        <strong>[개념 쏙쏙]</strong> 컴퓨터 비전 AI는 사진을 볼 때 <strong>[픽셀 숫자 데이터 ➔ 특징(선, 색상, 모양) 추출 ➔ 분류]</strong> 과정을 거쳐요!
       </div>
 
-      <!-- 인터랙티브 시각화 시뮬레이터 -->
-      <div class="vision-demo-wrap">
-        <div class="vision-box">
-          <div class="vision-box-title">👤 사람의 시각 (의미 중심)</div>
-          <div style="width:180px; height:180px; background:#1e293b; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
-            <span style="font-size:50px;">🧴</span>
-            <span style="font-size:13px; font-weight:bold; color:#68d391;">"투명한 페트병이구나!"</span>
-          </div>
-          <p style="font-size:12px; color:var(--text-sub); margin-top:8px;">경험을 통해 물체의 전체적인 모양과 맥락을 바로 인식합니다.</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+        <div style="background:#f8fafc; border:2px solid #e2e8f0; border-radius:18px; padding:16px; text-align:center;">
+          <h3 style="font-size:16px; font-weight:900; color:#1e293b; margin-bottom:10px;">👤 사람의 눈</h3>
+          <div style="font-size:50px; margin:15px 0;">🧴</div>
+          <p style="font-size:15px; font-weight:800; color:#16a34a;">"투명한 페트병이구나!"</p>
+          <p style="font-size:13px; color:#64748b; margin-top:6px;">경험으로 물체의 모습을 한 번에 바로 알아요.</p>
         </div>
 
-        <div class="vision-box">
-          <div class="vision-box-title">🤖 AI의 시각 (픽셀 특징 추출)</div>
-          <div class="pixel-grid" id="pixelGrid">
-            <!-- JS로 6x6 픽셀 격자 생성 -->
-          </div>
-          <button class="btn-back" style="font-size:11px; padding:4px 8px;" onclick="animatePixelVision()">🔄 AI 특징 스캔 다시보기</button>
-          <p style="font-size:12px; color:var(--text-sub); margin-top:8px;">각 격자의 밝기/색상 수치(0~255) 차이를 분석해 윤곽선 특징을 찾습니다.</p>
-        </div>
-      </div>
-
-      <!-- 개념 확인 3단 퀴즈 -->
-      <div class="quiz-card">
-        <div class="quiz-q">
-          <span>Q1.</span>
-          <span>컴퓨터 비전 AI가 카메라로 찍힌 사진을 읽을 때 가장 기본이 되는 데이터 형태는 무엇일까요?</span>
-        </div>
-        <div class="quiz-options">
-          <button class="opt-btn" onclick="checkQuiz(1, this, false)">A. 사람의 마음과 기억</button>
-          <button class="opt-btn" onclick="checkQuiz(1, this, true)">B. 픽셀(Pixel)의 색상과 밝기를 나타내는 숫자 데이터</button>
-          <button class="opt-btn" onclick="checkQuiz(1, this, false)">C. 공기의 온도와 습도</button>
-        </div>
-      </div>
-
-      <div class="quiz-card">
-        <div class="quiz-q">
-          <span>Q2.</span>
-          <span>AI가 깨끗한 페트병과 라벨이 붙은 페트병을 구별하기 위해 찾는 핵심 요소를 무엇이라 부를까요?</span>
-        </div>
-        <div class="quiz-options">
-          <button class="opt-btn" onclick="checkQuiz(2, this, true)">A. 특징(Feature - 윤곽선, 색상 차이, 재질 패턴)</button>
-          <button class="opt-btn" onclick="checkQuiz(2, this, false)">B. 컴퓨터의 무게</button>
-          <button class="opt-btn" onclick="checkQuiz(2, this, false)">C. 쓰레기통의 가격</button>
+        <div style="background:#f8fafc; border:2px solid #e2e8f0; border-radius:18px; padding:16px; text-align:center;">
+          <h3 style="font-size:16px; font-weight:900; color:#1e293b; margin-bottom:10px;">🤖 AI 컴퓨터의 눈</h3>
+          <div style="font-size:40px; margin:10px 0;">🔢 ➔ 📐</div>
+          <p style="font-size:15px; font-weight:800; color:#2563eb;">"픽셀 밝기 차이로 윤곽선 특징 계산 중!"</p>
+          <p style="font-size:13px; color:#64748b; margin-top:6px;">수많은 숫자 데이터를 분석해서 특징을 찾아요.</p>
         </div>
       </div>
 
       <div class="action-bar">
-        <button class="btn-nav btn-prev-step" onclick="goToStep(2)">⬅ 이전 단계</button>
-        <button class="btn-nav btn-next-step" onclick="validateAndNextStep(3)">
-          개념 마스터 완료 & T-차트 수사 회의 ➔
+        <button class="btn-nav-large btn-prev" onclick="goToStep(2)">⬅ 이전 단계</button>
+        <button class="btn-nav-large btn-next" onclick="goToStep(4)">
+          4단계: T-차트 수사 회의 ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== STEP 4: 적용 (10분) ==================== -->
+    <!-- ==================== 4단계: T-차트 ==================== -->
     <section class="stage-card" id="stage-4">
       <div class="stage-badge">4단계 • 적용 (10분)</div>
-      <h2 class="stage-title">⚖️ T-차트: AI vs 인간의 판별 강점과 한계</h2>
+      <h2 class="stage-title">⚖️ T-차트: AI vs 사람의 판별 강점과 한계</h2>
       <div class="stage-goal">
-        <strong>[수사 회의]</strong> 분리배출 선별 시 <strong>AI가 잘하는 점(강점)</strong>과 <strong>사람이 꼭 도와주어야 하는 점(한계)</strong>을 정리해 보세요!
+        <strong>[수사 회의]</strong> 분리배출을 할 때 <strong>AI가 잘하는 점</strong>과 <strong>사람이 꼭 도와주어야 하는 점</strong>을 정리해 보세요!
       </div>
 
-      <div class="tchart-container">
-        <!-- AI 영역 -->
-        <div class="tchart-col tchart-ai">
-          <div class="tchart-header">🤖 AI의 뛰어난 점 (강점)</div>
-          <div class="tchart-list" id="tchartAiList">
-            <div class="tchart-card">
-              <span>⚡ 1초에 수십 장의 사진을 지치지 않고 고속 판별</span>
-            </div>
-            <div class="tchart-card">
-              <span>🎯 미세한 바코드 및 재질 마크 픽셀 탐지</span>
-            </div>
-          </div>
-          <div class="tchart-add-box">
-            <input type="text" id="inputAiStrength" class="text-input" style="padding:8px 10px; font-size:12px;" placeholder="AI 강점 추가...">
-            <button class="btn-back" style="font-size:12px; padding:6px 10px;" onclick="addTchartCard('ai')">추가</button>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+        <div style="background:#eff6ff; border:2px solid #bfdbfe; border-radius:18px; padding:16px;">
+          <h3 style="font-family:'Jua',sans-serif; font-size:18px; color:#1d4ed8; margin-bottom:10px;">🤖 AI가 잘하는 점 (강점)</h3>
+          <div style="font-size:14px; font-weight:800; color:#1e293b; line-height:1.6;">
+            • 1초에 수십 장의 사진을 지치지 않고 빠르게 확인해요.<br>
+            • 작은 바코드나 재질 마크를 눈 깜짝할 사이에 찾아요.
           </div>
         </div>
 
-        <!-- 사람 영역 -->
-        <div class="tchart-col tchart-human">
-          <div class="tchart-header">👤 인간의 뛰어난 점 (보완점)</div>
-          <div class="tchart-list" id="tchartHumanList">
-            <div class="tchart-card">
-              <span>👃 냄새나 촉감으로 썩은 음식물 오염 즉시 감지</span>
-            </div>
-            <div class="tchart-card">
-              <span>💡 가려지거나 심하게 찌그러진 쓰레기의 맥락 이해</span>
-            </div>
-          </div>
-          <div class="tchart-add-box">
-            <input type="text" id="inputHumanStrength" class="text-input" style="padding:8px 10px; font-size:12px;" placeholder="인간 강점 추가...">
-            <button class="btn-back" style="font-size:12px; padding:6px 10px;" onclick="addTchartCard('human')">추가</button>
+        <div style="background:#fffbeb; border:2px solid #fde68a; border-radius:18px; padding:16px;">
+          <h3 style="font-family:'Jua',sans-serif; font-size:18px; color:#b45309; margin-bottom:10px;">👤 사람이 꼭 도와줘야 하는 점</h3>
+          <div style="font-size:14px; font-weight:800; color:#1e293b; line-height:1.6;">
+            • 냄새나 만졌을 때의 끈적임 같은 오염을 바로 알아채요.<br>
+            • 심하게 찌그러져 겹친 쓰레기도 상황을 보고 판단해요.
           </div>
         </div>
       </div>
 
       <div class="action-bar">
-        <button class="btn-nav btn-prev-step" onclick="goToStep(3)">⬅ 이전 단계</button>
-        <button class="btn-nav btn-next-step" onclick="validateAndNextStep(4)">
-          T-차트 완성 및 탐구 질문 생성 ➔
+        <button class="btn-nav-large btn-prev" onclick="goToStep(3)">⬅ 이전 단계</button>
+        <button class="btn-nav-large btn-next" onclick="goToStep(5)">
+          5단계: 나만의 탐구 질문 완성 ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== STEP 5: 정리 (5분) ==================== -->
+    <!-- ==================== 5단계: 정리 & 최종 완료 ==================== -->
     <section class="stage-card" id="stage-5">
       <div class="stage-badge">5단계 • 정리 (5분)</div>
-      <h2 class="stage-title">💡 나만의 AI 탐구 질문 수립 & 최종 리포트</h2>
+      <h2 class="stage-title">💡 나만의 AI 탐구 질문 완성 & 퀘스트 완료</h2>
       <div class="stage-goal">
-        <strong>[최종 미션]</strong> 1차시 수업을 마무리하며, 우리 학교 문제를 해결하기 위한 <strong>AI 탐구 질문 1개</strong>를 완성하여 제출하세요!
+        <strong>[최종 미션]</strong> 1차시 수업을 마치며, 우리 학교 문제를 해결하기 위한 <strong>나만의 멋진 질문</strong>을 적어보세요!
       </div>
 
-      <!-- 추천 질문 템플릿 칩 -->
-      <span class="quick-tag-label">💡 질문 추천 템플릿 (클릭 시 자동 입력):</span>
-      <div class="template-chips">
-        <button class="chip-btn" onclick="applyTemplate('AI는 심하게 찌그러진 알루미늄 캔도 특징을 찾아 알아볼 수 있을까?')">
-          "AI는 찌그러진 캔도 알아볼 수 있을까?"
-        </button>
-        <button class="chip-btn" onclick="applyTemplate('AI가 투명 페트병의 비닐 라벨을 100% 감지하려면 어떤 각도의 사진이 몇 장 필요할까?')">
-          "라벨 감지에 필요한 사진 각도와 장수는?"
-        </button>
-        <button class="chip-btn" onclick="applyTemplate('국물이 묻어 오염된 종이컵과 깨끗한 종이컵을 AI 카메라는 색상 픽셀만으로 구분할 수 있을까?')">
-          "오염된 컵을 픽셀 색상으로 구분 가능할까?"
-        </button>
-      </div>
-
-      <div class="input-field-group">
-        <label class="input-label">✍️ [최종 탐구 질문] 당신의 빛나는 AI 질문을 작성하세요:</label>
-        <textarea id="finalQuestionInput" class="textarea-input" rows="3" placeholder="예: AI 카메라가 어두운 복도에서도 쓰레기 종류를 정확하게 구별할 수 있을까?"></textarea>
-      </div>
-
-      <!-- 학생 정보 입력 확인 -->
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:14px;">
-        <div>
-          <label class="input-label">👤 탐정 이름 (학생 이름)</label>
-          <input type="text" id="studentNameInput" class="text-input" placeholder="이름을 입력하세요">
-        </div>
-        <div>
-          <label class="input-label">🏫 학번 / 모둠 번호</label>
-          <input type="text" id="studentIdInput" class="text-input" placeholder="예: 6학년 2반 15번">
-        </div>
-      </div>
-
-      <!-- 실시간 리포트 미리보기 -->
-      <div class="report-card-preview" id="reportPreview">
-        <span class="report-badge">🏆 1차시 수사 리포트</span>
-        <h3 style="font-family:'Jua',sans-serif; color:var(--primary); font-size:18px; margin-bottom:12px;">AI 자원순환 수사대 사건 파일 #01</h3>
-        <div class="report-row">
-          <div class="report-label">1단계 포착 단서</div>
-          <div class="report-val" id="repClue">-</div>
-        </div>
-        <div class="report-row">
-          <div class="report-label">2단계 원인 분류</div>
-          <div class="report-val" id="repClassification">-</div>
-        </div>
-        <div class="report-row">
-          <div class="report-label">AI 핵심 이해</div>
-          <div class="report-val">컴퓨터 비전 AI는 픽셀 데이터에서 특징(Feature)을 추출하여 대상을 인식함.</div>
-        </div>
-        <div class="report-row" style="border-bottom:none;">
-          <div class="report-label">최종 AI 탐구 질문</div>
-          <div class="report-val" id="repQuestion" style="color:var(--accent-gold); font-size:15px;">-</div>
-        </div>
+      <div style="background:#f8fafc; border:2px solid #e2e8f0; border-radius:18px; padding:16px; margin-bottom:20px;">
+        <label style="display:block; font-size:15px; font-weight:900; color:#1e293b; margin-bottom:8px;">✍️ 내가 만든 AI 탐구 질문:</label>
+        <input type="text" id="finalQuestionInput" class="comment-input" style="width:100%; padding:12px;" value="AI 카메라는 심하게 찌그러진 캔도 특징을 찾아 알아볼 수 있을까?">
       </div>
 
       <div class="action-bar">
-        <button class="btn-nav btn-prev-step" onclick="goToStep(4)">⬅ 이전 단계</button>
-        <button class="btn-nav btn-complete btn-next-step" onclick="submitFinalQuest()">
-          🎉 1차시 퀘스트 최종 완료 및 저장 (⭐ +100 EXP)
+        <button class="btn-nav-large btn-prev" onclick="goToStep(4)">⬅ 이전 단계</button>
+        <button class="btn-nav-large btn-finish btn-next" onclick="finishQuest1()">
+          🎉 1차시 퀘스트 최종 완료 (⭐ +100 EXP)
         </button>
       </div>
     </section>
@@ -1635,12 +1032,11 @@
   <!-- 토스트 알림창 -->
   <div class="toast-msg" id="toastMsg">알림 메시지</div>
 
-  <!-- Firebase 및 애플리케이션 스크립트 모듈 -->
+  <!-- 스크립트 모듈 -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, doc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // Firebase 연동 설정
     const firebaseConfig = { 
       apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00", 
       authDomain: "elemeelementary-textbook.firebaseapp.com", 
@@ -1649,7 +1045,7 @@
       messagingSenderId: "713149004420", 
       appId: "1:713149004420:web:8483273681e16f5a8fa0d1" 
     };
-    
+
     let db = null;
     try {
       const app = initializeApp(firebaseConfig);
@@ -1660,90 +1056,53 @@
 
     // 전역 상태
     window.state = {
-      currentStep: 1,
       score: parseInt(localStorage.getItem("elementary_score") || "0"),
+      soundEnabled: true,
       comments: JSON.parse(localStorage.getItem("quest1_comments") || "[]"),
-      // 2단계 사진별 단어 태그 배열 (1, 2, 3번 사진)
       photoTags: {
         1: JSON.parse(localStorage.getItem("quest1_tags_1") || "[]"),
         2: JSON.parse(localStorage.getItem("quest1_tags_2") || "[]"),
         3: JSON.parse(localStorage.getItem("quest1_tags_3") || "[]")
       },
-      selectedTouchWord: null, // 모바일/터치용 선택된 단어
-      quizAnswers: { q1: false, q2: false },
-      soundEnabled: true,
-      studentId: localStorage.getItem("elementary_studentId") || "",
-      studentName: localStorage.getItem("elementary_studentName") || "탐정_" + Math.floor(Math.random()*900 + 100)
+      selectedTouchWord: null
     };
 
-    // 기본 초기 예시 댓글 설정
     if (window.state.comments.length === 0) {
       window.state.comments = [
-        { id: 'c1', author: '선임탐정 에코', text: '페트병에 붙은 비닐 라벨이 떼어지지 않은 채 그대로 버려져 있어요!', time: '방금 전', likes: 5, my: false },
-        { id: 'c2', author: '그린봇', text: '종이 수거함 쪽에 음식물 국물이 묻어있는 컵라면 용기가 잘못 들어가 있네요.', time: '1분 전', likes: 3, my: false }
+        { id: 'c1', author: '선임탐정 에코', text: '페트병 비닐 라벨이 그대로 붙어 있어요!', my: false },
+        { id: 'c2', author: '그린봇', text: '종이함에 국물 묻은 컵라면이 잘못 들어가 있네요.', my: false }
       ];
-      localStorage.setItem("quest1_comments", JSON.stringify(window.state.comments));
     }
 
-    // Web Audio 효과음 발생기
+    // 사운드
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    
     window.playSound = function(type) {
       if (!window.state.soundEnabled) return;
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
+      osc.connect(gain); gain.connect(audioCtx.destination);
       const now = audioCtx.currentTime;
 
       if (type === 'click') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(440, now);
-        osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
-        osc.start(now);
-        osc.stop(now + 0.08);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(500, now);
+        osc.frequency.exponentialRampToValueAtTime(900, now + 0.08);
+        gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+        osc.start(now); osc.stop(now + 0.08);
       } else if (type === 'drop') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(320, now);
-        osc.frequency.exponentialRampToValueAtTime(640, now + 0.12);
-        gain.gain.setValueAtTime(0.3, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
-        osc.start(now);
-        osc.stop(now + 0.12);
-      } else if (type === 'correct') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(523.25, now);
-        osc.frequency.setValueAtTime(659.25, now + 0.1);
-        osc.frequency.setValueAtTime(783.99, now + 0.2);
-        gain.gain.setValueAtTime(0.25, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
-        osc.start(now);
-        osc.stop(now + 0.35);
-      } else if (type === 'wrong') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(200, now);
-        osc.frequency.linearRampToValueAtTime(140, now + 0.2);
-        gain.gain.setValueAtTime(0.25, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
-        osc.start(now);
-        osc.stop(now + 0.2);
+        osc.type = 'triangle'; osc.frequency.setValueAtTime(350, now);
+        osc.frequency.exponentialRampToValueAtTime(700, now + 0.12);
+        gain.gain.setValueAtTime(0.25, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+        osc.start(now); osc.stop(now + 0.12);
       } else if (type === 'fanfare') {
         [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
           const o = audioCtx.createOscillator();
           const g = audioCtx.createGain();
-          o.connect(g);
-          g.connect(audioCtx.destination);
+          o.connect(g); g.connect(audioCtx.destination);
           o.frequency.setValueAtTime(freq, now + i * 0.12);
           g.gain.setValueAtTime(0.25, now + i * 0.12);
           g.gain.linearRampToValueAtTime(0.01, now + i * 0.12 + 0.25);
-          o.start(now + i * 0.12);
-          o.stop(now + i * 0.12 + 0.25);
+          o.start(now + i * 0.12); o.stop(now + i * 0.12 + 0.25);
         });
       }
     };
@@ -1751,7 +1110,6 @@
     window.toggleSound = function() {
       window.state.soundEnabled = !window.state.soundEnabled;
       document.getElementById('soundToggle').textContent = window.state.soundEnabled ? '🔊' : '🔇';
-      showToast(window.state.soundEnabled ? '소리가 켜졌습니다.' : '소리가 꺼졌습니다.');
     };
 
     window.showToast = function(msg) {
@@ -1767,117 +1125,49 @@
       localStorage.setItem("elementary_score", window.state.score);
     };
 
-    // 이미지 파일 로드 실패 시 스마트 SVG 폴백 렌더러
-    window.handleImageFallback = function(imgEl, imgType) {
-      const parent = imgEl.parentElement;
-      if (!parent) return;
-
-      let svgContent = '';
-      if (imgType === 'q1-image') {
-        svgContent = `
-          <svg width="100%" height="100%" viewBox="0 0 400 240" style="background:#111827;">
-            <rect x="30" y="30" width="100" height="170" rx="10" fill="#1e3a8a" opacity="0.85"/>
-            <text x="80" y="65" fill="#60a5fa" font-size="14" font-weight="bold" text-anchor="middle">플라스틱함</text>
-            <rect x="55" y="110" width="50" height="70" rx="6" fill="#bfdbfe"/>
-            <rect x="55" y="128" width="50" height="30" fill="#ef4444"/>
-            <text x="80" y="147" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">비닐라벨 미제거</text>
-
-            <rect x="150" y="30" width="100" height="170" rx="10" fill="#065f46" opacity="0.85"/>
-            <text x="200" y="65" fill="#34d399" font-size="14" font-weight="bold" text-anchor="middle">캔/고철함</text>
-            <rect x="175" y="120" width="50" height="55" rx="6" fill="#cbd5e1"/>
-            <circle cx="200" cy="180" r="14" fill="#991b1b" opacity="0.8"/>
-            <text x="200" y="184" fill="#fff" font-size="9" text-anchor="middle">음료얼룩</text>
-
-            <rect x="270" y="30" width="100" height="170" rx="10" fill="#78350f" opacity="0.85"/>
-            <text x="320" y="65" fill="#fbbf24" font-size="14" font-weight="bold" text-anchor="middle">종이류함</text>
-            <path d="M 290 120 L 350 120 L 340 170 L 300 170 Z" fill="#fecdd3"/>
-            <text x="320" y="148" fill="#e11d48" font-size="11" font-weight="bold" text-anchor="middle">컵라면(비닐코팅)</text>
-          </svg>
-        `;
-      } else if (imgType === 'q1-1') {
-        svgContent = `
-          <svg width="100%" height="100%" viewBox="0 0 260 160" style="background:#1e293b;">
-            <rect x="30" y="20" width="200" height="120" rx="10" fill="#1e1b4b" stroke="#6366f1" stroke-width="2"/>
-            <text x="130" y="45" fill="#a5b4fc" font-size="12" font-weight="bold" text-anchor="middle">종이 수거함 현장</text>
-            <path d="M 90 65 L 170 65 L 155 125 L 105 125 Z" fill="#fda4af"/>
-            <text x="130" y="95" fill="#9f1239" font-size="11" font-weight="bold" text-anchor="middle">국물 묻은 컵라면</text>
-            <text x="130" y="115" fill="#e11d48" font-size="9" text-anchor="middle">(종이 재활용 불가)</text>
-          </svg>
-        `;
-      } else if (imgType === 'q1-2') {
-        svgContent = `
-          <svg width="100%" height="100%" viewBox="0 0 260 160" style="background:#1e293b;">
-            <rect x="30" y="20" width="200" height="120" rx="10" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
-            <text x="130" y="45" fill="#6ee7b7" font-size="12" font-weight="bold" text-anchor="middle">급식실 퇴식구 분리대</text>
-            <rect x="55" y="65" width="45" height="55" rx="5" fill="#fde68a"/>
-            <text x="77" y="95" fill="#92400e" font-size="9" font-weight="bold" text-anchor="middle">우유팩</text>
-            <ellipse cx="165" cy="95" rx="35" ry="22" fill="#cbd5e1"/>
-            <text x="165" y="98" fill="#1e293b" font-size="10" font-weight="bold" text-anchor="middle">찌그러진 캔</text>
-            <circle cx="165" cy="120" r="8" fill="#b91c1c" opacity="0.8"/>
-            <text x="165" y="123" fill="#fff" font-size="7" text-anchor="middle">잔여물</text>
-          </svg>
-        `;
-      } else if (imgType === 'q1-3') {
-        svgContent = `
-          <svg width="100%" height="100%" viewBox="0 0 260 160" style="background:#1e293b;">
-            <rect x="30" y="20" width="200" height="120" rx="10" fill="#172554" stroke="#3b82f6" stroke-width="2"/>
-            <text x="130" y="45" fill="#93c5fd" font-size="12" font-weight="bold" text-anchor="middle">투명 페트병 수거함</text>
-            <rect x="100" y="60" width="60" height="80" rx="8" fill="#dbeafe"/>
-            <rect x="100" y="80" width="60" height="35" fill="#ef4444"/>
-            <text x="130" y="102" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">비닐라벨 부착</text>
-          </svg>
-        `;
-      }
-
-      imgEl.style.display = 'none';
-      const wrapper = document.createElement('div');
-      wrapper.className = 'img-fallback-svg';
-      wrapper.innerHTML = svgContent;
-      parent.appendChild(wrapper);
-    };
-
-    // 단계 이동 제어
     window.goToStep = function(stepNum) {
       window.playSound('click');
-      window.state.currentStep = stepNum;
-
-      document.querySelectorAll('.stage-card').forEach((card, idx) => {
-        card.classList.toggle('active', idx + 1 === stepNum);
-      });
-
-      document.querySelectorAll('.step-item').forEach((item, idx) => {
-        item.classList.toggle('active', idx + 1 === stepNum);
-      });
-
-      if (stepNum === 5) {
-        updateReportPreview();
-      }
-
+      document.querySelectorAll('.stage-card').forEach((c, idx) => c.classList.toggle('active', idx + 1 === stepNum));
+      document.querySelectorAll('.step-item').forEach((item, idx) => item.classList.toggle('active', idx + 1 === stepNum));
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // ==========================================
-    // 1번 탭: 댓글 피드 기능
-    // ==========================================
+    // 이미지 스마트 SVG 폴백
+    window.handleImageFallback = function(imgEl, imgType) {
+      const parent = imgEl.parentElement;
+      if (!parent) return;
+      imgEl.style.display = 'none';
+      const wrapper = document.createElement('div');
+      wrapper.style.width = '100%';
+      wrapper.style.height = '100%';
+      wrapper.style.display = 'flex';
+      wrapper.style.alignItems = 'center';
+      wrapper.style.justifyContent = 'center';
+      wrapper.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 200 140" style="background:#eff6ff;">
+          <rect x="20" y="20" width="160" height="100" rx="10" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+          <text x="100" y="60" font-size="14" font-weight="bold" fill="#1e3a8a" text-anchor="middle">📷 현장 사진</text>
+          <text x="100" y="85" font-size="11" font-weight="bold" fill="#2563eb" text-anchor="middle">${imgType}</text>
+        </svg>
+      `;
+      parent.appendChild(wrapper);
+    };
+
+    // 댓글 기능
     window.renderComments = function() {
       const container = document.getElementById('commentListScroll');
       const countBadge = document.getElementById('commentCountBadge');
       if (!container) return;
-
       container.innerHTML = '';
       countBadge.textContent = `댓글 ${window.state.comments.length}개`;
 
-      window.state.comments.forEach((c, idx) => {
+      window.state.comments.forEach(c => {
         const item = document.createElement('div');
         item.className = `comment-item ${c.my ? 'my-comment' : ''}`;
         item.innerHTML = `
           <div class="comment-top-row">
-            <div class="comment-author-box">
-              <div class="author-avatar">${c.author ? c.author.charAt(0) : '탐'}</div>
-              <span class="author-name">${c.author || '수사관'}</span>
-              ${c.my ? '<span style="font-size:10px; background:var(--primary); color:#0a0e1a; padding:1px 5px; border-radius:4px; font-weight:bold;">내 댓글</span>' : ''}
-            </div>
-            <span class="comment-time">${c.time || '방금'}</span>
+            <span class="author-name">${c.author}</span>
+            ${c.my ? '<span style="font-size:11px; background:#2563eb; color:#fff; padding:1px 6px; border-radius:4px; font-weight:bold;">내 댓글</span>' : ''}
           </div>
           <div class="comment-body">${c.text}</div>
           <div class="comment-action-row">
@@ -1887,59 +1177,29 @@
         `;
         container.appendChild(item);
       });
-
       container.scrollTop = container.scrollHeight;
     };
 
-    window.addChipText = function(chip) {
-      window.playSound('click');
-      const input = document.getElementById('commentInputText');
-      if (input) {
-        input.value = input.value ? `${input.value} ${chip}` : chip;
-        input.focus();
-      }
-    };
-
-    window.submitComment = async function() {
+    window.submitComment = function() {
       const input = document.getElementById('commentInputText');
       const text = input ? input.value.trim() : '';
       if (!text) {
-        showToast('댓글 내용을 입력해 주세요!');
+        showToast('댓글 내용을 입력하세요!');
         return;
       }
-
-      window.playSound('correct');
-      const newComment = {
+      window.playSound('click');
+      window.addScore(20);
+      window.state.comments.push({
         id: 'c_' + Date.now(),
-        author: window.state.studentName,
+        author: localStorage.getItem("elementary_studentName") || "나의 탐정",
         text: text,
-        time: '방금',
         likes: 0,
-        my: true,
-        createdAt: new Date().toISOString()
-      };
-
-      window.state.comments.push(newComment);
+        my: true
+      });
       localStorage.setItem("quest1_comments", JSON.stringify(window.state.comments));
       input.value = '';
-      
-      window.addScore(20);
-      showToast('🎉 수사 단서 댓글이 등록되었습니다! (⭐ +20 EXP)');
       renderComments();
-
-      // Firebase 저장 (오프라인 모드 시 catch)
-      if (db) {
-        try {
-          await addDoc(collection(db, "quest1_comments"), {
-            author: newComment.author,
-            studentId: window.state.studentId,
-            text: newComment.text,
-            createdAt: serverTimestamp()
-          });
-        } catch(e) {
-          console.log("Firestore comment save local fallback");
-        }
-      }
+      showToast('🎉 댓글이 등록되었습니다! (⭐ +20 EXP)');
     };
 
     window.likeComment = function(id) {
@@ -1947,7 +1207,6 @@
       const item = window.state.comments.find(c => c.id === id);
       if (item) {
         item.likes = (item.likes || 0) + 1;
-        localStorage.setItem("quest1_comments", JSON.stringify(window.state.comments));
         renderComments();
       }
     };
@@ -1955,16 +1214,11 @@
     window.deleteComment = function(id) {
       window.playSound('click');
       window.state.comments = window.state.comments.filter(c => c.id !== id);
-      localStorage.setItem("quest1_comments", JSON.stringify(window.state.comments));
       renderComments();
-      showToast('댓글이 삭제되었습니다.');
     };
 
-    // ==========================================
-    // 2번 탭: q1-1, q1-2, q1-3 단어 복제 드래그&드롭 / 터치 매칭
-    // ==========================================
+    // 2단계 단어 매칭
     let currentDraggingWord = null;
-
     window.handleWordDragStart = function(e, word) {
       currentDraggingWord = word;
       e.dataTransfer.setData('text/plain', word);
@@ -1984,23 +1238,19 @@
       e.preventDefault();
       e.currentTarget.classList.remove('hovered');
       const word = e.dataTransfer.getData('text/plain') || currentDraggingWord;
-      if (word) {
-        addTagToPhoto(photoIndex, word);
-      }
+      if (word) addTagToPhoto(photoIndex, word);
     };
 
-    // 터치/클릭 매칭 지원
     window.handleWordTouchSelect = function(word, el) {
       window.playSound('click');
       if (window.state.selectedTouchWord === word) {
         window.state.selectedTouchWord = null;
         document.querySelectorAll('.draggable-word-chip').forEach(c => c.classList.remove('selected-for-touch'));
-        showToast('선택이 취소되었습니다.');
       } else {
         window.state.selectedTouchWord = word;
         document.querySelectorAll('.draggable-word-chip').forEach(c => c.classList.remove('selected-for-touch'));
         el.classList.add('selected-for-touch');
-        showToast(`'${word}' 단어 선택됨! 넣을 사진 카드를 터치하세요.`);
+        showToast(`'${word}' 단어 선택됨! 넣을 사진을 터치하세요.`);
       }
     };
 
@@ -2012,19 +1262,16 @@
 
     window.addTagToPhoto = function(photoIndex, word) {
       const currentList = window.state.photoTags[photoIndex] || [];
-      // 중복 방지 (같은 사진 내 동일 단어는 1회만, 다른 사진에는 자유롭게 추가 가능)
       if (currentList.includes(word)) {
-        showToast(`'${word}' 단어가 이미 이 사진에 들어가 있습니다!`);
+        showToast(`'${word}' 단어가 이미 들어가 있습니다!`);
         return;
       }
-
       window.playSound('drop');
       currentList.push(word);
       window.state.photoTags[photoIndex] = currentList;
       localStorage.setItem(`quest1_tags_${photoIndex}`, JSON.stringify(currentList));
-      
       renderPhotoTags();
-      showToast(`사건 #${photoIndex}번에 '${word}' 단어가 추가되었습니다!`);
+      showToast(`사건 #${photoIndex}번에 '${word}' 추가 완료!`);
     };
 
     window.removeTagFromPhoto = function(photoIndex, word, e) {
@@ -2042,10 +1289,8 @@
         const zone = document.getElementById(`dropZone-${idx}`);
         const emptyMsg = document.getElementById(`emptyMsg-${idx}`);
         const list = window.state.photoTags[idx] || [];
-
         if (!zone) return;
 
-        // 기존 태그들 비우기 (emptyMsg 제외)
         zone.querySelectorAll('.dropped-word-tag').forEach(t => t.remove());
 
         if (list.length === 0) {
@@ -2055,7 +1300,6 @@
           list.forEach(word => {
             const tagEl = document.createElement('div');
             tagEl.className = 'dropped-word-tag';
-            tagEl.setAttribute('data-word', word);
             tagEl.innerHTML = `
               <span>${word}</span>
               <button class="btn-remove-tag" onclick="removeTagFromPhoto(${idx}, '${word}', event)">✕</button>
@@ -2066,211 +1310,18 @@
       });
     };
 
-    // ==========================================
-    // STEP 3: 픽셀 비전 애니메이션 & 퀴즈
-    // ==========================================
-    window.initPixelGrid = function() {
-      const grid = document.getElementById('pixelGrid');
-      if (!grid) return;
-      grid.innerHTML = '';
-      for (let i = 0; i < 36; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'pixel-cell';
-        cell.id = `px-${i}`;
-        cell.textContent = Math.floor(Math.random() * 255);
-        grid.appendChild(cell);
-      }
-      animatePixelVision();
-    };
-
-    window.animatePixelVision = function() {
-      const outlineIndices = [2, 3, 8, 9, 14, 15, 20, 21, 26, 27, 32, 33];
-      for (let i = 0; i < 36; i++) {
-        const cell = document.getElementById(`px-${i}`);
-        if (cell) {
-          cell.classList.remove('lit');
-          cell.textContent = Math.floor(Math.random() * 80);
-        }
-      }
-      outlineIndices.forEach((idx, i) => {
-        setTimeout(() => {
-          const c = document.getElementById(`px-${idx}`);
-          if (c) {
-            c.classList.add('lit');
-            c.textContent = '255';
-          }
-        }, i * 60);
-      });
-    };
-
-    window.checkQuiz = function(qNum, btn, isCorrect) {
-      const parent = btn.parentElement;
-      parent.querySelectorAll('.opt-btn').forEach(b => {
-        b.classList.remove('correct', 'wrong');
-      });
-
-      if (isCorrect) {
-        window.playSound('correct');
-        btn.classList.add('correct');
-        window.state.quizAnswers[`q${qNum}`] = true;
-        showToast('정답입니다! 🌟 (+20 EXP)');
-        window.addScore(20);
-      } else {
-        window.playSound('wrong');
-        btn.classList.add('wrong');
-        showToast('다시 한번 생각해 보세요!');
-      }
-    };
-
-    // ==========================================
-    // STEP 4: T-Chart
-    // ==========================================
-    window.addTchartCard = function(type) {
-      const input = document.getElementById(type === 'ai' ? 'inputAiStrength' : 'inputHumanStrength');
-      const list = document.getElementById(type === 'ai' ? 'tchartAiList' : 'tchartHumanList');
-      const text = input ? input.value.trim() : '';
-
-      if (!text) {
-        showToast('내용을 입력하세요!');
-        return;
-      }
-
-      window.playSound('click');
-      const card = document.createElement('div');
-      card.className = 'tchart-card';
-      card.innerHTML = `
-        <span>${text}</span>
-        <button class="btn-del-card" onclick="this.parentElement.remove()">✕</button>
-      `;
-      list.appendChild(card);
-      input.value = '';
-      window.addScore(10);
-      showToast('T-차트에 의견이 추가되었습니다!');
-    };
-
-    // ==========================================
-    // STEP 5: 최종 리포트 & 제출
-    // ==========================================
-    window.applyTemplate = function(txt) {
-      window.playSound('click');
-      const input = document.getElementById('finalQuestionInput');
-      if (input) {
-        input.value = txt;
-        updateReportPreview();
-      }
-    };
-
-    window.updateReportPreview = function() {
-      const myComments = window.state.comments.filter(c => c.my);
-      const repClue = document.getElementById('repClue');
-      if (repClue) {
-        repClue.textContent = myComments.length > 0 
-          ? myComments.map(c => `"${c.text}"`).join(', ') 
-          : '(1단계에서 수사 댓글을 등록해 주세요)';
-      }
-
-      const repClassification = document.getElementById('repClassification');
-      if (repClassification) {
-        const p1 = (window.state.photoTags[1] || []).join(', ') || '미분류';
-        const p2 = (window.state.photoTags[2] || []).join(', ') || '미분류';
-        const p3 = (window.state.photoTags[3] || []).join(', ') || '미분류';
-        repClassification.textContent = `사건1[${p1}] | 사건2[${p2}] | 사건3[${p3}]`;
-      }
-
-      const qInput = document.getElementById('finalQuestionInput');
-      const repQuestion = document.getElementById('repQuestion');
-      if (repQuestion && qInput) {
-        repQuestion.textContent = qInput.value.trim() || '(아직 질문이 작성되지 않았습니다)';
-      }
-    };
-
-    // 단계 검증 및 다음 이동
-    window.validateAndNextStep = function(currentStep) {
-      if (currentStep === 1) {
-        const myComments = window.state.comments.filter(c => c.my);
-        if (myComments.length === 0) {
-          showToast('💡 문제점을 댓글로 최소 1개 이상 작성해 보세요!');
-          // 그래도 진행 가능하도록 허용
-        }
-        goToStep(2);
-      } else if (currentStep === 2) {
-        const t1 = window.state.photoTags[1] || [];
-        const t2 = window.state.photoTags[2] || [];
-        const t3 = window.state.photoTags[3] || [];
-        if (t1.length === 0 && t2.length === 0 && t3.length === 0) {
-          showToast('💡 단어를 드래그하여 최소 1개 이상의 사진에 원인을 지정해 보세요!');
-          return;
-        }
-        window.addScore(30);
-        showToast('원인 분류 완료! (⭐ +30 EXP)');
-        goToStep(3);
-      } else if (currentStep === 3) {
-        goToStep(4);
-      } else if (currentStep === 4) {
-        goToStep(5);
-      }
-    };
-
-    window.submitFinalQuest = async function() {
-      const qInput = document.getElementById('finalQuestionInput');
-      const nameInput = document.getElementById('studentNameInput');
-      const idInput = document.getElementById('studentIdInput');
-
-      const question = qInput ? qInput.value.trim() : '';
-      const name = nameInput ? nameInput.value.trim() : window.state.studentName;
-      const studentId = idInput ? idInput.value.trim() : window.state.studentId;
-
-      if (!question) {
-        showToast('💡 마지막으로 나만의 AI 탐구 질문을 작성해 주세요!');
-        if (qInput) qInput.focus();
-        return;
-      }
-
+    window.finishQuest1 = function() {
       window.playSound('fanfare');
       window.addScore(100);
-
-      localStorage.setItem("elementary_studentName", name);
-      localStorage.setItem("elementary_studentId", studentId);
       localStorage.setItem("quest1_completed", "true");
-
-      // Firebase 최종 리포트 저장
-      if (db) {
-        try {
-          await addDoc(collection(db, "quest1_submissions"), {
-            studentName: name,
-            studentId: studentId,
-            score: window.state.score,
-            comments: window.state.comments.filter(c => c.my),
-            photoTags: window.state.photoTags,
-            finalQuestion: question,
-            completedAt: serverTimestamp()
-          });
-        } catch(e) {
-          console.log("Firestore final submission offline fallback");
-        }
-      }
-
-      alert(`🎉 축하합니다! 1차시 [우리 학교 분리배출 사건을 찾아라] 퀘스트를 성공적으로 완료했습니다!\n\n총 획득 점수: ${window.state.score} EXP\n메인 화면으로 이동합니다.`);
+      alert(`🎉 축하합니다! 1차시 퀘스트를 성공적으로 완료했습니다!\n\n총 획득 점수: ${window.state.score} EXP\n메인 화면으로 이동합니다.`);
       window.location.href = 'main.html';
     };
 
-    // 초기화 실행
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
-      
-      const nameInput = document.getElementById('studentNameInput');
-      const idInput = document.getElementById('studentIdInput');
-      if (nameInput) nameInput.value = window.state.studentName;
-      if (idInput) idInput.value = window.state.studentId;
-
       renderComments();
       renderPhotoTags();
-      initPixelGrid();
-
-      const qInput = document.getElementById('finalQuestionInput');
-      if (qInput) {
-        qInput.addEventListener('input', updateReportPreview);
-      }
     });
   </script>
 </body>
