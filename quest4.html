@@ -472,7 +472,17 @@
     const ctx = ic.getContext('2d');
     ctx.fillStyle = '#263238'; ctx.fillRect(0, 0, ic.width, ic.height);
     ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 20px Pretendard'; ctx.textAlign = 'center';
-    ctx.fillText('📦 예시: 페트병과 우유팩 수집 사진 불러오는 중...', 300, 180);
+    ctx.fillText('📦 예시: q4-1 수집 사진 불러오는 중...', 300, 180);
+
+    const candidateSources = [
+      'images/q4-1.png',
+      'images/q4-1.jpg',
+      'images/q4-1.jpeg',
+      'images/q4-1',
+      'Images/q4-1.png',
+      'Images/q4-1.jpg'
+    ];
+    let candidateIndex = 0;
 
     const img = new Image();
     img.onload = () => {
@@ -492,20 +502,41 @@
     };
 
     img.onerror = () => {
-      // 대소문자 경로 호환 (Images/labelex.png)
-      if (!img.src.includes('Images/')) {
-        img.src = 'Images/labelex.png';
+      candidateIndex++;
+      if (candidateIndex < candidateSources.length) {
+        img.src = candidateSources[candidateIndex];
       } else {
-        ctx.fillStyle = '#263238'; ctx.fillRect(0, 0, 600, 360);
-        ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 20px Pretendard'; ctx.textAlign = 'center';
-        ctx.fillText('📦 예시: 페트병과 우유팩 수집 사진', 300, 180);
-        ctx.fillStyle = '#B0BEC5'; ctx.font = '14px Pretendard';
-        ctx.fillText('마우스/손가락으로 드래그해서 상자를 그려보세요!', 300, 210);
+        // 스마트 폴백 캔버스 일러스트
+        ctx.fillStyle = '#1e293b'; ctx.fillRect(0, 0, 600, 360);
+        
+        // 투명 페트병 일러스트
+        ctx.fillStyle = '#dbeafe'; ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 3;
+        ctx.fillRect(80, 80, 100, 190); ctx.strokeRect(80, 80, 100, 190);
+        ctx.fillStyle = '#ef4444'; ctx.fillRect(80, 130, 100, 70);
+        ctx.fillStyle = '#ffffff'; ctx.font = 'bold 15px Pretendard';
+        ctx.fillText('비닐 라벨', 130, 170);
+
+        // 우유팩 일러스트
+        ctx.fillStyle = '#fef3c7'; ctx.strokeStyle = '#f59e0b';
+        ctx.fillRect(240, 90, 110, 180); ctx.strokeRect(240, 90, 110, 180);
+        ctx.fillStyle = '#92400e'; ctx.font = 'bold 16px Pretendard';
+        ctx.fillText('우유팩', 295, 180);
+
+        // 알루미늄 캔 일러스트
+        ctx.fillStyle = '#e2e8f0'; ctx.strokeStyle = '#64748b';
+        ctx.fillRect(410, 110, 100, 160); ctx.strokeRect(410, 110, 100, 160);
+        ctx.fillStyle = '#1e293b'; ctx.font = 'bold 16px Pretendard';
+        ctx.fillText('알루미늄 캔', 460, 190);
+
+        ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 18px Pretendard';
+        ctx.fillText('📷 예시 사진 (q4-1)', 300, 45);
+        ctx.fillStyle = '#94a3b8'; ctx.font = '14px Pretendard';
+        ctx.fillText('마우스/손가락으로 드래그해서 상자를 그려보세요!', 300, 315);
         redrawPractice();
       }
     };
 
-    img.src = 'images/labelex.png';
+    img.src = candidateSources[0];
     redrawPractice();
   }
 
