@@ -756,8 +756,8 @@
     <div class="header-left">
       <a href="main.html" class="btn-back">⬅ 메인화면</a>
       <div class="header-title-group">
-        <span class="badge-chasi">6차시 • 규약 리그 본부</span>
-        <h1 class="header-main-title">🏛️ 학급 자원순환 의회 & 최종 규약</h1>
+        <span class="badge-chasi">규약 리그 본부</span>
+        <h1 class="header-main-title">🏛️ 우리 학교 자원순환 규약 의회</h1>
       </div>
     </div>
     <div class="header-right">
@@ -769,52 +769,52 @@
   <!-- 메인 앱 컨테이너 -->
   <main class="app-container">
 
-    <!-- 5단계 네비게이터 트래커 -->
+    <!-- 단계 네비게이터 트래커 -->
     <nav class="step-tracker">
       <div class="step-item active" onclick="goToStep(1)">
-        <span class="step-num">1단계</span>
-        <span class="step-name">도입 (4분)</span>
+        <span class="step-num">📸 1</span>
+        <span class="step-name">사진 비교하기</span>
       </div>
       <div class="step-item" onclick="goToStep(2)">
-        <span class="step-num">2단계</span>
-        <span class="step-name">발표 (12분)</span>
+        <span class="step-num">📢 2</span>
+        <span class="step-name">모둠 발표하기</span>
       </div>
       <div class="step-item" onclick="goToStep(3)">
-        <span class="step-num">3단계</span>
-        <span class="step-name">검증 (8분)</span>
+        <span class="step-num">🔍 3</span>
+        <span class="step-name">서로 묻고 답하기</span>
       </div>
       <div class="step-item" onclick="goToStep(4)">
-        <span class="step-num">4단계</span>
-        <span class="step-name">합의 (10분)</span>
+        <span class="step-num">📜 4</span>
+        <span class="step-name">우리 반 약속</span>
       </div>
       <div class="step-item" onclick="goToStep(5)">
-        <span class="step-num">5단계</span>
-        <span class="step-name">성찰 (6분)</span>
+        <span class="step-num">🏅 5</span>
+        <span class="step-name">실천 다짐하기</span>
       </div>
     </nav>
 
-    <!-- ==================== 1단계: 도입 (4분) ==================== -->
+    <!-- ==================== 1: 사진 비교 ==================== -->
     <section class="stage-card active" id="stage-1">
-      <div class="stage-badge">1단계 • 도입 (4분)</div>
-      <h2 class="stage-title">📸 1차시 문제 사진 vs 현재 해결안 사진 비교</h2>
+      <div class="stage-badge">📸 과거와 현재 사진 비교</div>
+      <h2 class="stage-title">📸 문제 사진과 해결 모습 비교하기</h2>
       <div class="stage-goal">
-        <strong>[도입 활동]</strong> 1차시에 발견했던 우리 학교의 분리배출 문제 현장 사진과, 현재 탐정단 활동을 통해 개선된 사진을 비교하고 오늘의 의회 규칙을 확인하세요!
+        처음에 발견했던 학교의 어지러운 쓰레기 사진과, 탐정단 활동을 통해 깨끗해진 모습을 비교해보고 오늘의 의회 약속을 확인해요!
       </div>
 
       <!-- 사진 비교 그리드 -->
       <div class="compare-photos-grid">
-        <!-- 1차시 문제 사진 (Before) -->
+        <!-- 과거 문제 사진 (Before) -->
         <div class="photo-view-card">
           <div class="photo-card-header">
-            <span style="font-size:15px; font-weight:800; color:#1e293b;">1차시 현장 문제 사진</span>
-            <span class="photo-type-badge badge-before">🚨 BEFORE (과거 문제)</span>
+            <span style="font-size:15px; font-weight:800; color:#1e293b;">과거 문제 현장 사진</span>
+            <span class="photo-type-badge badge-before">🚨 이전 모습 (문제점)</span>
           </div>
           <div class="photo-preview-box" id="previewBoxBefore">
-            <img src="images/q1-image.jpg" onerror="this.src='https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=500&auto=format&fit=crop&q=80'" alt="1차시 문제 사진" id="imgBefore">
+            <img src="images/q1-image.jpg" onerror="this.src='https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=500&auto=format&fit=crop&q=80'" alt="과거 문제 사진" id="imgBefore">
           </div>
           <div class="upload-trigger-row">
             <button class="btn-photo-upload" onclick="triggerFileInput('inputBefore')">
-              📷 사진 교체 / 촬영
+              📷 사진 바꾸기 / 촬영
             </button>
             <input type="file" accept="image/*" class="hidden-file-input" id="inputBefore" onchange="handleImageUpload(event, 'previewBoxBefore', 'quest6_photo_before')">
           </div>
@@ -823,15 +823,15 @@
         <!-- 현재 개선안 사진 (After) -->
         <div class="photo-view-card">
           <div class="photo-card-header">
-            <span style="font-size:15px; font-weight:800; color:#1e293b;">현재 개선 & 해결안 사진</span>
-            <span class="photo-type-badge badge-after">✨ AFTER (해결 모습)</span>
+            <span style="font-size:15px; font-weight:800; color:#1e293b;">해결 및 개선된 사진</span>
+            <span class="photo-type-badge badge-after">✨ 달라진 모습 (해결)</span>
           </div>
           <div class="photo-preview-box" id="previewBoxAfter">
             <img src="https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?w=500&auto=format&fit=crop&q=80" alt="현재 개선 사진" id="imgAfter">
           </div>
           <div class="upload-trigger-row">
             <button class="btn-photo-upload" onclick="triggerFileInput('inputAfter')">
-              📷 내 실천 사진 업로드 / 촬영
+              📷 내 실천 사진 올리기 / 촬영
             </button>
             <input type="file" accept="image/*" class="hidden-file-input" id="inputAfter" onchange="handleImageUpload(event, 'previewBoxAfter', 'quest6_photo_after')">
           </div>
@@ -840,79 +840,79 @@
 
       <!-- 의회 3대 규칙 안내 -->
       <div class="council-rules-box">
-        <h3 class="rules-title">⚖️ 오늘의 자원순환 의회 3대 원칙</h3>
+        <h3 class="rules-title">⚖️ 오늘 의회에서 지킬 3가지 약속</h3>
         <div class="rules-grid">
-          <div class="rule-item">👂 1. 다른 모둠의 발표를 끝까지 경청해요.</div>
-          <div class="rule-item">🔍 2. AI 데이터 근거를 바탕으로 질문해요.</div>
-          <div class="rule-item">🤝 3. 비난 대신 실천 가능한 대안을 합의해요.</div>
+          <div class="rule-item">👂 1. 친구 모둠의 발표를 끝까지 귀담아들어요.</div>
+          <div class="rule-item">🔍 2. AI 실험 결과를 바탕으로 친절하게 질문해요.</div>
+          <div class="rule-item">🤝 3. 비난하기보다 다 함께 실천할 방법을 찾아요.</div>
         </div>
       </div>
 
       <div class="action-bar">
         <div></div>
         <button class="btn-nav-large btn-next" onclick="submitStep1()">
-          확인 완료 & 2단계: 모둠 발표 ➔
+          확인 완료하고 발표하러 가기 ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== 2단계: 발표 (12분) ==================== -->
+    <!-- ==================== 2: 발표 ==================== -->
     <section class="stage-card" id="stage-2">
-      <div class="stage-badge">2단계 • 발표 (12분)</div>
-      <h2 class="stage-title">📢 모둠별 2분 발표문 작성 (5대 핵심 요소)</h2>
+      <div class="stage-badge">📢 모둠별 생각 발표하기</div>
+      <h2 class="stage-title">📢 우리 모둠 탐정 보고서 작성하기</h2>
       <div class="stage-goal">
-        <strong>[발표 활동]</strong> 우리 모둠이 탐구한 <strong>[문제 - 근거 - AI 한계 - 해결안 - 사람 역할]</strong>의 5가지 핵심 요소를 정리하여 의회에 발표하세요!
+        우리 모둠이 탐구한 <strong>[문제 - 이유 - AI 한계 - 해결 방법 - 사람이 할 일]</strong>을 정리해 친구들에게 발표해봐요!
       </div>
 
       <div class="presentation-form-wrap">
         <div class="input-field-group">
-          <label>1. 🚨 발견한 문제 정의:</label>
-          <input type="text" id="pIssue" class="custom-input" placeholder="예: 급식실 앞 분리수거함에 떡볶이 국물 묻은 용기와 비닐 라벨이 섞여 버려집니다.">
+          <label>1. 🚨 우리가 찾은 분리배출 문제:</label>
+          <input type="text" id="pIssue" class="custom-input" placeholder="예: 분리수거함에 떡볶이 국물 묻은 컵라면과 라벨이 붙은 페트병이 섞여 버려집니다.">
         </div>
 
         <div class="input-field-group">
-          <label>2. 📊 데이터 및 실험 근거 (5차시 결과):</label>
-          <input type="text" id="pEvidence" class="custom-input" placeholder="예: 5차시 AI 실험 결과, 오염된 용기는 AI가 스티로폼으로 오판독(정확도 88% 오류)했습니다.">
+          <label>2. 📊 AI 실험에서 확인한 증거:</label>
+          <input type="text" id="pEvidence" class="custom-input" placeholder="예: AI 실험 결과, 양념 묻은 용기를 AI가 스티로폼/플라스틱으로 잘못 알아봤습니다.">
         </div>
 
         <div class="input-field-group">
-          <label>3. 🤖 AI의 한계와 오류 원인:</label>
-          <input type="text" id="pAiLimit" class="custom-input" placeholder="예: AI 카메라는 겉모양만 보고 음식물 오염 상태나 미세 크기 조건을 스스로 판단하지 못합니다.">
+          <label>3. 🤖 AI가 헷갈려한 까닭 (AI의 한계):</label>
+          <input type="text" id="pAiLimit" class="custom-input" placeholder="예: AI는 겉모양만 보고 빨간 양념 오염이나 아주 작은 크기를 스스로 알지 못합니다.">
         </div>
 
         <div class="input-field-group">
-          <label>4. 💡 우리 모둠의 해결 방안:</label>
-          <textarea id="pSolution" class="custom-textarea" placeholder="예: 비닐 라벨을 떼는 전용 가위 거치대를 설치하고, 오염 사진 데이터를 추가 학습시킵니다."></textarea>
+          <label>4. 💡 우리 모둠의 해결 방법:</label>
+          <textarea id="pSolution" class="custom-textarea" placeholder="예: 비닐 라벨을 떼는 전용 가위를 두고, 오염된 사진을 AI에게 더 가르쳐줍니다."></textarea>
         </div>
 
         <div class="input-field-group">
-          <label>5. 👤 사람이 책임질 핵심 역할:</label>
-          <input type="text" id="pHumanRole" class="custom-input" placeholder="예: 국물 묻은 용기는 헹구어 버리거나 일반쓰레기통에 바로 넣는 실천을 합니다.">
+          <label>5. 👤 사람이 꼭 실천해야 할 일:</label>
+          <input type="text" id="pHumanRole" class="custom-input" placeholder="예: 국물 묻은 용기는 물로 헹구어 버리거나 일반쓰레기통에 바로 넣습니다.">
         </div>
       </div>
 
       <div class="action-bar">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(1)">⬅ 이전 단계</button>
+        <button class="btn-nav-large btn-prev" onclick="goToStep(1)">⬅ 이전으로</button>
         <button class="btn-nav-large btn-next" onclick="submitStep2()">
-          발표문 저장 & 3단계: 참관 검증 ➔
+          발표문 저장하고 검증하러 가기 ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== 3단계: 검증 (8분) ==================== -->
+    <!-- ==================== 3: 검증 ==================== -->
     <section class="stage-card" id="stage-3">
-      <div class="stage-badge">3단계 • 검증 (8분)</div>
-      <h2 class="stage-title">🔍 참관 모둠 상호 검증 & 질문/답변</h2>
+      <div class="stage-badge">🔍 다른 모둠 발표 살펴보기</div>
+      <h2 class="stage-title">🔍 별점 주기 & 궁금한 점 묻고 답하기</h2>
       <div class="stage-goal">
-        <strong>[검증 활동]</strong> 다른 모둠의 발표를 듣고 <strong>3가지 기준(근거·효과·실현 가능성)</strong>에 따라 별점을 부여하고 상호 검증 질문을 남겨보세요.
+        다른 모둠의 발표를 듣고 <strong>3가지 기준</strong>에 맞춰 별점을 주고, 궁금한 질문과 답변을 적어보세요.
       </div>
 
       <!-- 3대 검증 기준 카드 -->
       <div class="verify-grid">
         <div class="verify-card">
           <div class="verify-icon">📊</div>
-          <h4 class="verify-title">1. 근거의 타당성</h4>
-          <p class="verify-desc">AI 실험 결과와 실제 데이터에 바탕을 두고 있는가?</p>
+          <h4 class="verify-title">1. 믿을 수 있는 설명인가요?</h4>
+          <p class="verify-desc">AI 실험 결과와 실제 증거를 바탕으로 설명했나요?</p>
           <div class="star-score-row" id="stars1">
             <button class="star-btn active" onclick="setStarScore(1, 1)">★</button>
             <button class="star-btn active" onclick="setStarScore(1, 2)">★</button>
@@ -924,8 +924,8 @@
 
         <div class="verify-card">
           <div class="verify-icon">💡</div>
-          <h4 class="verify-title">2. 개선 효과성</h4>
-          <p class="verify-desc">실제 분리배출 문제를 획기적으로 줄일 수 있는가?</p>
+          <h4 class="verify-title">2. 문제 해결에 도움이 되나요?</h4>
+          <p class="verify-desc">실제 분리배출 실수를 쏙 줄일 수 있는 방법인가요?</p>
           <div class="star-score-row" id="stars2">
             <button class="star-btn active" onclick="setStarScore(2, 1)">★</button>
             <button class="star-btn active" onclick="setStarScore(2, 2)">★</button>
@@ -937,8 +937,8 @@
 
         <div class="verify-card">
           <div class="verify-icon">🏫</div>
-          <h4 class="verify-title">3. 실현 가능성</h4>
-          <p class="verify-desc">우리 학교와 교실에서 내일부터 바로 실행 가능한가?</p>
+          <h4 class="verify-title">3. 우리 학교에서 쉽게 할 수 있나요?</h4>
+          <p class="verify-desc">내일부터 우리 교실에서 바로 따라 할 수 있나요?</p>
           <div class="star-score-row" id="stars3">
             <button class="star-btn active" onclick="setStarScore(3, 1)">★</button>
             <button class="star-btn active" onclick="setStarScore(3, 2)">★</button>
@@ -951,87 +951,87 @@
 
       <!-- 질의응답 메모 -->
       <div style="background:#ffffff; border:2px solid #e2e8f0; border-radius:20px; padding:20px;">
-        <h3 style="font-size:16px; font-weight:800; color:#0f172a; margin-bottom:8px;">💬 참관 질문 및 모둠 답변 기록</h3>
-        <textarea id="qaRecordInput" class="custom-textarea" placeholder="발표 모둠에게 물어본 질문과 그에 대한 멋진 답변을 간단히 메모하세요. (예: 질문: 라벨을 떼지 않는 친구들은 어떻게 도울까요? / 답변: 분리수거함 위에 라벨 제거 안내판을 크게 붙입니다.)"></textarea>
+        <h3 style="font-size:16px; font-weight:800; color:#0f172a; margin-bottom:8px;">💬 친구들과 나눈 질문 & 답변</h3>
+        <textarea id="qaRecordInput" class="custom-textarea" placeholder="발표 모둠에게 물어본 질문이나 답변을 적어보세요. (예: 질문: 라벨 떼기를 잊어버리는 친구는 어떻게 도울까요? / 답변: 분리수거함 위에 귀여운 안내 캐릭터를 붙여요.)"></textarea>
       </div>
 
       <div class="action-bar">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(2)">⬅ 이전 단계</button>
+        <button class="btn-nav-large btn-prev" onclick="goToStep(2)">⬅ 이전으로</button>
         <button class="btn-nav-large btn-next" onclick="submitStep3()">
-          검증 완료 & 4단계: 학급 규약 합의 ➔
+          검증 완료하고 우리 반 약속 정하기 ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== 4단계: 합의 (10분) ==================== -->
+    <!-- ==================== 4: 합의 ==================== -->
     <section class="stage-card" id="stage-4">
-      <div class="stage-badge">4단계 • 합의 (10분)</div>
-      <h2 class="stage-title">📜 우리 학급 자원순환 규약 3~5개 확정</h2>
+      <div class="stage-badge">📜 다 함께 지킬 약속 정하기</div>
+      <h2 class="stage-title">📜 우리 반 자원순환 약속 4가지</h2>
       <div class="stage-goal">
-        <strong>[합의 활동]</strong> 검증된 발표안들을 바탕으로, <strong>우리 학급이 다 함께 지켜나갈 실천 규약 3~5가지 문장</strong>을 최종 확정하세요!
+        모둠별 발표 내용을 모아, <strong>우리 반 친구들이 다 함께 지킬 실천 약속</strong>을 완성해봐요!
       </div>
 
       <div class="rules-builder-wrap">
-        <p style="font-size:13px; font-weight:800; color:#16a34a; margin-bottom:8px;">💡 추천 규약 문장 칩 (클릭하면 아래 규약 칸에 자동 입력됩니다):</p>
+        <p style="font-size:13px; font-weight:800; color:#16a34a; margin-bottom:8px;">💡 추천 약속 칩 (누르면 아래 칸에 쏙 들어갑니다):</p>
         <div class="chip-suggest-group">
-          <button class="chip-suggest" onclick="addRuleSuggestion('페트병의 투명 비닐 라벨은 반드시 떼어 비닐류에 따로 버린다.')">+ 비닐 라벨 분리</button>
-          <button class="chip-suggest" onclick="addRuleSuggestion('양념이나 국물이 묻은 용기는 물로 헹구거나 일반쓰레기로 배출한다.')">+ 양념 용기 세척</button>
-          <button class="chip-suggest" onclick="addRuleSuggestion('종이팩과 우유팩은 펼쳐서 말린 후 전용 수거함에 모은다.')">+ 종이 우유팩 펼치기</button>
-          <button class="chip-suggest" onclick="addRuleSuggestion('플라스틱 빨대와 작은 조각은 일반쓰레기통에 넣는다.')">+ 작은 빨대 일반쓰레기</button>
-          <button class="chip-suggest" onclick="addRuleSuggestion('택배 박스의 비닐 테이프와 송장 스티커는 떼어내고 종이로 버린다.')">+ 테이프/송장 제거</button>
+          <button class="chip-suggest" onclick="addRuleSuggestion('페트병의 투명 비닐 라벨은 떼어서 비닐류에 따로 버린다.')">+ 비닐 라벨 떼기</button>
+          <button class="chip-suggest" onclick="addRuleSuggestion('양념이나 국물이 묻은 용기는 물로 헹구거나 일반쓰레기로 버린다.')">+ 양념 용기 세척</button>
+          <button class="chip-suggest" onclick="addRuleSuggestion('종이 우유팩은 깨끗이 씻어 펼쳐 말린 후 모은다.')">+ 우유팩 펼치기</button>
+          <button class="chip-suggest" onclick="addRuleSuggestion('플라스틱 빨대처럼 작은 조각은 일반쓰레기로 버린다.')">+ 작은 빨대 일반쓰레기</button>
+          <button class="chip-suggest" onclick="addRuleSuggestion('택배 박스의 비닐 테이프와 송장 스티커는 떼어내고 버린다.')">+ 테이프/스티커 떼기</button>
         </div>
 
         <div class="promise-list-box" id="promiseListBox">
           <div class="promise-row">
             <div class="promise-num">1</div>
-            <input type="text" class="custom-input rule-item-input" id="rule1" value="페트병의 투명 비닐 라벨은 반드시 떼어 비닐류에 따로 버린다.">
+            <input type="text" class="custom-input rule-item-input" id="rule1" value="페트병의 투명 비닐 라벨은 떼어서 비닐류에 따로 버린다.">
           </div>
           <div class="promise-row">
             <div class="promise-num">2</div>
-            <input type="text" class="custom-input rule-item-input" id="rule2" value="양념이나 국물이 묻은 용기는 물로 헹구거나 일반쓰레기로 배출한다.">
+            <input type="text" class="custom-input rule-item-input" id="rule2" value="양념이나 국물이 묻은 용기는 물로 헹구거나 일반쓰레기로 버린다.">
           </div>
           <div class="promise-row">
             <div class="promise-num">3</div>
-            <input type="text" class="custom-input rule-item-input" id="rule3" value="종이팩과 우유팩은 깨끗이 씻어 펼쳐 말린 후 전용함에 모은다.">
+            <input type="text" class="custom-input rule-item-input" id="rule3" value="종이 우유팩은 깨끗이 씻어 펼쳐 말린 후 전용함에 모은다.">
           </div>
           <div class="promise-row">
             <div class="promise-num">4</div>
-            <input type="text" class="custom-input rule-item-input" id="rule4" value="플라스틱 빨대처럼 너무 작은 플라스틱은 일반쓰레기로 버린다.">
+            <input type="text" class="custom-input rule-item-input" id="rule4" value="플라스틱 빨대처럼 작은 플라스틱은 일반쓰레기로 버린다.">
           </div>
         </div>
       </div>
 
       <div class="action-bar">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(3)">⬅ 이전 단계</button>
+        <button class="btn-nav-large btn-prev" onclick="goToStep(3)">⬅ 이전으로</button>
         <button class="btn-nav-large btn-next" onclick="submitStep4()">
-          규약 확정 & 5단계: 최종 성찰 및 서약 ➔
+          약속 확정하고 실천 다짐하러 가기 ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== 5단계: 성찰 (6분) ==================== -->
+    <!-- ==================== 5: 성찰 & 서약 ==================== -->
     <section class="stage-card" id="stage-5">
-      <div class="stage-badge">5단계 • 성찰 (6분)</div>
-      <h2 class="stage-title">🏅 탐정단 성찰 & 마스터 실천 서약서</h2>
+      <div class="stage-badge">🏅 마스터 탐정 실천 서약</div>
+      <h2 class="stage-title">🏅 탐정단 생각 정리 & 실천 서약서</h2>
       <div class="stage-goal">
-        <strong>[성찰 및 수료]</strong> 6차시 동안 배운 내용을 바탕으로 <strong>AI와 사람의 역할</strong>을 되돌아보고, <strong>나의 실천 인증 사진</strong>과 함께 최종 마스터 서약서를 완성하세요!
+        그동안 배운 내용을 되돌아보며 <strong>AI와 사람의 역할</strong>을 정리하고, <strong>내 인증 사진</strong>과 함께 최종 마스터 서약서를 완성하세요!
       </div>
 
       <!-- 성찰 3대 기록 -->
       <div style="background:#ffffff; border:2px solid #e2e8f0; border-radius:20px; padding:20px; margin-bottom:24px;">
-        <h3 style="font-size:17px; font-weight:800; color:#14532d; margin-bottom:12px;">🌱 6차시 활동 성찰 기록</h3>
+        <h3 style="font-size:17px; font-weight:800; color:#14532d; margin-bottom:12px;">🌱 나의 탐정 생각 정리</h3>
         <div style="display:flex; flex-direction:column; gap:12px;">
           <div class="input-field-group">
             <label>🤖 1. AI가 가장 잘한 일 (AI의 장점):</label>
-            <input type="text" id="refAiGood" class="custom-input" value="깨끗한 캔, 페트병, 종이의 특징을 빠르게 감지하여 분류함">
+            <input type="text" id="refAiGood" class="custom-input" value="깨끗한 캔, 페트병, 종이의 특징을 빠르고 정확하게 찾아내어 분류함">
           </div>
           <div class="input-field-group">
-            <label>⚠️ 2. AI가 틀렸던 일 (AI의 한계):</label>
-            <input type="text" id="refAiLimit" class="custom-input" value="오염 물질이나 물체의 크기, 내부 이물질 조건을 스스로 파악하지 못함">
+            <label>⚠️ 2. AI가 실수했던 일 (AI의 한계):</label>
+            <input type="text" id="refAiLimit" class="custom-input" value="빨간 양념 오염이나 작은 크기, 내부에 든 이물질을 스스로 구분하지 못함">
           </div>
           <div class="input-field-group">
             <label>👤 3. 사람이 끝까지 책임져야 할 일:</label>
-            <input type="text" id="refHumanMust" class="custom-input" value="올바른 분리배출 규칙을 세우고, 이물질 세척과 라벨 제거를 직접 실천하기">
+            <input type="text" id="refHumanMust" class="custom-input" value="올바른 분리배출 약속을 세우고, 이물질을 씻고 라벨을 떼는 일을 직접 실천하기">
           </div>
         </div>
       </div>
@@ -1047,7 +1047,7 @@
           <img id="pledgePhotoImg" src="https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?w=500&auto=format&fit=crop&q=80" alt="실천 인증 사진">
         </div>
         <button class="btn-photo-upload" style="max-width:220px; margin-bottom:14px;" onclick="triggerFileInput('inputPledgePhoto')">
-          📷 내 얼굴 / 실천 사진 등록
+          📷 내 얼굴 / 실천 사진 올리기
         </button>
         <input type="file" accept="image/*" class="hidden-file-input" id="inputPledgePhoto" onchange="handleImageUpload(event, null, 'quest6_pledge_photo')">
 
