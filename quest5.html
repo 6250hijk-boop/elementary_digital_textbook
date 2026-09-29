@@ -416,7 +416,7 @@
       border-color: #2563eb;
     }
 
-    /* 2단계 준비 스타일 (10개 쓰레기 목록 & 기준표) */
+    /* 2단계 & 3단계 공통 스타일 */
     .standard-ref-box {
       background: #eff6ff;
       border: 2px solid #bfdbfe;
@@ -563,236 +563,199 @@
       }
     }
 
-    /* 3단계 탐구 스타일 (AI 실시간 판별 실험실) */
-    .lab-dashboard {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-
-    @media (max-width: 820px) {
-      .lab-dashboard {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .ai-scanner-panel {
-      background: #0f172a;
-      border-radius: 20px;
-      padding: 20px;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.2);
-    }
-
-    .scanner-header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-
-    .scanner-live-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      font-weight: 900;
-      color: #34d399;
-      background: rgba(52, 211, 153, 0.15);
-      padding: 4px 10px;
-      border-radius: 20px;
-    }
-
-    .live-dot {
-      width: 8px;
-      height: 8px;
-      background: #34d399;
-      border-radius: 50%;
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(1.3); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    .camera-viewport {
-      width: 100%;
-      height: 240px;
-      background: #1e293b;
-      border: 2px dashed #475569;
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .scan-laser {
-      display: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: linear-gradient(90deg, transparent, #38bdf8, transparent);
-      box-shadow: 0 0 12px #38bdf8;
-      animation: scanAnim 2s infinite linear;
-    }
-
-    @keyframes scanAnim {
-      0% { top: 0; }
-      50% { top: 100%; }
-      100% { top: 0; }
-    }
-
-    .camera-viewport.scanning .scan-laser {
-      display: block;
-    }
-
-    .scan-current-icon {
-      font-size: 72px;
-      margin-bottom: 8px;
-      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
-    }
-
-    .scan-current-name {
-      font-family: 'Jua', sans-serif;
-      font-size: 20px;
-      color: #f8fafc;
-    }
-
-    .scanner-controls {
-      width: 100%;
-      display: flex;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .btn-scan-action {
-      flex: 1;
-      padding: 12px;
-      border-radius: 12px;
-      font-family: 'Jua', sans-serif;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .btn-scan-one {
-      background: #2563eb;
-      color: white;
-    }
-
-    .btn-scan-all {
-      background: #7c3aed;
-      color: white;
-    }
-
-    .btn-scan-action:hover {
-      opacity: 0.9;
-      transform: translateY(-2px);
-    }
-
-    /* AI 판별 결과 리포트 테이블 */
-    .lab-results-panel {
+    /* 3단계: AI 판별 결과 기록 & 실시간 대조 스타일 */
+    .lab-summary-bar {
       background: #ffffff;
       border: 2px solid #e2e8f0;
-      border-radius: 20px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .results-header-summary {
+      border-radius: 18px;
+      padding: 16px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #f1f5f9;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
 
-    .stat-badge {
-      font-size: 13px;
+    .lab-stats-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      font-size: 14px;
       font-weight: 800;
-      padding: 6px 12px;
+      padding: 6px 14px;
       border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .stat-match {
+    .stat-pill.total {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+    }
+
+    .stat-pill.match {
       background: #ecfdf5;
       color: #065f46;
       border: 1px solid #a7f3d0;
     }
 
-    .stat-mismatch {
+    .stat-pill.mismatch {
       background: #fef2f2;
       color: #991b1b;
       border: 1px solid #fecaca;
     }
 
-    .results-table-wrap {
-      flex: 1;
-      max-height: 310px;
-      overflow-y: auto;
+    .btn-auto-fill {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-family: 'Jua', sans-serif;
+      font-size: 15px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
     }
 
-    .compare-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
+    .btn-auto-fill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
     }
 
-    .compare-table th {
-      background: #f8fafc;
-      color: #475569;
+    /* 3단계 대조 카드 */
+    .compare-item-card {
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1.6fr 0.9fr;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.2s;
+    }
+
+    .compare-item-card.is-matched {
+      border-color: #a7f3d0;
+      background: #fafdfb;
+    }
+
+    .compare-item-card.is-mismatched {
+      border-color: #fecaca;
+      background: #fffafa;
+    }
+
+    .human-judged-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 8px 12px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .human-judged-label {
+      font-size: 11px;
       font-weight: 800;
-      padding: 8px 6px;
-      text-align: center;
-      position: sticky;
-      top: 0;
-      border-bottom: 2px solid #e2e8f0;
+      color: #2563eb;
+      margin-bottom: 2px;
     }
 
-    .compare-table td {
-      padding: 8px 6px;
-      text-align: center;
-      border-bottom: 1px solid #f1f5f9;
-      font-weight: 600;
+    .human-judged-val {
+      font-size: 14px;
+      font-weight: 800;
+      color: #1e3a8a;
     }
 
-    .badge-result-ok {
+    .ai-select-col {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .ai-select-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: #7c3aed;
+    }
+
+    .ai-btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .btn-ai-choice {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1.5px solid #cbd5e1;
+      background: #f8fafc;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-ai-choice:hover {
+      background: #e2e8f0;
+    }
+
+    .btn-ai-choice.selected {
+      background: #7c3aed;
+      border-color: #7c3aed;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(124, 58, 237, 0.3);
+    }
+
+    .match-status-col {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .badge-match-result {
+      padding: 8px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 900;
+      text-align: center;
+      width: 100%;
+    }
+
+    .badge-match-result.match {
       background: #ecfdf5;
       color: #059669;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-weight: 900;
-      font-size: 12px;
+      border: 1.5px solid #10b981;
     }
 
-    .badge-result-fail {
+    .badge-match-result.mismatch {
       background: #fef2f2;
       color: #dc2626;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-weight: 900;
-      font-size: 12px;
+      border: 1.5px solid #ef4444;
+    }
+
+    .badge-match-result.waiting {
+      background: #f1f5f9;
+      color: #94a3b8;
+      border: 1.5px solid #cbd5e1;
+    }
+
+    @media (max-width: 860px) {
+      .compare-item-card {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
     }
 
     /* 4단계 생각·발표 스타일 */
@@ -1131,69 +1094,32 @@
     <!-- ==================== 3단계: 탐구 (15분) ==================== -->
     <section class="stage-card" id="stage-3">
       <div class="stage-badge">3단계 • 탐구 (15분)</div>
-      <h2 class="stage-title">🤖 AI 실시간 촬영·판별 & 비교 기록</h2>
+      <h2 class="stage-title">🤖 AI 판별 결과 기록 & 사람 기준표 비교</h2>
       <div class="stage-goal">
-        <strong>[탐구 활동]</strong> 학습된 AI 비전 모델로 10가지 쓰레기를 하나씩 <strong>촬영·판별</strong>하고, AI 예측 결과와 사람 기준표를 비교하여 <strong>맞힘(⭕) / 틀림(❌)</strong>을 기록하세요!
+        <strong>[탐구 활동]</strong> 학습된 AI로 교실 쓰레기 10개를 하나씩 테스트하고, <strong>AI가 판별한 결과</strong>를 기록하여 <strong>사람 기준표와 맞힘(⭕) / 틀림(❌)</strong>을 비교해보세요!
       </div>
 
-      <div class="lab-dashboard">
-        <!-- 왼쪽: AI 스캐너 뷰어 -->
-        <div class="ai-scanner-panel">
-          <div class="scanner-header">
-            <span style="font-family:'Jua',sans-serif; font-size:16px; color:#cbd5e1;">📷 AI 비전 스캐너</span>
-            <div class="scanner-live-badge"><span class="live-dot"></span> AI MODEL READY</div>
-          </div>
-
-          <div class="camera-viewport" id="cameraViewport">
-            <div class="scan-laser"></div>
-            <div class="scan-current-icon" id="scanCurrentIcon">🥫</div>
-            <div class="scan-current-name" id="scanCurrentName">#1 찌그러진 알루미늄 캔</div>
-            <div style="font-size:13px; color:#94a3b8; margin-top:4px;" id="scanStatusText">스캔 버튼을 눌러 AI 판별을 시작하세요.</div>
-          </div>
-
-          <div class="scanner-controls">
-            <button class="btn-scan-action btn-scan-one" onclick="scanCurrentSingleItem()">
-              🔍 현재 품목 판별
-            </button>
-            <button class="btn-scan-action btn-scan-all" onclick="scanAllItemsFast()">
-              ⚡ 10개 일괄 자동 스캔
-            </button>
-          </div>
+      <!-- 상단 요약 통계 & 추천 데이터 자동 채우기 바 -->
+      <div class="lab-summary-bar">
+        <div class="lab-stats-group">
+          <div class="stat-pill total" id="labTotalProgress">기록 완료: 0/10</div>
+          <div class="stat-pill match" id="labMatchStat">⭕ 맞힘: 0개</div>
+          <div class="stat-pill mismatch" id="labMismatchStat">❌ 틀림: 0개</div>
         </div>
+        <button class="btn-auto-fill" onclick="fillDefaultAiExperimentData()">
+          ⚡ 표준 실험 데이터 채우기
+        </button>
+      </div>
 
-        <!-- 오른쪽: 비교 결과 테이블 -->
-        <div class="lab-results-panel">
-          <div class="results-header-summary">
-            <span style="font-family:'Jua',sans-serif; font-size:17px; color:#0f172a;">📊 판별 비교 결과표</span>
-            <div style="display:flex; gap:6px;">
-              <span class="stat-badge stat-match" id="matchCountBadge">⭕ 일치: 0개</span>
-              <span class="stat-badge stat-mismatch" id="mismatchCountBadge">❌ 불일치: 0개</span>
-            </div>
-          </div>
-
-          <div class="results-table-wrap">
-            <table class="compare-table">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>품목</th>
-                  <th>사람 판단</th>
-                  <th>AI 예측 (신뢰도)</th>
-                  <th>결과</th>
-                </tr>
-              </thead>
-              <tbody id="compareTableBody">
-                <!-- JS 동적 생성 -->
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <!-- 10개 비교 목록 리스트 -->
+      <div class="items-record-grid" id="compareItemsList">
+        <!-- JS 동적 생성 -->
       </div>
 
       <div class="action-bar">
         <button class="btn-nav-large btn-prev" onclick="goToStep(2)">⬅ 이전 단계</button>
         <button class="btn-nav-large btn-next" onclick="submitStep3()">
-          판별 결과 확정 & 4단계: 생각·발표 ➔
+          비교 완료 & 4단계: 생각·발표 ➔
         </button>
       </div>
     </section>
@@ -1336,18 +1262,18 @@
       console.warn("Firebase offline or local mode:", e);
     }
 
-    // 10가지 교실 쓰레기 데이터
+    // 10가지 교실 쓰레기 데이터 & 기본 AI 실험값
     const WASTE_ITEMS = [
-      { id: 1, name: "찌그러진 알루미늄 캔", icon: "🥫", desc: "음료를 마신 후 발로 밟아 찌그러진 캔", correctStd: "캔류", aiPred: "캔류 (94%)", aiCategory: "캔류", aiCorrect: true },
-      { id: 2, name: "라벨 붙은 투명 페트병", icon: "🧴", desc: "비닐 라벨 스티커가 붙어있는 생수병", correctStd: "플라스틱", aiPred: "플라스틱 (89%)", aiCategory: "플라스틱", aiCorrect: true },
-      { id: 3, name: "양념 묻은 컵라면 용기", icon: "🍜", desc: "빨간 떡볶이 국물이 물들어 지워지지 않음", correctStd: "일반쓰레기", aiPred: "스티로폼/플라스틱 (88%)", aiCategory: "플라스틱", aiCorrect: false },
-      { id: 4, name: "깨끗하게 접은 신문지", icon: "📰", desc: "이물질 없이 반듯하게 모은 신문지", correctStd: "종이류", aiPred: "종이류 (97%)", aiCategory: "종이류", aiCorrect: true },
-      { id: 5, name: "씻어 말린 종이 우유팩", icon: "🥛", desc: "물로 헹군 뒤 펼쳐서 건조한 우유팩", correctStd: "종이류", aiPred: "종이류 (92%)", aiCategory: "종이류", aiCorrect: true },
-      { id: 6, name: "일회용 플라스틱 빨대", icon: "🥤", desc: "음료수에 꽂아 쓰던 얇은 빨대", correctStd: "일반쓰레기", aiPred: "플라스틱 (91%)", aiCategory: "플라스틱", aiCorrect: false },
-      { id: 7, name: "사용한 나무 젓가락", icon: "🥢", desc: "컵라면을 먹을 때 쓴 나무 젓가락", correctStd: "일반쓰레기", aiPred: "일반쓰레기 (85%)", aiCategory: "일반쓰레기", aiCorrect: true },
-      { id: 8, name: "은박 과자 비닐봉지", icon: "🍿", desc: "내부에 은박 코팅이 된 과자 포장재", correctStd: "비닐류", aiPred: "비닐류 (93%)", aiCategory: "비닐류", aiCorrect: true },
-      { id: 9, name: "뚜껑 분리한 유리 주스병", icon: "🍶", desc: "내용물을 비우고 뚜껑을 따로 뺀 유리병", correctStd: "유리", aiPred: "유리 (96%)", aiCategory: "유리", aiCorrect: true },
-      { id: 10, name: "송장 붙은 택배 박스", icon: "📦", desc: "비닐 테이프와 송장이 붙은 골판지 박스", correctStd: "종이류", aiPred: "종이류 (87%)", aiCategory: "종이류", aiCorrect: true }
+      { id: 1, name: "찌그러진 알루미늄 캔", icon: "🥫", desc: "음료를 마신 후 발로 밟아 찌그러진 캔", defaultStd: "캔류", defaultAi: "캔류" },
+      { id: 2, name: "라벨 붙은 투명 페트병", icon: "🧴", desc: "비닐 라벨 스티커가 붙어있는 생수병", defaultStd: "플라스틱", defaultAi: "플라스틱" },
+      { id: 3, name: "양념 묻은 컵라면 용기", icon: "🍜", desc: "빨간 떡볶이 국물이 물들어 지워지지 않음", defaultStd: "일반쓰레기", defaultAi: "플라스틱" }, // AI 오류
+      { id: 4, name: "깨끗하게 접은 신문지", icon: "📰", desc: "이물질 없이 반듯하게 모은 신문지", defaultStd: "종이류", defaultAi: "종이류" },
+      { id: 5, name: "씻어 말린 종이 우유팩", icon: "🥛", desc: "물로 헹군 뒤 펼쳐서 건조한 우유팩", defaultStd: "종이류", defaultAi: "종이류" },
+      { id: 6, name: "일회용 플라스틱 빨대", icon: "🥤", desc: "음료수에 꽂아 쓰던 얇은 빨대", defaultStd: "일반쓰레기", defaultAi: "플라스틱" }, // AI 오류
+      { id: 7, name: "사용한 나무 젓가락", icon: "🥢", desc: "컵라면을 먹을 때 쓴 나무 젓가락", defaultStd: "일반쓰레기", defaultAi: "일반쓰레기" },
+      { id: 8, name: "은박 과자 비닐봉지", icon: "🍿", desc: "내부에 은박 코팅이 된 과자 포장재", defaultStd: "비닐류", defaultAi: "비닐류" },
+      { id: 9, name: "뚜껑 분리한 유리 주스병", icon: "🍶", desc: "내용물을 비우고 뚜껑을 따로 뺀 유리병", defaultStd: "유리", defaultAi: "유리" },
+      { id: 10, name: "송장 붙은 택배 박스", icon: "📦", desc: "비닐 테이프와 송장이 붙은 골판지 박스", defaultStd: "종이류", defaultAi: "종이류" }
     ];
 
     const CATEGORIES = ["종이류", "플라스틱", "비닐류", "캔류", "유리", "일반쓰레기"];
@@ -1359,8 +1285,7 @@
       step: 1,
       predictedCount: parseInt(localStorage.getItem("quest5_pred_count") || "8"),
       humanJudgments: JSON.parse(localStorage.getItem("quest5_human_judgments") || "{}"),
-      aiScanned: JSON.parse(localStorage.getItem("quest5_ai_scanned") || "{}"),
-      currentIndex: 0,
+      aiJudgments: JSON.parse(localStorage.getItem("quest5_ai_judgments") || "{}"),
       quizAnswers: {},
       feedComments: JSON.parse(localStorage.getItem("quest5_feed_comments") || "[]")
     };
@@ -1387,11 +1312,6 @@
         osc.frequency.exponentialRampToValueAtTime(900, now + 0.08);
         gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
         osc.start(now); osc.stop(now + 0.08);
-      } else if (type === 'scan') {
-        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, now);
-        osc.frequency.linearRampToValueAtTime(800, now + 0.25);
-        gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
-        osc.start(now); osc.stop(now + 0.25);
       } else if (type === 'correct') {
         osc.type = 'triangle'; osc.frequency.setValueAtTime(523.25, now);
         osc.frequency.setValueAtTime(659.25, now + 0.1);
@@ -1523,102 +1443,103 @@
       window.addScore(20);
       showToast('🎉 2단계 사람 판단 기록 완료! (⭐ +20 EXP)');
       goToStep(3);
-      updateLabView();
+      renderStep3CompareList();
     };
 
-    // 3단계 AI 탐지 실험실 뷰 & 비교 테이블
-    function updateLabView() {
-      const item = WASTE_ITEMS[window.state.currentIndex];
-      const iconEl = document.getElementById('scanCurrentIcon');
-      const nameEl = document.getElementById('scanCurrentName');
-      if (iconEl && item) iconEl.textContent = item.icon;
-      if (nameEl && item) nameEl.textContent = `#${item.id} ${item.name}`;
-
-      renderCompareTable();
-    }
-
-    window.scanCurrentSingleItem = function() {
-      const item = WASTE_ITEMS[window.state.currentIndex];
-      if (!item) return;
-
-      window.playSound('scan');
-      const vp = document.getElementById('cameraViewport');
-      const statusText = document.getElementById('scanStatusText');
-      vp.classList.add('scanning');
-      statusText.textContent = '⚡ 신경망 비전 모델 분석 중...';
-
-      setTimeout(() => {
-        vp.classList.remove('scanning');
-        window.state.aiScanned[item.id] = true;
-        localStorage.setItem("quest5_ai_scanned", JSON.stringify(window.state.aiScanned));
-        window.playSound(item.aiCorrect ? 'correct' : 'wrong');
-        statusText.textContent = `결과: ${item.aiPred} | 사람: ${window.state.humanJudgments[item.id] || item.correctStd}`;
-        
-        window.state.currentIndex = (window.state.currentIndex + 1) % WASTE_ITEMS.length;
-        updateLabView();
-        showToast(`'${item.name}' 판별 완료!`);
-      }, 700);
-    };
-
-    window.scanAllItemsFast = function() {
-      window.playSound('scan');
-      const vp = document.getElementById('cameraViewport');
-      vp.classList.add('scanning');
-      document.getElementById('scanStatusText').textContent = '⚡ 10개 품목 고속 AI 일괄 분석 중...';
-
-      setTimeout(() => {
-        vp.classList.remove('scanning');
-        WASTE_ITEMS.forEach(it => { window.state.aiScanned[it.id] = true; });
-        localStorage.setItem("quest5_ai_scanned", JSON.stringify(window.state.aiScanned));
-        window.playSound('fanfare');
-        document.getElementById('scanStatusText').textContent = '🎉 10개 전 품목 AI 판별 완료!';
-        renderCompareTable();
-        showToast('🎉 10개 품목 AI 판별 및 비교가 완료되었습니다!');
-      }, 1000);
-    };
-
-    function renderCompareTable() {
-      const tbody = document.getElementById('compareTableBody');
-      if (!tbody) return;
-      tbody.innerHTML = '';
+    // 3단계: AI 판별 결과 기록 & 비교 목록 렌더링
+    function renderStep3CompareList() {
+      const container = document.getElementById('compareItemsList');
+      if (!container) return;
+      container.innerHTML = '';
 
       let matchCount = 0;
       let mismatchCount = 0;
+      let recordedCount = 0;
 
       WASTE_ITEMS.forEach(item => {
-        const isScanned = !!window.state.aiScanned[item.id];
-        const humanChoice = window.state.humanJudgments[item.id] || item.correctStd;
-        const isMatch = isScanned ? (item.aiCorrect) : null;
+        const humanChoice = window.state.humanJudgments[item.id] || item.defaultStd;
+        const aiChoice = window.state.aiJudgments[item.id] || '';
+        const isRecorded = !!aiChoice;
+        let isMatch = false;
 
-        if (isScanned) {
+        if (isRecorded) {
+          recordedCount++;
+          isMatch = (humanChoice === aiChoice);
           if (isMatch) matchCount++;
           else mismatchCount++;
         }
 
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>#${item.id}</td>
-          <td style="text-align:left; font-weight:800;">${item.icon} ${item.name}</td>
-          <td><span style="color:#2563eb; font-weight:800;">${humanChoice}</span></td>
-          <td>${isScanned ? `<span style="color:#7c3aed; font-weight:800;">${item.aiPred}</span>` : '<span style="color:#94a3b8;">대기 중</span>'}</td>
-          <td>${isScanned ? (isMatch ? '<span class="badge-result-ok">⭕ 일치</span>' : '<span class="badge-result-fail">❌ 불일치</span>') : '-'}</td>
+        const card = document.createElement('div');
+        card.className = `compare-item-card ${isRecorded ? (isMatch ? 'is-matched' : 'is-mismatched') : ''}`;
+        card.innerHTML = `
+          <div class="item-info-col">
+            <div class="item-idx-badge">#${item.id}</div>
+            <div class="item-icon-box">${item.icon}</div>
+            <div class="item-text-wrap">
+              <h4>${item.name}</h4>
+              <p>${item.desc}</p>
+            </div>
+          </div>
+
+          <div class="human-judged-box">
+            <div class="human-judged-label">👤 사람 기준 판단</div>
+            <div class="human-judged-val">${humanChoice}</div>
+          </div>
+
+          <div class="ai-select-col">
+            <span class="ai-select-label">🤖 AI 판별 결과 선택:</span>
+            <div class="ai-btn-group">
+              ${CATEGORIES.map(cat => `
+                <button class="btn-ai-choice ${aiChoice === cat ? 'selected' : ''}" onclick="selectAiCategory(${item.id}, '${cat}')">
+                  ${cat}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="match-status-col">
+            ${isRecorded ? (
+              isMatch 
+                ? '<div class="badge-match-result match">⭕ 일치 (정답)</div>'
+                : '<div class="badge-match-result mismatch">❌ 불일치 (오류)</div>'
+            ) : '<div class="badge-match-result waiting">선택 대기</div>'}
+          </div>
         `;
-        tbody.appendChild(tr);
+        container.appendChild(card);
       });
 
-      document.getElementById('matchCountBadge').textContent = `⭕ 일치(성공): ${matchCount}개`;
-      document.getElementById('mismatchCountBadge').textContent = `❌ 불일치(오류): ${mismatchCount}개`;
+      // 통계 바 갱신
+      document.getElementById('labTotalProgress').textContent = `기록 완료: ${recordedCount}/10`;
+      document.getElementById('labMatchStat').textContent = `⭕ 맞힘: ${matchCount}개`;
+      document.getElementById('labMismatchStat').textContent = `❌ 틀림: ${mismatchCount}개`;
     }
 
+    window.selectAiCategory = function(itemId, cat) {
+      window.playSound('click');
+      window.state.aiJudgments[itemId] = cat;
+      localStorage.setItem("quest5_ai_judgments", JSON.stringify(window.state.aiJudgments));
+      renderStep3CompareList();
+    };
+
+    window.fillDefaultAiExperimentData = function() {
+      window.playSound('correct');
+      WASTE_ITEMS.forEach(it => {
+        window.state.aiJudgments[it.id] = it.defaultAi;
+      });
+      localStorage.setItem("quest5_ai_judgments", JSON.stringify(window.state.aiJudgments));
+      renderStep3CompareList();
+      showToast('⚡ 표준 AI 실험 데이터가 적용되었습니다! (8개 일치, 2개 불일치)');
+    };
+
     window.submitStep3 = function() {
-      const scannedCount = Object.keys(window.state.aiScanned).length;
-      if (scannedCount < 10) {
-        showToast(`10개 품목을 모두 AI로 판별해주세요! (${scannedCount}/10 완료)`);
+      const recordedCount = Object.keys(window.state.aiJudgments).length;
+      if (recordedCount < 10) {
+        showToast(`10개 품목의 AI 판별 결과를 모두 기록해주세요! (${recordedCount}/10 완료)`);
         return;
       }
       window.playSound('correct');
       window.addScore(20);
-      showToast('🎉 3단계 AI 판별 탐구 완료! (⭐ +20 EXP)');
+      showToast('🎉 3단계 AI 판별 비교 완료! (⭐ +20 EXP)');
       goToStep(4);
     };
 
@@ -1717,6 +1638,7 @@
             studentName,
             predictedCount: window.state.predictedCount,
             humanJudgments: window.state.humanJudgments,
+            aiJudgments: window.state.aiJudgments,
             score: window.state.score,
             createdAt: serverTimestamp()
           });
@@ -1736,7 +1658,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
       renderStep2Items();
-      updateLabView();
+      renderStep3CompareList();
       renderCommunityFeed();
     });
   </script>
