@@ -181,281 +181,240 @@
       margin-bottom: 20px;
     }
 
-    /* 초안 작성 폼 */
-    .form-group {
-      margin-bottom: 20px;
+    /* 1단계 2개 입력칸 전용 스타일 */
+    .form-group-item {
+      background: #F9FBE7;
+      border: 2px solid #C8E6C9;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 18px;
     }
 
-    .form-label {
-      display: block;
+    .form-label-num {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       font-family: 'Jua', sans-serif;
-      font-size: 18px;
+      font-size: 19px;
       color: #1B5E20;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
-    .input-title {
+    .badge-num-circle {
+      width: 28px;
+      height: 28px;
+      background: #2E7D32;
+      color: white;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
+
+    .rule-textarea {
       width: 100%;
       padding: 14px 18px;
       border: 2px solid #C8E6C9;
       border-radius: 14px;
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 600;
       color: #1B5E20;
       outline: none;
-      background: #FAFAFA;
+      background: #FFFFFF;
       transition: all 0.2s;
+      resize: vertical;
+      line-height: 1.6;
     }
 
-    .input-title:focus {
+    .rule-textarea:focus {
       border-color: var(--primary);
-      background: #FFFFFF;
       box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.12);
     }
 
-    .rule-item-box {
-      background: #FFFDE7;
-      border: 2px dashed #FBC02D;
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 14px;
+    /* 내가 작성한 글 미리보기 카드 */
+    .my-post-preview-card {
+      background: #E1F5FE;
+      border: 2px solid #81D4FA;
+      border-radius: 18px;
+      padding: 22px;
+      margin-top: 24px;
+      position: relative;
+      animation: fadeIn 0.3s ease-out;
     }
 
-    .rule-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .rule-row:last-child {
-      margin-bottom: 0;
-    }
-
-    .rule-num {
-      width: 32px;
-      height: 32px;
-      background: #F57F17;
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Jua', sans-serif;
-      font-size: 15px;
-      flex-shrink: 0;
-    }
-
-    .rule-input {
-      flex: 1;
-      padding: 12px 14px;
-      border: 2px solid #FFE082;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 600;
-      outline: none;
-      background: white;
-    }
-
-    .rule-input:focus {
-      border-color: #F57F17;
-    }
-
-    /* 실시간 모둠 공유 게시판 */
-    .board-header {
+    .my-preview-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #B3E5FC;
     }
 
-    .live-status-pill {
-      background: #E8F5E9;
-      border: 1px solid #81C784;
-      color: #2E7D32;
+    .my-preview-tag {
+      background: #0288D1;
+      color: white;
+      font-family: 'Jua', sans-serif;
+      font-size: 14px;
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+
+    .btn-delete-my-post {
+      background: #FFEBEE;
+      color: #C62828;
+      border: 1.5px solid #FFCDD2;
+      padding: 6px 14px;
+      border-radius: 10px;
       font-size: 13px;
       font-weight: 800;
-      padding: 6px 12px;
-      border-radius: 20px;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
+      transition: all 0.2s;
     }
 
-    .pulse-green {
-      width: 8px;
-      height: 8px;
-      background: #2E7D32;
-      border-radius: 50%;
-      animation: pulse 1.5s infinite;
+    .btn-delete-my-post:hover {
+      background: #FFCDD2;
     }
 
-    @keyframes pulse {
-      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.7); }
-      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(46, 125, 50, 0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 125, 50, 0); }
+    .my-rule-display-box {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid #B3E5FC;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #01579B;
     }
 
+    .my-reason-display-box {
+      background: #F1F8E9;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 15px;
+      color: #2E7D32;
+      border: 1px solid #C8E6C9;
+      line-height: 1.5;
+    }
+
+    /* 2단계 실시간 게시판 카드 */
     .rules-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 16px;
+      gap: 18px;
       margin-bottom: 24px;
     }
 
-    .draft-card {
+    .board-feed-card {
       background: #FFFFFF;
       border: 2px solid #C8E6C9;
       border-radius: 18px;
-      padding: 20px;
+      padding: 22px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       transition: all 0.2s;
-      position: relative;
     }
 
-    .draft-card:hover {
+    .board-feed-card:hover {
       border-color: var(--primary);
       box-shadow: 0 8px 20px rgba(46, 125, 50, 0.15);
     }
 
-    .draft-card.my-post {
+    .board-feed-card.my-card {
       border-color: #81D4FA;
-      background: #F0F9FF;
+      background: #F9FDFF;
     }
 
-    .draft-top {
+    .card-top-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
       border-bottom: 1px dashed #E0E0E0;
     }
 
-    .draft-author-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .author-badge {
+    .author-badge-pill {
       background: #E8F5E9;
       color: #2E7D32;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 10px;
+      padding: 4px 12px;
+      border-radius: 12px;
       border: 1px solid #A5D6A7;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
-    .draft-time {
+    .card-time-text {
       font-size: 12px;
       color: #90A4AE;
     }
 
-    .draft-title {
-      font-family: 'Jua', sans-serif;
-      font-size: 20px;
-      color: #1B5E20;
-      margin-bottom: 10px;
-    }
-
-    .draft-articles {
-      background: white;
-      border-radius: 12px;
-      padding: 14px;
-      border: 1px solid #E8F5E9;
-      margin-bottom: 12px;
-      font-size: 15px;
-      line-height: 1.6;
-      color: #37474F;
-    }
-
-    .draft-articles li {
-      margin-left: 20px;
-      margin-bottom: 6px;
-    }
-
-    .draft-reason {
-      font-size: 14px;
-      color: #558B2F;
+    .card-rule-content {
       background: #F1F8E9;
-      padding: 8px 12px;
-      border-radius: 10px;
-      margin-bottom: 14px;
+      border-radius: 14px;
+      padding: 16px;
+      border: 1px solid #DCEDC8;
+      margin-bottom: 12px;
+      font-size: 16px;
+      line-height: 1.7;
+      color: #1B5E20;
     }
 
-    .draft-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .btn-like-post {
-      background: #FFF3E0;
-      border: 1px solid #FFE0B2;
-      color: #E65100;
+    .card-reason-content {
+      background: #FFFDE7;
+      border-radius: 12px;
+      padding: 12px 16px;
       font-size: 14px;
-      font-weight: 800;
-      padding: 6px 14px;
-      border-radius: 12px;
-      cursor: pointer;
-      display: inline-flex;
+      color: #5D4037;
+      border: 1px solid #FFF59D;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    /* 댓글 영역 */
+    .comments-section {
+      background: #FAFAFA;
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid #EEEEEE;
+    }
+
+    .comments-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 14px;
+      color: #546E7A;
+      margin-bottom: 8px;
+      display: flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
+      gap: 4px;
     }
 
-    .btn-like-post:hover {
-      background: #FFE0B2;
-      transform: scale(1.03);
-    }
-
-    .btn-adopt-post {
-      background: #E8F5E9;
-      border: 1px solid #81C784;
-      color: #2E7D32;
-      font-size: 13px;
-      font-weight: 800;
-      padding: 6px 14px;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-adopt-post:hover {
-      background: #C8E6C9;
-    }
-
-    /* 댓글 섹션 */
-    .comments-area {
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px solid #F1F8E9;
-    }
-
-    .comment-list {
+    .comments-list {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
-    .comment-bubble {
-      background: #F8FAF9;
-      border-radius: 8px;
-      padding: 6px 10px;
+    .comment-item-pill {
+      background: white;
+      border-radius: 10px;
+      padding: 8px 12px;
       font-size: 13px;
-      color: #455A64;
+      color: #37474F;
+      border: 1px solid #E0E0E0;
+      line-height: 1.4;
     }
 
-    .comment-bubble strong {
+    .comment-item-pill strong {
       color: #2E7D32;
-      margin-right: 4px;
+      margin-right: 6px;
     }
 
     .comment-input-row {
@@ -463,24 +422,30 @@
       gap: 6px;
     }
 
-    .comment-input {
+    .comment-input-field {
       flex: 1;
-      padding: 8px 12px;
-      border: 1px solid #CFD8DC;
-      border-radius: 8px;
+      padding: 8px 14px;
+      border: 1.5px solid #CFD8DC;
+      border-radius: 10px;
       font-size: 13px;
       outline: none;
+      background: white;
     }
 
-    .comment-submit-btn {
-      padding: 6px 12px;
+    .comment-input-field:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-submit-comment {
+      padding: 8px 16px;
       background: #2E7D32;
       color: white;
       border: none;
-      border-radius: 8px;
-      font-size: 12px;
+      border-radius: 10px;
+      font-size: 13px;
       font-weight: bold;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     /* 하단 버튼 */
@@ -563,60 +528,65 @@
   </header>
 
   <nav class="step-nav">
-    <button class="step-btn active" id="sbtn1" onclick="goToStep(1)"><span>1단계</span> ✍️ 초안 작성 & 게시</button>
-    <button class="step-btn" id="sbtn2" onclick="goToStep(2)"><span>2단계</span> 👥 모둠 실시간 공유판</button>
+    <button class="step-btn active" id="sbtn1" onclick="goToStep(1)"><span>1단계</span> ✍️ 실천 규약 내용 작성하기</button>
+    <button class="step-btn" id="sbtn2" onclick="goToStep(2)"><span>2단계</span> 👥 모둠 실시간 공유 게시판</button>
   </nav>
 
   <div class="main-container">
 
-    <!-- 1단계: 실천 규약 초안 작성 -->
+    <!-- 1단계: 실천 규약 내용 작성하기 (2개 입력칸) -->
     <div class="card step-content active" id="step1">
-      <h2 class="card-title">✍️ 1단계: 우리 모둠 실천 규약 초안 작성하기</h2>
-      <p class="card-desc">우리 학교와 교실에서 지켜야 할 자원순환 실천 규약 초안을 작성하여 모둠 공유 게시판에 등록해보세요!</p>
+      <h2 class="card-title">✍️ 1단계: 실천 규약 내용 작성하기</h2>
+      <p class="card-desc">우리 학교와 교실에서 꼭 지켜야 할 자원순환 실천 규약과 그 이유를 작성하고 게시해보세요!</p>
 
-      <div class="form-group">
-        <label class="form-label" for="ruleTitleInput">🏷️ 실천 규약 제목</label>
-        <input type="text" id="ruleTitleInput" class="input-title" placeholder="예: 우리 반 깨끗한 페트병 100% 자원순환 규약" maxlength="40">
+      <!-- 1. 규약 입력칸 -->
+      <div class="form-group-item">
+        <label class="form-label-num" for="inputRuleContent">
+          <span class="badge-num-circle">1</span>
+          <span>규약:</span>
+        </label>
+        <textarea id="inputRuleContent" class="rule-textarea" rows="3" placeholder="예: 음료수 투명 페트병은 비닐 라벨을 100% 떼어내고 물로 깨끗이 헹군 뒤 납작하게 압축하여 버린다."></textarea>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">📜 핵심 실천 약속 3가지 조항</label>
-        
-        <div class="rule-item-box">
-          <div class="rule-row">
-            <div class="rule-num">1</div>
-            <input type="text" id="ruleArticle1" class="rule-input" placeholder="제1조: (예) 음료 페트병은 라벨을 뜯고 납작하게 눌러서 뚜껑을 닫아 버립니다.">
+      <!-- 2. 제시한 이유 입력칸 -->
+      <div class="form-group-item">
+        <label class="form-label-num" for="inputRuleReason">
+          <span class="badge-num-circle">2</span>
+          <span>제시한 이유:</span>
+        </label>
+        <textarea id="inputRuleReason" class="rule-textarea" rows="3" placeholder="예: 라벨이 붙어있거나 이물질이 남아있으면 고품질 재활용이 불가능해지고, 교실 AI 탐정도 정확히 구분할 수 없기 때문입니다."></textarea>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;background:#E8F5E9;padding:12px 16px;border-radius:12px;margin-bottom:14px;">
+        <span style="font-size:14px;color:#2E7D32;font-weight:bold;">작성 탐정: <span id="dispWriterName" style="color:#1B5E20;">-</span></span>
+        <span style="font-size:14px;color:#558B2F;">소속 모둠: <span id="dispWriterTeam" style="font-weight:bold;">-</span></span>
+      </div>
+
+      <button class="btn btn-post" id="btnPublishDraft" onclick="publishRuleDraft()">📢 게시하기 (+50 EXP)</button>
+
+      <!-- 내가 작성하여 저장된 글 실시간 표시 영역 (삭제 가능) -->
+      <div id="mySavedPostArea" style="display:none;">
+        <div class="my-post-preview-card">
+          <div class="my-preview-header">
+            <span class="my-preview-tag">📌 내가 방금 게시한 실천 규약</span>
+            <button class="btn-delete-my-post" onclick="deleteMyPost()">🗑️ 내 글 삭제하기</button>
           </div>
-          <div class="rule-row">
-            <div class="rule-num">2</div>
-            <input type="text" id="ruleArticle2" class="rule-input" placeholder="제2조: (예) 우유팩과 주스 캔은 물로 깨끗이 헹군 뒤 전용 수거함에 넣습니다.">
-          </div>
-          <div class="rule-row">
-            <div class="rule-num">3</div>
-            <input type="text" id="ruleArticle3" class="rule-input" placeholder="제3조: (예) 친구가 분리배출을 어려워하면 친절하게 설명해줍니다.">
-          </div>
+
+          <div style="font-size:14px;font-weight:bold;color:#0277BD;margin-bottom:6px;">1. 규약 내용:</div>
+          <div class="my-rule-display-box" id="myRuleDisplay">-</div>
+
+          <div style="font-size:14px;font-weight:bold;color:#2E7D32;margin-bottom:6px;">2. 제시한 이유:</div>
+          <div class="my-reason-display-box" id="myReasonDisplay">-</div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="ruleReasonInput">🌱 이 규약을 실천해야 하는 이유 (모둠 의견)</label>
-        <textarea id="ruleReasonInput" class="input-title" rows="3" placeholder="예: 깨끗하게 헹구고 분리해야 고품질 재활용이 가능하고, 교실 AI 탐정도 정확하게 인식할 수 있기 때문입니다."></textarea>
-      </div>
-
-      <div style="display:flex;justify-content:space-between;align-items:center;background:#E8F5E9;padding:12px 16px;border-radius:12px;margin-bottom:16px;">
-        <span style="font-size:14px;color:#2E7D32;font-weight:bold;">작성 탐정: <span id="dispWriterName" style="color:#1B5E20;">-</span></span>
-        <span style="font-size:14px;color:#558B2F;">소속: <span id="dispWriterTeam" style="font-weight:bold;">-</span></span>
-      </div>
-
-      <button class="btn btn-post" id="btnPublishDraft" onclick="publishRuleDraft()">📢 우리 모둠 게시판에 초안 게시하기 (+50 EXP)</button>
-
       <div class="action-btn-area">
         <div></div>
-        <button class="btn btn-next" onclick="goToStep(2)">모둠 공유판 보기 ➡️</button>
+        <button class="btn btn-next" onclick="goToStep(2)">2단계: 친구들 규약 보러가기 ➡️</button>
       </div>
     </div>
 
-    <!-- 2단계: 모둠 실시간 공유 게시판 -->
+    <!-- 2단계: 모둠 실시간 공유 게시판 & 댓글 달기 -->
     <div class="card step-content" id="step2">
       <div class="board-header">
         <h2 class="card-title" style="margin-bottom:0;">👥 2단계: 우리 모둠 실시간 규약 공유 게시판</h2>
@@ -625,27 +595,27 @@
           <span id="liveTeamCount">우리 모둠 실시간 동기화 중</span>
         </div>
       </div>
-      <p class="card-desc">같은 모둠 친구들이 등록한 실천 규약 초안을 실시간으로 확인하고, 서로 공감(👍)을 누르거나 피드백 댓글을 남겨보세요!</p>
+      <p class="card-desc">친구들이 올린 실천 규약과 제시한 이유를 확인하고, 자유롭게 응원 및 보완 댓글을 남겨보세요!</p>
 
-      <!-- 실시간 초안 목록 -->
+      <!-- 모둠원들의 규약 목록 피드 -->
       <div class="rules-grid" id="sharedRulesGrid">
         <div style="text-align:center;padding:40px 20px;color:#78909C;">
           <div style="font-size:36px;margin-bottom:10px;">⏳</div>
-          <p>모둠원들의 실천 규약 초안을 불러오는 중입니다...</p>
+          <p>모둠원들의 실천 규약을 불러오는 중입니다...</p>
         </div>
       </div>
 
-      <!-- 최종 완료 & 의회 상정 배너 -->
+      <!-- 최종 완료 & QUEST 8 이동 배너 -->
       <div style="background:linear-gradient(135deg, #FFF9C4, #FFF59D);border:3px solid #FBC02D;border-radius:18px;padding:24px;text-align:center;margin-top:20px;">
-        <h3 style="font-family:'Jua';color:#E65100;font-size:22px;margin-bottom:8px;">🎉 모둠 실천 규약 초안 공유 완료!</h3>
-        <p style="color:#5D4037;font-size:15px;margin-bottom:16px;">모둠원들과 의견을 나눈 후, 마지막 관문인 <strong>[QUEST 8: 우리학교 자원 순환 규약 의회]</strong>에 초안을 상정하세요!</p>
+        <h3 style="font-family:'Jua';color:#E65100;font-size:22px;margin-bottom:8px;">🎉 모둠 실천 규약 공유 완료!</h3>
+        <p style="color:#5D4037;font-size:15px;margin-bottom:16px;">모둠원들과 의견을 나눈 후, 마지막 관문인 <strong>[QUEST 8: 우리학교 자원 순환 규약 의회]</strong>로 이동하여 스티커 투표를 진행하세요!</p>
         <button class="btn" style="background:linear-gradient(135deg,#2E7D32,#1B5E20);color:white;font-size:18px;padding:16px 32px;" onclick="finishQuest7()">
-          🏛️ QUEST 7 완료 & 의회로 초안 상정하기 (+100 EXP) 🚀
+          🏛️ QUEST 7 완료 & 우리학교 의회로 이동하기 (+100 EXP) 🚀
         </button>
       </div>
 
       <div class="action-btn-area">
-        <button class="btn btn-prev" onclick="goToStep(1)">⬅️ 초안 수정하기</button>
+        <button class="btn btn-prev" onclick="goToStep(1)">⬅️ 내 규약 수정하러 가기</button>
         <div></div>
       </div>
     </div>
@@ -654,7 +624,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, doc, updateDoc, increment, onSnapshot, query, where, orderBy, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, increment, onSnapshot, query, where, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
@@ -676,6 +646,7 @@
     window.state = {
       score: parseInt(localStorage.getItem("elementary_score") || "0", 10),
       currentStep: 1,
+      myPostDocId: localStorage.getItem("quest7_my_post_doc_id") || null,
       drafts: []
     };
 
@@ -702,55 +673,94 @@
       if (scoreDisp) scoreDisp.textContent = `⭐ ${window.state.score} EXP`;
     };
 
-    // 실천 규약 초안 게시 (Firestore 등록)
+    // 1단계: 실천 규약 게시 (Firestore 저장 & 즉시 표시)
     window.publishRuleDraft = async function() {
-      const title = document.getElementById("ruleTitleInput").value.trim();
-      const a1 = document.getElementById("ruleArticle1").value.trim();
-      const a2 = document.getElementById("ruleArticle2").value.trim();
-      const a3 = document.getElementById("ruleArticle3").value.trim();
-      const reason = document.getElementById("ruleReasonInput").value.trim();
+      const ruleContent = document.getElementById("inputRuleContent").value.trim();
+      const reason = document.getElementById("inputRuleReason").value.trim();
 
-      if (!title) {
-        return alert("규약 제목을 입력해주세요!");
+      if (!ruleContent) {
+        return alert("1. 규약 내용을 입력해주세요!");
       }
-      if (!a1 || !a2 || !a3) {
-        return alert("핵심 실천 약속 3가지 조항을 모두 작성해주세요!");
+      if (!reason) {
+        return alert("2. 제시한 이유를 입력해주세요!");
       }
 
       const btn = document.getElementById("btnPublishDraft");
       btn.disabled = true;
-      btn.textContent = "⏳ 모둠 게시판에 게시 중...";
+      btn.textContent = "⏳ 게시판에 저장 중...";
 
       try {
-        await addDoc(collection(db, "quest7_rules"), {
+        const docRef = await addDoc(collection(db, "quest7_rules"), {
           teamCode: teamCode,
           studentId: studentId,
           authorName: studentName,
-          title: title,
-          articles: [a1, a2, a3],
-          reason: reason || "깨끗한 지구와 교실 자원순환을 위해 실천합니다.",
-          likes: 1,
-          comments: [
-            { author: "🤖 모둠 AI", text: "정말 훌륭한 실천 규약 초안이에요! 함께 지켜봐요!" }
-          ],
+          ruleContent: ruleContent,
+          reason: reason,
+          likes: 0,
+          comments: [],
           createdAt: serverTimestamp()
         });
 
+        window.state.myPostDocId = docRef.id;
+        localStorage.setItem("quest7_my_post_doc_id", docRef.id);
+        localStorage.setItem("quest7_my_rule_content", ruleContent);
+        localStorage.setItem("quest7_my_rule_reason", reason);
+
         window.addScore(50);
-        alert("🎉 우리 모둠 실천 규약 초안이 성공적으로 게시되었습니다! (+50 EXP)\n모둠 공유 게시판으로 이동합니다.");
+        showMyPostPreview(ruleContent, reason);
+
+        alert("🎉 나의 실천 규약이 성공적으로 게시되었습니다! (+50 EXP)");
         btn.disabled = false;
-        btn.textContent = "📢 우리 모둠 게시판에 초안 게시하기 (+50 EXP)";
-        goToStep(2);
+        btn.textContent = "📢 다시 게시하기";
 
       } catch (e) {
         console.error(e);
         alert("게시 중 오류가 발생했습니다: " + e.message);
         btn.disabled = false;
-        btn.textContent = "📢 우리 모둠 게시판에 초안 게시하기 (+50 EXP)";
+        btn.textContent = "📢 게시하기 (+50 EXP)";
       }
     };
 
-    // 실시간 모둠 규약 피드 구독
+    // 내가 작성한 글 미리보기 렌더링
+    function showMyPostPreview(rule, reason) {
+      const previewArea = document.getElementById("mySavedPostArea");
+      const ruleDisp = document.getElementById("myRuleDisplay");
+      const reasonDisp = document.getElementById("myReasonDisplay");
+
+      if (previewArea && rule && reason) {
+        ruleDisp.textContent = rule;
+        reasonDisp.textContent = reason;
+        previewArea.style.display = "block";
+      }
+    }
+
+    // 내 글 삭제 기능
+    window.deleteMyPost = async function() {
+      if (!confirm("정말 내가 작성한 실천 규약을 삭제할까요?")) return;
+
+      try {
+        if (window.state.myPostDocId) {
+          await deleteDoc(doc(db, "quest7_rules", window.state.myPostDocId));
+        }
+
+        window.state.myPostDocId = null;
+        localStorage.removeItem("quest7_my_post_doc_id");
+        localStorage.removeItem("quest7_my_rule_content");
+        localStorage.removeItem("quest7_my_rule_reason");
+
+        document.getElementById("mySavedPostArea").style.display = "none";
+        document.getElementById("inputRuleContent").value = "";
+        document.getElementById("inputRuleReason").value = "";
+
+        alert("✅ 작성한 실천 규약이 삭제되었습니다. 새로운 규약을 다시 작성할 수 있습니다.");
+
+      } catch(e) {
+        console.error(e);
+        alert("삭제 중 오류가 발생했습니다: " + e.message);
+      }
+    };
+
+    // 2단계: 실시간 모둠 규약 피드 구독
     function subscribeTeamRules() {
       const q = query(
         collection(db, "quest7_rules"),
@@ -771,12 +781,20 @@
         });
 
         renderSharedRules(list);
+
+        // 내가 쓴 글이 목록에 있으면 1단계 미리보기도 갱신
+        const myDoc = list.find(it => it.studentId === studentId);
+        if (myDoc) {
+          window.state.myPostDocId = myDoc.id;
+          localStorage.setItem("quest7_my_post_doc_id", myDoc.id);
+          showMyPostPreview(myDoc.ruleContent || (myDoc.articles ? myDoc.articles.join(', ') : ''), myDoc.reason || '');
+        }
       }, (error) => {
         console.warn("Realtime listener error:", error);
       });
     }
 
-    // 공유 게시판 렌더링
+    // 2단계 공유 게시판 렌더링
     function renderSharedRules(list) {
       const grid = document.getElementById("sharedRulesGrid");
       if (!grid) return;
@@ -785,8 +803,8 @@
         grid.innerHTML = `
           <div style="text-align:center;padding:40px 20px;background:#F9FBE7;border-radius:16px;border:2px dashed #C8E6C9;">
             <div style="font-size:36px;margin-bottom:8px;">📝</div>
-            <h4 style="font-family:'Jua';color:#2E7D32;font-size:18px;margin-bottom:6px;">아직 등록된 실천 규약 초안이 없습니다.</h4>
-            <p style="font-size:14px;color:#558B2F;">1단계에서 우리 모둠의 첫 번째 실천 규약 초안을 작성해보세요!</p>
+            <h4 style="font-family:'Jua';color:#2E7D32;font-size:18px;margin-bottom:6px;">아직 등록된 실천 규약이 없습니다.</h4>
+            <p style="font-size:14px;color:#558B2F;">1단계에서 우리 모둠의 첫 번째 실천 규약을 작성해보세요!</p>
           </div>
         `;
         return;
@@ -796,51 +814,40 @@
         const isMyPost = item.studentId === studentId;
         const timeStr = item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '방금 전';
 
-        const commentsHtml = (item.comments || []).map(c => `
-          <div class="comment-bubble">
-            <strong>${c.author}:</strong> ${c.text}
+        const ruleText = item.ruleContent || (item.articles ? item.articles.join(', ') : item.title || '실천 규약');
+        const reasonText = item.reason || '자원순환 실천을 위해 작성되었습니다.';
+
+        const commentsHtml = (item.comments && item.comments.length) ? item.comments.map(c => `
+          <div class="comment-item-pill">
+            <strong>👤 ${c.author}:</strong> ${c.text}
           </div>
-        `).join('');
+        `).join('') : '<div style="font-size:12px;color:#90A4AE;padding:4px;">아직 댓글이 없습니다. 첫 번째 댓글을 남겨보세요!</div>';
 
         return `
-          <div class="draft-card ${isMyPost ? 'my-post' : ''}">
-            <div class="draft-top">
-              <div class="draft-author-info">
-                <span class="author-badge">🕵️ ${item.authorName || '모둠원'}</span>
-                ${isMyPost ? '<span style="font-size:12px;font-weight:bold;color:#0288D1;">(내가 작성)</span>' : ''}
+          <div class="board-feed-card ${isMyPost ? 'my-card' : ''}">
+            <div class="card-top-row">
+              <div class="author-badge-pill">
+                <span>🕵️ ${item.authorName || '모둠원'}</span>
+                ${isMyPost ? '<span style="font-size:12px;color:#0288D1;font-weight:900;">(내가 작성)</span>' : ''}
               </div>
-              <span class="draft-time">🕒 ${timeStr}</span>
+              <span class="card-time-text">🕒 ${timeStr}</span>
             </div>
 
-            <h3 class="draft-title">${item.title}</h3>
+            <div style="font-family:'Jua';font-size:16px;color:#1B5E20;margin-bottom:6px;">📜 1. 규약:</div>
+            <div class="card-rule-content">${ruleText}</div>
 
-            <div class="draft-articles">
-              <ol>
-                ${(item.articles || []).map(a => `<li>${a}</li>`).join('')}
-              </ol>
-            </div>
-
-            <div class="draft-reason">
-              💡 <strong>실천 이유:</strong> ${item.reason}
-            </div>
-
-            <div class="draft-actions">
-              <button class="btn-like-post" onclick="likePost('${item.id}')">
-                👍 공감해요 ${item.likes || 0}
-              </button>
-              <button class="btn-adopt-post" onclick="adoptPost('${item.id}', '${item.title.replace(/'/g, "\\'")}')">
-                ⭐ 모둠 대표 규약으로 채택
-              </button>
-            </div>
+            <div style="font-family:'Jua';font-size:15px;color:#5D4037;margin-bottom:6px;">💡 2. 제시한 이유:</div>
+            <div class="card-reason-content">${reasonText}</div>
 
             <!-- 댓글 영역 -->
-            <div class="comments-area">
-              <div class="comment-list">
+            <div class="comments-section">
+              <div class="comments-title">💬 친구들의 댓글 & 의견:</div>
+              <div class="comments-list" id="commentsList_${item.id}">
                 ${commentsHtml}
               </div>
               <div class="comment-input-row">
-                <input type="text" id="commentInput_${item.id}" class="comment-input" placeholder="칭찬이나 보완 의견을 남겨보세요..." onkeypress="if(event.key==='Enter') addComment('${item.id}')">
-                <button class="comment-submit-btn" onclick="addComment('${item.id}')">등록</button>
+                <input type="text" id="commentInput_${item.id}" class="comment-input-field" placeholder="칭찬이나 보완 의견을 댓글로 달아보세요..." onkeypress="if(event.key==='Enter') addCommentToPost('${item.id}')">
+                <button class="btn-submit-comment" onclick="addCommentToPost('${item.id}')">등록</button>
               </div>
             </div>
           </div>
@@ -848,19 +855,8 @@
       }).join('');
     }
 
-    // 공감 누르기
-    window.likePost = async function(postId) {
-      try {
-        await updateDoc(doc(db, "quest7_rules", postId), {
-          likes: increment(1)
-        });
-      } catch (e) {
-        console.warn("Like error:", e);
-      }
-    };
-
     // 댓글 등록
-    window.addComment = async function(postId) {
+    window.addCommentToPost = async function(postId) {
       const input = document.getElementById(`commentInput_${postId}`);
       if (!input) return;
       const text = input.value.trim();
@@ -877,13 +873,6 @@
       } catch (e) {
         console.warn("Comment error:", e);
       }
-    };
-
-    // 대표 규약 채택
-    window.adoptPost = function(postId, postTitle) {
-      localStorage.setItem("quest7_adopted_rule_id", postId);
-      localStorage.setItem("quest7_adopted_rule_title", postTitle);
-      alert(`⭐ [${postTitle}]\n우리 모둠의 대표 실천 규약으로 선정되었습니다! 의회에서 공식 상정합니다.`);
     };
 
     // QUEST 7 최종 완료
@@ -912,7 +901,16 @@
       document.getElementById('dispWriterTeam').textContent = teamCode;
       document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
 
-      // 실시간 모둠 규약 구독 시작
+      // 저장된 내 글이 있으면 표시
+      const savedRule = localStorage.getItem("quest7_my_rule_content");
+      const savedReason = localStorage.getItem("quest7_my_rule_reason");
+      if (savedRule && savedReason) {
+        document.getElementById("inputRuleContent").value = savedRule;
+        document.getElementById("inputRuleReason").value = savedReason;
+        showMyPostPreview(savedRule, savedReason);
+      }
+
+      // 실시간 모둠 피드 구독 시작
       subscribeTeamRules();
     });
   </script>

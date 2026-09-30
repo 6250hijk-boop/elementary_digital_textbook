@@ -762,11 +762,14 @@
 
         snap.forEach(d => {
           const data = d.data();
+          const mainRule = data.ruleContent || data.title || "실천 규약";
+          const ruleList = data.articles && data.articles.length ? data.articles : [mainRule];
+
           window.state.candidates.push({
             id: d.id,
-            title: data.title || "모둠 실천 규약",
+            title: mainRule,
             authorName: data.authorName || "모둠 탐정",
-            articles: data.articles || [],
+            articles: ruleList,
             reason: data.reason || "",
             stickers: data.stickers || [],
             voteCount: (data.stickers ? data.stickers.length : (data.likes || 0))
@@ -818,12 +821,14 @@
             <span style="font-size:13px;font-weight:bold;color:#2E7D32;background:#E8F5E9;padding:4px 10px;border-radius:12px;">우리 모둠 발의 안건</span>
           </div>
           <h3 class="candidate-title">${c.title}</h3>
-          <div class="candidate-articles">
-            <ol>
-              ${c.articles.map(a => `<li>${a}</li>`).join('')}
-            </ol>
-          </div>
-          ${c.reason ? `<div class="candidate-reason">💡 <strong>제안 이유:</strong> ${c.reason}</div>` : ''}
+          ${c.articles.length > 1 ? `
+            <div class="candidate-articles">
+              <ol>
+                ${c.articles.map(a => `<li>${a}</li>`).join('')}
+              </ol>
+            </div>
+          ` : ''}
+          ${c.reason ? `<div class="candidate-reason">💡 <strong>제시한 이유:</strong> ${c.reason}</div>` : ''}
         </div>
       `).join('');
     }
