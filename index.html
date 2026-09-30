@@ -188,7 +188,7 @@
     <div class="icon">💡</div>
     <div>
       <strong>아이디와 비밀번호 없이 모둠 코드로 입장!</strong><br>
-      같은 모둠 코드를 입력하면 대기방에서 친구들과 모여 함께 탐정을 시작합니다.
+      선생님이 알려주신 모둠 코드를 입력하면 친구들과 같은 대기방으로 입장합니다.
     </div>
   </div>
 
@@ -210,10 +210,6 @@
   </div>
 
   <button class="btn-start" id="loginBtn">🚀 모둠 대기방 입장하기</button>
-
-  <div class="admin-hint">
-    👑 <b>선생님/관리자 모드:</b> 모둠 코드에 <b>admin</b>을 입력하고 입장하세요.
-  </div>
 </div>
 
 <script type="module">
@@ -276,45 +272,35 @@
     }
 
     loginBtn.disabled = true;
-    loginBtn.textContent = "🚀 대기방 입장 중...";
+    loginBtn.textContent = "🔍 모둠 코드 확인 중...";
 
     try {
       const teamCode = rawTeamCode;
       const studentId = `${teamCode}_${studentName}`;
 
-      // 1. 모둠(Team) 문서 생성 또는 갱신 (팀원 추가)
+      // 1. 교사가 생성한 모둠(Team) 존재 여부 검증
       const teamRef = doc(db, "teams", teamCode);
       const teamSnap = await getDoc(teamRef);
 
-      let teamScore = 10;
-      let questsDone = 0;
-      let badge = "신입 탐정단";
-      let aiName = "에코봇";
-
-      if (teamSnap.exists()) {
-        const ex = teamSnap.data();
-        teamScore = ex.score !== undefined ? ex.score : 10;
-        questsDone = ex.questsDone !== undefined ? ex.questsDone : 0;
-        badge = ex.badge || "신입 탐정단";
-        aiName = ex.aiName || "에코봇";
-
-        await setDoc(teamRef, {
-          teamCode: teamCode,
-          members: arrayUnion(studentName),
-          lastActive: serverTimestamp()
-        }, { merge: true });
-      } else {
-        await setDoc(teamRef, {
-          teamCode: teamCode,
-          aiName: "에코봇",
-          members: [studentName],
-          score: 10,
-          badge: "신입 탐정단",
-          questsDone: 0,
-          createdAt: serverTimestamp(),
-          lastActive: serverTimestamp()
-        });
+      if (!teamSnap.exists()) {
+        alert(`⚠️ '${teamCode}'(은)는 아직 생성되지 않은 모둠 코드입니다!\n선생님이 개설해주신 올바른 모둠 코드를 입력해주세요.`);
+        loginBtn.disabled = false;
+        loginBtn.textContent = "🚀 모둠 대기방 입장하기";
+        return;
       }
+
+      const ex = teamSnap.data();
+      const teamScore = ex.score !== undefined ? ex.score : 10;
+      const questsDone = ex.questsDone !== undefined ? ex.questsDone : 0;
+      const badge = ex.badge || "신입 탐정단";
+      const aiName = ex.aiName || "에코봇";
+
+      // 팀원 목록에 학생 추가
+      await setDoc(teamRef, {
+        teamCode: teamCode,
+        members: arrayUnion(studentName),
+        lastActive: serverTimestamp()
+      }, { merge: true });
 
       // 2. 학생(Student) 개별 데이터 기록
       const studentRef = doc(db, "students", studentId);
