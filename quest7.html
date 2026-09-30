@@ -108,23 +108,23 @@
       border-bottom: 2px solid #E8F5E9;
       display: flex;
       justify-content: center;
-      gap: 8px;
+      gap: 12px;
       padding: 12px 16px;
       overflow-x: auto;
     }
 
     .step-btn {
-      padding: 8px 18px;
+      padding: 10px 24px;
       border-radius: 20px;
       border: 2px solid #C8E6C9;
       background: #F1F8E9;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--primary-dark);
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       white-space: nowrap;
       transition: all 0.2s;
     }
@@ -181,58 +181,15 @@
       margin-bottom: 20px;
     }
 
-    /* AI 도우미 추천 키워드 */
-    .ai-helper-box {
-      background: #F1F8E9;
-      border: 2px solid #C8E6C9;
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 22px;
-    }
-
-    .ai-helper-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-family: 'Jua', sans-serif;
-      font-size: 17px;
-      color: #1B5E20;
-      margin-bottom: 12px;
-    }
-
-    .chip-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .rule-chip {
-      background: white;
-      border: 2px solid #A5D6A7;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 700;
-      color: #2E7D32;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .rule-chip:hover {
-      background: #E8F5E9;
-      border-color: #2E7D32;
-      transform: translateY(-2px);
-    }
-
     /* 초안 작성 폼 */
     .form-group {
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
 
     .form-label {
       display: block;
       font-family: 'Jua', sans-serif;
-      font-size: 17px;
+      font-size: 18px;
       color: #1B5E20;
       margin-bottom: 8px;
     }
@@ -268,7 +225,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .rule-row:last-child {
@@ -606,51 +563,16 @@
   </header>
 
   <nav class="step-nav">
-    <button class="step-btn active" id="sbtn1" onclick="goToStep(1)"><span>1단계</span> 💡 아이디어 도우미</button>
-    <button class="step-btn" id="sbtn2" onclick="goToStep(2)"><span>2단계</span> ✍️ 초안 작성 & 게시</button>
-    <button class="step-btn" id="sbtn3" onclick="goToStep(3)"><span>3단계</span> 👥 모둠 실시간 공유판</button>
+    <button class="step-btn active" id="sbtn1" onclick="goToStep(1)"><span>1단계</span> ✍️ 초안 작성 & 게시</button>
+    <button class="step-btn" id="sbtn2" onclick="goToStep(2)"><span>2단계</span> 👥 모둠 실시간 공유판</button>
   </nav>
 
   <div class="main-container">
 
-    <!-- 1단계: 아이디어 탐색 & 추천 키워드 -->
+    <!-- 1단계: 실천 규약 초안 작성 -->
     <div class="card step-content active" id="step1">
-      <h2 class="card-title">💡 1단계: 실천 규약 주제 고르기 & AI 추천 조항</h2>
-      <p class="card-desc">우리가 QUEST 1부터 6까지 조사하고 실험한 내용을 바탕으로, 학교와 교실에서 꼭 지켜야 할 자원순환 규약 아이디어를 모아보세요!</p>
-
-      <div class="ai-helper-box">
-        <div class="ai-helper-header">
-          <span>🤖</span>
-          <span>모둠 AI 파트너 추천 실천 조항 (클릭하면 2단계 초안에 쏙 들어가요!)</span>
-        </div>
-        <div class="chip-container">
-          <div class="rule-chip" onclick="applySuggestion('투명 페트병은 비닐 라벨을 완전히 떼어내고 압축하여 배출한다.')">✨ 페트병 라벨 떼기 & 압축</div>
-          <div class="rule-chip" onclick="applySuggestion('우유팩과 음료수 캔은 물로 깨끗이 헹군 뒤 말려서 버린다.')">🥛 우유팩/캔 물로 헹구기</div>
-          <div class="rule-chip" onclick="applySuggestion('음식물이나 양념이 묻어 지워지지 않는 용기는 일반쓰레기로 분류한다.')">🍕 오염된 용기 올바른 배출</div>
-          <div class="rule-chip" onclick="applySuggestion('AI 스캐너가 헷갈려하는 복합 재질 쓰레기는 인간 탐정이 직접 확인한다.')">🕵️‍♂️ AI와 협력 검수하기</div>
-          <div class="rule-chip" onclick="applySuggestion('분리배출함 주변을 매일 1회 확인하고 바른 분리배출을 돕는다.')">🧹 우리 교실 분리수거 지킴이</div>
-        </div>
-      </div>
-
-      <div style="background:#FFF9C4;border:2px solid #FBC02D;border-radius:16px;padding:18px;margin-bottom:18px;">
-        <h4 style="font-family:'Jua';color:#E65100;margin-bottom:6px;">📌 좋은 실천 규약을 만드는 방법!</h4>
-        <ul style="margin-left:20px;font-size:15px;color:#5D4037;line-height:1.6;">
-          <li>누구나 쉽게 이해하고 바로 실천할 수 있는 <strong>구체적인 행동</strong>으로 적어요.</li>
-          <li>왜 이 규칙을 지켜야 하는지 <strong>이유(환경 보호, AI 정확도 향상 등)</strong>를 함께 생각해요.</li>
-          <li>모둠원 친구들과 서로 쓴 초안을 비교하며 <strong>가장 좋은 약속</strong>을 완성해요!</li>
-        </ul>
-      </div>
-
-      <div class="action-btn-area">
-        <div></div>
-        <button class="btn btn-next" onclick="goToStep(2)">다음 단계 (초안 작성하기) ➡️</button>
-      </div>
-    </div>
-
-    <!-- 2단계: 실천 규약 초안 작성 -->
-    <div class="card step-content" id="step2">
-      <h2 class="card-title">✍️ 2단계: 우리 모둠 실천 규약 초안 작성하기</h2>
-      <p class="card-desc">우리 모둠만의 멋진 실천 규약 초안을 작성하여 모둠 공유 게시판에 등록해보세요!</p>
+      <h2 class="card-title">✍️ 1단계: 우리 모둠 실천 규약 초안 작성하기</h2>
+      <p class="card-desc">우리 학교와 교실에서 지켜야 할 자원순환 실천 규약 초안을 작성하여 모둠 공유 게시판에 등록해보세요!</p>
 
       <div class="form-group">
         <label class="form-label" for="ruleTitleInput">🏷️ 실천 규약 제목</label>
@@ -671,7 +593,7 @@
           </div>
           <div class="rule-row">
             <div class="rule-num">3</div>
-            <input type="text" id="ruleArticle3" class="rule-input" placeholder="제3조: (예) 친구가 분리배출을 어려워하면 AI 탐정처럼 친절하게 설명해줍니다.">
+            <input type="text" id="ruleArticle3" class="rule-input" placeholder="제3조: (예) 친구가 분리배출을 어려워하면 친절하게 설명해줍니다.">
           </div>
         </div>
       </div>
@@ -689,15 +611,15 @@
       <button class="btn btn-post" id="btnPublishDraft" onclick="publishRuleDraft()">📢 우리 모둠 게시판에 초안 게시하기 (+50 EXP)</button>
 
       <div class="action-btn-area">
-        <button class="btn btn-prev" onclick="goToStep(1)">⬅️ 이전 단계</button>
-        <button class="btn btn-next" onclick="goToStep(3)">모둠 공유판 보기 ➡️</button>
+        <div></div>
+        <button class="btn btn-next" onclick="goToStep(2)">모둠 공유판 보기 ➡️</button>
       </div>
     </div>
 
-    <!-- 3단계: 모둠 실시간 공유 게시판 -->
-    <div class="card step-content" id="step3">
+    <!-- 2단계: 모둠 실시간 공유 게시판 -->
+    <div class="card step-content" id="step2">
       <div class="board-header">
-        <h2 class="card-title" style="margin-bottom:0;">👥 3단계: 우리 모둠 실시간 규약 공유 게시판</h2>
+        <h2 class="card-title" style="margin-bottom:0;">👥 2단계: 우리 모둠 실시간 규약 공유 게시판</h2>
         <div class="live-status-pill">
           <div class="pulse-green"></div>
           <span id="liveTeamCount">우리 모둠 실시간 동기화 중</span>
@@ -723,7 +645,7 @@
       </div>
 
       <div class="action-btn-area">
-        <button class="btn btn-prev" onclick="goToStep(2)">⬅️ 초안 수정하기</button>
+        <button class="btn btn-prev" onclick="goToStep(1)">⬅️ 초안 수정하기</button>
         <div></div>
       </div>
     </div>
@@ -760,7 +682,7 @@
     // 단계 이동
     window.goToStep = function(stepNum) {
       window.state.currentStep = stepNum;
-      for (let i = 1; i <= 3; i++) {
+      for (let i = 1; i <= 2; i++) {
         const stepEl = document.getElementById(`step${i}`);
         const btnEl = document.getElementById(`sbtn${i}`);
         if (stepEl) stepEl.classList.toggle('active', i === stepNum);
@@ -770,21 +692,6 @@
         }
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    // AI 추천 칩 클릭 시 초안에 채우기
-    window.applySuggestion = function(text) {
-      const a1 = document.getElementById("ruleArticle1");
-      const a2 = document.getElementById("ruleArticle2");
-      const a3 = document.getElementById("ruleArticle3");
-
-      if (!a1.value) a1.value = text;
-      else if (!a2.value) a2.value = text;
-      else if (!a3.value) a3.value = text;
-      else a3.value = text;
-
-      alert("✨ 추천 실천 조항이 2단계 초안 입력창에 추가되었습니다!");
-      goToStep(2);
     };
 
     // 점수 증가
@@ -833,7 +740,7 @@
         alert("🎉 우리 모둠 실천 규약 초안이 성공적으로 게시되었습니다! (+50 EXP)\n모둠 공유 게시판으로 이동합니다.");
         btn.disabled = false;
         btn.textContent = "📢 우리 모둠 게시판에 초안 게시하기 (+50 EXP)";
-        goToStep(3);
+        goToStep(2);
 
       } catch (e) {
         console.error(e);
@@ -879,7 +786,7 @@
           <div style="text-align:center;padding:40px 20px;background:#F9FBE7;border-radius:16px;border:2px dashed #C8E6C9;">
             <div style="font-size:36px;margin-bottom:8px;">📝</div>
             <h4 style="font-family:'Jua';color:#2E7D32;font-size:18px;margin-bottom:6px;">아직 등록된 실천 규약 초안이 없습니다.</h4>
-            <p style="font-size:14px;color:#558B2F;">2단계에서 우리 모둠의 첫 번째 실천 규약 초안을 작성해보세요!</p>
+            <p style="font-size:14px;color:#558B2F;">1단계에서 우리 모둠의 첫 번째 실천 규약 초안을 작성해보세요!</p>
           </div>
         `;
         return;
