@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <title>5차시: AI 탐지 실험실 (AI vs 사람 판별) | AI 자원순환 탐정단</title>
+  <title>QUEST 5: 교실쓰레기 AI 탐정단 | AI 자원순환 탐정단</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -20,27 +18,20 @@
       --primary-light: #eff6ff;
       --accent-gold: #f59e0b;
       --accent-green: #10b981;
-      --accent-red: #ef4444;
       --accent-purple: #8b5cf6;
       --text-main: #1e293b;
       --text-sub: #475569;
       --text-muted: #64748b;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
 
     body {
       font-family: 'Pretendard', sans-serif;
       background-color: var(--bg-light);
       background-image: 
         radial-gradient(circle at 10% 10%, rgba(37, 99, 235, 0.08), transparent 35%),
-        radial-gradient(circle at 90% 90%, rgba(139, 92, 246, 0.08), transparent 35%),
+        radial-gradient(circle at 90% 90%, rgba(245, 158, 11, 0.08), transparent 35%),
         linear-gradient(to bottom, #f0f7ff, #e8f2fc);
       color: var(--text-main);
       min-height: 100vh;
@@ -50,7 +41,6 @@
       overflow-x: hidden;
     }
 
-    /* 상단 앱 헤더 */
     .app-header {
       width: 100%;
       position: sticky;
@@ -66,11 +56,7 @@
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
 
     .btn-back {
       background: #f1f5f9;
@@ -87,35 +73,12 @@
       transition: all 0.2s;
     }
 
-    .btn-back:hover {
-      background: #e2e8f0;
-      transform: translateY(-1px);
-    }
+    .btn-back:hover { background: #e2e8f0; transform: translateY(-1px); }
 
-    .header-title-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .badge-chasi {
-      font-size: 12px;
-      font-weight: 800;
-      color: #7c3aed;
-      letter-spacing: 0.5px;
-    }
-
-    .header-main-title {
-      font-family: 'Jua', sans-serif;
-      font-size: 22px;
-      color: #1e3a8a;
-      letter-spacing: -0.3px;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .header-title-group { display: flex; flex-direction: column; }
+    .badge-chasi { font-size: 12px; font-weight: 800; color: #2563eb; letter-spacing: 0.5px; }
+    .header-main-title { font-family: 'Jua', sans-serif; font-size: 22px; color: #1e3a8a; }
+    .header-right { display: flex; align-items: center; gap: 10px; }
 
     .score-badge {
       background: #fffbeb;
@@ -128,19 +91,10 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
     }
 
-    .btn-sound {
-      background: #f8fafc;
-      border: 2px solid #e2e8f0;
-      padding: 8px 12px;
-      border-radius: 12px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+    .btn-sound { background: #f8fafc; border: 2px solid #e2e8f0; padding: 8px 12px; border-radius: 12px; font-size: 16px; cursor: pointer; }
 
-    /* 메인 컨테이너 */
     .app-container {
       width: 100%;
       max-width: 980px;
@@ -150,15 +104,14 @@
       gap: 20px;
     }
 
-    /* 5단계 네비게이터 */
     .step-tracker {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
       background: #ffffff;
       padding: 12px;
       border-radius: 18px;
-      border: 2px solid #e2e8f0;
+      border: 2px solid #bfdbfe;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
     }
 
@@ -176,40 +129,12 @@
       text-align: center;
     }
 
-    .step-item.active {
-      background: #eff6ff;
-      border-color: var(--primary);
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-      transform: translateY(-2px);
-    }
+    .step-item.active { background: #eff6ff; border-color: var(--primary); transform: translateY(-2px); }
+    .step-item.completed { background: #ecfdf5; border-color: #a7f3d0; }
+    .step-num { font-size: 12px; font-weight: 900; color: #94a3b8; margin-bottom: 2px; }
+    .step-item.active .step-num { color: var(--primary); }
+    .step-name { font-size: 13px; font-weight: 800; color: #475569; }
 
-    .step-item.completed {
-      background: #ecfdf5;
-      border-color: #a7f3d0;
-    }
-
-    .step-num {
-      font-size: 12px;
-      font-weight: 900;
-      color: #94a3b8;
-      margin-bottom: 2px;
-    }
-
-    .step-item.active .step-num {
-      color: var(--primary);
-    }
-
-    .step-name {
-      font-size: 13px;
-      font-weight: 800;
-      color: #475569;
-    }
-
-    .step-item.active .step-name {
-      color: #1e3a8a;
-    }
-
-    /* 스테이지 카드 공통 */
     .stage-card {
       display: none;
       background: var(--bg-card);
@@ -220,9 +145,7 @@
       animation: fadeIn 0.3s ease-out forwards;
     }
 
-    .stage-card.active {
-      display: block;
-    }
+    .stage-card.active { display: block; }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
@@ -233,9 +156,9 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: #f5f3ff;
-      color: #7c3aed;
-      border: 2px solid #ddd6fe;
+      background: #eff6ff;
+      color: #2563eb;
+      border: 2px solid #bfdbfe;
       padding: 6px 14px;
       border-radius: 30px;
       font-size: 14px;
@@ -243,15 +166,7 @@
       margin-bottom: 12px;
     }
 
-    .stage-title {
-      font-family: 'Jua', sans-serif;
-      font-size: clamp(22px, 3.2vw, 28px);
-      color: #0f172a;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .stage-title { font-family: 'Jua', sans-serif; font-size: clamp(22px, 3.2vw, 28px); color: #0f172a; margin-bottom: 10px; }
 
     .stage-goal {
       font-size: 16px;
@@ -259,12 +174,11 @@
       background: #f8fafc;
       padding: 14px 18px;
       border-radius: 14px;
-      border-left: 6px solid #7c3aed;
+      border-left: 6px solid #2563eb;
       margin-bottom: 24px;
       line-height: 1.6;
     }
 
-    /* 네비게이션 버튼 바 */
     .action-bar {
       display: flex;
       justify-content: space-between;
@@ -287,670 +201,115 @@
       transition: all 0.2s ease;
     }
 
-    .btn-prev {
-      background: #f1f5f9;
-      color: #475569;
-      border: 2px solid #cbd5e1;
-    }
+    .btn-prev { background: #f1f5f9; color: #475569; border: 2px solid #cbd5e1; }
+    .btn-next { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; margin-left: auto; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3); }
 
-    .btn-prev:hover {
-      background: #e2e8f0;
-    }
-
-    .btn-next {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: white;
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
-      margin-left: auto;
-    }
-
-    .btn-next:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
-    }
-
-    .btn-finish {
-      background: linear-gradient(135deg, #10b981, #059669);
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
-    }
-
-    /* 1단계 도입 스타일 */
-    .prediction-panel {
-      background: #ffffff;
-      border: 2px solid #e2e8f0;
-      border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 20px;
-    }
-
-    .prediction-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: #1e293b;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .predict-slider-box {
-      background: #f8fafc;
-      border: 2px solid #cbd5e1;
-      border-radius: 16px;
-      padding: 20px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .predict-val-display {
-      font-family: 'Jua', sans-serif;
-      font-size: 38px;
-      color: #2563eb;
-      margin-bottom: 8px;
-    }
-
-    .predict-range-input {
-      width: 100%;
-      height: 12px;
-      border-radius: 6px;
-      background: #cbd5e1;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .predict-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      font-weight: 700;
-      color: #64748b;
-      margin-top: 8px;
-    }
-
-    .reason-chip-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 10px 0 16px;
-    }
-
-    .reason-chip {
-      background: #f1f5f9;
-      border: 2px solid #cbd5e1;
-      color: #334155;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .reason-chip:hover {
-      background: #e2e8f0;
-    }
-
-    .reason-chip.selected {
-      background: #eff6ff;
-      border-color: #2563eb;
-      color: #1d4ed8;
-      font-weight: 800;
-    }
-
-    .custom-textarea {
-      width: 100%;
-      min-height: 90px;
-      padding: 14px;
-      border: 2px solid #cbd5e1;
-      border-radius: 14px;
-      font-family: 'Pretendard', sans-serif;
-      font-size: 15px;
-      outline: none;
-      resize: vertical;
-      background: #ffffff;
-      color: #1e293b;
-      transition: border-color 0.2s;
-    }
-
-    .custom-textarea:focus {
-      border-color: #2563eb;
-    }
-
-    /* 2단계 & 3단계 공통 스타일 */
-    .standard-ref-box {
-      background: #eff6ff;
-      border: 2px solid #bfdbfe;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 24px;
-    }
-
-    .standard-ref-title {
-      font-family: 'Jua', sans-serif;
-      font-size: 18px;
-      color: #1e40af;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .standard-chips {
+    /* 샘플 사진 선택기 */
+    .sample-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 8px;
-    }
-
-    .std-chip {
-      background: #ffffff;
-      border: 1px solid #93c5fd;
-      padding: 8px 10px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #1e3a8a;
-      text-align: center;
-    }
-
-    .items-record-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-
-    .item-record-card {
-      background: #ffffff;
-      border: 2px solid #e2e8f0;
-      border-radius: 18px;
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      transition: all 0.2s;
-    }
-
-    .item-record-card:hover {
-      border-color: #93c5fd;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
-    }
-
-    .item-info-col {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex: 1;
-    }
-
-    .item-idx-badge {
-      background: #f1f5f9;
-      color: #475569;
-      font-family: 'Jua', sans-serif;
-      font-size: 16px;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .item-icon-box {
-      font-size: 32px;
-      background: #f8fafc;
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      border: 1px solid #e2e8f0;
-    }
-
-    .item-text-wrap h4 {
-      font-size: 16px;
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 2px;
-    }
-
-    .item-text-wrap p {
-      font-size: 13px;
-      color: #64748b;
-      font-weight: 600;
-    }
-
-    .select-category-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      justify-content: flex-end;
-    }
-
-    .btn-cat-choice {
-      padding: 8px 12px;
-      border-radius: 10px;
-      border: 2px solid #cbd5e1;
-      background: #f8fafc;
-      color: #334155;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .btn-cat-choice:hover {
-      background: #e2e8f0;
-    }
-
-    .btn-cat-choice.selected {
-      background: #2563eb;
-      border-color: #2563eb;
-      color: #ffffff;
-      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
-    }
-
-    @media (max-width: 768px) {
-      .item-record-card {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .select-category-wrap {
-        width: 100%;
-        justify-content: flex-start;
-      }
-    }
-
-    /* 3단계: AI 판별 결과 기록 & 실시간 대조 스타일 */
-    .lab-summary-bar {
-      background: #ffffff;
-      border: 2px solid #e2e8f0;
-      border-radius: 18px;
-      padding: 16px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
       gap: 12px;
       margin-bottom: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
 
-    .lab-stats-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .stat-pill {
-      font-size: 14px;
-      font-weight: 800;
-      padding: 6px 14px;
-      border-radius: 20px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .stat-pill.total {
-      background: #f1f5f9;
-      color: #334155;
-      border: 1px solid #cbd5e1;
-    }
-
-    .stat-pill.match {
-      background: #ecfdf5;
-      color: #065f46;
-      border: 1px solid #a7f3d0;
-    }
-
-    .stat-pill.mismatch {
-      background: #fef2f2;
-      color: #991b1b;
-      border: 1px solid #fecaca;
-    }
-
-    .btn-auto-fill {
-      background: linear-gradient(135deg, #7c3aed, #6d28d9);
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 12px;
-      font-family: 'Jua', sans-serif;
-      font-size: 15px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
-    }
-
-    .btn-auto-fill:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-    }
-
-    /* 3단계 대조 카드 */
-    .compare-item-card {
+    .sample-item {
       background: #ffffff;
-      border: 2px solid #e2e8f0;
-      border-radius: 18px;
-      padding: 18px;
-      display: grid;
-      grid-template-columns: 1.2fr 1fr 1.6fr 0.9fr;
-      align-items: center;
-      gap: 16px;
+      border: 3px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 14px 10px;
+      text-align: center;
+      cursor: pointer;
       transition: all 0.2s;
     }
 
-    .compare-item-card.is-matched {
-      border-color: #a7f3d0;
-      background: #fafdfb;
-    }
+    .sample-item:hover { border-color: #2563eb; transform: translateY(-2px); }
+    .sample-item.selected { border-color: #2563eb; background: #eff6ff; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+    .sample-icon { font-size: 38px; margin-bottom: 6px; }
+    .sample-label { font-size: 14px; font-weight: 800; color: #1e3a8a; }
 
-    .compare-item-card.is-mismatched {
-      border-color: #fecaca;
-      background: #fffafa;
-    }
-
-    .human-judged-box {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      padding: 8px 12px;
-      border-radius: 12px;
-      text-align: center;
-    }
-
-    .human-judged-label {
-      font-size: 11px;
-      font-weight: 800;
-      color: #2563eb;
-      margin-bottom: 2px;
-    }
-
-    .human-judged-val {
-      font-size: 14px;
-      font-weight: 800;
-      color: #1e3a8a;
-    }
-
-    .ai-select-col {
+    /* AI 분석 뷰어 */
+    .ai-view-panel {
+      background: #0f172a;
+      border-radius: 20px;
+      padding: 20px;
+      color: white;
+      margin-bottom: 20px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      align-items: center;
+      position: relative;
     }
 
-    .ai-select-label {
-      font-size: 12px;
-      font-weight: 800;
-      color: #7c3aed;
-    }
-
-    .ai-btn-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-    }
-
-    .btn-ai-choice {
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: 1.5px solid #cbd5e1;
-      background: #f8fafc;
-      color: #334155;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .btn-ai-choice:hover {
-      background: #e2e8f0;
-    }
-
-    .btn-ai-choice.selected {
-      background: #7c3aed;
-      border-color: #7c3aed;
-      color: #ffffff;
-      box-shadow: 0 2px 6px rgba(124, 58, 237, 0.3);
-    }
-
-    .match-status-col {
+    .ai-screen-box {
+      width: 100%;
+      max-width: 480px;
+      aspect-ratio: 4/3;
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .badge-match-result {
-      padding: 8px 14px;
-      border-radius: 14px;
+    .ai-screen-icon { font-size: 80px; }
+
+    .ai-bounding-box {
+      position: absolute;
+      border: 3px solid #10b981;
+      background: rgba(16, 185, 129, 0.2);
+      border-radius: 10px;
+      width: 65%;
+      height: 65%;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 6px 10px;
+      animation: pulseBox 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseBox {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); border-color: #34d399; }
+    }
+
+    .ai-tag-chip {
+      background: #10b981;
+      color: #ffffff;
       font-size: 13px;
       font-weight: 900;
-      text-align: center;
-      width: 100%;
-    }
-
-    .badge-match-result.match {
-      background: #ecfdf5;
-      color: #059669;
-      border: 1.5px solid #10b981;
-    }
-
-    .badge-match-result.mismatch {
-      background: #fef2f2;
-      color: #dc2626;
-      border: 1.5px solid #ef4444;
-    }
-
-    .badge-match-result.waiting {
-      background: #f1f5f9;
-      color: #94a3b8;
-      border: 1.5px solid #cbd5e1;
-    }
-
-    @media (max-width: 860px) {
-      .compare-item-card {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-    }
-
-    /* 4단계 생각·발표 스타일 */
-    .fail-analysis-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    @media (max-width: 768px) {
-      .fail-analysis-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .fail-case-card {
-      background: #ffffff;
-      border: 2px solid #fecaca;
-      border-radius: 18px;
-      padding: 16px;
-      background: linear-gradient(to bottom right, #ffffff, #fffaf0);
-    }
-
-    .fail-case-badge {
-      display: inline-block;
-      background: #fee2e2;
-      color: #b91c1c;
-      font-size: 12px;
-      font-weight: 900;
-      padding: 4px 10px;
-      border-radius: 20px;
-      margin-bottom: 8px;
-    }
-
-    .fail-case-title {
-      font-size: 16px;
-      font-weight: 800;
-      color: #1e293b;
-      margin-bottom: 6px;
-    }
-
-    .fail-case-desc {
-      font-size: 13px;
-      color: #475569;
-      line-height: 1.5;
-      margin-bottom: 10px;
-    }
-
-    .fail-cause-tag {
-      background: #fef3c7;
-      border: 1px solid #fde68a;
-      color: #92400e;
-      padding: 4px 8px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      display: inline-block;
-    }
-
-    /* 발표 의견 공유 피드 */
-    .community-feed {
-      background: #f8fafc;
-      border: 2px solid #e2e8f0;
-      border-radius: 18px;
-      padding: 16px;
-      max-height: 250px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .feed-item {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 14px;
-      padding: 12px 14px;
-    }
-
-    .feed-author {
-      font-size: 13px;
-      font-weight: 800;
-      color: #1e3a8a;
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 4px;
-    }
-
-    .feed-text {
-      font-size: 14px;
-      color: #334155;
-      line-height: 1.4;
-    }
-
-    .btn-feed-like {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1d4ed8;
-      font-size: 12px;
-      font-weight: 800;
       padding: 3px 8px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 6px;
+      border-radius: 6px;
     }
 
-    /* 5단계 퀴즈 & 마무리 */
-    .quiz-container {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .quiz-card {
+    .ai-result-details {
+      width: 100%;
       background: #ffffff;
       border: 2px solid #e2e8f0;
       border-radius: 18px;
       padding: 20px;
+      color: #1e293b;
+      margin-top: 16px;
     }
 
-    .quiz-num {
-      font-family: 'Jua', sans-serif;
-      font-size: 16px;
-      color: #7c3aed;
-      margin-bottom: 6px;
-    }
-
-    .quiz-question {
-      font-size: 16px;
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 14px;
-      line-height: 1.5;
-    }
-
-    .quiz-options {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
-
-    .quiz-opt-btn {
-      text-align: left;
-      padding: 12px 16px;
-      border-radius: 12px;
-      border: 2px solid #cbd5e1;
-      background: #f8fafc;
-      color: #334155;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .quiz-opt-btn:hover {
+    .confidence-meter {
       background: #e2e8f0;
+      border-radius: 10px;
+      height: 14px;
+      overflow: hidden;
+      margin: 8px 0 16px;
     }
 
-    .quiz-opt-btn.correct {
-      background: #ecfdf5;
-      border-color: #10b981;
-      color: #065f46;
+    .confidence-fill {
+      background: linear-gradient(90deg, #10b981, #059669);
+      height: 100%;
+      width: 94%;
+      border-radius: 10px;
+      transition: width 0.4s;
     }
 
-    .quiz-opt-btn.wrong {
-      background: #fef2f2;
-      border-color: #ef4444;
-      color: #991b1b;
-    }
-
-    .quiz-feedback {
-      margin-top: 10px;
-      font-size: 13px;
-      font-weight: 800;
-      padding: 8px 12px;
-      border-radius: 8px;
-      display: none;
-    }
-
-    .quiz-feedback.show-ok {
-      display: block;
-      background: #ecfdf5;
-      color: #065f46;
-    }
-
-    .quiz-feedback.show-err {
-      display: block;
-      background: #fef2f2;
-      color: #991b1b;
-    }
-
-    /* 토스트 알림창 */
     .toast-msg {
       position: fixed;
       bottom: 30px;
@@ -962,15 +321,11 @@
       border-radius: 30px;
       font-size: 15px;
       font-weight: 800;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
       z-index: 1000;
-      transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      transition: transform 0.3s;
       pointer-events: none;
     }
-
-    .toast-msg.show {
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast-msg.show { transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
@@ -980,8 +335,8 @@
     <div class="header-left">
       <a href="main.html" class="btn-back">⬅ 메인화면</a>
       <div class="header-title-group">
-        <span class="badge-chasi">AI 탐정 실험실</span>
-        <h1 class="header-main-title">🔬 AI vs 사람 분리배출 대결</h1>
+        <span class="badge-chasi">QUEST 5</span>
+        <h1 class="header-main-title">교실쓰레기 AI 탐정단</h1>
       </div>
     </div>
     <div class="header-right">
@@ -990,257 +345,154 @@
     </div>
   </header>
 
-  <!-- 메인 앱 컨테이너 -->
   <main class="app-container">
-
-    <!-- 단계 네비게이터 트래커 -->
     <nav class="step-tracker">
       <div class="step-item active" onclick="goToStep(1)">
-        <span class="step-num">🎯 1</span>
-        <span class="step-name">성공률 예측</span>
+        <span class="step-num">1단계</span>
+        <span class="step-name">쓰레기 샘플 선택</span>
       </div>
       <div class="step-item" onclick="goToStep(2)">
-        <span class="step-num">📋 2</span>
-        <span class="step-name">내 생각 적기</span>
+        <span class="step-num">2단계</span>
+        <span class="step-name">AI 비전 탐지</span>
       </div>
       <div class="step-item" onclick="goToStep(3)">
-        <span class="step-num">🤖 3</span>
-        <span class="step-name">AI와 비교하기</span>
+        <span class="step-num">3단계</span>
+        <span class="step-name">분리배출 꿀팁 확인</span>
       </div>
       <div class="step-item" onclick="goToStep(4)">
-        <span class="step-num">💡 4</span>
-        <span class="step-name">이유 찾기</span>
-      </div>
-      <div class="step-item" onclick="goToStep(5)">
-        <span class="step-num">🎮 5</span>
-        <span class="step-name">정리 퀴즈</span>
+        <span class="step-num">4단계</span>
+        <span class="step-name">미션 퀴즈 & 완료</span>
       </div>
     </nav>
 
-    <!-- ==================== 1: 도입 ==================== -->
+    <!-- 1단계: 쓰레기 샘플 선택 -->
     <section class="stage-card active" id="stage-1">
-      <div class="stage-badge">💡 AI는 쓰레기를 얼마나 잘 맞힐까?</div>
-      <h2 class="stage-title">🎯 AI 쓰레기 분류 실력 예측하기</h2>
+      <div class="stage-badge">🔍 교실 쓰레기 스캔 준비</div>
+      <h2 class="stage-title">🔍 AI에게 보여줄 교실 쓰레기를 선택하세요</h2>
       <div class="stage-goal">
-        인공지능(AI)이 우리 교실 쓰레기 10개를 보았을 때, <strong>몇 개나 맞힐 수 있을지 슬라이더로 예상</strong>하고 그 까닭을 적어보세요!
+        AI가 어떤 재활용 쓰레기인지 알아맞힐 수 있도록 <strong>교실 쓰레기 샘플을 선택</strong>해보세요!
       </div>
 
-      <div class="prediction-panel">
-        <h3 class="prediction-title">📊 1. AI는 10개 중 몇 개를 맞힐까요?</h3>
-        <div class="predict-slider-box">
-          <div class="predict-val-display" id="predictValueText">8개 (80%)</div>
-          <input type="range" min="0" max="10" value="8" class="predict-range-input" id="predictSlider" oninput="handleSliderChange(this.value)">
-          <div class="predict-labels">
-            <span>0개 (다 틀림)</span>
-            <span>5개 (절반 성공)</span>
-            <span>10개 (다 맞힘)</span>
-          </div>
+      <div class="sample-grid">
+        <div class="sample-item selected" onclick="selectSample(0, '🥫', '알루미늄 음료 캔', '캔류', 96, '내용물을 비우고 물로 헹군 뒤 찌그러뜨려 배출해요!')">
+          <div class="sample-icon">🥫</div>
+          <div class="sample-label">음료 캔</div>
         </div>
-
-        <h3 class="prediction-title">💬 2. 그렇게 예상한 까닭은 무엇인가요?</h3>
-        <p style="font-size:13px; color:#64748b; font-weight:600; margin-bottom:6px;">도움말 칩을 누르거나 직접 적어보세요:</p>
-        <div class="reason-chip-group">
-          <button class="reason-chip" onclick="toggleReasonChip('찌그러진 모양 때문에 헷갈릴 것 같아서', this)">#찌그러진 모양</button>
-          <button class="reason-chip" onclick="toggleReasonChip('음식물 양념이 묻어 색이 달라서', this)">#양념 오염</button>
-          <button class="reason-chip" onclick="toggleReasonChip('투명해서 빛이 반사되기 때문에', this)">#빛 반사</button>
-          <button class="reason-chip" onclick="toggleReasonChip('크기가 너무 작은 물체라서', this)">#작은 크기</button>
-          <button class="reason-chip" onclick="toggleReasonChip('공부한 사진이 많아서 잘 맞힐 것 같아서', this)">#많은 사진 공부</button>
+        <div class="sample-item" onclick="selectSample(1, '🧴', '투명 생수 페트병', '플라스틱', 94, '라벨 비닐을 떼어내고 깨끗이 헹군 뒤 압착하여 뚜껑을 닫아 배출해요!')">
+          <div class="sample-icon">🧴</div>
+          <div class="sample-label">투명 페트병</div>
         </div>
-        <textarea id="predictReasonInput" class="custom-textarea" placeholder="AI가 잘 맞히거나 틀릴 것 같은 까닭을 적어주세요. (예: 캔이나 페트병은 잘 맞히겠지만, 양념 묻은 라면 용기는 헷갈려할 것 같습니다.)"></textarea>
+        <div class="sample-item" onclick="selectSample(2, '🥛', '종이 우유팩', '종이류', 91, '물로 씻어서 펼쳐 바짝 말린 뒤 종이팩 전용함에 배출해요!')">
+          <div class="sample-icon">🥛</div>
+          <div class="sample-label">종이 우유팩</div>
+        </div>
+        <div class="sample-item" onclick="selectSample(3, '🍿', '과자 비닐 포장재', '비닐류', 89, '음식물 가루를 털어내고 투명 비닐봉투에 모아 배출해요!')">
+          <div class="sample-icon">🍿</div>
+          <div class="sample-label">과자 봉지</div>
+        </div>
+        <div class="sample-item" onclick="selectSample(4, '📦', '택배 골판지 상자', '종이류', 95, '테이프와 송장 스티커를 떼어내고 납작하게 접어서 배출해요!')">
+          <div class="sample-icon">📦</div>
+          <div class="sample-label">택배 상자</div>
+        </div>
+        <div class="sample-item" onclick="selectSample(5, '🍜', '양념 묻은 컵라면 용기', '일반쓰레기', 85, '오염이 씻기지 않는 컵라면 용기는 재활용이 안 되므로 종량제 봉투에 버려요!')">
+          <div class="sample-icon">🍜</div>
+          <div class="sample-label">컵라면 용기</div>
+        </div>
       </div>
 
       <div class="action-bar">
         <div></div>
         <button class="btn-nav-large btn-next" onclick="submitStep1()">
-          내 예상 저장하고 다음으로 ➔
+          AI 스캔 시작하기 ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== 2: 준비 ==================== -->
+    <!-- 2단계: AI 비전 탐지 결과 -->
     <section class="stage-card" id="stage-2">
-      <div class="stage-badge">📋 쓰레기 10개 내 생각 먼저 고르기</div>
-      <h2 class="stage-title">📋 사람(우리)의 생각 먼저 기록하기</h2>
+      <div class="stage-badge">🤖 AI 실시간 물체 감지</div>
+      <h2 class="stage-title">🤖 AI 탐정 비전 스캐너 감지 결과</h2>
       <div class="stage-goal">
-        선생님이 알려주신 <strong>올바른 분리배출 방법</strong>을 확인하고, AI의 판별 결과를 보기 전에 <strong>내 생각을 10개 쓰레기에 대해 먼저 골라보세요</strong>.
+        인공지능 모델이 사진 속 쓰레기를 바운딩 박스로 인식하고 확신도(Confidence)를 계산했습니다.
       </div>
 
-      <!-- 기준표 안내 -->
-      <div class="standard-ref-box">
-        <h3 class="standard-ref-title">📖 올바른 분리배출 안내 기준</h3>
-        <div class="standard-chips">
-          <div class="std-chip">🥫 캔류: 찌그러져도 캔</div>
-          <div class="std-chip">🧴 페트/플라스틱: 깨끗한 통</div>
-          <div class="std-chip">📦 종이류: 깨끗한 종이</div>
-          <div class="std-chip">🛍️ 비닐류: 깨끗한 비닐</div>
-          <div class="std-chip">🍶 유리병: 깨끗한 병</div>
-          <div class="std-chip">🗑️ 일반쓰레기: 오염/작은물건</div>
+      <div class="ai-view-panel">
+        <div class="ai-screen-box">
+          <div class="ai-screen-icon" id="viewScreenIcon">🥫</div>
+          <div class="ai-bounding-box">
+            <span class="ai-tag-chip" id="viewBoundingTag">CAN (캔류): 96%</span>
+          </div>
         </div>
-      </div>
 
-      <!-- 10개 품목 사람 판단 리스트 -->
-      <div class="items-record-grid" id="itemsRecordList">
-        <!-- JS로 10개 카드 동적 렌더링 -->
+        <div class="ai-result-details">
+          <h3 style="font-family:'Jua',sans-serif;font-size:22px;color:#1e3a8a;" id="viewItemName">알루미늄 음료 캔</h3>
+          <p style="font-size:15px;color:#475569;margin-top:4px;">AI 판별 분류: <strong style="color:#2563eb;" id="viewItemClass">캔류</strong></p>
+          <div style="font-size:13px;font-weight:700;color:#64748b;margin-top:8px;">인식 확신도(신뢰도): <span id="viewConfidenceVal">96%</span></div>
+          <div class="confidence-meter">
+            <div class="confidence-fill" id="viewConfidenceFill" style="width:96%;"></div>
+          </div>
+        </div>
       </div>
 
       <div class="action-bar">
         <button class="btn-nav-large btn-prev" onclick="goToStep(1)">⬅ 이전으로</button>
         <button class="btn-nav-large btn-next" onclick="submitStep2()">
-          내 생각 저장하고 AI와 비교하기 ➔
+          분리배출 방법 확인 ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== 3: 탐구 ==================== -->
+    <!-- 3단계: 분리배출 꿀팁 확인 -->
     <section class="stage-card" id="stage-3">
-      <div class="stage-badge">🤖 AI 결과 확인하고 맞힘/틀림 비교하기</div>
-      <h2 class="stage-title">🤖 AI 판별 결과 기록 & 사람 생각 비교</h2>
+      <div class="stage-badge">💡 올바른 배출 실천법</div>
+      <h2 class="stage-title">💡 이 쓰레기, 어떻게 배출해야 할까요?</h2>
       <div class="stage-goal">
-        학습된 AI로 교실 쓰레기 10개를 테스트하고, <strong>AI가 판독한 결과</strong>를 선택하여 <strong>사람 기준과 맞힘(⭕) / 틀림(❌)</strong>을 비교해보세요!
+        AI가 찾은 재질에 맞는 <strong>올바른 분리배출 행동 규칙</strong>을 확인하세요!
       </div>
 
-      <!-- 상단 요약 통계 & 추천 데이터 자동 채우기 바 -->
-      <div class="lab-summary-bar">
-        <div class="lab-stats-group">
-          <div class="stat-pill total" id="labTotalProgress">기록 완료: 0/10</div>
-          <div class="stat-pill match" id="labMatchStat">⭕ 맞힘: 0개</div>
-          <div class="stat-pill mismatch" id="labMismatchStat">❌ 틀림: 0개</div>
-        </div>
-        <button class="btn-auto-fill" onclick="fillDefaultAiExperimentData()">
-          ⚡ 표준 실험 데이터 채우기
-        </button>
-      </div>
-
-      <!-- 10개 비교 목록 리스트 -->
-      <div class="items-record-grid" id="compareItemsList">
-        <!-- JS 동적 생성 -->
+      <div style="background:#eff6ff; border:2px solid #bfdbfe; border-radius:20px; padding:24px; text-align:center;">
+        <div style="font-size:52px; margin-bottom:10px;" id="guideIcon">🥫</div>
+        <h3 style="font-family:'Jua',sans-serif;font-size:24px;color:#1e40af;margin-bottom:8px;" id="guideTitle">알루미늄 캔 분리배출 수칙</h3>
+        <p style="font-size:17px;color:#1e3a8a;font-weight:700;line-height:1.6;" id="guideDesc">
+          내용물을 비우고 물로 헹군 뒤 찌그러뜨려 배출해요!
+        </p>
       </div>
 
       <div class="action-bar">
         <button class="btn-nav-large btn-prev" onclick="goToStep(2)">⬅ 이전으로</button>
         <button class="btn-nav-large btn-next" onclick="submitStep3()">
-          비교 완료하고 생각 나누기 ➔
+          미션 퀴즈 풀기 ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== 4: 생각·발표 ==================== -->
+    <!-- 4단계: 미션 퀴즈 & 완료 -->
     <section class="stage-card" id="stage-4">
-      <div class="stage-badge">📢 AI가 왜 틀렸을까? 생각 나누기</div>
-      <h2 class="stage-title">💡 AI가 실수한 까닭 찾기 & 의견 발표</h2>
+      <div class="stage-badge">🎮 퀘스트 완료 퀴즈</div>
+      <h2 class="stage-title">🎮 AI 탐정단 실전 확인 퀴즈</h2>
       <div class="stage-goal">
-        AI가 잘못 판별한 쓰레기가 몇 개인지 확인하고, <strong>AI가 왜 헷갈렸는지 까닭을 찾아 친구들과 의견을 나눠보세요!</strong>
+        AI 비전 스캐너가 사물을 올바르게 분류하기 위해 가장 필요한 것은 무엇일까요?
       </div>
 
-      <!-- AI 오류 집중 분석 카드 -->
-      <h3 style="font-size:18px; font-weight:800; color:#1e293b; margin-bottom:12px;">🚨 AI가 헷갈려한 쓰레기 살펴보기</h3>
-      <div class="fail-analysis-grid">
-        <div class="fail-case-card">
-          <span class="fail-case-badge">실수 사례 1</span>
-          <h4 class="fail-case-title">🍜 국물 양념 묻은 컵라면 용기</h4>
-          <p class="fail-case-desc">
-            • <strong>AI 생각:</strong> 스티로폼/플라스틱 (88% 확신)<br>
-            • <strong>진짜 정답:</strong> 일반쓰레기 (국물 오염으로 재활용 안 됨)
-          </p>
-          <span class="fail-cause-tag">까닭: 겉모양만 보고 빨간 양념 오염을 알지 못함</span>
-        </div>
-
-        <div class="fail-case-card">
-          <span class="fail-case-badge">실수 사례 2</span>
-          <h4 class="fail-case-title">🥤 일회용 플라스틱 빨대</h4>
-          <p class="fail-case-desc">
-            • <strong>AI 생각:</strong> 플라스틱 (91% 확신)<br>
-            • <strong>진짜 정답:</strong> 일반쓰레기 (크기가 너무 작아 선별기 통과 불가)
-          </p>
-          <span class="fail-cause-tag">까닭: 재질만 보고 작은 크기 조건을 알지 못함</span>
-        </div>
-      </div>
-
-      <!-- 발표 작성 폼 -->
-      <div style="background:#ffffff; border:2px solid #e2e8f0; border-radius:20px; padding:20px;">
-        <h3 style="font-size:17px; font-weight:800; color:#1e293b; margin-bottom:10px;">✍️ 나만의 탐정 생각 발표문 쓰기</h3>
-        <textarea id="failAnalysisInput" class="custom-textarea" placeholder="AI가 왜 실수를 했을까요? 그리고 AI가 더 똑똑해지려면 어떤 사진을 더 가르쳐줘야 할까요?"></textarea>
-        <button class="btn-nav-large btn-next" style="margin-top:12px; width:100%; justify-content:center;" onclick="submitPresentationComment()">
-          📢 내 생각 등록하고 친구들과 공유하기 (⭐ +20 EXP)
-        </button>
-
-        <!-- 학급 공유 피드 -->
-        <div class="community-feed" id="communityFeedList">
-          <!-- JS 동적 생성 -->
-        </div>
+      <div style="background:#ffffff;border:2px solid #e2e8f0;border-radius:20px;padding:22px;margin-bottom:20px;">
+        <h3 style="font-size:17px;font-weight:800;color:#0f172a;margin-bottom:14px;">Q. AI 카메라가 교실 쓰레기를 정확하게 감지하려면 무엇이 가장 중요할까요?</h3>
+        <button class="btn-nav-large btn-prev" style="width:100%;justify-content:flex-start;margin-bottom:8px;" onclick="checkAnswer(false, this)">① 카메라의 크기가 클수록 잘 맞힌다.</button>
+        <button class="btn-nav-large btn-prev" style="width:100%;justify-content:flex-start;margin-bottom:8px;" onclick="checkAnswer(true, this)">② 다양한 각도와 조명에서 찍은 선명한 학습 데이터가 많아야 한다.</button>
+        <button class="btn-nav-large btn-prev" style="width:100%;justify-content:flex-start;" onclick="checkAnswer(false, this)">③ 쓰레기통을 어두운 곳에 둔다.</button>
+        <div id="quizResult" style="margin-top:12px;font-weight:800;display:none;"></div>
       </div>
 
       <div class="action-bar">
         <button class="btn-nav-large btn-prev" onclick="goToStep(3)">⬅ 이전으로</button>
-        <button class="btn-nav-large btn-next" onclick="goToStep(5)">
-          정리 퀴즈 풀러 가기 ➔
+        <button class="btn-nav-large btn-next" id="btnFinishQ5" style="display:none;" onclick="finishQuest5()">
+          🎉 5차시 퀘스트 완료 (⭐ +100 EXP) ➔
         </button>
       </div>
     </section>
-
-    <!-- ==================== 5: 퀴즈 & 정리 ==================== -->
-    <section class="stage-card" id="stage-5">
-      <div class="stage-badge">🎮 배운 내용 정리 퀴즈</div>
-      <h2 class="stage-title">🎮 AI 실전 퀴즈로 오늘 배운 내용 정리</h2>
-      <div class="stage-goal">
-        오늘 활동을 통해 배운 내용을 생각하며 <strong>재미있는 퀴즈 3문제</strong>를 풀고 퀘스트를 완료하세요!
-      </div>
-
-      <div class="quiz-container">
-        <!-- 퀴즈 1 -->
-        <div class="quiz-card" id="quizCard1">
-          <div class="quiz-num">문제 1</div>
-          <div class="quiz-question">Q1. AI가 깨끗한 캔은 잘 맞히지만, 심하게 찌그러진 캔이나 양념 묻은 라면용기를 잘못 판별하는 주된 이유는 무엇일까요?</div>
-          <div class="quiz-options">
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(1, 0, false, this)">① AI의 컴퓨터 성능이 너무 느려서</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(1, 1, true, this)">② 오염되거나 형태가 변형된 학습 데이터가 부족해서</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(1, 2, false, this)">③ 쓰레기통의 위치가 잘못 배치되어서</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(1, 3, false, this)">④ 쓰레기 냄새를 감지하지 못해서</button>
-          </div>
-          <div class="quiz-feedback" id="quizFb1"></div>
-        </div>
-
-        <!-- 퀴즈 2 -->
-        <div class="quiz-card" id="quizCard2">
-          <div class="quiz-num">문제 2</div>
-          <div class="quiz-question">Q2. 플라스틱 빨대처럼 재질은 플라스틱이지만 크기가 작아 재활용이 안 되는 경우, AI에게 어떻게 가르쳐야 할까요?</div>
-          <div class="quiz-options">
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(2, 0, false, this)">① 무조건 플라스틱으로 분류하도록 둔다.</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(2, 1, true, this)">② '길이나 크기가 작으면 일반쓰레기'라는 분류 규칙과 라벨 데이터를 추가 학습시킨다.</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(2, 2, false, this)">③ 카메라 렌즈를 빨간색으로 교체한다.</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(2, 3, false, this)">④ 모든 쓰레기를 통째로 버리게 한다.</button>
-          </div>
-          <div class="quiz-feedback" id="quizFb2"></div>
-        </div>
-
-        <!-- 퀴즈 3 -->
-        <div class="quiz-card" id="quizCard3">
-          <div class="quiz-num">문제 3</div>
-          <div class="quiz-question">Q3. AI 판별 실험에서 사람이 먼저 기준표를 확인하고 비교·검증하는 과정이 꼭 필요한 까닭은?</div>
-          <div class="quiz-options">
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(3, 0, false, this)">① AI는 절대 실수를 하지 않음을 자랑하기 위해</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(3, 1, false, this)">② 사람이 더 우월함을 보여주기 위해</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(3, 2, true, this)">③ AI의 한계와 오류를 발견하여 더 신뢰할 수 있는 규칙과 데이터를 보완하기 위해</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(3, 3, false, this)">④ 단순히 게임 점수만 높이기 위해</button>
-          </div>
-          <div class="quiz-feedback" id="quizFb3"></div>
-        </div>
-      </div>
-
-      <div class="action-bar">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(4)">⬅ 이전 단계</button>
-        <button class="btn-nav-large btn-finish btn-next" onclick="finishQuest5()">
-          🎉 5차시 퀘스트 최종 완료 (⭐ +100 EXP)
-        </button>
-      </div>
-    </section>
-
   </main>
 
-  <!-- 토스트 알림창 -->
   <div class="toast-msg" id="toastMsg">알림 메시지</div>
 
-  <!-- 스크립트 모듈 -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, doc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -1259,45 +511,19 @@
       const app = initializeApp(firebaseConfig);
       db = getFirestore(app);
     } catch(e) {
-      console.warn("Firebase offline or local mode:", e);
+      console.warn("Firebase offline mode:", e);
     }
 
-    // 10가지 교실 쓰레기 데이터 & 기본 AI 실험값
-    const WASTE_ITEMS = [
-      { id: 1, name: "찌그러진 알루미늄 캔", icon: "🥫", desc: "음료를 마신 후 발로 밟아 찌그러진 캔", defaultStd: "캔류", defaultAi: "캔류" },
-      { id: 2, name: "라벨 붙은 투명 페트병", icon: "🧴", desc: "비닐 라벨 스티커가 붙어있는 생수병", defaultStd: "플라스틱", defaultAi: "플라스틱" },
-      { id: 3, name: "양념 묻은 컵라면 용기", icon: "🍜", desc: "빨간 떡볶이 국물이 물들어 지워지지 않음", defaultStd: "일반쓰레기", defaultAi: "플라스틱" }, // AI 오류
-      { id: 4, name: "깨끗하게 접은 신문지", icon: "📰", desc: "이물질 없이 반듯하게 모은 신문지", defaultStd: "종이류", defaultAi: "종이류" },
-      { id: 5, name: "씻어 말린 종이 우유팩", icon: "🥛", desc: "물로 헹군 뒤 펼쳐서 건조한 우유팩", defaultStd: "종이류", defaultAi: "종이류" },
-      { id: 6, name: "일회용 플라스틱 빨대", icon: "🥤", desc: "음료수에 꽂아 쓰던 얇은 빨대", defaultStd: "일반쓰레기", defaultAi: "플라스틱" }, // AI 오류
-      { id: 7, name: "사용한 나무 젓가락", icon: "🥢", desc: "컵라면을 먹을 때 쓴 나무 젓가락", defaultStd: "일반쓰레기", defaultAi: "일반쓰레기" },
-      { id: 8, name: "은박 과자 비닐봉지", icon: "🍿", desc: "내부에 은박 코팅이 된 과자 포장재", defaultStd: "비닐류", defaultAi: "비닐류" },
-      { id: 9, name: "뚜껑 분리한 유리 주스병", icon: "🍶", desc: "내용물을 비우고 뚜껑을 따로 뺀 유리병", defaultStd: "유리", defaultAi: "유리" },
-      { id: 10, name: "송장 붙은 택배 박스", icon: "📦", desc: "비닐 테이프와 송장이 붙은 골판지 박스", defaultStd: "종이류", defaultAi: "종이류" }
-    ];
+    const studentId = localStorage.getItem("elementary_studentId");
+    const studentName = localStorage.getItem("elementary_studentName") || "학생 탐정";
 
-    const CATEGORIES = ["종이류", "플라스틱", "비닐류", "캔류", "유리", "일반쓰레기"];
-
-    // 전역 상태
     window.state = {
       score: parseInt(localStorage.getItem("elementary_score") || "0"),
       soundEnabled: true,
       step: 1,
-      predictedCount: parseInt(localStorage.getItem("quest5_pred_count") || "8"),
-      humanJudgments: JSON.parse(localStorage.getItem("quest5_human_judgments") || "{}"),
-      aiJudgments: JSON.parse(localStorage.getItem("quest5_ai_judgments") || "{}"),
-      quizAnswers: {},
-      feedComments: JSON.parse(localStorage.getItem("quest5_feed_comments") || "[]")
+      selectedItem: { icon: '🥫', name: '알루미늄 음료 캔', cat: '캔류', conf: 96, desc: '내용물을 비우고 물로 헹군 뒤 찌그러뜨려 배출해요!' }
     };
 
-    if (window.state.feedComments.length === 0) {
-      window.state.feedComments = [
-        { id: 'f1', author: '선임탐정 에코', text: '라면 국물 묻은 용기는 AI가 겉모양만 보고 스티로폼/플라스틱으로 착각했네요! 색상 오염 감지 규칙이 필요해요.', likes: 5 },
-        { id: 'f2', author: '그린봇', text: '빨대는 재질이 플라스틱이라도 크기가 작아 선별장에서 버려진다는 사실을 AI에게 라벨 데이터로 알려줘야겠어요.', likes: 4 }
-      ];
-    }
-
-    // Web Audio API 사운드 생성기
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     window.playSound = function(type) {
       if (!window.state.soundEnabled) return;
@@ -1317,11 +543,6 @@
         osc.frequency.setValueAtTime(659.25, now + 0.1);
         gain.gain.setValueAtTime(0.25, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
         osc.start(now); osc.stop(now + 0.25);
-      } else if (type === 'wrong') {
-        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, now);
-        osc.frequency.linearRampToValueAtTime(180, now + 0.2);
-        gain.gain.setValueAtTime(0.25, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
-        osc.start(now); osc.stop(now + 0.2);
       } else if (type === 'fanfare') {
         [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
           const o = audioCtx.createOscillator();
@@ -1364,302 +585,87 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // 1단계 슬라이더 & 키워드 칩 핸들러
-    window.handleSliderChange = function(val) {
-      window.state.predictedCount = parseInt(val);
-      document.getElementById('predictValueText').textContent = `${val}개 (${val * 10}%)`;
-    };
-
-    window.toggleReasonChip = function(text, btn) {
+    window.selectSample = function(idx, icon, name, cat, conf, desc) {
       window.playSound('click');
-      btn.classList.toggle('selected');
-      const input = document.getElementById('predictReasonInput');
-      if (btn.classList.contains('selected')) {
-        if (!input.value.includes(text)) {
-          input.value = input.value ? (input.value + " " + text) : text;
-        }
-      }
+      document.querySelectorAll('.sample-item').forEach((el, i) => el.classList.toggle('selected', i === idx));
+      window.state.selectedItem = { icon, name, cat, conf, desc };
     };
 
     window.submitStep1 = function() {
-      const reason = document.getElementById('predictReasonInput').value.trim();
-      if (!reason) {
-        showToast('예측한 이유(까닭)를 간단히 적어주세요!');
-        return;
-      }
+      const item = window.state.selectedItem;
+      document.getElementById('viewScreenIcon').textContent = item.icon;
+      document.getElementById('viewBoundingTag').textContent = `${item.cat}: ${item.conf}%`;
+      document.getElementById('viewItemName').textContent = item.name;
+      document.getElementById('viewItemClass').textContent = item.cat;
+      document.getElementById('viewConfidenceVal').textContent = `${item.conf}%`;
+      document.getElementById('viewConfidenceFill').style.width = `${item.conf}%`;
+
+      document.getElementById('guideIcon').textContent = item.icon;
+      document.getElementById('guideTitle').textContent = `${item.name} 분리배출 수칙`;
+      document.getElementById('guideDesc').textContent = item.desc;
+
       window.playSound('correct');
-      window.addScore(20);
-      localStorage.setItem("quest5_pred_count", window.state.predictedCount);
-      localStorage.setItem("quest5_pred_reason", reason);
-      showToast('🎉 1단계 예측 완료! (⭐ +20 EXP)');
+      window.addScore(25);
+      showToast('🎉 스캔 준비 완료! (⭐ +25 EXP)');
       goToStep(2);
     };
 
-    // 2단계 사람 판단 리스트 렌더링
-    function renderStep2Items() {
-      const container = document.getElementById('itemsRecordList');
-      if (!container) return;
-      container.innerHTML = '';
-
-      WASTE_ITEMS.forEach(item => {
-        const selectedCat = window.state.humanJudgments[item.id] || '';
-        const card = document.createElement('div');
-        card.className = 'item-record-card';
-        card.innerHTML = `
-          <div class="item-info-col">
-            <div class="item-idx-badge">#${item.id}</div>
-            <div class="item-icon-box">${item.icon}</div>
-            <div class="item-text-wrap">
-              <h4>${item.name}</h4>
-              <p>${item.desc}</p>
-            </div>
-          </div>
-          <div class="select-category-wrap">
-            ${CATEGORIES.map(cat => `
-              <button class="btn-cat-choice ${selectedCat === cat ? 'selected' : ''}" onclick="selectHumanCategory(${item.id}, '${cat}')">
-                ${cat}
-              </button>
-            `).join('')}
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    window.selectHumanCategory = function(itemId, cat) {
-      window.playSound('click');
-      window.state.humanJudgments[itemId] = cat;
-      localStorage.setItem("quest5_human_judgments", JSON.stringify(window.state.humanJudgments));
-      renderStep2Items();
-    };
-
     window.submitStep2 = function() {
-      const judgedCount = Object.keys(window.state.humanJudgments).length;
-      if (judgedCount < 10) {
-        showToast(`10개 품목에 대해 모두 사람 판단을 선택해주세요! (${judgedCount}/10 완료)`);
-        return;
-      }
       window.playSound('correct');
-      window.addScore(20);
-      showToast('🎉 2단계 사람 판단 기록 완료! (⭐ +20 EXP)');
+      window.addScore(25);
+      showToast('🎉 AI 감지 완료! (⭐ +25 EXP)');
       goToStep(3);
-      renderStep3CompareList();
-    };
-
-    // 3단계: AI 판별 결과 기록 & 비교 목록 렌더링
-    function renderStep3CompareList() {
-      const container = document.getElementById('compareItemsList');
-      if (!container) return;
-      container.innerHTML = '';
-
-      let matchCount = 0;
-      let mismatchCount = 0;
-      let recordedCount = 0;
-
-      WASTE_ITEMS.forEach(item => {
-        const humanChoice = window.state.humanJudgments[item.id] || item.defaultStd;
-        const aiChoice = window.state.aiJudgments[item.id] || '';
-        const isRecorded = !!aiChoice;
-        let isMatch = false;
-
-        if (isRecorded) {
-          recordedCount++;
-          isMatch = (humanChoice === aiChoice);
-          if (isMatch) matchCount++;
-          else mismatchCount++;
-        }
-
-        const card = document.createElement('div');
-        card.className = `compare-item-card ${isRecorded ? (isMatch ? 'is-matched' : 'is-mismatched') : ''}`;
-        card.innerHTML = `
-          <div class="item-info-col">
-            <div class="item-idx-badge">#${item.id}</div>
-            <div class="item-icon-box">${item.icon}</div>
-            <div class="item-text-wrap">
-              <h4>${item.name}</h4>
-              <p>${item.desc}</p>
-            </div>
-          </div>
-
-          <div class="human-judged-box">
-            <div class="human-judged-label">👤 사람 기준 판단</div>
-            <div class="human-judged-val">${humanChoice}</div>
-          </div>
-
-          <div class="ai-select-col">
-            <span class="ai-select-label">🤖 AI 판별 결과 선택:</span>
-            <div class="ai-btn-group">
-              ${CATEGORIES.map(cat => `
-                <button class="btn-ai-choice ${aiChoice === cat ? 'selected' : ''}" onclick="selectAiCategory(${item.id}, '${cat}')">
-                  ${cat}
-                </button>
-              `).join('')}
-            </div>
-          </div>
-
-          <div class="match-status-col">
-            ${isRecorded ? (
-              isMatch 
-                ? '<div class="badge-match-result match">⭕ 일치 (정답)</div>'
-                : '<div class="badge-match-result mismatch">❌ 불일치 (오류)</div>'
-            ) : '<div class="badge-match-result waiting">선택 대기</div>'}
-          </div>
-        `;
-        container.appendChild(card);
-      });
-
-      // 통계 바 갱신
-      document.getElementById('labTotalProgress').textContent = `기록 완료: ${recordedCount}/10`;
-      document.getElementById('labMatchStat').textContent = `⭕ 맞힘: ${matchCount}개`;
-      document.getElementById('labMismatchStat').textContent = `❌ 틀림: ${mismatchCount}개`;
-    }
-
-    window.selectAiCategory = function(itemId, cat) {
-      window.playSound('click');
-      window.state.aiJudgments[itemId] = cat;
-      localStorage.setItem("quest5_ai_judgments", JSON.stringify(window.state.aiJudgments));
-      renderStep3CompareList();
-    };
-
-    window.fillDefaultAiExperimentData = function() {
-      window.playSound('correct');
-      WASTE_ITEMS.forEach(it => {
-        window.state.aiJudgments[it.id] = it.defaultAi;
-      });
-      localStorage.setItem("quest5_ai_judgments", JSON.stringify(window.state.aiJudgments));
-      renderStep3CompareList();
-      showToast('⚡ 표준 AI 실험 데이터가 적용되었습니다! (8개 일치, 2개 불일치)');
     };
 
     window.submitStep3 = function() {
-      const recordedCount = Object.keys(window.state.aiJudgments).length;
-      if (recordedCount < 10) {
-        showToast(`10개 품목의 AI 판별 결과를 모두 기록해주세요! (${recordedCount}/10 완료)`);
-        return;
-      }
       window.playSound('correct');
-      window.addScore(20);
-      showToast('🎉 3단계 AI 판별 비교 완료! (⭐ +20 EXP)');
+      window.addScore(25);
+      showToast('🎉 배출 수칙 확인 완료! (⭐ +25 EXP)');
       goToStep(4);
     };
 
-    // 4단계 발표 피드
-    function renderCommunityFeed() {
-      const list = document.getElementById('communityFeedList');
-      if (!list) return;
-      list.innerHTML = '';
-
-      window.state.feedComments.forEach(c => {
-        const item = document.createElement('div');
-        item.className = 'feed-item';
-        item.innerHTML = `
-          <div class="feed-author">
-            <span>🕵️ ${c.author}</span>
-            <button class="btn-feed-like" onclick="likeFeed('${c.id}')">👍 공감 ${c.likes || 0}</button>
-          </div>
-          <div class="feed-text">${c.text}</div>
-        `;
-        list.appendChild(item);
-      });
-    }
-
-    window.submitPresentationComment = function() {
-      const input = document.getElementById('failAnalysisInput');
-      const text = input ? input.value.trim() : '';
-      if (!text) {
-        showToast('나만의 분석 발표 의견을 입력해주세요!');
-        return;
-      }
-      window.playSound('click');
-      window.addScore(20);
-      const studentName = localStorage.getItem("elementary_studentName") || "나의 탐정";
-      window.state.feedComments.unshift({
-        id: 'f_' + Date.now(),
-        author: studentName,
-        text: text,
-        likes: 1
-      });
-      localStorage.setItem("quest5_feed_comments", JSON.stringify(window.state.feedComments));
-      input.value = '';
-      renderCommunityFeed();
-      showToast('🎉 발표문이 등록되었습니다! (⭐ +20 EXP)');
-    };
-
-    window.likeFeed = function(id) {
-      window.playSound('click');
-      const target = window.state.feedComments.find(c => c.id === id);
-      if (target) {
-        target.likes = (target.likes || 0) + 1;
-        renderCommunityFeed();
-      }
-    };
-
-    // 5단계 퀴즈 시스템
-    window.checkQuizAnswer = function(qNum, optIdx, isCorrect, btnEl) {
-      const parent = btnEl.parentElement;
-      parent.querySelectorAll('.quiz-opt-btn').forEach(b => {
-        b.disabled = true;
-      });
-
-      const fb = document.getElementById(`quizFb${qNum}`);
+    window.checkAnswer = function(isCorrect, btn) {
+      const res = document.getElementById('quizResult');
+      res.style.display = 'block';
       if (isCorrect) {
-        btnEl.classList.add('correct');
         window.playSound('correct');
-        fb.textContent = '🎉 정답입니다! 멋진 AI 탐정이네요!';
-        fb.className = 'quiz-feedback show-ok';
-        window.state.quizAnswers[qNum] = true;
+        res.innerHTML = '<span style="color:#10b981;">🎉 정답입니다! 다양한 양질의 데이터가 AI의 핵심입니다.</span>';
+        document.getElementById('btnFinishQ5').style.display = 'inline-flex';
       } else {
-        btnEl.classList.add('wrong');
-        window.playSound('wrong');
-        fb.textContent = '💡 아쉬워요! 해설을 확인하고 다시 생각해보세요.';
-        fb.className = 'quiz-feedback show-err';
-        window.state.quizAnswers[qNum] = false;
+        window.playSound('click');
+        res.innerHTML = '<span style="color:#ef4444;">💡 아쉬워요! 다시 한번 생각해보세요.</span>';
       }
     };
 
     window.finishQuest5 = async function() {
-      const qSolved = Object.keys(window.state.quizAnswers).length;
-      if (qSolved < 3) {
-        showToast('3문제를 모두 풀어보세요!');
-        return;
-      }
-
       window.playSound('fanfare');
       window.addScore(100);
       localStorage.setItem("quest5_completed", "true");
-
-      const studentId = localStorage.getItem("elementary_studentId");
-      const studentName = localStorage.getItem("elementary_studentName");
 
       if (db && studentId) {
         try {
           await addDoc(collection(db, "quest5_logs"), {
             studentId,
             studentName,
-            predictedCount: window.state.predictedCount,
-            humanJudgments: window.state.humanJudgments,
-            aiJudgments: window.state.aiJudgments,
+            selectedItem: window.state.selectedItem.name,
             score: window.state.score,
             createdAt: serverTimestamp()
           });
           await updateDoc(doc(db, "students", studentId), {
-            score: increment(100)
+            score: increment(100),
+            questsDone: increment(1)
           });
         } catch(e) {
           console.warn("Firestore save error:", e);
         }
       }
 
-      alert(`🎉 축하합니다! 5차시 [AI 탐지 실험실] 퀘스트를 성공적으로 완료했습니다!\n\n총 획득 점수: ${window.state.score} EXP\n메인 화면으로 이동합니다.`);
-      window.location.href = 'main.html';
+      alert(`🎉 축하합니다! QUEST 5 [교실쓰레기 AI 탐정단]을 완료했습니다!\n\n총 획득 점수: ${window.state.score} EXP\n다음 퀘스트로 이동합니다!`);
+      window.location.href = 'quest6.html';
     };
 
-    // 초기화
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
-      renderStep2Items();
-      renderStep3CompareList();
-      renderCommunityFeed();
     });
   </script>
 </body>

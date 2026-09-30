@@ -1,1 +1,797 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUEST 7: AI탐정단 캠페인 본부</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4CAF50;
+      --primary-dark: #2E7D32;
+      --primary-light: #E8F5E9;
+      --secondary: #FF9800;
+      --secondary-light: #FFF3E0;
+      --accent-blue: #0288D1;
+      --accent-purple: #7B1FA2;
+      --bg: #F4F9F4;
+      --card-bg: #FFFFFF;
+      --text: #263238;
+      --text-muted: #607D8B;
+      --shadow: 0 8px 24px rgba(46, 125, 50, 0.12);
+      --radius: 20px;
+    }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: linear-gradient(135deg, #2E7D32, #1B5E20);
+      color: white;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-left a {
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+      background: rgba(255,255,255,0.2);
+      padding: 6px 12px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .header-left a:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .header-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      letter-spacing: 0.5px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .score-badge {
+      background: #FFF9C4;
+      color: #F57F17;
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: bold;
+      border: 2px solid #FBC02D;
+    }
+
+    .step-nav {
+      background: white;
+      border-bottom: 2px solid #E8F5E9;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
+      overflow-x: auto;
+    }
+
+    .step-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 2px solid #C8E6C9;
+      background: #F1F8E9;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .step-btn.active {
+      background: var(--primary-dark);
+      color: white;
+      border-color: var(--primary-dark);
+      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+    }
+
+    .step-btn.done {
+      background: #E8F5E9;
+      border-color: #81C784;
+    }
+
+    .main-container {
+      max-width: 900px;
+      margin: 24px auto;
+      padding: 0 16px;
+      flex: 1;
+      width: 100%;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      border: 2px solid #E8F5E9;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 24px;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .photo-grid { grid-template-columns: 1fr; }
+    }
+
+    .photo-box {
+      border: 2px dashed #81C784;
+      border-radius: 16px;
+      background: #F9FBE7;
+      padding: 16px;
+      text-align: center;
+      position: relative;
+    }
+
+    .photo-box h4 {
+      font-family: 'Jua', sans-serif;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+      font-size: 17px;
+    }
+
+    .photo-preview {
+      width: 100%;
+      height: 170px;
+      background: #FFFFFF;
+      border-radius: 12px;
+      border: 1px solid #C8E6C9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      overflow: hidden;
+      color: #90A4AE;
+      font-size: 14px;
+    }
+
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .btn-upload {
+      background: white;
+      border: 2px solid var(--primary);
+      color: var(--primary-dark);
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+
+    .btn-upload:hover {
+      background: var(--primary-light);
+    }
+
+    /* 슬로건 생성기 */
+    .generator-box {
+      background: #F1F8E9;
+      border-radius: 16px;
+      padding: 20px;
+      border: 2px solid #C8E6C9;
+      margin-bottom: 20px;
+    }
+
+    .slot-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .slot-chip {
+      background: white;
+      border: 2px solid #A5D6A7;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #2E7D32;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .slot-chip:hover {
+      border-color: #2E7D32;
+      background: #E8F5E9;
+    }
+
+    .slot-chip.selected {
+      background: #2E7D32;
+      color: white;
+      border-color: #1B5E20;
+    }
+
+    .slogan-banner {
+      background: linear-gradient(135deg, #FFF9C4, #FFF59D);
+      border: 3px solid #FBC02D;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin: 16px 0;
+      box-shadow: 0 4px 12px rgba(251, 192, 45, 0.25);
+    }
+
+    .slogan-text {
+      font-family: 'Jua', sans-serif;
+      font-size: 24px;
+      color: #E65100;
+      line-height: 1.4;
+      word-break: keep-all;
+    }
+
+    /* 서약서 작성 */
+    .pledge-sheet {
+      background: #FFFDE7;
+      border: 2px dashed #FBC02D;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .pledge-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .pledge-num {
+      width: 28px;
+      height: 28px;
+      background: #F57F17;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Jua', sans-serif;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .pledge-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 2px solid #FFE082;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 500;
+      outline: none;
+      background: white;
+    }
+
+    .pledge-input:focus {
+      border-color: #F57F17;
+    }
+
+    /* 피드 */
+    .feed-container {
+      max-height: 280px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .feed-card {
+      background: #F9FBE7;
+      border: 1px solid #DCEDC8;
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .feed-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .feed-author {
+      font-size: 13px;
+      font-weight: 700;
+      color: #33691E;
+    }
+
+    .feed-msg {
+      font-size: 14px;
+      color: #1B5E20;
+    }
+
+    .btn-like {
+      background: white;
+      border: 1px solid #C8E6C9;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #E65100;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-like:hover {
+      background: #FFF3E0;
+    }
+
+    /* 하단 액션 버튼 */
+    .action-btn-area {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      transition: all 0.2s;
+      font-family: 'Jua', sans-serif;
+    }
+
+    .btn-prev {
+      background: #ECEFF1;
+      color: #455A64;
+    }
+
+    .btn-prev:hover {
+      background: #CFD8DC;
+    }
+
+    .btn-next {
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: white;
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+    }
+
+    .btn-next:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
+    }
+
+    .step-content {
+      display: none;
+    }
+
+    .step-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <a href="main.html" title="메인으로">🏠</a>
+      <span class="header-title">QUEST 7: AI탐정단 캠페인 본부</span>
+    </div>
+    <div class="header-right">
+      <div class="score-badge" id="scoreDisplay">⭐ 0 EXP</div>
+    </div>
+  </header>
+
+  <nav class="step-nav">
+    <button class="step-btn active" id="sbtn1" onclick="goToStep(1)"><span>1단계</span> 📸 실천 사진 기록</button>
+    <button class="step-btn" id="sbtn2" onclick="goToStep(2)"><span>2단계</span> 📢 AI 슬로건 생성</button>
+    <button class="step-btn" id="sbtn3" onclick="goToStep(3)"><span>3단계</span> ✍️ 실천 서약 작성</button>
+    <button class="step-btn" id="sbtn4" onclick="goToStep(4)"><span>4단계</span> 🤝 캠페인 본부 출범</button>
+  </nav>
+
+  <div class="main-container">
+
+    <!-- 1단계: 사진 기록 -->
+    <div class="card step-content active" id="step1">
+      <h2 class="card-title">📸 1단계: 학교 쓰레기 분리배출 비포 & 애프터 사진 기록</h2>
+      <p class="card-desc">우리 학교와 교실의 쓰레기통 주변, 분리배출 장소의 '정리 전(Before)'과 '정리 후(After)' 실천 사진을 찍거나 올려보세요!</p>
+
+      <div class="photo-grid">
+        <div class="photo-box">
+          <h4>🧹 정리 전 (Before)</h4>
+          <div class="photo-preview" id="previewBefore">
+            <span>📷 사진을 등록해주세요</span>
+          </div>
+          <label class="btn-upload">
+            📁 사진 업로드
+            <input type="file" class="file-input" accept="image/*" onchange="handlePhotoUpload(event, 'previewBefore')">
+          </label>
+        </div>
+
+        <div class="photo-box" style="background:#E8F5E9; border-color:#4CAF50;">
+          <h4>✨ 정리 후 (After)</h4>
+          <div class="photo-preview" id="previewAfter">
+            <span>📷 사진을 등록해주세요</span>
+          </div>
+          <label class="btn-upload" style="background:#4CAF50;color:white;border-color:#2E7D32;">
+            📁 사진 업로드
+            <input type="file" class="file-input" accept="image/*" onchange="handlePhotoUpload(event, 'previewAfter')">
+          </label>
+        </div>
+      </div>
+
+      <div style="background:#E8F5E9;padding:12px 16px;border-radius:12px;font-size:14px;color:#2E7D32;margin-bottom:16px;">
+        💡 <strong>탐정 꿀팁:</strong> 사진 파일이 없는 경우, 아래 <strong>[예시 사진으로 채우기]</strong> 버튼을 누르면 탐정단 공식 실천 사진이 적용됩니다!
+      </div>
+
+      <div style="display:flex;gap:10px;margin-bottom:16px;">
+        <button class="btn btn-prev" onclick="fillSamplePhotos()" style="font-size:14px;padding:8px 16px;">✨ 예시 사진으로 자동 채우기</button>
+      </div>
+
+      <div class="action-btn-area">
+        <div></div>
+        <button class="btn btn-next" onclick="submitStep1()">다음 단계 (AI 슬로건 생성) ➡️</button>
+      </div>
+    </div>
+
+    <!-- 2단계: AI 슬로건 생성기 -->
+    <div class="card step-content" id="step2">
+      <h2 class="card-title">📢 2단계: AI 탐정단 캠페인 슬로건 & 표어 만들기</h2>
+      <p class="card-desc">키워드를 선택하거나 직접 수정하여 전교생의 마음을 움직일 멋진 자원순환 캠페인 슬로건을 완성해보세요!</p>
+
+      <div class="generator-box">
+        <h4 style="font-family:'Jua';color:#2E7D32;margin-bottom:10px;">1️⃣ 주제 키워드 고르기</h4>
+        <div class="slot-row" id="themeRow">
+          <div class="slot-chip selected" onclick="selectChip(this, 'theme', '깨끗한 우리 학교')">깨끗한 우리 학교</div>
+          <div class="slot-chip" onclick="selectChip(this, 'theme', '지구를 지키는')">지구를 지키는</div>
+          <div class="slot-chip" onclick="selectChip(this, 'theme', '5학년 탐정단의')">5학년 탐정단의</div>
+          <div class="slot-chip" onclick="selectChip(this, 'theme', 'AI와 함께하는')">AI와 함께하는</div>
+        </div>
+
+        <h4 style="font-family:'Jua';color:#2E7D32;margin-bottom:10px;">2️⃣ 행동 키워드 고르기</h4>
+        <div class="slot-row" id="actionRow">
+          <div class="slot-chip selected" onclick="selectChip(this, 'action', '올바른 분리배출로')">올바른 분리배출로</div>
+          <div class="slot-chip" onclick="selectChip(this, 'action', '비우고 헹구고 떼어내어')">비우고 헹구고 떼어내어</div>
+          <div class="slot-chip" onclick="selectChip(this, 'action', '쓰레기를 소중한 자원으로')">쓰레기를 소중한 자원으로</div>
+          <div class="slot-chip" onclick="selectChip(this, 'action', '재활용 규칙 100% 지켜')">재활용 규칙 100% 지켜</div>
+        </div>
+
+        <h4 style="font-family:'Jua';color:#2E7D32;margin-bottom:10px;">3️⃣ 마무리 다짐 고르기</h4>
+        <div class="slot-row" id="endRow">
+          <div class="slot-chip selected" onclick="selectChip(this, 'end', '초록빛 미래를 만들어요! 🌱')">초록빛 미래를 만들어요! 🌱</div>
+          <div class="slot-chip" onclick="selectChip(this, 'end', '함께 실천하는 탐정단이 되자! 🕵️')">함께 실천하는 탐정단이 되자! 🕵️</div>
+          <div class="slot-chip" onclick="selectChip(this, 'end', '지구 살리기에 앞장서요! 🌍')">지구 살리기에 앞장서요! 🌍</div>
+          <div class="slot-chip" onclick="selectChip(this, 'end', '선생님과 친구들에게 알려요! 📢')">선생님과 친구들에게 알려요! 📢</div>
+        </div>
+      </div>
+
+      <div class="slogan-banner">
+        <div style="font-size:14px;color:#F57F17;font-weight:bold;margin-bottom:6px;">🏆 모둠 공식 캠페인 슬로건</div>
+        <div class="slogan-text" id="finalSloganText">"깨끗한 우리 학교, 올바른 분리배출로 초록빛 미래를 만들어요! 🌱"</div>
+      </div>
+
+      <div class="action-btn-area">
+        <button class="btn btn-prev" onclick="goToStep(1)">⬅️ 이전 단계</button>
+        <button class="btn btn-next" onclick="submitStep2()">다음 단계 (실천 서약 작성) ➡️</button>
+      </div>
+    </div>
+
+    <!-- 3단계: 실천 서약서 작성 -->
+    <div class="card step-content" id="step3">
+      <h2 class="card-title">✍️ 3단계: 우리 모둠 3대 자원순환 실천 서약서</h2>
+      <p class="card-desc">우리가 지킬 수 있는 현실적이고 강력한 실천 약속 3가지를 정해 서약서를 완성해보세요.</p>
+
+      <div class="pledge-sheet">
+        <h3 style="text-align:center;font-family:'Jua';color:#E65100;font-size:22px;margin-bottom:16px;">📜 AI 자원순환 탐정단 실천 서약서</h3>
+        
+        <div class="pledge-item">
+          <div class="pledge-num">1</div>
+          <input type="text" id="pledge1" class="pledge-input" value="페트병은 라벨을 뜯고 찌그러뜨려서 뚜껑과 함께 닫아 버리겠습니다.">
+        </div>
+
+        <div class="pledge-item">
+          <div class="pledge-num">2</div>
+          <input type="text" id="pledge2" class="pledge-input" value="우유팩과 음료수 캔은 물로 깨끗이 헹군 뒤 분리수거함에 넣겠습니다.">
+        </div>
+
+        <div class="pledge-item">
+          <div class="pledge-num">3</div>
+          <input type="text" id="pledge3" class="pledge-input" value="친구들이 분리배출을 어려워할 때 AI 탐정처럼 친절하게 알려주겠습니다.">
+        </div>
+
+        <div style="margin-top:20px;text-align:right;font-family:'Jua';color:#33691E;font-size:16px;">
+          서약자: <span id="pledgeAuthorName" style="color:#E65100;font-size:18px;">탐정 학생</span> (서명 ✍️)
+        </div>
+      </div>
+
+      <div class="action-btn-area">
+        <button class="btn btn-prev" onclick="goToStep(2)">⬅️ 이전 단계</button>
+        <button class="btn btn-next" onclick="submitStep3()">다음 단계 (캠페인 본부 출범) ➡️</button>
+      </div>
+    </div>
+
+    <!-- 4단계: 캠페인 본부 출범 및 서명 운동 -->
+    <div class="card step-content" id="step4">
+      <h2 class="card-title">🤝 4단계: AI 탐정단 캠페인 본부 출범 및 전교생 서명 참여</h2>
+      <p class="card-desc">친구들의 응원 메시지를 확인하고, 나의 캠페인 등록을 완료하여 QUEST 7을 완수하세요!</p>
+
+      <h4 style="font-family:'Jua';color:#2E7D32;margin-bottom:10px;">🌟 전교생 실천 응원 릴레이 피드</h4>
+      <div class="feed-container" id="campaignFeed">
+        <div class="feed-card">
+          <div class="feed-left">
+            <span class="feed-author">🕵️ 1모둠 김민준 탐정</span>
+            <span class="feed-msg">"우리 교실 분리수거함 라벨 작업을 오늘 완료했습니다! 다 같이 지켜요!"</span>
+          </div>
+          <button class="btn-like" onclick="likeFeed(this)">❤️ 12</button>
+        </div>
+        <div class="feed-card">
+          <div class="feed-left">
+            <span class="feed-author">🕵️ 3모둠 박서연 탐정</span>
+            <span class="feed-msg">"페트병 비닐 라벨 뜯기 캠페인 포스터를 복도에 붙였어요!"</span>
+          </div>
+          <button class="btn-like" onclick="likeFeed(this)">❤️ 9</button>
+        </div>
+        <div class="feed-card">
+          <div class="feed-left">
+            <span class="feed-author">🕵️ 2모둠 이도윤 탐정</span>
+            <span class="feed-msg">"AI 카메라가 잘 맞출 수 있게 깨끗한 상태로 버리는 규칙을 지킵시다!"</span>
+          </div>
+          <button class="btn-like" onclick="likeFeed(this)">❤️ 15</button>
+        </div>
+      </div>
+
+      <div style="background:#FFF9C4;border:2px solid #FBC02D;border-radius:16px;padding:20px;text-align:center;margin-bottom:20px;">
+        <h3 style="font-family:'Jua';color:#E65100;font-size:20px;margin-bottom:8px;">🎉 캠페인 본부 등록 준비 완료!</h3>
+        <p style="color:#5D4037;font-size:15px;">캠페인 본부 출범식에 서명하고 마지막 관문인 <strong>[QUEST 8: 우리학교 자원 순환 규약 의회]</strong>로 이동할 수 있습니다.</p>
+      </div>
+
+      <div class="action-btn-area">
+        <button class="btn btn-prev" onclick="goToStep(3)">⬅️ 이전 단계</button>
+        <button class="btn btn-next" style="background:linear-gradient(135deg,#FF9800,#E65100);" onclick="finishQuest7()">🏁 QUEST 7 완료 및 서명 제출 (+100 EXP) ➡️</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, doc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+      authDomain: "elemeelementary-textbook.firebaseapp.com",
+      projectId: "elemeelementary-textbook",
+      storageBucket: "elemeelementary-textbook.firebasestorage.app",
+      messagingSenderId: "713149004420",
+      appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
+      measurementId: "G-TZT282J9E8"
+    };
+
+    let app, db;
+    try {
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+    } catch(e) {
+      console.warn("Firebase init:", e);
+    }
+
+    window.state = {
+      score: parseInt(localStorage.getItem("elementary_score") || "0", 10),
+      currentStep: 1,
+      sloganParts: {
+        theme: '깨끗한 우리 학교',
+        action: '올바른 분리배출로',
+        end: '초록빛 미래를 만들어요! 🌱'
+      },
+      hasPhotos: false
+    };
+
+    window.goToStep = function(stepNum) {
+      window.state.currentStep = stepNum;
+      for (let i = 1; i <= 4; i++) {
+        const stepEl = document.getElementById(`step${i}`);
+        const btnEl = document.getElementById(`sbtn${i}`);
+        if (stepEl) stepEl.classList.toggle('active', i === stepNum);
+        if (btnEl) {
+          btnEl.classList.toggle('active', i === stepNum);
+          if (i < stepNum) btnEl.classList.add('done');
+        }
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.handlePhotoUpload = function(event, previewId) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const preview = document.getElementById(previewId);
+        preview.innerHTML = `<img src="${e.target.result}" alt="업로드 사진">`;
+        window.state.hasPhotos = true;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.fillSamplePhotos = function() {
+      document.getElementById('previewBefore').innerHTML = `<img src="https://images.unsplash.com/photo-1605600659873-d808a13e4d2a?w=400&auto=format&fit=crop&q=60" alt="정리 전">`;
+      document.getElementById('previewAfter').innerHTML = `<img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400&auto=format&fit=crop&q=60" alt="정리 후">`;
+      window.state.hasPhotos = true;
+      alert("✨ 탐정단 공식 비포&애프터 실천 사진이 채워졌습니다!");
+    };
+
+    window.submitStep1 = function() {
+      if (!window.state.hasPhotos) {
+        if (!confirm("사진을 아직 등록하지 않았습니다. 예시 사진으로 등록하고 넘어갈까요?")) {
+          return;
+        }
+        fillSamplePhotos();
+      }
+      addScore(25);
+      goToStep(2);
+    };
+
+    window.selectChip = function(el, partKey, val) {
+      const parent = el.parentElement;
+      parent.querySelectorAll('.slot-chip').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      window.state.sloganParts[partKey] = val;
+      updateSloganDisplay();
+    };
+
+    function updateSloganDisplay() {
+      const text = `"${window.state.sloganParts.theme}, ${window.state.sloganParts.action} ${window.state.sloganParts.end}"`;
+      document.getElementById('finalSloganText').textContent = text;
+    }
+
+    window.submitStep2 = function() {
+      addScore(25);
+      goToStep(3);
+    };
+
+    window.submitStep3 = function() {
+      const p1 = document.getElementById('pledge1').value.trim();
+      const p2 = document.getElementById('pledge2').value.trim();
+      const p3 = document.getElementById('pledge3').value.trim();
+
+      if (!p1 || !p2 || !p3) {
+        return alert("3가지 실천 서약 약속을 모두 작성해주세요!");
+      }
+      addScore(25);
+      goToStep(4);
+    };
+
+    window.likeFeed = function(btn) {
+      let count = parseInt(btn.textContent.replace('❤️', '').trim() || "0", 10);
+      count++;
+      btn.textContent = `❤️ ${count}`;
+      btn.style.background = '#FFEBEE';
+      btn.style.borderColor = '#FFCDD2';
+    };
+
+    window.addScore = function(exp) {
+      window.state.score += exp;
+      localStorage.setItem("elementary_score", window.state.score);
+      document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
+    };
+
+    window.finishQuest7 = async function() {
+      addScore(100);
+      localStorage.setItem("quest7_completed", "true");
+
+      const studentId = localStorage.getItem("elementary_studentId");
+      const studentName = localStorage.getItem("elementary_studentName") || "탐정 학생";
+      const teamCode = localStorage.getItem("elementary_teamCode") || "모둠";
+      const slogan = document.getElementById('finalSloganText').textContent;
+      const pledges = [
+        document.getElementById('pledge1').value,
+        document.getElementById('pledge2').value,
+        document.getElementById('pledge3').value
+      ];
+
+      if (db && studentId) {
+        try {
+          await addDoc(collection(db, "quest7_logs"), {
+            studentId,
+            studentName,
+            teamCode,
+            slogan,
+            pledges,
+            createdAt: serverTimestamp()
+          });
+
+          await updateDoc(doc(db, "students", studentId), {
+            score: increment(100),
+            questsDone: increment(1)
+          });
+        } catch(e) {
+          console.warn("Firestore error:", e);
+        }
+      }
+
+      alert(`🎉 축하합니다! QUEST 7 [AI탐정단 캠페인 본부]를 완료했습니다!\n\n총 획득 점수: ${window.state.score} EXP\n마지막 최종 의회 관문인 [QUEST 8: 우리학교 자원 순환 규약 의회]로 이동합니다!`);
+      window.location.href = 'quest8.html';
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
+      const sName = localStorage.getItem("elementary_studentName") || "탐정 학생";
+      const sAuthor = document.getElementById('pledgeAuthorName');
+      if (sAuthor) sAuthor.textContent = sName;
+    });
+  </script>
+</body>
+</html>

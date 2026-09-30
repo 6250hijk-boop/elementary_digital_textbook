@@ -1,1 +1,707 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUEST 8: 우리학교 자원 순환 규약 의회</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4CAF50;
+      --primary-dark: #2E7D32;
+      --primary-light: #E8F5E9;
+      --secondary: #FF9800;
+      --secondary-light: #FFF3E0;
+      --gold: #FFD700;
+      --accent-purple: #6A1B9A;
+      --bg: #F4F9F4;
+      --card-bg: #FFFFFF;
+      --text: #263238;
+      --text-muted: #607D8B;
+      --shadow: 0 8px 24px rgba(46, 125, 50, 0.12);
+      --radius: 20px;
+    }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1B5E20, #004D40);
+      color: white;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-left a {
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+      background: rgba(255,255,255,0.2);
+      padding: 6px 12px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .header-left a:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .header-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      letter-spacing: 0.5px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .score-badge {
+      background: #FFF9C4;
+      color: #F57F17;
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: bold;
+      border: 2px solid #FBC02D;
+    }
+
+    .step-nav {
+      background: white;
+      border-bottom: 2px solid #E8F5E9;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
+      overflow-x: auto;
+    }
+
+    .step-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 2px solid #C8E6C9;
+      background: #F1F8E9;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .step-btn.active {
+      background: var(--primary-dark);
+      color: white;
+      border-color: var(--primary-dark);
+      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+    }
+
+    .step-btn.done {
+      background: #E8F5E9;
+      border-color: #81C784;
+    }
+
+    .main-container {
+      max-width: 900px;
+      margin: 24px auto;
+      padding: 0 16px;
+      flex: 1;
+      width: 100%;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      border: 2px solid #E8F5E9;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 24px;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    /* 의회 안건 카드 */
+    .bill-card {
+      background: #F1F8E9;
+      border-radius: 16px;
+      border: 2px solid #C8E6C9;
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: transform 0.2s;
+    }
+
+    .bill-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .bill-tag {
+      background: #2E7D32;
+      color: white;
+      font-family: 'Jua', sans-serif;
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 10px;
+    }
+
+    .bill-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 18px;
+      color: #1B5E20;
+    }
+
+    .bill-body {
+      font-size: 15px;
+      color: #37474F;
+      line-height: 1.6;
+      background: white;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid #E0E0E0;
+    }
+
+    /* 전자 투표 */
+    .vote-box {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .vote-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      border: 2px solid #C8E6C9;
+      background: white;
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .vote-btn.agree {
+      color: #2E7D32;
+    }
+
+    .vote-btn.agree:hover, .vote-btn.agree.selected {
+      background: #E8F5E9;
+      border-color: #2E7D32;
+      color: #1B5E20;
+    }
+
+    .vote-btn.opinion {
+      color: #E65100;
+    }
+
+    .vote-btn.opinion:hover, .vote-btn.opinion.selected {
+      background: #FFF3E0;
+      border-color: #E65100;
+      color: #BF360C;
+    }
+
+    /* 최종 헌장 서명 증서 */
+    .charter-doc {
+      background: #FFFDE7;
+      border: 4px double #FBC02D;
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 8px 24px rgba(251, 192, 45, 0.2);
+    }
+
+    .charter-emblem {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .charter-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 28px;
+      color: #E65100;
+      margin-bottom: 16px;
+    }
+
+    .charter-articles {
+      text-align: left;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #FFE082;
+      padding: 20px;
+      margin: 20px 0;
+      font-size: 15px;
+      line-height: 1.8;
+      color: #37474F;
+    }
+
+    .charter-sign-area {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 2px dashed #FFE082;
+    }
+
+    .sign-box {
+      font-family: 'Jua', sans-serif;
+      font-size: 18px;
+      color: #1B5E20;
+    }
+
+    .sign-badge {
+      background: #E8F5E9;
+      color: #2E7D32;
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 2px solid #81C784;
+      display: inline-block;
+      margin-top: 6px;
+    }
+
+    /* 인증서 카드 */
+    .cert-box {
+      background: linear-gradient(135deg, #FFF9C4, #FFF59D);
+      border: 4px solid #FBC02D;
+      border-radius: 24px;
+      padding: 36px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(251, 192, 45, 0.35);
+      animation: popCert 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popCert {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .cert-icon {
+      font-size: 64px;
+      margin-bottom: 12px;
+    }
+
+    .cert-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 32px;
+      color: #BF360C;
+      margin-bottom: 10px;
+    }
+
+    .cert-subtitle {
+      font-size: 17px;
+      color: #5D4037;
+      margin-bottom: 24px;
+    }
+
+    .cert-details {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 0 auto 24px auto;
+      max-width: 500px;
+      font-size: 16px;
+      line-height: 1.8;
+      color: #37474F;
+      border: 1px solid #FFE082;
+    }
+
+    /* 하단 액션 버튼 */
+    .action-btn-area {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      transition: all 0.2s;
+      font-family: 'Jua', sans-serif;
+    }
+
+    .btn-prev {
+      background: #ECEFF1;
+      color: #455A64;
+    }
+
+    .btn-prev:hover {
+      background: #CFD8DC;
+    }
+
+    .btn-next {
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: white;
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+    }
+
+    .btn-next:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
+    }
+
+    .step-content {
+      display: none;
+    }
+
+    .step-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <a href="main.html" title="메인으로">🏠</a>
+      <span class="header-title">QUEST 8: 우리학교 자원 순환 규약 의회</span>
+    </div>
+    <div class="header-right">
+      <div class="score-badge" id="scoreDisplay">⭐ 0 EXP</div>
+    </div>
+  </header>
+
+  <nav class="step-nav">
+    <button class="step-btn active" id="sbtn1" onclick="goToStep(1)"><span>1단계</span> 🏛️ 안건 상정</button>
+    <button class="step-btn" id="sbtn2" onclick="goToStep(2)"><span>2단계</span> 🗳️ 의회 전자 투표</button>
+    <button class="step-btn" id="sbtn3" onclick="goToStep(3)"><span>3단계</span> 📜 헌장 비준 서명</button>
+    <button class="step-btn" id="sbtn4" onclick="goToStep(4)"><span>4단계</span> 🏆 마스터 탐정 임명</button>
+  </nav>
+
+  <div class="main-container">
+
+    <!-- 1단계: 안건 상정 -->
+    <div class="card step-content active" id="step1">
+      <h2 class="card-title">🏛️ 1단계: 우리 학교 자원 순환 4대 안건 상정</h2>
+      <p class="card-desc">우리가 QUEST 1부터 7까지 탐정 활동을 통해 발견한 문제점과 해결책을 바탕으로 의회에 상정된 4가지 규칙 안건을 확인해보세요.</p>
+
+      <div class="bill-card">
+        <div class="bill-header">
+          <span class="bill-title">제1조 [투명 페트병 분리배출 의무화]</span>
+          <span class="bill-tag">조항 1</span>
+        </div>
+        <div class="bill-body">
+          교내에서 발생하는 모든 투명 음료 페트병은 <strong>[비우고 ➡️ 헹구고 ➡️ 비닐라벨을 떼어내고 ➡️ 찌그러뜨려]</strong> 전용 수거함에 배출한다.
+        </div>
+      </div>
+
+      <div class="bill-card">
+        <div class="bill-header">
+          <span class="bill-title">제2조 [음료 잔여물 세척 후 배출]</span>
+          <span class="bill-tag">조항 2</span>
+        </div>
+        <div class="bill-body">
+          우유팩, 캔, 요거트 용기 등 내용물이 남은 용기는 반드시 수돗물로 깨끗이 헹군 뒤 분리배출하여 다른 재활용품의 오염을 방지한다.
+        </div>
+      </div>
+
+      <div class="bill-card">
+        <div class="bill-header">
+          <span class="bill-title">제3조 [인간과 AI의 협력 분리수거 검수]</span>
+          <span class="bill-tag">조항 3</span>
+        </div>
+        <div class="bill-body">
+          AI 비전 스캐너가 애매하게 인식하거나 오류를 낼 수 있는 특수 쓰레기는 탐정단 학생이 최종 검수하고 올바르게 다시 분류한다.
+        </div>
+      </div>
+
+      <div class="bill-card">
+        <div class="bill-header">
+          <span class="bill-title">제4조 [교실 자원순환 주간 운영]</span>
+          <span class="bill-tag">조항 4</span>
+        </div>
+        <div class="bill-body">
+          매주 금요일 종례 시간을 'AI 자원순환의 날'로 지정하고 모둠별로 분리배출 상태를 점검하고 피드백을 공유한다.
+        </div>
+      </div>
+
+      <div class="action-btn-area">
+        <div></div>
+        <button class="btn btn-next" onclick="submitStep1()">다음 단계 (전자 투표 참여) ➡️</button>
+      </div>
+    </div>
+
+    <!-- 2단계: 전자 투표 -->
+    <div class="card step-content" id="step2">
+      <h2 class="card-title">🗳️ 2단계: 우리 모둠 대표 전자 투표 참여</h2>
+      <p class="card-desc">상정된 4가지 안건에 대해 찬성 여부를 투표하고 우리 모둠의 의견을 표결하세요!</p>
+
+      <div id="voteItemsArea">
+        <!-- JS 생성 -->
+      </div>
+
+      <div class="action-btn-area">
+        <button class="btn btn-prev" onclick="goToStep(1)">⬅️ 이전 단계</button>
+        <button class="btn btn-next" onclick="submitStep2()">다음 단계 (헌장 비준 서명) ➡️</button>
+      </div>
+    </div>
+
+    <!-- 3단계: 헌장 비준 및 서명 -->
+    <div class="card step-content" id="step3">
+      <h2 class="card-title">📜 3단계: 우리학교 자원 순환 헌장 비준 및 공식 서명</h2>
+      <p class="card-desc">의회에서 가결된 최종 규약 헌장을 엄숙히 낭독하고, 탐정단 대표로서 전자 서명을 완료하세요.</p>
+
+      <div class="charter-doc">
+        <div class="charter-emblem">🌍 🏛️ 📜</div>
+        <h3 class="charter-title">우리학교 자원 순환 공식 헌장</h3>
+        <p style="color:#6D4C41;font-size:15px;font-weight:bold;">초등학교 5학년 AI 자원순환 탐정단 의회 의결</p>
+
+        <div class="charter-articles">
+          <p><strong>제1조:</strong> 우리는 깨끗한 지구와 쾌적한 학교를 위해 비우고, 헹구고, 분리하는 규칙을 철저히 지킨다.</p>
+          <p><strong>제2조:</strong> 우리는 인공지능(AI)을 올바른 데이터로 학습시키고, AI의 한계를 이해하며 협력하여 자원순환을 이끈다.</p>
+          <p><strong>제3조:</strong> 우리는 학교와 가정에서 배운 분리배출 지식을 친구들과 가족들에게 널리 알리고 실천에 앞장선다.</p>
+        </div>
+
+        <div class="charter-sign-area">
+          <div class="sign-box">
+            <div>의회 대표 의원</div>
+            <div class="sign-badge" id="charterSignName">탐정 학생 ✍️</div>
+          </div>
+          <div class="sign-box">
+            <div>AI 파트너 증인</div>
+            <div class="sign-badge" style="background:#FFF3E0;color:#E65100;border-color:#FFB74D;" id="charterAiName">🤖 에코봇</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-btn-area">
+        <button class="btn btn-prev" onclick="goToStep(2)">⬅️ 이전 단계</button>
+        <button class="btn btn-next" style="background:linear-gradient(135deg,#FF9800,#E65100);" onclick="submitStep3()">최종 비준 및 임명장 수여식 ➡️</button>
+      </div>
+    </div>
+
+    <!-- 4단계: 수료식 및 마스터 탐정 임명 -->
+    <div class="card step-content" id="step4">
+      <div class="cert-box">
+        <div class="cert-icon">🏆 🎓 ✨</div>
+        <h2 class="cert-title">마스터 AI 탐정 공인 임명장</h2>
+        <p class="cert-subtitle">AI 자원순환 탐정단 전 과정(QUEST 1~8) 완수 증명</p>
+
+        <div class="cert-details">
+          <p><strong>이름:</strong> <span id="certStudentName" style="color:#2E7D32;font-weight:bold;">탐정 학생</span></p>
+          <p><strong>소속 모둠:</strong> <span id="certTeamCode" style="color:#0277BD;font-weight:bold;">1모둠</span></p>
+          <p><strong>AI 파트너:</strong> <span id="certAiName" style="color:#7B1FA2;font-weight:bold;">에코봇</span></p>
+          <p><strong>최종 탐정 EXP:</strong> <span id="certScore" style="color:#E65100;font-weight:bold;">1000 EXP</span></p>
+          <p style="margin-top:10px;font-size:14px;color:#546E7A;">위 학생은 AI와 데이터, 자원순환의 모든 과정을 훌륭히 이수하였으므로 우리 학교 공식 <strong>[마스터 탐정 🏆]</strong>으로 임명합니다.</p>
+        </div>
+
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+          <a href="dashboard.html" class="btn" style="background:#2E7D32;color:white;text-decoration:none;">📊 우리 모둠 & 학급 대시보드 보기</a>
+          <a href="main.html" class="btn" style="background:#0288D1;color:white;text-decoration:none;">🏠 메인 화면으로 돌아가기</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, doc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+      authDomain: "elemeelementary-textbook.firebaseapp.com",
+      projectId: "elemeelementary-textbook",
+      storageBucket: "elemeelementary-textbook.firebasestorage.app",
+      messagingSenderId: "713149004420",
+      appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
+      measurementId: "G-TZT282J9E8"
+    };
+
+    let app, db;
+    try {
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+    } catch(e) {
+      console.warn("Firebase init:", e);
+    }
+
+    const BILLS = [
+      { id: 1, title: '제1조 [투명 페트병 분리배출 의무화]', desc: '비우고, 헹구고, 라벨 떼고, 찌그러뜨리기 의무화' },
+      { id: 2, title: '제2조 [음료 잔여물 세척 후 배출]', desc: '음료와 우유 잔여물 세척 후 분리배출' },
+      { id: 3, title: '제3조 [인간-AI 협력 분리수거 검수]', desc: 'AI 판단 오류 시 인간 탐정단의 최종 검수 및 재분류' },
+      { id: 4, title: '제4조 [교실 자원순환 주간 운영]', desc: '매주 금요일 AI 자원순환의 날 운영' }
+    ];
+
+    window.state = {
+      score: parseInt(localStorage.getItem("elementary_score") || "0", 10),
+      currentStep: 1,
+      votes: { 1: 'agree', 2: 'agree', 3: 'agree', 4: 'agree' }
+    };
+
+    window.goToStep = function(stepNum) {
+      window.state.currentStep = stepNum;
+      for (let i = 1; i <= 4; i++) {
+        const stepEl = document.getElementById(`step${i}`);
+        const btnEl = document.getElementById(`sbtn${i}`);
+        if (stepEl) stepEl.classList.toggle('active', i === stepNum);
+        if (btnEl) {
+          btnEl.classList.toggle('active', i === stepNum);
+          if (i < stepNum) btnEl.classList.add('done');
+        }
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.submitStep1 = function() {
+      addScore(25);
+      renderVoteItems();
+      goToStep(2);
+    };
+
+    function renderVoteItems() {
+      const area = document.getElementById('voteItemsArea');
+      if (!area) return;
+      area.innerHTML = BILLS.map(b => `
+        <div class="bill-card" style="margin-bottom:14px;">
+          <div class="bill-header">
+            <span class="bill-title">${b.title}</span>
+          </div>
+          <p style="font-size:14px;color:#546E7A;margin-bottom:8px;">${b.desc}</p>
+          <div class="vote-box">
+            <button class="vote-btn agree ${window.state.votes[b.id] === 'agree' ? 'selected' : ''}" onclick="setVote(${b.id}, 'agree', this)">
+              👍 적극 찬성 및 동의
+            </button>
+            <button class="vote-btn opinion ${window.state.votes[b.id] === 'opinion' ? 'selected' : ''}" onclick="setVote(${b.id}, 'opinion', this)">
+              💡 찬성 (추가 의견 제시)
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.setVote = function(billId, voteType, btnEl) {
+      window.state.votes[billId] = voteType;
+      const parent = btnEl.parentElement;
+      parent.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('selected'));
+      btnEl.classList.add('selected');
+    };
+
+    window.submitStep2 = function() {
+      addScore(25);
+      goToStep(3);
+    };
+
+    window.submitStep3 = async function() {
+      addScore(100);
+      localStorage.setItem("quest8_completed", "true");
+      localStorage.setItem("elementary_badge", "마스터 탐정 🏆");
+
+      const studentId = localStorage.getItem("elementary_studentId");
+      const studentName = localStorage.getItem("elementary_studentName") || "탐정 학생";
+      const teamCode = localStorage.getItem("elementary_teamCode") || "모둠";
+      const aiName = localStorage.getItem("elementary_aiPartnerName") || "에코봇";
+
+      if (db && studentId) {
+        try {
+          await addDoc(collection(db, "quest8_logs"), {
+            studentId,
+            studentName,
+            teamCode,
+            votes: window.state.votes,
+            badge: "마스터 탐정 🏆",
+            score: window.state.score,
+            createdAt: serverTimestamp()
+          });
+
+          await updateDoc(doc(db, "students", studentId), {
+            score: increment(100),
+            questsDone: increment(1),
+            badge: "마스터 탐정 🏆"
+          });
+        } catch(e) {
+          console.warn("Firestore error:", e);
+        }
+      }
+
+      // 최종 인증서 정보 갱신
+      document.getElementById('certStudentName').textContent = studentName;
+      document.getElementById('certTeamCode').textContent = teamCode;
+      document.getElementById('certAiName').textContent = aiName;
+      document.getElementById('certScore').textContent = `${window.state.score} EXP`;
+
+      goToStep(4);
+    };
+
+    window.addScore = function(exp) {
+      window.state.score += exp;
+      localStorage.setItem("elementary_score", window.state.score);
+      document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
+      const sName = localStorage.getItem("elementary_studentName") || "탐정 학생";
+      const aiName = localStorage.getItem("elementary_aiPartnerName") || "에코봇";
+
+      const signName = document.getElementById('charterSignName');
+      if (signName) signName.textContent = `${sName} ✍️`;
+
+      const aiSign = document.getElementById('charterAiName');
+      if (aiSign) aiSign.textContent = `🤖 ${aiName}`;
+    });
+  </script>
+</body>
+</html>

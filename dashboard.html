@@ -185,19 +185,21 @@
           <th>익명 학번</th>
           <th>익명 이름</th>
           <th>AI 파트너</th>
-          <th>Q1 (시선)</th>
-          <th>Q2 (기준)</th>
-          <th>Q3 (선별)</th>
+          <th>Q1 (사건)</th>
+          <th>Q2 (규칙)</th>
+          <th>Q3 (사진)</th>
           <th>Q4 (라벨)</th>
           <th>Q5 (탐지)</th>
-          <th>Q6 (규약)</th>
+          <th>Q6 (오류)</th>
+          <th>Q7 (캠페인)</th>
+          <th>Q8 (규약)</th>
           <th>탐정 등급</th>
           <th>진도율</th>
         </tr>
       </thead>
       <tbody id="studentTableBody">
         <tr>
-          <td colspan="11" style="padding: 20px;">실시간 진도 데이터를 수신하고 있습니다...</td>
+          <td colspan="13" style="padding: 20px;">실시간 진도 데이터를 수신하고 있습니다...</td>
         </tr>
       </tbody>
     </table>
@@ -244,17 +246,18 @@
     document.getElementById("myStatus").textContent = "비로그인 상태";
   }
 
-  // 6개 퀘스트 완료 여부 캐시 객체
-  const questDoneMap = {}; // { studentId: { q1: bool, q2: bool, ... } }
+  // 8개 퀘스트 완료 여부 캐시 객체
+  const questDoneMap = {};
 
-  // 퀘스트 완료 기록 실시간 구독
   const collections = [
     { name: "quest1_records", key: "q1" },
     { name: "quest2_rules", key: "q2" },
     { name: "quest3_data", key: "q3" },
     { name: "quest4_labeling", key: "q4" },
-    { name: "quest5_compare", key: "q5" },
-    { name: "quest6_promises", key: "q6" }
+    { name: "quest5_logs", key: "q5" },
+    { name: "quest6_logs", key: "q6" },
+    { name: "quest7_logs", key: "q7" },
+    { name: "quest8_logs", key: "q8" }
   ];
 
   collections.forEach(col => {
@@ -272,7 +275,6 @@
 
   let studentsCache = [];
 
-  // 학생 등록부 실시간 구독
   const studentsQ = query(collection(db, "students"), orderBy("score", "desc"));
   onSnapshot(studentsQ, (snapshot) => {
     studentsCache = [];
@@ -285,7 +287,7 @@
   function renderTable() {
     const tbody = document.getElementById("studentTableBody");
     if (!studentsCache.length) {
-      tbody.innerHTML = `<tr><td colspan="11" style="padding: 20px;">등록된 탐정단 학생이 없습니다.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="13" style="padding: 20px;">등록된 탐정단 학생이 없습니다.</td></tr>`;
       return;
     }
 
@@ -303,12 +305,14 @@
       const isQ4 = !!qStatus.q4;
       const isQ5 = !!qStatus.q5;
       const isQ6 = !!qStatus.q6;
+      const isQ7 = !!qStatus.q7;
+      const isQ8 = !!qStatus.q8;
 
-      const completedCount = [isQ1, isQ2, isQ3, isQ4, isQ5, isQ6].filter(Boolean).length;
+      const completedCount = [isQ1, isQ2, isQ3, isQ4, isQ5, isQ6, isQ7, isQ8].filter(Boolean).length;
       totalQuestsCompleted += completedCount;
 
-      const progressPercent = Math.round((completedCount / 6) * 100);
-      const isMaster = (completedCount === 6) || (student.badge === "마스터 탐정 ⭐");
+      const progressPercent = Math.round((completedCount / 8) * 100);
+      const isMaster = (completedCount === 8) || (student.badge && student.badge.includes("마스터"));
       if (isMaster) masterCount++;
 
       const isMe = (sId === currentStudentId);
@@ -326,6 +330,8 @@
         <td><span class="badge-quest ${isQ4 ? 'badge-done' : 'badge-yet'}">${isQ4 ? '완료 ✓' : '진행중'}</span></td>
         <td><span class="badge-quest ${isQ5 ? 'badge-done' : 'badge-yet'}">${isQ5 ? '완료 ✓' : '진행중'}</span></td>
         <td><span class="badge-quest ${isQ6 ? 'badge-done' : 'badge-yet'}">${isQ6 ? '완료 ✓' : '진행중'}</span></td>
+        <td><span class="badge-quest ${isQ7 ? 'badge-done' : 'badge-yet'}">${isQ7 ? '완료 ✓' : '진행중'}</span></td>
+        <td><span class="badge-quest ${isQ8 ? 'badge-done' : 'badge-yet'}">${isQ8 ? '완료 ✓' : '진행중'}</span></td>
         <td><span class="badge-quest ${isMaster ? 'badge-master' : 'badge-done'}">${isMaster ? '🏅 마스터' : '🌱 신입'}</span></td>
         <td style="width: 100px;">
           <div style="font-size: 11px; margin-bottom: 2px;">${progressPercent}%</div>
@@ -340,7 +346,7 @@
     // 상단 요약 갱신
     const totalCount = studentsCache.length;
     document.getElementById("totalStudents").textContent = `${totalCount}명`;
-    const avgProg = totalCount ? Math.round((totalQuestsCompleted / (totalCount * 6)) * 100) : 0;
+    const avgProg = totalCount ? Math.round((totalQuestsCompleted / (totalCount * 8)) * 100) : 0;
     document.getElementById("avgProgress").textContent = `${avgProg}%`;
     document.getElementById("masterCount").textContent = `${masterCount}명`;
   }

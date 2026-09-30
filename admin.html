@@ -442,7 +442,7 @@
       } else {
         teamTbody.innerHTML = cachedTeams.map(t => {
           const qDone = t.questsDone || 0;
-          const pct = Math.round((qDone / 6) * 100);
+          const pct = Math.round((qDone / 8) * 100);
           const membersList = (t.members && t.members.length) 
             ? t.members.map(m => `<span class="member-pill">👤 ${m}</span>`).join(' ')
             : '<span style="color:#B0BEC5;font-size:13px;">아직 접속 학생 없음</span>';
@@ -458,7 +458,7 @@
                 <div class="progress-bar-wrap">
                   <div class="progress-bar-fill" style="width: ${pct}%"></div>
                 </div>
-                <strong style="font-size:13px;color:#2E7D32;">${qDone}/6 완료</strong>
+                <strong style="font-size:13px;color:#2E7D32;">${qDone}/8 완료</strong>
               </td>
               <td>
                 <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit">✏️ AI명 변경</button>
@@ -588,7 +588,7 @@
       const cleanCode = (t.teamCode || t.id || '').replace(/"/g, '""');
       const cleanAi = (t.aiName || '에코봇').replace(/"/g, '""');
       const cleanMembers = ((t.members || []).join(', ')).replace(/"/g, '""');
-      return `"${cleanCode}","${cleanAi}","${cleanMembers}",${t.score||10},"${qDone}/6 완료"`;
+      return `"${cleanCode}","${cleanAi}","${cleanMembers}",${t.score||10},"${qDone}/8 완료"`;
     });
 
     const csv = '\uFEFF' + [header, ...rows].join('\n');
