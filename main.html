@@ -721,7 +721,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, setDoc, updateDoc, onSnapshot, collection, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, updateDoc, onSnapshot, collection, query, orderBy, limit, arrayUnion, arrayRemove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
@@ -804,6 +804,14 @@
       : `✨ 모둠원 누구나 아래에서 이름을 바꿀 수 있어요!`;
   }
 
+  // 접속 시 내 이름을 대기방 멤버로 재확인 등록
+  if (teamCode && studentName) {
+    updateDoc(doc(db, "teams", teamCode), {
+      members: arrayUnion(studentName),
+      lastActive: serverTimestamp()
+    }).catch(e => console.warn(e));
+  }
+
   // 1. 실시간 모둠(Team) 데이터 구독 (대기방 멤버, AI 이름, 점수, 배지)
   if (teamCode) {
     onSnapshot(doc(db, "teams", teamCode), (docSnap) => {
@@ -879,7 +887,23 @@
     if (e.key === "Enter") inlineAiSaveBtn.click();
   });
 
-  // 3. 실시간 학급 모둠 랭킹 현황
+  // 3. 창 닫기/새로고침 시 자동 퇴장 처리 (beforeunload / pagehide)
+  const leaveRoom = () => {
+    if (teamCode && studentName) {
+      try {
+        updateDoc(doc(db, "teams", teamCode), {
+          members: arrayRemove(studentName)
+        });
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+  };
+
+  window.addEventListener("beforeunload", leaveRoom);
+  window.addEventListener("pagehide", leaveRoom);
+
+  // 4. 실시간 학급 모둠 랭킹 현황
   const teamRankQuery = query(collection(db, "teams"), orderBy("score", "desc"), limit(6));
   onSnapshot(teamRankQuery, (snapshot) => {
     const list = [];
@@ -890,7 +914,16 @@
     document.getElementById("liveRanking").textContent = list.join("  ｜  ") || "모둠 랭킹 정보를 불러오는 중...";
   });
 
-  window.logout = function() {
+  window.logout = async function() {
+    if (teamCode && studentName) {
+      try {
+        await updateDoc(doc(db, "teams", teamCode), {
+          members: arrayRemove(studentName)
+        });
+      } catch (e) {
+        console.warn(e);
+      }
+    }
     localStorage.removeItem("elementary_studentId");
     localStorage.removeItem("elementary_teamCode");
     localStorage.removeItem("elementary_isAdmin");
