@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AI 자원순환 탐정단 - 관리자 페이지</title>
+  <title>AI 자원순환 탐정단 - 관리자 및 모둠 관리</title>
   <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua 사용 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,7 +37,7 @@
       max-width: 1100px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 24px;
     }
 
     /* 상단 헤더 */
@@ -134,13 +134,13 @@
       margin-top: 4px;
     }
 
-    /* 학생 정보 & 진도 현황 섹션 */
-    .table-section {
+    /* 모둠 코드 생성 & 관리 섹션 */
+    .manage-card {
       background: #FFFFFF;
-      border: 3px solid #A5D6A7;
+      border: 3px solid #81C784;
       border-radius: 24px;
       padding: 24px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 8px 24px rgba(46, 125, 50, 0.08);
     }
 
     .section-header {
@@ -156,6 +156,37 @@
       font-family: 'Jua', sans-serif;
       font-size: 24px;
       color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 모둠 생성 폼 인풋 */
+    .add-team-box {
+      background: #F1F8E9;
+      border: 2px dashed #A5D6A7;
+      border-radius: 18px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .add-team-box input {
+      padding: 12px 16px;
+      border: 2px solid #C8E6C9;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      outline: none;
+      color: #1B5E20;
+    }
+
+    .add-team-box input:focus {
+      border-color: var(--primary);
+      background: #FFFFFF;
     }
 
     .table-wrapper {
@@ -192,12 +223,25 @@
 
     .code-tag {
       font-family: monospace;
-      background: #EFEBE9;
-      color: #4E342E;
-      padding: 4px 8px;
-      border-radius: 6px;
+      background: #E8F5E9;
+      color: #1B5E20;
+      padding: 6px 12px;
+      border-radius: 8px;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 16px;
+      border: 1px solid #A5D6A7;
+    }
+
+    .member-pill {
+      display: inline-block;
+      background: #E1F5FE;
+      color: #0277BD;
+      border: 1px solid #81D4FA;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      margin: 2px;
     }
 
     .badge-tag {
@@ -211,7 +255,7 @@
     }
 
     .progress-bar-wrap {
-      width: 120px;
+      width: 100px;
       height: 10px;
       background: #E0E0E0;
       border-radius: 6px;
@@ -228,15 +272,15 @@
     }
 
     .btn-sm-action {
-      padding: 4px 10px;
-      font-size: 12px;
+      padding: 6px 12px;
+      font-size: 13px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
       font-weight: bold;
     }
 
-    .btn-sm-reset { background: #E1F5FE; color: #0288D1; border: 1px solid #81D4FA; }
+    .btn-sm-edit { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
     .btn-sm-del { background: #FFEBEE; color: #C62828; border: 1px solid #FFCDD2; margin-left: 4px; }
   </style>
 </head>
@@ -247,59 +291,91 @@
   <!-- 헤더 -->
   <header>
     <div class="admin-title-area">
-      <h1>👑 관리자 페이지 (학생 관리 & 진도 현황)</h1>
+      <h1>👑 선생님 관리자 모드 (모둠 코드 & 진도 관리)</h1>
       <p>AI 자원순환 탐정단 초등 5학년 교육용 교과서</p>
     </div>
 
     <div class="header-btns">
-      <a href="main.html" class="btn-action btn-ghost">🏠 메인 화면</a>
+      <a href="main.html" class="btn-action btn-ghost">🏠 학생 메인 화면</a>
       <button onclick="logoutAdmin()" class="btn-action btn-ghost" style="color:#C62828;border-color:#FFCDD2;">🚪 로그아웃</button>
     </div>
   </header>
 
-  <!-- 통계 카드 -->
+  <!-- 요약 통계 카드 -->
   <div class="stat-cards">
     <div class="stat-card">
-      <div class="stat-num" id="statTotalStudents">0명</div>
-      <div class="stat-label">👥 총 등록 학생 수</div>
+      <div class="stat-num" id="statTotalTeams">0개</div>
+      <div class="stat-label">👥 개설된 모둠(팀) 수</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num" id="statActiveStudents">0명</div>
-      <div class="stat-label">🚀 퀘스트 수행 학생 수</div>
+      <div class="stat-num" id="statTotalStudents">0명</div>
+      <div class="stat-label">👤 총 접속 학생 수</div>
     </div>
     <div class="stat-card">
       <div class="stat-num" id="statAvgScore">0점</div>
-      <div class="stat-label">⭐ 전체 평균 점수</div>
+      <div class="stat-label">⭐ 전체 모둠 평균 점수</div>
     </div>
   </div>
 
-  <!-- 학생 목록 & 진도 표 -->
-  <div class="table-section">
+  <!-- 1. 모둠 코드 등록 및 실시간 관리 섹션 -->
+  <div class="manage-card">
     <div class="section-header">
-      <h2>📋 학생 아이디, 비밀번호 & 학습 진도 현황</h2>
+      <h2>🏷️ 모둠 코드(팀코드) 생성 및 실시간 관리</h2>
       <div style="display:flex;gap:8px;">
-        <button onclick="loadAdminStudents()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;">🔄 새로고침</button>
-        <button onclick="downloadAdminCSV()" class="btn-action btn-green" style="font-size:14px;padding:8px 14px;">📥 학생 명단 CSV 다운로드</button>
+        <button onclick="loadAdminData()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;">🔄 새로고침</button>
+        <button onclick="quickBatchCreateTeams()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;background:#E8F5E9;">✨ 1모둠~6모둠 자동 생성</button>
       </div>
+    </div>
+
+    <!-- 새 모둠 코드 추가 폼 -->
+    <div class="add-team-box">
+      <strong style="color:#2E7D32;font-family:'Jua',sans-serif;font-size:17px;">➕ 새 모둠 추가:</strong>
+      <input type="text" id="newTeamCode" placeholder="모둠 코드 (예: 1모둠, GREEN)" style="flex:1;min-width:160px;">
+      <input type="text" id="newTeamAiName" placeholder="기본 AI 이름 (예: 에코봇)" style="flex:1;min-width:160px;">
+      <button onclick="addNewTeamCode()" class="btn-action btn-green" style="padding:10px 18px;font-size:15px;">➕ 모둠 생성</button>
+    </div>
+
+    <!-- 모둠 목록 테이블 -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>모둠 코드</th>
+            <th>모둠 AI 파트너 이름</th>
+            <th>참여 학생 명단</th>
+            <th>모둠 탐정 점수</th>
+            <th>배지</th>
+            <th>퀘스트 진도</th>
+            <th>관리</th>
+          </tr>
+        </thead>
+        <tbody id="teamTableBody">
+          <tr><td colspan="7" style="text-align:center;padding:30px;color:#78909C;">모둠 데이터를 불러오는 중입니다...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 2. 학생별 개별 접속 현황 & CSV 다운로드 -->
+  <div class="manage-card" style="border-color:#A5D6A7;">
+    <div class="section-header">
+      <h2>📋 학생별 개별 학습 및 진도 현황</h2>
+      <button onclick="downloadAdminCSV()" class="btn-action btn-green" style="font-size:14px;padding:8px 14px;">📥 모둠 및 학생 명단 CSV 다운로드</button>
     </div>
 
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
-            <th>학생 닉네임</th>
-            <th>아이디</th>
-            <th>비밀번호</th>
-            <th>AI 파트너</th>
+            <th>학생 이름</th>
+            <th>소속 모둠 코드</th>
+            <th>모둠 AI 파트너</th>
             <th>점수</th>
-            <th>배지</th>
-            <th>학습 진도 (퀘스트)</th>
-            <th>가입일</th>
-            <th>관리</th>
+            <th>최근 활동</th>
           </tr>
         </thead>
         <tbody id="studentTableBody">
-          <tr><td colspan="9" style="text-align:center;padding:30px;color:#78909C;">학생 데이터를 불러오는 중입니다...</td></tr>
+          <tr><td colspan="5" style="text-align:center;padding:20px;color:#78909C;">학생 목록을 불러오는 중입니다...</td></tr>
         </tbody>
       </table>
     </div>
@@ -309,7 +385,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
@@ -324,121 +400,202 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
+  let cachedTeams = [];
   let cachedStudents = [];
 
-  window.loadAdminStudents = async function() {
-    const tbody = document.getElementById("studentTableBody");
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:#78909C;">파이어베이스에서 학생 데이터를 로딩 중입니다...</td></tr>';
+  // 1. 전체 데이터 로드
+  window.loadAdminData = async function() {
+    const teamTbody = document.getElementById("teamTableBody");
+    const studentTbody = document.getElementById("studentTableBody");
+    teamTbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#78909C;">모둠 데이터를 불러오는 중...</td></tr>';
 
     try {
-      const snap = await getDocs(collection(db, "students"));
-      cachedStudents = [];
-
-      snap.forEach(docSnap => {
-        const d = docSnap.data();
-        cachedStudents.push({
-          id: docSnap.id,
-          ...d
-        });
+      // 1) 모둠 (teams) 컬렉션 읽기
+      const teamSnap = await getDocs(collection(db, "teams"));
+      cachedTeams = [];
+      teamSnap.forEach(d => {
+        cachedTeams.push({ id: d.id, ...d.data() });
       });
 
-      // 통계 계산
-      const totalCount = cachedStudents.length;
-      const activeCount = cachedStudents.filter(s => (s.score || 0) > 10 || (s.questsDone || 0) > 0).length;
-      const totalScore = cachedStudents.reduce((acc, s) => acc + (s.score || 0), 0);
-      const avgScore = totalCount ? Math.round(totalScore / totalCount) : 0;
+      // 2) 학생 (students) 컬렉션 읽기
+      const stuSnap = await getDocs(collection(db, "students"));
+      cachedStudents = [];
+      stuSnap.forEach(d => {
+        if (d.id !== "admin") {
+          cachedStudents.push({ id: d.id, ...d.data() });
+        }
+      });
 
-      document.getElementById("statTotalStudents").textContent = totalCount + "명";
-      document.getElementById("statActiveStudents").textContent = activeCount + "명";
+      // 요약 통계 계산
+      const totalTeams = cachedTeams.length;
+      const totalStudents = cachedStudents.length;
+      const totalScore = cachedTeams.reduce((acc, t) => acc + (t.score || 0), 0);
+      const avgScore = totalTeams ? Math.round(totalScore / totalTeams) : 0;
+
+      document.getElementById("statTotalTeams").textContent = totalTeams + "개";
+      document.getElementById("statTotalStudents").textContent = totalStudents + "명";
       document.getElementById("statAvgScore").textContent = avgScore + "점";
 
-      if (cachedStudents.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:#78909C;">등록된 학생 계정이 없습니다.</td></tr>';
-        return;
+      // 모둠 테이블 렌더링
+      if (cachedTeams.length === 0) {
+        teamTbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:#78909C;">개설된 모둠이 없습니다. 위에서 새 모둠을 추가해보세요!</td></tr>';
+      } else {
+        teamTbody.innerHTML = cachedTeams.map(t => {
+          const qDone = t.questsDone || 0;
+          const pct = Math.round((qDone / 6) * 100);
+          const membersList = (t.members && t.members.length) 
+            ? t.members.map(m => `<span class="member-pill">👤 ${m}</span>`).join(' ')
+            : '<span style="color:#B0BEC5;font-size:13px;">아직 접속 학생 없음</span>';
+
+          return `
+            <tr>
+              <td><span class="code-tag">${t.teamCode || t.id}</span></td>
+              <td><strong>🤖 ${t.aiName || '에코봇'}</strong></td>
+              <td>${membersList}</td>
+              <td><strong style="color:#2E7D32;font-size:16px;">${t.score || 10}점</strong></td>
+              <td><span class="badge-tag">🏅 ${t.badge || '신입 탐정'}</span></td>
+              <td>
+                <div class="progress-bar-wrap">
+                  <div class="progress-bar-fill" style="width: ${pct}%"></div>
+                </div>
+                <strong style="font-size:13px;color:#2E7D32;">${qDone}/6 완료</strong>
+              </td>
+              <td>
+                <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit">✏️ AI명 변경</button>
+                <button onclick="deleteTeam('${t.id}')" class="btn-sm-action btn-sm-del">🗑️ 삭제</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
       }
 
-      tbody.innerHTML = cachedStudents.map(s => {
-        const qDone = s.questsDone || 0;
-        const pct = Math.round((qDone / 6) * 100);
-        const createdStr = s.createdAt ? new Date(s.createdAt.seconds * 1000).toISOString().slice(0, 10) : '-';
-
-        return `
-          <tr>
-            <td><strong>${s.studentName || '익명'}</strong></td>
-            <td><span class="code-tag">${s.studentId || s.id}</span></td>
-            <td><span class="code-tag" style="background:#FFF3E0;color:#E65100;">${s.password || '미설정'}</span></td>
-            <td>🤖 ${s.aiPartnerName || '에코봇'}</td>
-            <td><strong style="color:#2E7D32;">${s.score || 0}점</strong></td>
-            <td><span class="badge-tag">🏅 ${s.badge || '신입 탐정'}</span></td>
-            <td>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar-fill" style="width: ${pct}%"></div>
-              </div>
-              <strong style="font-size:13px;color:#2E7D32;">${qDone}/6 완료</strong>
-            </td>
-            <td style="font-size:13px;color:#78909C;">${createdStr}</td>
-            <td>
-              <button onclick="resetUserPw('${s.id}')" class="btn-sm-action btn-sm-reset">🔑 비번 초기화</button>
-              <button onclick="deleteUserAccount('${s.id}', '${s.studentName||s.id}')" class="btn-sm-action btn-sm-del">🗑️ 삭제</button>
-            </td>
-          </tr>
-        `;
-      }).join('');
+      // 학생 테이블 렌더링
+      if (cachedStudents.length === 0) {
+        studentTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#78909C;">접속한 학생 데이터가 없습니다.</td></tr>';
+      } else {
+        studentTbody.innerHTML = cachedStudents.map(s => {
+          return `
+            <tr>
+              <td><strong>${s.studentName || s.id}</strong></td>
+              <td><span class="code-tag" style="font-size:13px;padding:3px 8px;">${s.teamCode || '미지정'}</span></td>
+              <td>🤖 ${s.aiPartnerName || '에코봇'}</td>
+              <td><strong style="color:#2E7D32;">${s.score || 0}점</strong></td>
+              <td style="font-size:13px;color:#78909C;">${s.lastActive ? new Date(s.lastActive.seconds * 1000).toLocaleString('ko-KR') : '-'}</td>
+            </tr>
+          `;
+        }).join('');
+      }
 
     } catch (e) {
       console.error(e);
-      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:30px;color:#C62828;">데이터 로딩 오류: ${e.message}</td></tr>`;
+      teamTbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:#C62828;">오류: ${e.message}</td></tr>`;
     }
   };
 
-  // 비번 초기화 (1234로)
-  window.resetUserPw = async function(id) {
-    if (!confirm(`'${id}' 계정의 비밀번호를 '1234'로 초기화할까요?`)) return;
+  // 2. 새 모둠 코드 추가
+  window.addNewTeamCode = async function() {
+    const code = document.getElementById("newTeamCode").value.trim();
+    const aiName = document.getElementById("newTeamAiName").value.trim() || "에코봇";
+
+    if (!code) {
+      return alert("모둠 코드를 입력해주세요! (예: 1모둠, GREEN)");
+    }
+
     try {
-      await updateDoc(doc(db, "students", id), { password: "1234" });
-      alert("✅ 비밀번호가 '1234'로 초기화되었습니다.");
-      loadAdminStudents();
+      await setDoc(doc(db, "teams", code), {
+        teamCode: code,
+        aiName: aiName,
+        members: [],
+        score: 10,
+        badge: "신입 탐정",
+        questsDone: 0,
+        createdAt: serverTimestamp(),
+        lastActive: serverTimestamp()
+      }, { merge: true });
+
+      alert(`✅ '${code}' 모둠 코드가 성공적으로 생성되었습니다!`);
+      document.getElementById("newTeamCode").value = "";
+      document.getElementById("newTeamAiName").value = "";
+      loadAdminData();
     } catch (e) {
-      alert("초기화 실패: " + e.message);
+      alert("모둠 생성 실패: " + e.message);
     }
   };
 
-  // 학생 삭제
-  window.deleteUserAccount = async function(id, name) {
-    if (!confirm(`'${name}' (${id}) 학생 계정을 정말 삭제할까요?`)) return;
+  // 3. 1모둠~6모둠 간편 일괄 생성
+  window.quickBatchCreateTeams = async function() {
+    if (!confirm("1모둠부터 6모둠까지 6개 모둠을 일괄 생성할까요?")) return;
+
     try {
-      await deleteDoc(doc(db, "students", id));
-      alert("✅ 삭제되었습니다.");
-      loadAdminStudents();
+      for (let i = 1; i <= 6; i++) {
+        const code = `${i}모둠`;
+        await setDoc(doc(db, "teams", code), {
+          teamCode: code,
+          aiName: `에코봇-${i}`,
+          members: [],
+          score: 10,
+          badge: "신입 탐정",
+          questsDone: 0,
+          createdAt: serverTimestamp(),
+          lastActive: serverTimestamp()
+        }, { merge: true });
+      }
+      alert("✅ 1모둠부터 6모둠까지 생성이 완료되었습니다!");
+      loadAdminData();
+    } catch (e) {
+      alert("일괄 생성 실패: " + e.message);
+    }
+  };
+
+  // 4. 모둠 AI 이름 변경
+  window.editTeamAiName = async function(teamId, currentAi) {
+    const newName = prompt(`[${teamId}] 모둠의 새 AI 파트너 이름을 입력하세요:`, currentAi);
+    if (!newName || newName.trim() === currentAi) return;
+
+    try {
+      await updateDoc(doc(db, "teams", teamId), {
+        aiName: newName.trim(),
+        updatedAt: serverTimestamp()
+      });
+      alert(`✅ AI 이름이 '${newName.trim()}'(으)로 변경되었습니다. 모둠원 화면에 실시간 적용됩니다.`);
+      loadAdminData();
+    } catch (e) {
+      alert("변경 실패: " + e.message);
+    }
+  };
+
+  // 5. 모둠 삭제
+  window.deleteTeam = async function(teamId) {
+    if (!confirm(`'${teamId}' 모둠을 정말 삭제할까요?`)) return;
+    try {
+      await deleteDoc(doc(db, "teams", teamId));
+      alert("✅ 모둠이 삭제되었습니다.");
+      loadAdminData();
     } catch (e) {
       alert("삭제 실패: " + e.message);
     }
   };
 
-  // CSV 다운로드 (BOM 인코딩)
+  // 6. CSV 다운로드
   window.downloadAdminCSV = function() {
-    if (!cachedStudents.length) {
-      alert("다운로드할 학생 데이터가 없습니다.");
-      return;
+    if (!cachedTeams.length) {
+      return alert("다운로드할 모둠 데이터가 없습니다.");
     }
 
-    const header = "학생 닉네임,아이디,비밀번호,AI 파트너,점수,배지,퀘스트 완료수(진도),가입일";
-    const rows = cachedStudents.map(s => {
-      const qDone = s.questsDone || 0;
-      const createdStr = s.createdAt ? new Date(s.createdAt.seconds * 1000).toISOString().slice(0, 10) : '';
-      const cleanName = (s.studentName || '').replace(/"/g, '""');
-      const cleanId = (s.studentId || s.id || '').replace(/"/g, '""');
-      const cleanPw = (s.password || '').replace(/"/g, '""');
-      const cleanAi = (s.aiPartnerName || '에코봇').replace(/"/g, '""');
-      const cleanBadge = (s.badge || '신입 탐정').replace(/"/g, '""');
-      return `"${cleanName}","${cleanId}","${cleanPw}","${cleanAi}",${s.score||0},"${cleanBadge}","${qDone}/6 완료","${createdStr}"`;
+    const header = "모둠코드,AI파트너이름,참여학생명단,모둠점수,퀘스트완료수(진도)";
+    const rows = cachedTeams.map(t => {
+      const qDone = t.questsDone || 0;
+      const cleanCode = (t.teamCode || t.id || '').replace(/"/g, '""');
+      const cleanAi = (t.aiName || '에코봇').replace(/"/g, '""');
+      const cleanMembers = ((t.members || []).join(', ')).replace(/"/g, '""');
+      return `"${cleanCode}","${cleanAi}","${cleanMembers}",${t.score||10},"${qDone}/6 완료"`;
     });
 
     const csv = '\uFEFF' + [header, ...rows].join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `학생명단및진도_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `모둠_진도현황_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
   };
 
@@ -449,7 +606,7 @@
   };
 
   // 초기 실행
-  loadAdminStudents();
+  loadAdminData();
 </script>
 </body>
 </html>

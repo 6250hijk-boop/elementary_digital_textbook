@@ -413,34 +413,36 @@
 
 <div class="app-container">
 
-  <!-- 상단 학생 프로필 -->
+  <!-- 상단 학생 & 모둠 프로필 -->
   <header>
     <div class="user-profile">
-      <div class="avatar-box">🕵️‍♂️</div>
+      <div class="avatar-box">🌱🕵️‍♂️</div>
       <div class="user-info">
         <h2 id="dispStudent">학생 탐정단</h2>
-        <p id="dispAiName">🤖 AI 파트너: 로딩 중...</p>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+          <p id="dispAiName" style="margin:0;">🤖 모둠 AI: 로딩 중...</p>
+          <button class="btn-sm-action" id="editAiBtn" style="background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7;padding:4px 8px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:13px;">✏️ AI 이름 변경</button>
+        </div>
       </div>
     </div>
 
     <div class="status-badges">
+      <div class="badge-pill badge-team" id="dispTeamBadge">👥 모둠: 로딩 중...</div>
       <div class="badge-pill" id="dispScore">⭐ 10점</div>
       <div class="badge-pill" id="dispBadge">🏅 신입 탐정</div>
-      <div class="badge-pill badge-team" id="dispTeamBadge">👥 팀: 없음</div>
-      <button class="btn-team" id="team-code-btn">🏷️ 팀코드 입력</button>
       <button class="btn-logout" onclick="logout()">로그아웃</button>
     </div>
   </header>
 
-  <!-- 팀 코드 입력 모달 -->
-  <div id="team-modal" class="modal-overlay">
+  <!-- 모둠 AI 이름 변경 모달 -->
+  <div id="ai-modal" class="modal-overlay">
     <div class="modal-card">
-      <h3>👥 우리 모둠 팀코드 입력</h3>
-      <p>선생님이나 모둠 친구와 함께 정한<br>팀코드를 입력하면 수집한 데이터를 공유할 수 있어요!</p>
-      <input type="text" id="team-code-input" class="modal-input" placeholder="예: 1모둠 또는 TEAM-A" maxlength="20" />
+      <h3>🤖 우리 모둠 AI 이름 바꾸기</h3>
+      <p>우리 모둠 AI 파트너의 새 이름을 지어주세요.<br>마지막에 저장한 이름이 모든 모둠원에게 실시간 반영됩니다!</p>
+      <input type="text" id="ai-modal-input" class="modal-input" placeholder="예: 초록이, 지구지킴이, 에코봇" maxlength="15" />
       <div class="modal-btns">
-        <button id="team-cancel-btn" class="modal-btn cancel">취소</button>
-        <button id="team-save-btn" class="modal-btn save">저장하기</button>
+        <button id="ai-cancel-btn" class="modal-btn cancel">취소</button>
+        <button id="ai-save-btn" class="modal-btn save">저장 및 공유하기</button>
       </div>
     </div>
   </div>
@@ -571,7 +573,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, setDoc, onSnapshot, collection, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, updateDoc, onSnapshot, collection, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
@@ -586,97 +588,111 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
+  const teamCode = localStorage.getItem("elementary_teamCode");
   const studentId = localStorage.getItem("elementary_studentId");
   const studentName = localStorage.getItem("elementary_studentName") || "학생 탐정";
-  const aiName = localStorage.getItem("elementary_aiName") || "에코봇";
+  let currentAiName = localStorage.getItem("elementary_aiName") || "에코봇";
 
-  if (!studentId) {
+  if (!studentId || !teamCode) {
     window.location.href = "index.html";
   }
 
-  // 팀 코드 UI 제어
-  const teamBtn = document.getElementById('team-code-btn');
-  const teamModal = document.getElementById('team-modal');
-  const teamInput = document.getElementById('team-code-input');
-  const saveBtn = document.getElementById('team-save-btn');
-  const cancelBtn = document.getElementById('team-cancel-btn');
-  const dispTeamBadge = document.getElementById('dispTeamBadge');
+  // 상단 기본 표시
+  document.getElementById("dispStudent").textContent = `${studentName} 탐정`;
+  document.getElementById("dispTeamBadge").textContent = `👥 모둠: ${teamCode}`;
+  document.getElementById("dispAiName").textContent = `🤖 모둠 AI: ${currentAiName}`;
 
-  function updateTeamDisplay(code) {
-    if (code) {
-      dispTeamBadge.textContent = `👥 팀: ${code}`;
-      dispTeamBadge.style.display = 'inline-flex';
-    } else {
-      dispTeamBadge.textContent = `👥 팀: 없음`;
-    }
-  }
+  // AI 파트너 이름 수정 모달 제어
+  const editAiBtn = document.getElementById('editAiBtn');
+  const aiModal = document.getElementById('ai-modal');
+  const aiInput = document.getElementById('ai-modal-input');
+  const aiSaveBtn = document.getElementById('ai-save-btn');
+  const aiCancelBtn = document.getElementById('ai-cancel-btn');
 
-  // 초기 팀코드 표시
-  const currentTeamCode = localStorage.getItem('elementary_teamCode') || '';
-  updateTeamDisplay(currentTeamCode);
-
-  teamBtn.addEventListener('click', () => {
-    teamInput.value = localStorage.getItem('elementary_teamCode') || '';
-    teamModal.style.display = 'flex';
-    teamInput.focus();
+  editAiBtn.addEventListener('click', () => {
+    aiInput.value = currentAiName;
+    aiModal.style.display = 'flex';
+    aiInput.focus();
   });
 
-  cancelBtn.addEventListener('click', () => {
-    teamModal.style.display = 'none';
+  aiCancelBtn.addEventListener('click', () => {
+    aiModal.style.display = 'none';
   });
 
-  saveBtn.addEventListener('click', async () => {
-    const code = teamInput.value.trim();
-    if (!code) {
-      alert('팀 코드를 입력해주세요!');
+  aiSaveBtn.addEventListener('click', async () => {
+    const newAi = aiInput.value.trim();
+    if (!newAi) {
+      alert('AI 파트너 이름을 입력해주세요!');
       return;
     }
-    localStorage.setItem('elementary_teamCode', code);
-    updateTeamDisplay(code);
+
+    aiSaveBtn.disabled = true;
+    aiSaveBtn.textContent = '저장 중...';
 
     try {
-      if (studentId) {
-        const userRef = doc(db, 'students', studentId);
-        await setDoc(userRef, { teamCode: code }, { merge: true });
-      }
-      alert(`🎉 '${code}' 팀코드가 등록되었습니다!`);
+      // 모둠 문서에 새 AI 이름 갱신 (마지막에 입력한 학생의 설정으로 갱신)
+      const teamRef = doc(db, 'teams', teamCode);
+      await updateDoc(teamRef, {
+        aiName: newAi,
+        lastUpdatedBy: studentName,
+        updatedAt: serverTimestamp()
+      });
+
+      // 내 학생 정보에도 반영
+      const stuRef = doc(db, 'students', studentId);
+      await setDoc(stuRef, { aiPartnerName: newAi }, { merge: true });
+
+      localStorage.setItem('elementary_aiName', newAi);
+      currentAiName = newAi;
+      document.getElementById('dispAiName').textContent = `🤖 모둠 AI: ${newAi}`;
+
+      alert(`🎉 우리 모둠 AI 이름이 '${newAi}'(으)로 변경되었습니다!\n모든 모둠원 친구들에게 실시간 반영됩니다.`);
     } catch (e) {
-      console.error("팀코드 저장 에러:", e);
+      console.error(e);
+      alert('AI 이름 변경 중 오류가 발생했습니다: ' + e.message);
+    } finally {
+      aiSaveBtn.disabled = false;
+      aiSaveBtn.textContent = '저장 및 공유하기';
+      aiModal.style.display = 'none';
     }
-    teamModal.style.display = 'none';
   });
 
-  // 실시간 학생 데이터 동기화
-  onSnapshot(doc(db, "students", studentId), (docSnap) => {
-    if (docSnap.exists()) {
-      const d = docSnap.data();
-      document.getElementById("dispStudent").textContent = `${d.studentName || studentName} (${d.studentId})`;
-      document.getElementById("dispAiName").textContent = `🤖 AI 파트너: ${d.aiPartnerName || aiName}`;
-      document.getElementById("dispScore").textContent = `⭐ ${d.score || 0}점`;
-      document.getElementById("dispBadge").textContent = `🏅 ${d.badge || '신입 탐정'}`;
-      if (d.teamCode) {
-        localStorage.setItem('elementary_teamCode', d.teamCode);
-        updateTeamDisplay(d.teamCode);
+  // 1. 실시간 모둠(Team) 데이터 동기화 (AI 이름, 점수, 배지)
+  if (teamCode) {
+    onSnapshot(doc(db, "teams", teamCode), (docSnap) => {
+      if (docSnap.exists()) {
+        const d = docSnap.data();
+        if (d.aiName) {
+          currentAiName = d.aiName;
+          document.getElementById("dispAiName").textContent = `🤖 모둠 AI: ${d.aiName}`;
+          localStorage.setItem("elementary_aiName", d.aiName);
+        }
+        if (d.score !== undefined) {
+          document.getElementById("dispScore").textContent = `⭐ ${d.score}점`;
+          localStorage.setItem("elementary_score", d.score.toString());
+        }
+        if (d.badge) {
+          document.getElementById("dispBadge").textContent = `🏅 ${d.badge}`;
+        }
       }
-    } else {
-      document.getElementById("dispStudent").textContent = `${studentName} (${studentId})`;
-      document.getElementById("dispAiName").textContent = `🤖 AI 파트너: ${aiName}`;
-    }
-  });
+    });
+  }
 
-  // 실시간 랭킹 목록
-  const rankQ = query(collection(db, "students"), orderBy("score", "desc"), limit(5));
-  onSnapshot(rankQ, (snapshot) => {
+  // 2. 실시간 학급 모둠 랭킹 현황
+  const teamRankQuery = query(collection(db, "teams"), orderBy("score", "desc"), limit(6));
+  onSnapshot(teamRankQuery, (snapshot) => {
     const list = [];
     snapshot.forEach(docSnap => {
       const d = docSnap.data();
-      list.push(`${d.studentName}(${d.score || 0}점)`);
+      list.push(`${d.teamCode || docSnap.id}(${d.score || 0}점 - ${d.aiName || '에코봇'})`);
     });
-    document.getElementById("liveRanking").textContent = list.join("  ｜  ") || "참여 학생 목록 수신 중...";
+    document.getElementById("liveRanking").textContent = list.join("  ｜  ") || "모둠 랭킹 정보를 불러오는 중...";
   });
 
   window.logout = function() {
     localStorage.removeItem("elementary_studentId");
+    localStorage.removeItem("elementary_teamCode");
+    localStorage.removeItem("elementary_isAdmin");
     window.location.href = "index.html";
   };
 </script>
