@@ -34,8 +34,8 @@
     .login-card {
       background: var(--card-bg);
       width: 100%;
-      max-width: 520px;
-      padding: 36px 28px;
+      max-width: 500px;
+      padding: 38px 28px;
       border-radius: 28px;
       box-shadow: 0 16px 36px rgba(46, 125, 50, 0.15);
       text-align: center;
@@ -77,7 +77,7 @@
       border: 2px dashed #81C784;
       border-radius: 18px;
       padding: 14px 16px;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
       font-size: 14px;
       color: #2E7D32;
       line-height: 1.5;
@@ -133,26 +133,6 @@
       box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.15);
     }
 
-    .ai-name-box {
-      background: #F9FBE7;
-      border: 2px solid #DCE775;
-      border-radius: 16px;
-      padding: 14px;
-      margin-bottom: 20px;
-      text-align: left;
-    }
-
-    .ai-name-box label {
-      color: #827717;
-      font-size: 17px;
-    }
-
-    .ai-name-box input {
-      border-color: #DCE775;
-      background: #FFFFFF;
-      font-size: 17px;
-    }
-
     .btn-start {
       width: 100%;
       padding: 18px;
@@ -165,6 +145,7 @@
       cursor: pointer;
       box-shadow: 0 6px 16px rgba(46, 125, 50, 0.3);
       transition: all 0.2s;
+      margin-top: 6px;
     }
 
     .btn-start:active {
@@ -206,12 +187,12 @@
   <div class="info-banner">
     <div class="icon">💡</div>
     <div>
-      <strong>아이디와 비밀번호가 필요 없어요!</strong><br>
-      우리 모둠의 <b>모둠 코드</b>만 입력하면 모둠원 친구들과 함께 실시간으로 화면과 점수를 공유해요.
+      <strong>아이디와 비밀번호 없이 모둠 코드로 입장!</strong><br>
+      같은 모둠 코드를 입력하면 대기방에서 친구들과 모여 함께 탐정을 시작합니다.
     </div>
   </div>
 
-  <!-- 모둠 코드 입력 폼 -->
+  <!-- 모둠 코드 & 학생 이름 입력 -->
   <div class="form-group">
     <label for="teamCodeInput">
       🏷️ 모둠 코드 (팀 코드)
@@ -223,24 +204,12 @@
   <div class="form-group">
     <label for="studentNameInput">
       👤 내 이름 (학생 닉네임)
-      <span class="label-hint">탐정단 출석 확인</span>
+      <span class="label-hint">대기방 출석 닉네임</span>
     </label>
     <input type="text" id="studentNameInput" placeholder="예: 김민수, 이지은" autocomplete="off">
   </div>
 
-  <!-- 우리 모둠 AI 이름 짓기 -->
-  <div class="ai-name-box">
-    <label for="aiNameInput">
-      🤖 우리 모둠의 AI 파트너 이름
-      <span class="label-hint">마지막 입력한 이름으로 변경</span>
-    </label>
-    <input type="text" id="aiNameInput" placeholder="예: 에코봇, 초록이, 지구지킴이" autocomplete="off">
-    <div style="font-size:12px;color:#9E9D24;margin-top:6px;line-height:1.4;">
-      ※ 모둠원 중 마지막으로 이름을 입력하거나 수정한 친구의 이름으로 모든 모둠원에게 실시간 반영됩니다.
-    </div>
-  </div>
-
-  <button class="btn-start" id="loginBtn">🚀 모둠 탐정단 입장하기</button>
+  <button class="btn-start" id="loginBtn">🚀 모둠 대기방 입장하기</button>
 
   <div class="admin-hint">
     👑 <b>선생님/관리자 모드:</b> 모둠 코드에 <b>admin</b>을 입력하고 입장하세요.
@@ -266,39 +235,17 @@
 
   const teamInput = document.getElementById("teamCodeInput");
   const studentInput = document.getElementById("studentNameInput");
-  const aiInput = document.getElementById("aiNameInput");
   const loginBtn = document.getElementById("loginBtn");
 
   // 이전 저장된 기록 불러오기 (편의성)
   const savedTeam = localStorage.getItem("elementary_teamCode") || "";
   const savedStudent = localStorage.getItem("elementary_studentName") || "";
-  const savedAi = localStorage.getItem("elementary_aiName") || "에코봇";
 
   if (savedTeam && savedTeam !== "admin") teamInput.value = savedTeam;
-  if (savedStudent && savedStudent !== "관리자") studentInput.value = savedStudent;
-  if (savedAi) aiInput.value = savedAi;
-
-  // 팀코드 입력 시 기존 등록된 팀이 있다면 AI 이름 자동 불러오기
-  teamInput.addEventListener("blur", async () => {
-    const rawCode = teamInput.value.trim();
-    if (!rawCode || rawCode.toLowerCase() === "admin") return;
-
-    try {
-      const teamRef = doc(db, "teams", rawCode);
-      const teamSnap = await getDoc(teamRef);
-      if (teamSnap.exists()) {
-        const tData = teamSnap.data();
-        if (tData.aiName) {
-          aiInput.value = tData.aiName;
-        }
-      }
-    } catch (e) {
-      console.warn("팀 정보 조회 중 오류:", e);
-    }
-  });
+  if (savedStudent && savedStudent !== "선생님(관리자)") studentInput.value = savedStudent;
 
   // 엔터 키 지원
-  [teamInput, studentInput, aiInput].forEach(inp => {
+  [teamInput, studentInput].forEach(inp => {
     inp.addEventListener("keypress", (e) => {
       if (e.key === "Enter") loginBtn.click();
     });
@@ -308,7 +255,6 @@
   loginBtn.addEventListener("click", async () => {
     const rawTeamCode = teamInput.value.trim();
     const studentName = studentInput.value.trim();
-    let aiName = aiInput.value.trim();
 
     if (!rawTeamCode) {
       return alert("🏷️ 모둠 코드를 입력해주세요!");
@@ -329,55 +275,48 @@
       return alert("👤 내 이름(학생 닉네임)을 입력해주세요!");
     }
 
-    if (!aiName) {
-      aiName = "에코봇";
-    }
-
     loginBtn.disabled = true;
-    loginBtn.textContent = "🚀 모둠 연결 중...";
+    loginBtn.textContent = "🚀 대기방 입장 중...";
 
     try {
       const teamCode = rawTeamCode;
       const studentId = `${teamCode}_${studentName}`;
 
-      // 1. 모둠(Team) 문서 생성 또는 갱신 (마지막에 입력한 학생의 AI 이름으로 업데이트)
+      // 1. 모둠(Team) 문서 생성 또는 갱신 (팀원 추가)
       const teamRef = doc(db, "teams", teamCode);
       const teamSnap = await getDoc(teamRef);
 
       let teamScore = 10;
       let questsDone = 0;
-      let badge = "신입 탐정";
+      let badge = "신입 탐정단";
+      let aiName = "에코봇";
 
       if (teamSnap.exists()) {
         const ex = teamSnap.data();
         teamScore = ex.score !== undefined ? ex.score : 10;
         questsDone = ex.questsDone !== undefined ? ex.questsDone : 0;
-        badge = ex.badge || "신입 탐정";
+        badge = ex.badge || "신입 탐정단";
+        aiName = ex.aiName || "에코봇";
 
         await setDoc(teamRef, {
           teamCode: teamCode,
-          aiName: aiName, // 마지막 학생이 설정한 AI 이름으로 갱신
-          lastStudentName: studentName,
           members: arrayUnion(studentName),
-          updatedAt: serverTimestamp(),
           lastActive: serverTimestamp()
         }, { merge: true });
       } else {
         await setDoc(teamRef, {
           teamCode: teamCode,
-          aiName: aiName,
-          lastStudentName: studentName,
+          aiName: "에코봇",
           members: [studentName],
           score: 10,
-          badge: "신입 탐정",
+          badge: "신입 탐정단",
           questsDone: 0,
           createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
           lastActive: serverTimestamp()
         });
       }
 
-      // 2. 학생(Student) 개별 데이터도 기록
+      // 2. 학생(Student) 개별 데이터 기록
       const studentRef = doc(db, "students", studentId);
       await setDoc(studentRef, {
         studentId: studentId,
@@ -398,14 +337,13 @@
       localStorage.setItem("elementary_score", teamScore.toString());
       localStorage.removeItem("elementary_isAdmin");
 
-      alert(`🎉 [${teamCode}] 모둠 입장 완료!\n파트너 AI '${aiName}'와 함께 탐정을 시작합니다!`);
       window.location.href = "main.html";
 
     } catch (e) {
       console.error(e);
-      alert("모둠 입장 중 오류가 발생했습니다: " + e.message);
+      alert("대기방 입장 중 오류가 발생했습니다: " + e.message);
       loginBtn.disabled = false;
-      loginBtn.textContent = "🚀 모둠 탐정단 입장하기";
+      loginBtn.textContent = "🚀 모둠 대기방 입장하기";
     }
   });
 </script>
