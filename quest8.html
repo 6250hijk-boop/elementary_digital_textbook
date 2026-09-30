@@ -745,49 +745,6 @@
     const teamCode = localStorage.getItem("elementary_teamCode") || "1모둠";
     const aiPartnerName = localStorage.getItem("elementary_aiPartnerName") || "에코봇";
 
-    // 기본 후보 데이터 (Quest 7 등록 데이터가 부족할 때 대비한 표준 안건 포함)
-    const DEFAULT_CANDIDATES = [
-      {
-        id: "def_1",
-        title: "우리 반 투명 페트병 완벽 분리배출 규약",
-        authorName: "1모둠 김민수 탐정",
-        articles: [
-          "음료수 페트병의 비닐 라벨을 100% 떼어내어 비닐류에 따로 버린다.",
-          "내용물을 깨끗한 물로 비우고 헹군 뒤 납작하게 찌그러뜨린다.",
-          "뚜껑을 닫아 투명 페트병 전용 수거함에 올바르게 넣는다."
-        ],
-        reason: "투명 페트병은 고품질 의류 원사로 재탄생할 수 있는 소중한 자원이기 때문입니다.",
-        stickers: ["🌟", "👍", "❤️"],
-        voteCount: 3
-      },
-      {
-        id: "def_2",
-        title: "깨끗하게 헹구는 우유팩 & 음료캔 실천 약속",
-        authorName: "2모둠 이지은 탐정",
-        articles: [
-          "급식 우유팩은 완전히 펼쳐서 물로 깨끗이 헹군 뒤 말린다.",
-          "음료수 캔 속 이물질(빨대 등)을 빼내고 발로 밟아 납작하게 버린다.",
-          "오염 물질이 묻은 채 버려져 다른 재활용품을 오염시키지 않도록 한다."
-        ],
-        reason: "우유팩은 고급 화장지로, 캔은 새 알루미늄 캔으로 재활용될 수 있습니다.",
-        stickers: ["💡", "👍"],
-        voteCount: 2
-      },
-      {
-        id: "def_3",
-        title: "인간 탐정과 AI 스캐너의 협동 검수 규약",
-        authorName: "3모둠 박도윤 탐정",
-        articles: [
-          "AI 카메라가 헷갈려하는 복합 재질 쓰레기는 인간 탐정이 직접 확인한다.",
-          "AI가 오인식한 쓰레기는 이유를 함께 분석하고 바르게 재분류한다.",
-          "새로운 쓰레기 분리배출 규칙을 발견하면 학급 친구들에게 공유한다."
-        ],
-        reason: "AI와 사람이 서로 도와야 완벽한 친환경 스마트 교실을 만들 수 있습니다.",
-        stickers: ["🌟", "💡", "❤️", "👍"],
-        voteCount: 4
-      }
-    ];
-
     window.state = {
       score: parseInt(localStorage.getItem("elementary_score") || "0", 10),
       currentStep: 1,
@@ -795,7 +752,7 @@
       myStickers: {} // { [candidateId]: ['🌟', '👍'] }
     };
 
-    // 1. 후보 데이터 로드 (Firestore quest7_rules + 기본 후보)
+    // 1. 우리 모둠이 작성한 실천 규약 데이터 로드 (Firestore quest7_rules)
     async function loadCandidates() {
       window.state.candidates = [];
 
@@ -810,22 +767,13 @@
             title: data.title || "모둠 실천 규약",
             authorName: data.authorName || "모둠 탐정",
             articles: data.articles || [],
-            reason: data.reason || "자원순환 실천",
-            stickers: data.stickers || ["👍"],
-            voteCount: (data.stickers ? data.stickers.length : (data.likes || 1))
+            reason: data.reason || "",
+            stickers: data.stickers || [],
+            voteCount: (data.stickers ? data.stickers.length : (data.likes || 0))
           });
         });
       } catch(e) {
         console.warn("Firestore candidate read warning:", e);
-      }
-
-      // 후보가 3개 미만이면 기본 후보 병합
-      if (window.state.candidates.length < 3) {
-        DEFAULT_CANDIDATES.forEach(def => {
-          if (!window.state.candidates.some(c => c.title === def.title)) {
-            window.state.candidates.push(def);
-          }
-        });
       }
 
       renderStep1List();
@@ -852,11 +800,22 @@
       const container = document.getElementById("step1CandidatesList");
       if (!container) return;
 
+      if (window.state.candidates.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center;padding:50px 20px;background:#F9FBE7;border-radius:18px;border:2px dashed #C8E6C9;">
+            <div style="font-size:40px;margin-bottom:10px;">📭</div>
+            <h3 style="font-family:'Jua';color:#2E7D32;font-size:20px;margin-bottom:8px;">우리 모둠이 작성한 실천 규약이 아직 없습니다.</h3>
+            <p style="font-size:15px;color:#558B2F;">QUEST 7에서 모둠원들이 먼저 실천 규약 초안을 작성하여 등록해주세요.</p>
+          </div>
+        `;
+        return;
+      }
+
       container.innerHTML = window.state.candidates.map((c, idx) => `
         <div class="candidate-card">
           <div class="candidate-top">
             <span class="candidate-author">🕵️ 안건 ${idx + 1}: ${c.authorName}</span>
-            <span style="font-size:13px;font-weight:bold;color:#2E7D32;background:#E8F5E9;padding:4px 10px;border-radius:12px;">발의 안건</span>
+            <span style="font-size:13px;font-weight:bold;color:#2E7D32;background:#E8F5E9;padding:4px 10px;border-radius:12px;">우리 모둠 발의 안건</span>
           </div>
           <h3 class="candidate-title">${c.title}</h3>
           <div class="candidate-articles">
@@ -864,7 +823,7 @@
               ${c.articles.map(a => `<li>${a}</li>`).join('')}
             </ol>
           </div>
-          <div class="candidate-reason">💡 <strong>제안 이유:</strong> ${c.reason}</div>
+          ${c.reason ? `<div class="candidate-reason">💡 <strong>제안 이유:</strong> ${c.reason}</div>` : ''}
         </div>
       `).join('');
     }
@@ -873,6 +832,17 @@
     function renderVotingList() {
       const container = document.getElementById("votingCandidatesList");
       if (!container) return;
+
+      if (window.state.candidates.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center;padding:50px 20px;background:#F9FBE7;border-radius:18px;border:2px dashed #C8E6C9;">
+            <div style="font-size:40px;margin-bottom:10px;">🗳️</div>
+            <h3 style="font-family:'Jua';color:#2E7D32;font-size:20px;margin-bottom:8px;">투표할 모둠 실천 규약 안건이 없습니다.</h3>
+            <p style="font-size:15px;color:#558B2F;">QUEST 7에서 모둠원들이 먼저 실천 규약 초안을 등록해야 스티커 투표를 할 수 있습니다.</p>
+          </div>
+        `;
+        return;
+      }
 
       const STICKER_TYPES = ["🌟 적극 추천", "👍 훌륭해요", "💡 기발해요", "❤️ 꼭 실천"];
 
@@ -913,7 +883,7 @@
             <div style="margin-top:10px;display:flex;align-items:center;gap:6px;">
               <span style="font-size:13px;color:#78909C;font-weight:bold;">붙은 스티커:</span>
               <div class="sticker-board-preview">
-                ${allStickers.map(st => `<span class="sticker-stamp">${st}</span>`).join('')}
+                ${allStickers.length > 0 ? allStickers.map(st => `<span class="sticker-stamp">${st}</span>`).join('') : '<span style="font-size:13px;color:#B0BEC5;">(아직 스티커 없음)</span>'}
               </div>
             </div>
           </div>
@@ -947,15 +917,16 @@
 
     // 2단계 투표 완료 -> 3단계 득표순 결과 정렬 렌더링
     window.completeVoting = async function() {
+      if (window.state.candidates.length === 0) {
+        return alert("투표할 모둠 실천 규약 안건이 없습니다.\nQUEST 7에서 먼저 모둠 실천 규약을 작성해주세요!");
+      }
+
       // 내 투표가 1개 이상 있는지 확인
       const totalMyStickers = Object.values(window.state.myStickers).reduce((acc, cur) => acc + cur.length, 0);
       if (totalMyStickers === 0) {
-        if (!confirm("아직 스티커를 붙이지 않았습니다. 기본 스티커를 자동으로 붙이고 결과를 볼까요?")) {
+        if (!confirm("아직 스티커를 붙이지 않았습니다. 투표를 그대로 완료할까요?")) {
           return;
         }
-        // 기본 첫 번째 후보에 스티커 자동 부착
-        const firstId = window.state.candidates[0].id;
-        window.state.myStickers[firstId] = ["🌟", "👍"];
       }
 
       window.addScore(50);
@@ -982,6 +953,16 @@
     function renderRankingResults(rankedList) {
       const container = document.getElementById("rankingResultList");
       if (!container) return;
+
+      if (rankedList.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center;padding:50px 20px;background:#F9FBE7;border-radius:18px;border:2px dashed #C8E6C9;">
+            <div style="font-size:40px;margin-bottom:10px;">📊</div>
+            <h3 style="font-family:'Jua';color:#2E7D32;font-size:20px;margin-bottom:8px;">집계할 투표 안건이 없습니다.</h3>
+          </div>
+        `;
+        return;
+      }
 
       const MEDALS = ["🥇 1위 (최다 득표 가결)", "🥈 2위 (우수 안건)", "🥉 3위 (장려 안건)"];
 
@@ -1010,7 +991,7 @@
               <span style="font-size:13px;color:#558B2F;">💡 제안자: <strong>${c.authorName}</strong></span>
               <div style="display:flex;gap:4px;align-items:center;">
                 <span style="font-size:12px;color:#78909C;font-weight:bold;">받은 스티커:</span>
-                ${c.totalStickers.map(s => `<span style="font-size:18px;">${s}</span>`).join('')}
+                ${c.totalStickers.length > 0 ? c.totalStickers.map(s => `<span style="font-size:18px;">${s}</span>`).join('') : '<span style="font-size:13px;color:#B0BEC5;">(없음)</span>'}
               </div>
             </div>
           </div>
@@ -1020,14 +1001,18 @@
       // 4단계 공식 헌장 본문에 1위 및 상위 조항들 주입
       const top1 = rankedList[0];
       const charterBox = document.getElementById("charterArticlesContent");
-      if (charterBox && top1) {
-        charterBox.innerHTML = `
-          <h4 style="font-family:'Jua';color:#E65100;font-size:18px;margin-bottom:10px;">🏆 의회 최다 득표 규약: [${top1.title}]</h4>
-          <ol style="margin-left:20px;line-height:1.8;">
-            ${top1.articles.map(a => `<li><strong>${a}</strong></li>`).join('')}
-          </ol>
-          <p style="margin-top:14px;font-size:14px;color:#558B2F;">우리 5학년 탐정단 일동은 위 헌장을 가결하고 학교와 가정에서 성실히 실천할 것을 엄숙히 선언합니다.</p>
-        `;
+      if (charterBox) {
+        if (top1) {
+          charterBox.innerHTML = `
+            <h4 style="font-family:'Jua';color:#E65100;font-size:18px;margin-bottom:10px;">🏆 우리 모둠 최다 득표 규약: [${top1.title}]</h4>
+            <ol style="margin-left:20px;line-height:1.8;">
+              ${top1.articles.map(a => `<li><strong>${a}</strong></li>`).join('')}
+            </ol>
+            <p style="margin-top:14px;font-size:14px;color:#558B2F;">우리 5학년 탐정단 일동은 위 헌장을 가결하고 학교와 가정에서 성실히 실천할 것을 엄숙히 선언합니다.</p>
+          `;
+        } else {
+          charterBox.innerHTML = `<p style="text-align:center;padding:30px;color:#78909C;font-size:16px;">(등록된 모둠 실천 규약 안건이 없습니다)</p>`;
+        }
       }
     }
 
