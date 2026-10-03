@@ -5,25 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
-  <title>QUEST 2: 사람의 분류 규칙을 AI에게 설명하라 | AI 자원순환 탐정단</title>
+  <title>QUEST 2: 분류기준 만들기 | AI 자원순환 탐정단</title>
+  
+  <!-- 무료 웹폰트 Pretendard 및 Jua -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-light: #f0f7ff;
+      --bg-light: #f0fdf4;
       --bg-card: #ffffff;
-      --border-card: #d0e4ff;
-      --primary: #2563eb;
-      --primary-light: #eff6ff;
+      --border-card: #bbf7d0;
+      --primary: #16a34a;
+      --primary-dark: #15803d;
+      --primary-light: #dcfce7;
       --accent-gold: #f59e0b;
-      --accent-green: #10b981;
+      --accent-blue: #2563eb;
+      --accent-purple: #9333ea;
       --accent-red: #ef4444;
-      --accent-purple: #8b5cf6;
-      --text-main: #1e293b;
-      --text-sub: #475569;
+      --text-main: #14532d;
+      --text-sub: #334155;
       --text-muted: #64748b;
+      --radius: 22px;
+      --shadow: 0 10px 30px rgba(22, 163, 74, 0.08);
     }
 
     * {
@@ -38,9 +43,9 @@
       font-family: 'Pretendard', sans-serif;
       background-color: var(--bg-light);
       background-image: 
-        radial-gradient(circle at 10% 10%, rgba(37, 99, 235, 0.08), transparent 35%),
-        radial-gradient(circle at 90% 90%, rgba(245, 158, 11, 0.08), transparent 35%),
-        linear-gradient(to bottom, #f0f7ff, #e8f2fc);
+        radial-gradient(circle at 10% 10%, rgba(22, 163, 74, 0.08), transparent 35%),
+        radial-gradient(circle at 90% 90%, rgba(37, 99, 235, 0.08), transparent 35%),
+        linear-gradient(to bottom, #f0fdf4, #eafaf1);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -49,7 +54,7 @@
       overflow-x: hidden;
     }
 
-    /* 상단 앱 HUD 네비게이션 (밝고 선명한 디자인) */
+    /* 상단 앱 HUD 네비게이션 */
     .app-header {
       width: 100%;
       position: sticky;
@@ -96,18 +101,25 @@
       flex-direction: column;
     }
 
-    .badge-chasi {
+    .header-quest-badge {
+      font-family: 'Jua', sans-serif;
       font-size: 12px;
-      font-weight: 800;
-      color: #d97706;
-      letter-spacing: 0.5px;
+      color: #16a34a;
+      background: #dcfce7;
+      padding: 2px 8px;
+      border-radius: 6px;
+      display: inline-block;
+      width: fit-content;
+      font-weight: bold;
     }
 
-    .header-main-title {
+    .header-title {
       font-family: 'Jua', sans-serif;
-      font-size: 22px;
-      color: #1e3a8a;
-      letter-spacing: -0.3px;
+      font-size: 20px;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .header-right {
@@ -116,106 +128,131 @@
       gap: 10px;
     }
 
-    .score-badge {
-      background: #fffbeb;
-      border: 2px solid #fde68a;
-      color: #b45309;
-      font-weight: 900;
-      font-size: 16px;
-      padding: 6px 16px;
-      border-radius: 30px;
+    .student-badge {
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+    }
+
+    .score-badge {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      font-family: 'Jua', sans-serif;
+      font-size: 15px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .btn-sound {
-      background: #f8fafc;
-      border: 2px solid #e2e8f0;
-      padding: 8px 12px;
-      border-radius: 12px;
-      font-size: 16px;
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
     }
 
     /* 메인 컨테이너 */
     .app-container {
       width: 100%;
-      max-width: 980px;
-      padding: 20px 16px 90px;
+      max-width: 960px;
+      padding: 24px 16px 80px;
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
 
-    /* 5단계 네비게이터 (크고 읽기 쉬운 디자인) */
+    /* 단계 네비게이터 */
     .step-tracker {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
       background: #ffffff;
       padding: 12px;
       border-radius: 18px;
       border: 2px solid #e2e8f0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 640px) {
+      .step-tracker {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     .step-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 10px 6px;
+      padding: 10px 8px;
       border-radius: 12px;
       background: #f8fafc;
       border: 2px solid transparent;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
       text-align: center;
     }
 
+    .step-item:hover {
+      background: #f1f5f9;
+    }
+
     .step-item.active {
-      background: #eff6ff;
-      border-color: var(--primary);
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-      transform: translateY(-2px);
+      background: #dcfce7;
+      border-color: #16a34a;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.15);
     }
 
     .step-item.completed {
-      background: #ecfdf5;
-      border-color: #a7f3d0;
+      background: #f0fdf4;
+      border-color: #86efac;
     }
 
     .step-num {
-      font-size: 12px;
-      font-weight: 900;
-      color: #94a3b8;
+      font-family: 'Jua', sans-serif;
+      font-size: 13px;
+      color: #64748b;
       margin-bottom: 2px;
     }
 
     .step-item.active .step-num {
-      color: var(--primary);
+      color: #15803d;
+      font-weight: bold;
     }
 
     .step-name {
       font-size: 14px;
       font-weight: 800;
-      color: #475569;
+      color: #334155;
     }
 
     .step-item.active .step-name {
-      color: #1e3a8a;
+      color: #14532d;
     }
 
-    /* 스테이지 카드 공통 */
+    /* 스테이지 카드 */
     .stage-card {
+      background: #ffffff;
+      border-radius: var(--radius);
+      border: 2.5px solid var(--border-card);
+      padding: 30px;
+      box-shadow: var(--shadow);
       display: none;
-      background: var(--bg-card);
-      border: 2px solid #e2e8f0;
-      border-radius: 24px;
-      padding: clamp(20px, 3vw, 32px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
       animation: fadeIn 0.3s ease-out forwards;
     }
 
@@ -232,473 +269,421 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: #eff6ff;
-      color: var(--primary);
-      border: 2px solid #bfdbfe;
+      background: #dcfce7;
+      color: #15803d;
+      font-family: 'Jua', sans-serif;
+      font-size: 15px;
       padding: 6px 14px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 900;
+      border-radius: 20px;
       margin-bottom: 12px;
+      border: 1.5px solid #86efac;
     }
 
     .stage-title {
       font-family: 'Jua', sans-serif;
-      font-size: clamp(22px, 3.2vw, 28px);
-      color: #0f172a;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-size: 26px;
+      color: #14532d;
+      line-height: 1.4;
+      margin-bottom: 12px;
     }
 
-    .stage-goal {
-      font-size: 16px;
-      color: #334155;
-      background: #f8fafc;
-      padding: 14px 18px;
-      border-radius: 14px;
-      border-left: 6px solid var(--primary);
-      margin-bottom: 24px;
+    .stage-desc {
+      font-size: 15px;
+      color: #475569;
       line-height: 1.6;
-    }
-
-    /* ========================================================
-       1단계: 도입 (4분) - 헷갈리는 쓰레기 3대 경계 사례
-       ======================================================== */
-    .confuse-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
       margin-bottom: 24px;
+      font-weight: 500;
     }
 
-    @media (max-width: 768px) {
-      .confuse-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .confuse-card {
-      background: #ffffff;
-      border: 3px solid #e2e8f0;
-      border-radius: 18px;
-      overflow: hidden;
+    /* 대상 선택 탭 */
+    .target-tabs {
       display: flex;
-      flex-direction: column;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
-      transition: all 0.25s ease;
+      gap: 10px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
     }
 
-    .confuse-card:hover {
-      border-color: #93c5fd;
-      transform: translateY(-3px);
-    }
-
-    .confuse-img-box {
-      width: 100%;
-      height: 170px;
-      background: #f1f5f9;
+    .target-tab-btn {
+      flex: 1;
+      min-width: 140px;
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      color: #475569;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-bottom: 2px solid #e2e8f0;
-    }
-
-    .confuse-body {
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
       gap: 8px;
-      flex-grow: 1;
-    }
-
-    .confuse-title {
-      font-size: 17px;
-      font-weight: 800;
-      color: #1e293b;
-    }
-
-    .confuse-desc {
-      font-size: 14px;
-      color: #64748b;
-      line-height: 1.5;
-    }
-
-    .btn-vote-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .btn-vote {
-      padding: 10px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 800;
-      border: 2px solid #cbd5e1;
-      background: #f8fafc;
-      color: #334155;
-      cursor: pointer;
       transition: all 0.2s;
     }
 
-    .btn-vote:hover {
-      background: #e2e8f0;
+    .target-tab-btn:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
     }
 
-    .btn-vote.selected-recycle {
-      background: #ecfdf5;
-      border-color: #10b981;
-      color: #065f46;
+    .target-tab-btn.active {
+      background: #16a34a;
+      border-color: #15803d;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
     }
 
-    .btn-vote.selected-trash {
-      background: #fef2f2;
-      border-color: #ef4444;
-      color: #991b1b;
-    }
-
-    /* ========================================================
-       2단계: 활동 1 (12분) - 5개 범주 상자로 사진 카드 분류
-       ======================================================== */
-    .pool-section-light {
+    /* 박스 공통 */
+    .info-box {
       background: #f8fafc;
       border: 2px solid #e2e8f0;
       border-radius: 18px;
-      padding: 16px;
+      padding: 20px;
       margin-bottom: 20px;
     }
 
-    .pool-section-title {
-      font-size: 15px;
-      font-weight: 800;
-      color: #0f172a;
+    .info-box-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 18px;
+      color: #1e293b;
       margin-bottom: 12px;
       display: flex;
       align-items: center;
-      gap: 6px;
-    }
-
-    .cards-scroll-pool {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      min-height: 50px;
-    }
-
-    .waste-item-chip {
-      background: #ffffff;
-      border: 2px solid #cbd5e1;
-      padding: 10px 16px;
-      border-radius: 14px;
-      font-size: 15px;
-      font-weight: 800;
-      color: #1e293b;
-      cursor: grab;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-      transition: all 0.2s;
-    }
-
-    .waste-item-chip:hover {
-      border-color: var(--primary);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-    }
-
-    .waste-item-chip.selected-touch {
-      background: #eff6ff;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-    }
-
-    /* 5개 분리수거함 그리드 */
-    .five-bins-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    @media (max-width: 900px) {
-      .five-bins-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    .bin-dropzone {
-      background: #ffffff;
-      border: 3px dashed #cbd5e1;
-      border-radius: 16px;
-      padding: 14px 10px;
-      min-height: 220px;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-
-    .bin-dropzone:hover, .bin-dropzone.hover-active {
-      border-color: var(--primary);
-      background: #eff6ff;
-    }
-
-    .bin-header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #f1f5f9;
-      margin-bottom: 10px;
-    }
-
-    .bin-icon {
-      font-size: 28px;
-    }
-
-    .bin-name {
-      font-family: 'Jua', sans-serif;
-      font-size: 16px;
-      color: #0f172a;
-    }
-
-    .bin-count {
-      font-size: 12px;
-      font-weight: 800;
-      color: #64748b;
-      background: #f1f5f9;
-      padding: 2px 8px;
-      border-radius: 10px;
-    }
-
-    .bin-items-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex-grow: 1;
-    }
-
-    .dropped-chip {
-      background: #f8fafc;
-      border: 1.5px solid #cbd5e1;
-      padding: 6px 10px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
       justify-content: space-between;
     }
 
-    .btn-chip-remove {
-      background: none;
-      border: none;
-      color: #ef4444;
-      font-size: 13px;
-      cursor: pointer;
-      padding: 0 4px;
-    }
-
-    /* ========================================================
-       3단계: 활동 2 (15분) - 만약 ○○이면 △△로 분류한다 (AI 규칙 만들기)
-       ======================================================== */
-    .rule-builder-card {
-      background: #f0fdf4;
-      border: 3px solid #86efac;
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.08);
-    }
-
-    .rule-builder-title {
-      font-family: 'Jua', sans-serif;
-      font-size: 20px;
-      color: #166534;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .rule-sentence-row {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      font-size: 18px;
-      font-weight: 900;
-      color: #1e293b;
+    /* 텍스트 입력창 */
+    .custom-textarea {
+      width: 100%;
       background: #ffffff;
-      padding: 16px;
+      border: 2px solid #cbd5e1;
       border-radius: 14px;
-      border: 2px solid #bbf7d0;
-      margin-bottom: 14px;
-    }
-
-    .rule-select {
-      background: #f8fafc;
-      border: 2px solid #94a3b8;
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-size: 16px;
-      font-weight: 800;
-      color: #0f172a;
+      padding: 14px 16px;
+      font-size: 15px;
+      font-family: 'Pretendard', sans-serif;
+      color: #1e293b;
+      line-height: 1.6;
+      resize: vertical;
+      min-height: 80px;
       outline: none;
-      font-family: inherit;
+      transition: all 0.2s;
+      user-select: text;
     }
 
-    .rule-select:focus {
+    .custom-textarea:focus {
       border-color: #16a34a;
+      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.15);
     }
 
-    .btn-add-rule {
-      background: #16a34a;
-      color: #fff;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 14px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.15s;
-    }
-
-    .btn-add-rule:hover {
-      transform: scale(1.03);
-      background: #15803d;
-    }
-
-    .rules-history-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .created-rule-item {
+    .custom-input {
+      width: 100%;
       background: #ffffff;
       border: 2px solid #cbd5e1;
-      padding: 12px 16px;
       border-radius: 12px;
+      padding: 12px 16px;
       font-size: 15px;
-      font-weight: 800;
+      font-family: 'Pretendard', sans-serif;
       color: #1e293b;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      outline: none;
+      transition: all 0.2s;
+      user-select: text;
     }
 
-    /* ========================================================
-       4단계: 토의 (6분) - 우리 모둠 판정 vs 정부 공식 안내 대조
-       ======================================================== */
-    .compare-table-wrap {
+    .custom-input:focus {
+      border-color: #16a34a;
+      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.15);
+    }
+
+    /* 체크리스트 영역 */
+    .checklist-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .check-card {
+      background: #ffffff;
       border: 2px solid #e2e8f0;
       border-radius: 16px;
-      overflow: hidden;
-      margin-bottom: 20px;
+      padding: 16px 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .compare-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #ffffff;
-      font-size: 15px;
+    .check-card:hover {
+      border-color: #16a34a;
+      transform: translateY(-2px);
     }
 
-    .compare-table th {
-      background: #1e3a8a;
-      color: #ffffff;
-      padding: 14px 12px;
-      font-weight: 800;
-      text-align: center;
+    .check-card.checked {
+      background: #f0fdf4;
+      border-color: #16a34a;
+      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.12);
     }
 
-    .compare-table td {
-      padding: 14px 12px;
-      border-bottom: 1px solid #f1f5f9;
-      text-align: center;
-      font-weight: 700;
-    }
-
-    .tag-official {
-      background: #ecfdf5;
-      color: #065f46;
-      border: 1.5px solid #10b981;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 13px;
-    }
-
-    /* ========================================================
-       5단계: 정리 (3분) - 애매한 말 ➔ 구체적인 관찰 기준으로 고치기
-       ======================================================== */
-    .fix-rule-box {
-      background: #fffbeb;
-      border: 3px solid #fcd34d;
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 20px;
-    }
-
-    .fix-row {
-      display: grid;
-      grid-template-columns: 1fr auto 1.4fr;
-      gap: 12px;
+    .check-box-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 2px solid #cbd5e1;
+      display: flex;
       align-items: center;
-      margin-bottom: 14px;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      color: transparent;
+      background: #ffffff;
+      flex-shrink: 0;
+      transition: all 0.2s;
     }
 
-    @media (max-width: 650px) {
-      .fix-row {
+    .check-card.checked .check-box-icon {
+      background: #16a34a;
+      border-color: #15803d;
+      color: #ffffff;
+    }
+
+    .check-content-wrap {
+      flex: 1;
+    }
+
+    .check-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 4px;
+    }
+
+    .check-desc {
+      font-size: 14px;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .check-tag {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1e40af;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-top: 6px;
+    }
+
+    /* 챗봇 도우미 팝업 / 상시 카드 */
+    .chatbot-helper-box {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border: 2px solid #93c5fd;
+      border-radius: 18px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .chatbot-avatar {
+      width: 46px;
+      height: 46px;
+      background: #2563eb;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+    }
+
+    .chatbot-speech {
+      flex: 1;
+      font-size: 14.5px;
+      color: #1e3a8a;
+      line-height: 1.6;
+    }
+
+    .chatbot-speech strong {
+      color: #1d4ed8;
+    }
+
+    /* 템플릿 빌더 (2단계) */
+    .template-builder-card {
+      background: #ffffff;
+      border: 2.5px solid #93c5fd;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
+      margin-bottom: 24px;
+    }
+
+    .builder-row {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .builder-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .builder-label {
+      font-family: 'Jua', sans-serif;
+      font-size: 15px;
+      color: #1e40af;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* 실시간 완성 문장 프리뷰 카드 */
+    .sentence-preview-box {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 2.5px solid #f59e0b;
+      border-radius: 18px;
+      padding: 22px;
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .preview-badge {
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      background: #d97706;
+      color: white;
+      font-family: 'Jua', sans-serif;
+      font-size: 13px;
+      padding: 3px 12px;
+      border-radius: 12px;
+    }
+
+    .preview-text {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      color: #78350f;
+      line-height: 1.6;
+      margin-top: 6px;
+      word-break: keep-all;
+    }
+
+    .preview-text span.hl {
+      color: #15803d;
+      text-decoration: underline;
+      text-decoration-color: #22c55e;
+      text-underline-offset: 4px;
+    }
+
+    /* 예시 카드 그리드 */
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .examples-grid {
         grid-template-columns: 1fr;
       }
     }
 
-    .input-box-light {
-      width: 100%;
-      background: #ffffff;
-      border: 2px solid #cbd5e1;
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 15px;
+    .example-card {
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      border-radius: 16px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .example-card:hover {
+      background: #f0fdf4;
+      border-color: #16a34a;
+      transform: translateY(-2px);
+    }
+
+    .example-tag {
+      font-family: 'Jua', sans-serif;
+      font-size: 13px;
+      color: #15803d;
+      background: #dcfce7;
+      padding: 2px 8px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .example-content {
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    /* 3단계 상세 기준 카드 & 키워드 태그 */
+    .keyword-pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+    }
+
+    .keyword-pill {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
       font-weight: 700;
-      color: #1e293b;
-      outline: none;
-      font-family: inherit;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
-    .input-box-light:focus {
-      border-color: var(--primary);
+    .keyword-pill:hover {
+      background: #dcfce7;
+      border-color: #16a34a;
+      color: #15803d;
+      transform: scale(1.03);
     }
 
-    /* 하단 거대 액션 버튼 바 */
+    /* 버튼 액션 바 */
     .action-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 24px;
+      margin-top: 28px;
       padding-top: 20px;
       border-top: 2px solid #f1f5f9;
       gap: 12px;
     }
 
     .btn-nav-large {
-      padding: 16px 32px;
+      padding: 14px 28px;
       border-radius: 16px;
-      font-size: 18px;
-      font-weight: 900;
-      font-family: inherit;
+      font-size: 17px;
+      font-weight: 800;
+      font-family: 'Jua', sans-serif;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
       transition: all 0.2s;
+      border: none;
     }
 
     .btn-prev {
@@ -712,41 +697,118 @@
     }
 
     .btn-next {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      border: none;
+      background: linear-gradient(135deg, #16a34a, #15803d);
       color: #ffffff;
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
-      margin-left: auto;
+      box-shadow: 0 6px 20px rgba(22, 163, 74, 0.25);
     }
 
     .btn-next:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+      box-shadow: 0 8px 24px rgba(22, 163, 74, 0.35);
     }
 
-    .btn-finish {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      color: #ffffff;
-      font-size: 20px;
+    .btn-action-small {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.2s;
     }
 
-    /* 토스트 알림 */
+    .btn-action-small:hover {
+      background: #e2e8f0;
+      border-color: #94a3b8;
+    }
+
+    /* 최종 완료 배지 상자 */
+    .cert-box {
+      background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+      border: 3px solid #86efac;
+      border-radius: 24px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(22, 163, 74, 0.12);
+      margin-bottom: 24px;
+    }
+
+    .cert-icon {
+      font-size: 56px;
+      margin-bottom: 12px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-12px); }
+      60% { transform: translateY(-6px); }
+    }
+
+    .cert-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 28px;
+      color: #14532d;
+      margin-bottom: 8px;
+    }
+
+    .rule-summary-card {
+      background: #ffffff;
+      border: 2px solid #86efac;
+      border-radius: 18px;
+      padding: 20px;
+      text-align: left;
+      margin: 20px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    .rule-summary-row {
+      display: flex;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .rule-summary-row:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .rule-summary-label {
+      font-family: 'Jua', sans-serif;
+      color: #15803d;
+      width: 130px;
+      flex-shrink: 0;
+    }
+
+    .rule-summary-val {
+      color: #1e293b;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    /* 토스트 알림창 */
     .toast-msg {
       position: fixed;
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
-      background: #1e293b;
-      color: #ffffff;
-      padding: 14px 28px;
-      border-radius: 40px;
-      font-size: 16px;
-      font-weight: 800;
+      background: rgba(15, 23, 42, 0.9);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 700;
       z-index: 1000;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      pointer-events: none;
       opacity: 0;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      pointer-events: none;
     }
 
     .toast-msg.show {
@@ -757,16 +819,17 @@
 </head>
 <body>
 
-  <!-- 앱 헤더 -->
+  <!-- 상단 앱 HUD 네비게이션 -->
   <header class="app-header">
     <div class="header-left">
-      <a href="main.html" class="btn-back">⬅ 메인으로</a>
+      <a href="main.html" class="btn-back">⬅ 본부로 이동</a>
       <div class="header-title-group">
-        <span class="badge-chasi">QUEST 2</span>
-        <h1 class="header-main-title">사람의 분류 규칙을 AI에게 설명하라</h1>
+        <span class="header-quest-badge">QUEST 2 • 실과/과학 연계</span>
+        <h1 class="header-title">📋 분류기준 만들기</h1>
       </div>
     </div>
     <div class="header-right">
+      <div class="student-badge" id="studentDisplay">👤 탐정 학생 (1모둠)</div>
       <div class="score-badge" id="scoreDisplay">⭐ 0 EXP</div>
       <button class="btn-sound" id="soundToggle" onclick="toggleSound()">🔊</button>
     </div>
@@ -775,336 +838,326 @@
   <!-- 메인 컨테이너 -->
   <main class="app-container">
     
-    <!-- 5단계 네비게이터 -->
+    <!-- 4단계 네비게이터 -->
     <nav class="step-tracker">
       <div class="step-item active" id="stepNav-1" onclick="goToStep(1)">
-        <span class="step-num">1단계 (4분)</span>
-        <span class="step-name">🚨 헷갈리는 쓰레기</span>
+        <span class="step-num">1단계</span>
+        <span class="step-name">🔍 교차 검증</span>
       </div>
       <div class="step-item" id="stepNav-2" onclick="goToStep(2)">
-        <span class="step-num">2단계 (12분)</span>
-        <span class="step-name">📂 5개 상자 분류</span>
+        <span class="step-num">2단계</span>
+        <span class="step-name">🗣️ 규칙 정립</span>
       </div>
       <div class="step-item" id="stepNav-3" onclick="goToStep(3)">
-        <span class="step-num">3단계 (15분)</span>
-        <span class="step-name">🤖 AI 규칙 만들기</span>
+        <span class="step-num">3단계</span>
+        <span class="step-name">🤖 AI 판별 기준</span>
       </div>
       <div class="step-item" id="stepNav-4" onclick="goToStep(4)">
-        <span class="step-num">4단계 (6분)</span>
-        <span class="step-name">💬 정부 기준 대조</span>
-      </div>
-      <div class="step-item" id="stepNav-5" onclick="goToStep(5)">
-        <span class="step-num">5단계 (3분)</span>
-        <span class="step-name">💡 관찰 기준 다듬기</span>
+        <span class="step-num">완료 단계</span>
+        <span class="step-name">🏅 배지 획득</span>
       </div>
     </nav>
 
-    <!-- ==================== 1단계: 도입 (4분) ==================== -->
+    <!-- ==================== [1단계] 챗봇·공식 자료 교차 검증 (기준 보완) ==================== -->
     <section class="stage-card active" id="stage-1">
-      <div class="stage-badge">1단계 • 도입 (4분)</div>
-      <h2 class="stage-title">🚨 헷갈리는 쓰레기! 재활용일까? 일반쓰레기일까?</h2>
-      <div class="stage-goal">
-        <strong>[생각 열기]</strong> 우리 주변에서 가장 헷갈리는 3가지 쓰레기를 보고, <strong>재활용이 될지 일반쓰레기일지</strong> 나의 생각을 골라보세요!
+      <div class="stage-badge">1단계 • 챗봇·공식 자료 교차 검증</div>
+      <h2 class="stage-title">🔍 직관적으로 보던 특징을 공식 기준과 대조하여 보완하기</h2>
+      <p class="stage-desc">
+        우리가 눈으로 어렴풋이 보던 재활용품의 특징을 챗봇 및 환경부 공식 분리배출 기준과 대조하여 핵심 단서를 날카롭게 다듬어 봅시다.
+      </p>
+
+      <!-- 비교 대상 선택 탭 -->
+      <div class="info-box-title" style="margin-bottom: 8px;">
+        <span>🎯 비교 대상 선택:</span>
+      </div>
+      <div class="target-tabs">
+        <button class="target-tab-btn active" onclick="switchTarget('milk', this)">
+          <span>🥛 우유갑 (살균팩·멸균팩)</span>
+        </button>
+        <button class="target-tab-btn" onclick="switchTarget('can', this)">
+          <span>🥫 캔류 (알루미늄·철캔)</span>
+        </button>
+        <button class="target-tab-btn" onclick="switchTarget('pet', this)">
+          <span>🍶 페트병 (투명·유색)</span>
+        </button>
       </div>
 
-      <div class="confuse-grid">
-        <!-- 1. 컵라면 용기 -->
-        <div class="confuse-card">
-          <div class="confuse-img-box">
-            <svg width="120" height="120" viewBox="0 0 100 100">
-              <path d="M 20 25 L 80 25 L 70 85 L 30 85 Z" fill="#fee2e2" stroke="#ef4444" stroke-width="3"/>
-              <ellipse cx="50" cy="25" rx="30" ry="8" fill="#fca5a5"/>
-              <text x="50" y="55" font-size="11" font-weight="bold" fill="#b91c1c" text-anchor="middle">빨간 국물 오염</text>
-              <text x="50" y="70" font-size="9" fill="#7f1d1d" text-anchor="middle">컵라면 용기</text>
-            </svg>
-          </div>
-          <div class="confuse-body">
-            <h3 class="confuse-title">1. 빨간 국물이 묻은 컵라면</h3>
-            <p class="confuse-desc">물로 헹궈도 붉은 양념 자국이 남아있어요.</p>
-            <div class="btn-vote-group">
-              <button class="btn-vote" onclick="voteConfuse(1, 'recycle', this)">♻️ 재활용</button>
-              <button class="btn-vote" onclick="voteConfuse(1, 'trash', this)">🗑️ 일반쓰레기</button>
-            </div>
-          </div>
+      <!-- 우리가 처음 생각했던 기준 -->
+      <div class="info-box">
+        <div class="info-box-title">
+          <span>💭 우리가 처음 생각했던 기준:</span>
+          <button class="btn-action-small" onclick="loadSampleInitial()">💡 예시 불러오기</button>
         </div>
+        <textarea 
+          id="initialCriteria" 
+          class="custom-textarea" 
+          placeholder="예: '종이 재질이고 네모나면 우유갑이다'"
+        >종이 재질이고 네모나면 우유갑이다</textarea>
+      </div>
 
-        <!-- 2. 반짝이는 코팅 종이 -->
-        <div class="confuse-card">
-          <div class="confuse-img-box">
-            <svg width="120" height="120" viewBox="0 0 100 100">
-              <rect x="25" y="20" width="50" height="65" rx="4" fill="#fef08a" stroke="#eab308" stroke-width="3"/>
-              <path d="M 30 25 L 70 65" stroke="#ca8a04" stroke-width="2" stroke-dasharray="4"/>
-              <text x="50" y="50" font-size="10" font-weight="bold" fill="#854d0e" text-anchor="middle">비닐 코팅</text>
-              <text x="50" y="65" font-size="9" fill="#854d0e" text-anchor="middle">광고 전단지</text>
-            </svg>
-          </div>
-          <div class="confuse-body">
-            <h3 class="confuse-title">2. 겉면이 비닐 코팅된 종이</h3>
-            <p class="confuse-desc">찢어보면 투명한 비닐 막이 벗겨져요.</p>
-            <div class="btn-vote-group">
-              <button class="btn-vote" onclick="voteConfuse(2, 'recycle', this)">♻️ 재활용</button>
-              <button class="btn-vote" onclick="voteConfuse(2, 'trash', this)">🗑️ 일반쓰레기</button>
-            </div>
-          </div>
+      <!-- 챗봇·공식 자료 확인 가이드 박스 -->
+      <div class="chatbot-helper-box">
+        <div class="chatbot-avatar">🤖</div>
+        <div class="chatbot-speech">
+          <strong>에코봇의 공식 분리배출 가이드 힌트:</strong><br>
+          "우유갑은 일반 종이와 달리 물이 새지 않도록 <strong>폴리에틸렌 방수 코팅</strong>이 되어 있으며, 상온 보관용 멸균팩은 빛을 막기 위해 내부에 <strong>알루미늄 은박</strong>이 들어있어요! 공식 체크리스트를 확인해보세요."
         </div>
+      </div>
 
-        <!-- 3. 기름때 묻은 페트병 -->
-        <div class="confuse-card">
-          <div class="confuse-img-box">
-            <svg width="120" height="120" viewBox="0 0 100 100">
-              <rect x="35" y="30" width="30" height="55" rx="6" fill="#bfdbfe" stroke="#3b82f6" stroke-width="3"/>
-              <rect x="42" y="18" width="16" height="12" fill="#60a5fa"/>
-              <circle cx="50" cy="55" r="10" fill="#f59e0b" opacity="0.8"/>
-              <text x="50" y="58" font-size="8" font-weight="bold" fill="#fff" text-anchor="middle">식용유</text>
-              <text x="50" y="75" font-size="8" fill="#1e3a8a" text-anchor="middle">오염 페트병</text>
-            </svg>
+      <!-- 챗봇/공식 자료 확인 후 발견한 사실 (체크리스트 영역) -->
+      <div class="info-box">
+        <div class="info-box-title">
+          <span>📋 챗봇/공식 자료 확인 후 발견한 사실 (체크리스트):</span>
+          <span style="font-size:13px; color:#16a34a; font-weight:700;">모두 클릭하여 확인해보세요!</span>
+        </div>
+        
+        <div class="checklist-container" id="checklistArea">
+          <!-- 체크 1 -->
+          <div class="check-card" onclick="toggleCheck(this, 1)">
+            <div class="check-box-icon">✓</div>
+            <div class="check-content-wrap">
+              <div class="check-title">겉면 코팅(폴리에틸렌) 및 내부 은박(알루미늄 멸균팩) 유무</div>
+              <div class="check-desc">일반 종이와 달리 물에 젖지 않는 방수 코팅막과 은박 차단막이 존재함</div>
+              <span class="check-tag">재질/보호막 단서</span>
+            </div>
           </div>
-          <div class="confuse-body">
-            <h3 class="confuse-title">3. 식용유 기름이 남은 페트병</h3>
-            <p class="confuse-desc">기름때가 병 안쪽에 미끌거리게 묻어있어요.</p>
-            <div class="btn-vote-group">
-              <button class="btn-vote" onclick="voteConfuse(3, 'recycle', this)">♻️ 재활용</button>
-              <button class="btn-vote" onclick="voteConfuse(3, 'trash', this)">🗑️ 일반쓰레기</button>
+
+          <!-- 체크 2 -->
+          <div class="check-card" onclick="toggleCheck(this, 2)">
+            <div class="check-box-icon">✓</div>
+            <div class="check-content-wrap">
+              <div class="check-title">빨대 꽂는 은박 구멍이나 플라스틱 캡 유무</div>
+              <div class="check-desc">상단에 스트로우를 꽂을 수 있는 원형 은박 홀 또는 돌려 따는 마개가 결합되어 있음</div>
+              <span class="check-tag">구조적 형태 단서</span>
+            </div>
+          </div>
+
+          <!-- 체크 3 -->
+          <div class="check-card" onclick="toggleCheck(this, 3)">
+            <div class="check-box-icon">✓</div>
+            <div class="check-content-wrap">
+              <div class="check-title">일반 파지와 분리배출해야 하는 살균팩/멸균팩 기호</div>
+              <div class="check-desc">고급 천연 펄프로 재활용하기 위해 일반 신문지/상자와 분리하는 전용 마크가 인쇄됨</div>
+              <span class="check-tag">공식 인증 마크</span>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- 수정한 핵심 단서 -->
+      <div class="info-box" style="background:#f0fdf4; border-color:#86efac;">
+        <div class="info-box-title">
+          <span style="color:#14532d;">✨ 교차 검증 후 수정한 핵심 단서:</span>
+          <button class="btn-action-small" style="background:#dcfce7; color:#15803d; border-color:#86efac;" onclick="loadSampleRevised()">💡 추천 단서 채우기</button>
+        </div>
+        <textarea 
+          id="revisedClue" 
+          class="custom-textarea" 
+          placeholder="예: '접힌 모서리 날개와 상단 삼각 지붕 형태, 내부 방수 코팅 재질'"
+        >접힌 모서리 날개와 상단 삼각 지붕 형태, 내부 방수 코팅 재질</textarea>
       </div>
 
       <div class="action-bar">
         <div></div>
         <button class="btn-nav-large btn-next" onclick="goToStep(2)">
-          2단계: 5개 상자로 분류하기 ➔
+          2단계: 모둠 분류 규칙 정립 ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== 2단계: 활동 1 (12분) ==================== -->
+    <!-- ==================== [2단계] 모둠 분류 규칙 정립 (한 문장 발표용) ==================== -->
     <section class="stage-card" id="stage-2">
-      <div class="stage-badge">2단계 • 활동 1 (12분)</div>
-      <h2 class="stage-title">📂 8개 사진 카드를 5개 분리수거 상자로 쏙!</h2>
-      <div class="stage-goal">
-        <strong>[모둠 분류 활동]</strong> 아래 쓰레기 카드를 터치하거나 드래그하여 <strong>5개 분리수거 상자</strong>에 알맞게 넣어보세요!
-      </div>
+      <div class="stage-badge">2단계 • 모둠 분류 규칙 정립</div>
+      <h2 class="stage-title">🗣️ 한 문장 발표용 템플릿으로 분류 규칙 완성하기</h2>
+      <p class="stage-desc">
+        발표 시 모든 모둠원이 명확하고 일관되게 설명할 수 있도록 표준 문장 템플릿에 맞추어 규칙을 정립합니다.
+      </p>
 
-      <!-- 쓰레기 카드 풀 -->
-      <div class="pool-section-light">
-        <div class="pool-section-title">🗂️ 분류할 쓰레기 카드 (카드를 터치한 후 상자를 눌러도 쏙 들어갑니다!)</div>
-        <div class="cards-scroll-pool" id="wasteCardPool">
-          <div class="waste-item-chip" draggable="true" data-id="w1" data-name="신문지" ondragstart="dragWaste(event, 'w1')" onclick="touchSelectWaste('w1', this)">
-            📰 신문지
+      <!-- 작성 예시 카드 -->
+      <div class="info-box-title">
+        <span>💡 표준 작성 예시 (클릭하면 템플릿에 자동 적용):</span>
+      </div>
+      <div class="examples-grid">
+        <div class="example-card" onclick="applyTemplateExample('milk')">
+          <span class="example-tag">🥛 우유갑 표준 예시</span>
+          <div class="example-content">
+            "우유갑은 상단에 삼각 지붕 형태의 접힌 날개가 있고, 내외부에 방수 코팅이 된 사각 기둥 모양이다."
           </div>
-          <div class="waste-item-chip" draggable="true" data-id="w2" data-name="투명 페트병(라벨제거)" ondragstart="dragWaste(event, 'w2')" onclick="touchSelectWaste('w2', this)">
-            🧴 깨끗한 투명 페트병
-          </div>
-          <div class="waste-item-chip" draggable="true" data-id="w3" data-name="과자 봉지(비닐)" ondragstart="dragWaste(event, 'w3')" onclick="touchSelectWaste('w3', this)">
-            🍿 과자 봉지
-          </div>
-          <div class="waste-item-chip" draggable="true" data-id="w4" data-name="음료수 캔" ondragstart="dragWaste(event, 'w4')" onclick="touchSelectWaste('w4', this)">
-            🥤 알루미늄 캔
-          </div>
-          <div class="waste-item-chip" draggable="true" data-id="w5" data-name="국물 묻은 컵라면" ondragstart="dragWaste(event, 'w5')" onclick="touchSelectWaste('w5', this)">
-            🍜 양념 묻은 컵라면
-          </div>
-          <div class="waste-item-chip" draggable="true" data-id="w6" data-name="코팅된 광고 전단지" ondragstart="dragWaste(event, 'w6')" onclick="touchSelectWaste('w6', this)">
-            📑 비닐 코팅 전단지
-          </div>
-          <div class="waste-item-chip" draggable="true" data-id="w7" data-name="깨끗한 택배 상자" ondragstart="dragWaste(event, 'w7')" onclick="touchSelectWaste('w7', this)">
-            📦 종이 박스
-          </div>
-          <div class="waste-item-chip" draggable="true" data-id="w8" data-name="다 쓴 치약 튜브" ondragstart="dragWaste(event, 'w8')" onclick="touchSelectWaste('w8', this)">
-            🪥 복합 플라스틱 튜브
+        </div>
+        <div class="example-card" onclick="applyTemplateExample('can')">
+          <span class="example-tag">🥫 알루미늄 캔 표준 예시</span>
+          <div class="example-content">
+            "알루미늄 캔은 상단에 링풀(손잡이 탭)과 음료 배출구가 레이저 절개선으로 맞물려 있는 원통형이다."
           </div>
         </div>
       </div>
 
-      <!-- 5개 분리수거함 -->
-      <div class="five-bins-grid">
-        <!-- 1. 종이류 -->
-        <div class="bin-dropzone" data-bin="paper" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="dropToBin(event, 'paper')" onclick="touchDropToBin('paper')">
-          <div class="bin-header">
-            <span class="bin-icon">📦</span>
-            <span class="bin-name">1. 종이류</span>
-            <span class="bin-count" id="count-paper">0개</span>
-          </div>
-          <div class="bin-items-list" id="bin-paper"></div>
+      <!-- 발표 템플릿 빌더 -->
+      <div class="template-builder-card">
+        <div class="info-box-title" style="color:#1d4ed8; margin-bottom:16px;">
+          <span>📝 발표 템플릿 조립기:</span>
+          <span style="font-size:13px; color:#64748b;">빈칸을 채우면 실시간 문장이 완성됩니다</span>
         </div>
 
-        <!-- 2. 플라스틱 -->
-        <div class="bin-dropzone" data-bin="plastic" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="dropToBin(event, 'plastic')" onclick="touchDropToBin('plastic')">
-          <div class="bin-header">
-            <span class="bin-icon">🧴</span>
-            <span class="bin-name">2. 플라스틱</span>
-            <span class="bin-count" id="count-plastic">0개</span>
+        <div class="builder-row">
+          <div class="builder-input-group">
+            <label class="builder-label">① 분류 대상 [ 대상 ]</label>
+            <input type="text" id="tplTarget" class="custom-input" value="우유갑" placeholder="예: 우유갑" oninput="updateSentencePreview()">
           </div>
-          <div class="bin-items-list" id="bin-plastic"></div>
+
+          <div class="builder-input-group">
+            <label class="builder-label">② 핵심 시각 단서 [ 핵심 시각 단서/특징 ]</label>
+            <input type="text" id="tplVisual" class="custom-input" value="상단에 삼각 지붕 형태의 접힌 날개" placeholder="예: 상단에 삼각 지붕 형태의 접힌 날개" oninput="updateSentencePreview()">
+          </div>
+
+          <div class="builder-input-group">
+            <label class="builder-label">③ 재질 및 구조 [ 재질/구조적 특성 ]</label>
+            <input type="text" id="tplMaterial" class="custom-input" value="내외부에 방수 코팅이 된 사각 기둥 모양" placeholder="예: 내외부에 방수 코팅이 된 사각 기둥 모양" oninput="updateSentencePreview()">
+          </div>
         </div>
 
-        <!-- 3. 비닐류 -->
-        <div class="bin-dropzone" data-bin="vinyl" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="dropToBin(event, 'vinyl')" onclick="touchDropToBin('vinyl')">
-          <div class="bin-header">
-            <span class="bin-icon">🛍️</span>
-            <span class="bin-name">3. 비닐류</span>
-            <span class="bin-count" id="count-vinyl">0개</span>
+        <!-- 실시간 완성 문장 프리뷰 -->
+        <div class="sentence-preview-box">
+          <span class="preview-badge">📢 완성된 모둠 발표 문장</span>
+          <div class="preview-text" id="sentencePreview">
+            "<span class="hl">우유갑</span>은(는) <span class="hl">상단에 삼각 지붕 형태의 접힌 날개</span>(이)가 있고 <span class="hl">내외부에 방수 코팅이 된 사각 기둥 모양</span>을(를) 지니고 있다."
           </div>
-          <div class="bin-items-list" id="bin-vinyl"></div>
         </div>
 
-        <!-- 4. 캔/고철 -->
-        <div class="bin-dropzone" data-bin="can" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="dropToBin(event, 'can')" onclick="touchDropToBin('can')">
-          <div class="bin-header">
-            <span class="bin-icon">🥫</span>
-            <span class="bin-name">4. 캔/고철</span>
-            <span class="bin-count" id="count-can">0개</span>
-          </div>
-          <div class="bin-items-list" id="bin-can"></div>
-        </div>
-
-        <!-- 5. 일반쓰레기 -->
-        <div class="bin-dropzone" data-bin="trash" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="dropToBin(event, 'trash')" onclick="touchDropToBin('trash')">
-          <div class="bin-header">
-            <span class="bin-icon">🗑️</span>
-            <span class="bin-name">5. 일반쓰레기</span>
-            <span class="bin-count" id="count-trash">0개</span>
-          </div>
-          <div class="bin-items-list" id="bin-trash"></div>
+        <!-- 음성 발표 연습 버튼 -->
+        <div style="display:flex; justify-content:center; gap:10px;">
+          <button class="btn-action-small" style="background:#eff6ff; border-color:#93c5fd; color:#1d4ed8; padding:10px 18px; font-size:14px;" onclick="speakSentence()">
+            🔊 AI 음성으로 문장 들어보기 (발표 연습)
+          </button>
         </div>
       </div>
 
       <div class="action-bar">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(1)">⬅ 이전 단계</button>
+        <button class="btn-nav-large btn-prev" onclick="goToStep(1)">⬅ 1단계 교차 검증</button>
         <button class="btn-nav-large btn-next" onclick="goToStep(3)">
-          3단계: AI 생각 규칙 만들기 ➔
+          3단계: AI 상세 판별 기준 ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== 3단계: 활동 2 (15분) ==================== -->
+    <!-- ==================== [3단계] AI 학습을 위한 상세 판별 기준 (입력창) ==================== -->
     <section class="stage-card" id="stage-3">
-      <div class="stage-badge">3단계 • 활동 2 (15분)</div>
-      <h2 class="stage-title">🤖 "만약 ○○이면 △△로 분류한다!" AI 규칙 만들기</h2>
-      <div class="stage-goal">
-        <strong>[AI 알고리즘 규칙 만들기]</strong> AI 로봇이 스스로 쓰레기를 구별할 수 있도록 <strong>"만약 [조건] 이면 [결과] 로 분류한다"</strong> 규칙을 완성해 보세요!
+      <div class="stage-badge">3단계 • AI 학습용 상세 기준 입력</div>
+      <h2 class="stage-title">🤖 사진 속 일부만 보이거나 구겨져도 판별하는 세부 기준</h2>
+      <p class="stage-desc">
+        AI 카메라는 쓰레기가 구겨지거나 다른 물건 뒤에 숨어있을 때 혼란을 겪습니다. AI가 어떤 조건에서도 정확히 판별할 수 있도록 세부 기준을 작성해주세요.
+      </p>
+
+      <!-- 1. 전체 형태가 안 보일 때의 식별 기준 -->
+      <div class="info-box">
+        <div class="info-box-title">
+          <span>🔍 1. 전체 형태가 안 보일 때의 식별 기준:</span>
+        </div>
+        <p style="font-size:14px; color:#64748b; margin-bottom:8px;">
+          💡 추천 키워드를 클릭하면 내용에 빠르게 추가할 수 있습니다:
+        </p>
+        <div class="keyword-pill-group">
+          <span class="keyword-pill" onclick="appendKeyword('partialCriteria', '모서리 접합선 및 접힌 삼각 날개')">+ 모서리 접합선/삼각 날개</span>
+          <span class="keyword-pill" onclick="appendKeyword('partialCriteria', '상단 은박 빨대 투입구')">+ 상단 은박 빨대 투입구</span>
+          <span class="keyword-pill" onclick="appendKeyword('partialCriteria', '플라스틱 스크류 캡')">+ 플라스틱 캡</span>
+          <span class="keyword-pill" onclick="appendKeyword('partialCriteria', '살균팩/멸균팩 분리배출 마크')">+ 분리배출 마크 노출</span>
+        </div>
+        <textarea 
+          id="partialCriteria" 
+          class="custom-textarea" 
+          placeholder="예: 모서리 접합선, 접힌 삼각 날개 부분, 상단 은박 빨대 투입구 또는 플라스틱 캡, 브랜드 로고나 분리배출 마크의 일부 노출"
+        >모서리 접합선, 접힌 삼각 날개 부분, 상단 은박 빨대 투입구 또는 플라스틱 캡, 브랜드 로고나 분리배출 마크의 일부 노출</textarea>
       </div>
 
-      <div class="rule-builder-card">
-        <div class="rule-builder-title">🧩 AI 생각 규칙 조립기</div>
-        
-        <div class="rule-sentence-row">
-          <span>만약</span>
-          <select id="ruleCondition" class="rule-select">
-            <option value="물로 씻기지 않는 양념이나 기름이 묻어있으면">물로 씻기지 않는 양념이나 기름이 묻어있으면</option>
-            <option value="비닐 코팅이 되어 찢어지지 않으면">비닐 코팅이 되어 찢어지지 않으면</option>
-            <option value="깨끗하게 씻은 투명 페트병이고 라벨을 뗐으면">깨끗하게 씻은 투명 페트병이고 라벨을 뗐으면</option>
-            <option value="내용물을 비우고 찌그러뜨린 알루미늄 캔이면">내용물을 비우고 찌그러뜨린 알루미늄 캔이면</option>
-            <option value="여러 재질이 섞여 분리할 수 없으면">여러 재질이 섞여 분리할 수 없으면</option>
-          </select>
-          <span>👉</span>
-          <select id="ruleResult" class="rule-select">
-            <option value="[일반쓰레기] 종량제 봉투">[일반쓰레기] 종량제 봉투</option>
-            <option value="[투명 페트병] 전용 수거함">[투명 페트병] 전용 수거함</option>
-            <option value="[캔/고철] 수거함">[캔/고철] 수거함</option>
-            <option value="[종이류] 수거함">[종이류] 수거함</option>
-            <option value="[비닐류] 수거함">[비닐류] 수거함</option>
-          </select>
-          <span>(으)로 분류한다!</span>
+      <!-- 2. 오분류 방지 예외 기준 -->
+      <div class="info-box" style="background:#fffbeb; border-color:#fde68a;">
+        <div class="info-box-title" style="color:#92400e;">
+          <span>⚠️ 2. 오분류 방지 예외 기준 (다른 쓰레기와 헷갈리지 않는 조건):</span>
         </div>
 
-        <button class="btn-add-rule" onclick="addAiRule()">➕ 이 규칙을 AI에게 가르치기 (⭐ +20 EXP)</button>
+        <!-- 세부 기준 1: 택배 상자와 구분 -->
+        <div style="margin-bottom: 16px;">
+          <label style="font-size:14px; font-weight:800; color:#b45309; display:block; margin-bottom:6px;">
+            📦 종이 상자(택배 박스)와 혼동하지 않는 기준:
+          </label>
+          <input 
+            type="text" 
+            id="avoidBoxCriteria" 
+            class="custom-input" 
+            value="방수 코팅 표면 및 모서리 실링 처리, 얇은 방수 백색 펄프 단면" 
+            placeholder="예: 방수 코팅 표면 및 모서리 실링 처리"
+          >
+        </div>
 
-        <div class="rules-history-list" id="rulesHistoryList">
-          <div class="created-rule-item">
-            <span>🤖 규칙 1: 만약 <strong>물로 씻기지 않는 양념이 묻어있으면</strong> 👉 <strong>[일반쓰레기]</strong>(으)로 분류한다.</span>
+        <!-- 세부 기준 2: 플라스틱 통과 구분 -->
+        <div>
+          <label style="font-size:14px; font-weight:800; color:#b45309; display:block; margin-bottom:6px;">
+            🧴 플라스틱 통과 혼동하지 않는 기준:
+          </label>
+          <input 
+            type="text" 
+            id="avoidPlasticCriteria" 
+            class="custom-input" 
+            value="눌렀을 때 생기는 종이 특유의 각진 접힘 주름 및 내부 종이 단면" 
+            placeholder="예: 눌렀을 때 생기는 종이 접힘 주름"
+          >
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn-nav-large btn-prev" onclick="goToStep(2)">⬅ 2단계 규칙 정립</button>
+        <button class="btn-nav-large btn-next" style="background:linear-gradient(135deg,#f59e0b,#d97706);" onclick="saveAndFinishQuest2()">
+          💾 우리 모둠 AI 규칙 저장 & 완료 ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== [4단계] 완료 & 배지 수여 ==================== -->
+    <section class="stage-card" id="stage-4">
+      <div class="cert-box">
+        <div class="cert-icon">📋 🥈 🌟</div>
+        <h2 class="cert-title">QUEST 2: 분류기준 만들기 완료!</h2>
+        <p style="font-size:16px; color:#14532d; font-weight:700; margin-bottom:16px;">
+          축하합니다! 공식 기준 교차 검증과 발표 템플릿, AI 세부 판별 기준을 모두 수립하여<br>
+          <strong>'규칙 설계 탐정 🥈'</strong> 배지를 획득했습니다!
+        </p>
+
+        <!-- 완성된 모둠 규칙 요약표 -->
+        <div class="rule-summary-card">
+          <div class="rule-summary-row">
+            <div class="rule-summary-label">🎯 분류 대상</div>
+            <div class="rule-summary-val" id="sumTarget">우유갑 (살균팩·멸균팩)</div>
+          </div>
+          <div class="rule-summary-row">
+            <div class="rule-summary-label">🗣️ 한 문장 발표 규칙</div>
+            <div class="rule-summary-val" id="sumSentence">"우유갑은 상단에 삼각 지붕 형태의 접힌 날개가 있고, 내외부에 방수 코팅이 된 사각 기둥 모양이다."</div>
+          </div>
+          <div class="rule-summary-row">
+            <div class="rule-summary-label">🔍 부분 식별 기준</div>
+            <div class="rule-summary-val" id="sumPartial">모서리 접합선, 접힌 삼각 날개, 상단 은박 빨대 투입구/플라스틱 캡</div>
+          </div>
+          <div class="rule-summary-row">
+            <div class="rule-summary-label">⚠️ 오분류 방지 기준</div>
+            <div class="rule-summary-val" id="sumAvoid">택배 상자와 구분(방수 코팅 실링), 플라스틱과 구분(각진 접힘 주름)</div>
           </div>
         </div>
-      </div>
 
-      <div class="action-bar">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(2)">⬅ 이전 단계</button>
-        <button class="btn-nav-large btn-next" onclick="goToStep(4)">
-          4단계: 정부 공식 기준 대조하기 ➔
-        </button>
-      </div>
-    </section>
-
-    <!-- ==================== 4단계: 토의 (6분) ==================== -->
-    <section class="stage-card" id="stage-4">
-      <div class="stage-badge">4단계 • 토의 (6분)</div>
-      <h2 class="stage-title">💬 우리 생각 vs 환경부 공식 기준 대조하기</h2>
-      <div class="stage-goal">
-        <strong>[공식 안내 대조]</strong> 환경부에서 정한 <strong>진짜 공식 분리배출 기준</strong>을 확인하고 우리 모둠의 생각과 비교해 보세요!
-      </div>
-
-      <div class="compare-table-wrap">
-        <table class="compare-table">
-          <thead>
-            <tr>
-              <th>품목 사진/이름</th>
-              <th>정부 공식 분류</th>
-              <th>핵심 공식 배출 요령</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>🍜 양념 묻은 컵라면 용기</td>
-              <td><span class="tag-official" style="background:#fee2e2; color:#991b1b; border-color:#ef4444;">일반쓰레기</span></td>
-              <td>오염 물질이 지워지지 않으면 재활용 불가! 종량제 봉투에 버려요.</td>
-            </tr>
-            <tr>
-              <td>📑 비닐 코팅된 전단지</td>
-              <td><span class="tag-official" style="background:#fee2e2; color:#991b1b; border-color:#ef4444;">일반쓰레기</span></td>
-              <td>비닐과 종이가 분리되지 않아 종이 재활용이 되지 않아요.</td>
-            </tr>
-            <tr>
-              <td>🧴 투명 페트병</td>
-              <td><span class="tag-official">투명 페트병 전용</span></td>
-              <td>내용물을 비우고 물로 헹군 뒤 <strong>라벨을 떼고 압착</strong>해서 배출해요.</td>
-            </tr>
-            <tr>
-              <td>🥛 우유팩 (종이팩)</td>
-              <td><span class="tag-official" style="background:#fef3c7; color:#92400e; border-color:#f59e0b;">종이팩 전용함</span></td>
-              <td>일반 종이와 재질이 다르므로 씻어서 펼쳐 말린 뒤 전용함에 넣어요.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="action-bar">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(3)">⬅ 이전 단계</button>
-        <button class="btn-nav-large btn-next" onclick="goToStep(5)">
-          5단계: 애매한 말 고치기 ➔
-        </button>
-      </div>
-    </section>
-
-    <!-- ==================== 5단계: 정리 (3분) ==================== -->
-    <section class="stage-card" id="stage-5">
-      <div class="stage-badge">5단계 • 정리 (3분)</div>
-      <h2 class="stage-title">💡 애매한 낱말 ➔ 구체적인 관찰 기준으로 바꾸기</h2>
-      <div class="stage-goal">
-        <strong>[최종 정리]</strong> AI 컴퓨터는 "조금 더러움", "적당히 깨끗함" 같은 애매한 말을 이해하지 못해요! <br>
-        <strong>누구나 보고 바로 알 수 있는 똑똑한 관찰 기준</strong>으로 바꿔 써보세요.
-      </div>
-
-      <div class="fix-rule-box">
-        <div class="fix-row">
-          <input type="text" class="input-box-light" value="❌ 조금 더러운 컵라면" readonly style="background:#fee2e2; color:#991b1b;">
-          <span style="font-size:22px; font-weight:900;">➔</span>
-          <input type="text" class="input-box-light" id="fixRule1" value="⭕ 물로 헹궈도 붉은 양념 얼룩이 남아있는 컵라면">
+        <div style="background:white; border-radius:16px; padding:18px; border:2px solid #bbf7d0; margin-bottom:24px; text-align:left;">
+          <h4 style="font-family:'Jua'; color:#15803d; font-size:18px; margin-bottom:8px;">💡 다음 퀘스트 안내:</h4>
+          <p style="font-size:15px; color:#334155; line-height:1.6;">
+            우리가 만든 분류 기준을 바탕으로, AI가 헷갈리지 않고 가장 잘 학습할 수 있는 사진 데이터를 직접 선별해보는<br>
+            <strong>[QUEST 3: AI가 잘 배우는 사진은 무엇일까?]</strong>로 나아갑시다!
+          </p>
         </div>
 
-        <div class="fix-row">
-          <input type="text" class="input-box-light" value="❌ 대충 버린 페트병" readonly style="background:#fee2e2; color:#991b1b;">
-          <span style="font-size:22px; font-weight:900;">➔</span>
-          <input type="text" class="input-box-light" id="fixRule2" value="⭕ 겉면에 비닐 라벨이 떼어지지 않은 페트병">
-        </div>
+        <a href="quest3.html" class="btn-nav-large btn-next" style="text-decoration:none; margin:0 auto; font-size:18px; padding:16px 36px; display:inline-flex;">
+          🚀 다음 차시 [QUEST 3: AI가 잘 배우는 사진] 시작하기
+        </a>
       </div>
 
-      <!-- 최종 제출 및 점수 획득 -->
-      <div class="action-bar">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(4)">⬅ 이전 단계</button>
-        <button class="btn-nav-large btn-finish btn-next" onclick="finishQuest2()">
-          🎉 2차시 퀘스트 완료 및 저장 (⭐ +100 EXP)
-        </button>
+      <div class="action-bar" style="margin-top:20px;">
+        <button class="btn-nav-large btn-prev" onclick="goToStep(3)">⬅ 3단계 기준 다시 수정하기</button>
+        <div></div>
       </div>
     </section>
 
@@ -1113,7 +1166,7 @@
   <!-- 토스트 알림창 -->
   <div class="toast-msg" id="toastMsg">알림 메시지</div>
 
-  <!-- Firebase 및 인터랙션 스크립트 모듈 -->
+  <!-- Firebase 및 스크립트 모듈 -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -1132,48 +1185,50 @@
       const app = initializeApp(firebaseConfig);
       db = getFirestore(app);
     } catch(e) {
-      console.warn("Firebase offline or local mode:", e);
+      console.warn("Firebase offline/local mode:", e);
+    }
+
+    const studentId = localStorage.getItem("elementary_studentId") || "guest";
+    const studentName = localStorage.getItem("elementary_studentName") || "탐정 학생";
+    const teamCode = localStorage.getItem("elementary_teamCode") || "1모둠";
+
+    // 학생 정보 표시
+    const studentDisplay = document.getElementById('studentDisplay');
+    if (studentDisplay) {
+      studentDisplay.textContent = `👤 ${studentName} (${teamCode})`;
     }
 
     // 전역 상태
     window.state = {
-      score: parseInt(localStorage.getItem("elementary_score") || "0"),
+      score: parseInt(localStorage.getItem("elementary_score") || "0", 10),
       soundEnabled: true,
-      selectedWasteId: null,
-      bins: {
-        paper: [],
-        plastic: [],
-        vinyl: [],
-        can: [],
-        trash: []
-      },
-      rules: []
+      currentStep: 1,
+      targetType: 'milk',
+      checksDone: { 1: false, 2: false, 3: false }
     };
 
-    // 오디오 효과음 발생기
+    // 점수 표시
+    document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
+
+    // 오디오 사운드
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     window.playSound = function(type) {
       if (!window.state.soundEnabled) return;
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
+      osc.connect(gain); gain.connect(audioCtx.destination);
       const now = audioCtx.currentTime;
 
       if (type === 'click') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(500, now);
-        osc.frequency.exponentialRampToValueAtTime(900, now + 0.08);
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(500, now);
+        osc.frequency.exponentialRampToValueAtTime(850, now + 0.08);
+        gain.gain.setValueAtTime(0.18, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
         osc.start(now); osc.stop(now + 0.08);
-      } else if (type === 'drop') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(350, now);
-        osc.frequency.exponentialRampToValueAtTime(700, now + 0.12);
-        gain.gain.setValueAtTime(0.25, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+      } else if (type === 'check') {
+        osc.type = 'sine'; osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(1200, now + 0.12);
+        gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
         osc.start(now); osc.stop(now + 0.12);
       } else if (type === 'fanfare') {
         [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
@@ -1191,7 +1246,6 @@
     window.toggleSound = function() {
       window.state.soundEnabled = !window.state.soundEnabled;
       document.getElementById('soundToggle').textContent = window.state.soundEnabled ? '🔊' : '🔇';
-      showToast(window.state.soundEnabled ? '소리가 켜졌습니다.' : '소리가 꺼졌습니다.');
     };
 
     window.showToast = function(msg) {
@@ -1207,167 +1261,187 @@
       localStorage.setItem("elementary_score", window.state.score);
     };
 
+    // 단계 전환
     window.goToStep = function(stepNum) {
       window.playSound('click');
-      document.querySelectorAll('.stage-card').forEach((c, idx) => {
-        c.classList.toggle('active', idx + 1 === stepNum);
-      });
-      document.querySelectorAll('.step-item').forEach((item, idx) => {
-        item.classList.toggle('active', idx + 1 === stepNum);
-      });
+      window.state.currentStep = stepNum;
+      for (let i = 1; i <= 4; i++) {
+        const stepCard = document.getElementById(`stage-${i}`);
+        const navItem = document.getElementById(`stepNav-${i}`);
+        if (stepCard) stepCard.classList.toggle('active', i === stepNum);
+        if (navItem) {
+          navItem.classList.toggle('active', i === stepNum);
+          if (i < stepNum) navItem.classList.add('completed');
+        }
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // 1단계 투표
-    window.voteConfuse = function(cardIdx, voteType, btn) {
+    // 1단계 대상 전환
+    window.switchTarget = function(type, btnEl) {
       window.playSound('click');
-      const parent = btn.parentElement;
-      parent.querySelectorAll('.btn-vote').forEach(b => b.classList.remove('selected-recycle', 'selected-trash'));
-      btn.classList.add(voteType === 'recycle' ? 'selected-recycle' : 'selected-trash');
-      showToast('나의 생각이 선택되었습니다!');
+      window.state.targetType = type;
+      document.querySelectorAll('.target-tab-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+
+      const initialEl = document.getElementById('initialCriteria');
+      const revisedEl = document.getElementById('revisedClue');
+      const helperSpeech = document.querySelector('.chatbot-speech');
+
+      if (type === 'milk') {
+        initialEl.value = "종이 재질이고 네모나면 우유갑이다";
+        revisedEl.value = "접힌 모서리 날개와 상단 삼각 지붕 형태, 내부 방수 코팅 재질";
+        helperSpeech.innerHTML = `<strong>에코봇의 공식 분리배출 가이드 힌트:</strong><br>우유갑은 일반 종이와 달리 <strong>폴리에틸렌 방수 코팅</strong> 및 <strong>내부 알루미늄 은박</strong>이 들어있어 일반 파지와 따로 모아야 해요!`;
+      } else if (type === 'can') {
+        initialEl.value = "반짝이는 쇠붙이이고 가벼우면 캔이다";
+        revisedEl.value = "상단 링풀 탭 손잡이, 레이저 배출구 절개선, 알루미늄/철 압축 원통형";
+        helperSpeech.innerHTML = `<strong>에코봇의 공식 분리배출 가이드 힌트:</strong><br>캔류는 <strong>알루미늄 캔</strong>과 <strong>철캔</strong>으로 나뉘며 뚜껑의 링풀(따개)과 자석 부착 여부로 쉽게 구별할 수 있어요!`;
+      } else if (type === 'pet') {
+        initialEl.value = "투명하고 음료수가 담긴 통이면 페트병이다";
+        revisedEl.value = "하단 5개 발 모양 돌기(페탈로이드), 상단 스크류 나사선 입구, 무색 투명 PET 재질";
+        helperSpeech.innerHTML = `<strong>에코봇의 공식 분리배출 가이드 힌트:</strong><br>투명 페트병은 고품질 섬유로 재활용되므로 <strong>라벨 제거 여부</strong>와 <strong>바닥면 페탈로이드 형태</strong>가 중요한 단서예요!`;
+      }
+      showToast(`🎯 대상이 '${btnEl.textContent.trim()}'(으)로 전환되었습니다.`);
     };
 
-    // 2단계 드래그 & 터치 분류
-    let currentDraggingWaste = null;
+    // 체크리스트 토글
+    window.toggleCheck = function(cardEl, checkIdx) {
+      window.playSound('check');
+      cardEl.classList.toggle('checked');
+      const isChecked = cardEl.classList.contains('checked');
+      window.state.checksDone[checkIdx] = isChecked;
 
-    window.dragWaste = function(e, id) {
-      currentDraggingWaste = id;
-      e.dataTransfer.setData('text/plain', id);
+      if (isChecked) {
+        window.addScore(10);
+        showToast('✨ 공식 기준 교차 검증 단서 확인! (+10 EXP)');
+      }
+    };
+
+    // 1단계 예시 불러오기
+    window.loadSampleInitial = function() {
       window.playSound('click');
+      document.getElementById('initialCriteria').value = "종이 재질이고 네모나면 우유갑이다";
+      showToast("💡 '처음 생각했던 기준' 예시가 입력되었습니다.");
     };
 
-    window.allowDrop = function(e) {
-      e.preventDefault();
-      e.currentTarget.classList.add('hover-active');
-    };
-
-    window.leaveDrop = function(e) {
-      e.currentTarget.classList.remove('hover-active');
-    };
-
-    window.dropToBin = function(e, binType) {
-      e.preventDefault();
-      e.currentTarget.classList.remove('hover-active');
-      const id = e.dataTransfer.getData('text/plain') || currentDraggingWaste;
-      if (id) assignWasteToBin(id, binType);
-    };
-
-    window.touchSelectWaste = function(id, el) {
+    window.loadSampleRevised = function() {
       window.playSound('click');
-      if (window.state.selectedWasteId === id) {
-        window.state.selectedWasteId = null;
-        document.querySelectorAll('.waste-item-chip').forEach(c => c.classList.remove('selected-touch'));
-        showToast('선택이 해제되었습니다.');
+      document.getElementById('revisedClue').value = "접힌 모서리 날개와 상단 삼각 지붕 형태, 내부 방수 코팅 재질";
+      showToast("✨ '수정한 핵심 단서'가 반영되었습니다.");
+    };
+
+    // 2단계 문장 실시간 프리뷰 갱신
+    window.updateSentencePreview = function() {
+      const target = document.getElementById('tplTarget').value.trim() || "대상";
+      const visual = document.getElementById('tplVisual').value.trim() || "핵심 시각 단서";
+      const material = document.getElementById('tplMaterial').value.trim() || "재질/구조적 특성";
+
+      const previewEl = document.getElementById('sentencePreview');
+      previewEl.innerHTML = `"<span class="hl">${target}</span>은(는) <span class="hl">${visual}</span>(이)가 있고 <span class="hl">${material}</span>을(를) 지니고 있다."`;
+    };
+
+    // 2단계 템플릿 예시 적용
+    window.applyTemplateExample = function(type) {
+      window.playSound('click');
+      if (type === 'milk') {
+        document.getElementById('tplTarget').value = "우유갑";
+        document.getElementById('tplVisual').value = "상단에 삼각 지붕 형태의 접힌 날개";
+        document.getElementById('tplMaterial').value = "내외부에 방수 코팅이 된 사각 기둥 모양";
+      } else if (type === 'can') {
+        document.getElementById('tplTarget').value = "알루미늄 캔";
+        document.getElementById('tplVisual').value = "상단에 링풀(손잡이 탭)과 음료 배출구가 레이저 절개선으로 맞물려 있는";
+        document.getElementById('tplMaterial').value = "가볍고 단단한 원통형 금속 구조";
+      }
+      updateSentencePreview();
+      showToast("💡 표준 발표 템플릿 예시가 적용되었습니다.");
+    };
+
+    // 음성 낭독 (Web Speech API)
+    window.speakSentence = function() {
+      window.playSound('click');
+      const target = document.getElementById('tplTarget').value.trim() || "우유갑";
+      const visual = document.getElementById('tplVisual').value.trim() || "핵심 단서";
+      const material = document.getElementById('tplMaterial').value.trim() || "재질 특성";
+      const textToRead = `${target}은 ${visual}가 있고 ${material}을 지니고 있다.`;
+
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(textToRead);
+        utter.lang = 'ko-KR';
+        utter.rate = 0.95;
+        window.speechSynthesis.speak(utter);
+        showToast("🔊 모둠 발표 문장을 낭독합니다.");
       } else {
-        window.state.selectedWasteId = id;
-        document.querySelectorAll('.waste-item-chip').forEach(c => c.classList.remove('selected-touch'));
-        el.classList.add('selected-touch');
-        showToast('카드가 선택되었습니다! 넣을 상자를 터치하세요.');
+        showToast("📢 음성 합성을 지원하지 않는 브라우저입니다.");
       }
     };
 
-    window.touchDropToBin = function(binType) {
-      if (window.state.selectedWasteId) {
-        assignWasteToBin(window.state.selectedWasteId, binType);
-        window.state.selectedWasteId = null;
-        document.querySelectorAll('.waste-item-chip').forEach(c => c.classList.remove('selected-touch'));
+    // 3단계 키워드 태그 클릭 추가
+    window.appendKeyword = function(textareaId, kwText) {
+      window.playSound('click');
+      const el = document.getElementById(textareaId);
+      if (el.value.includes(kwText)) {
+        showToast("이미 포함된 키워드입니다.");
+        return;
       }
+      if (el.value.trim().length > 0) {
+        el.value = el.value.trim() + ", " + kwText;
+      } else {
+        el.value = kwText;
+      }
+      showToast(`+ '${kwText}' 단서가 추가되었습니다.`);
     };
 
-    window.assignWasteToBin = function(wasteId, binType) {
-      const chip = document.querySelector(`.waste-item-chip[data-id="${wasteId}"]`);
-      if (!chip) return;
-
-      const wasteName = chip.getAttribute('data-name');
-      window.playSound('drop');
-
-      // 상자에 추가
-      const list = document.getElementById(`bin-${binType}`);
-      const itemEl = document.createElement('div');
-      itemEl.className = 'dropped-chip';
-      itemEl.setAttribute('data-id', wasteId);
-      itemEl.innerHTML = `
-        <span>${chip.textContent.trim()}</span>
-        <button class="btn-chip-remove" onclick="returnWasteToPool('${wasteId}', '${binType}', event)">✕</button>
-      `;
-      list.appendChild(itemEl);
-
-      // 풀에서 숨기기
-      chip.style.display = 'none';
-
-      updateBinCounts();
-      showToast(`${wasteName}이(가) 상자에 쏙 들어갔습니다!`);
-    };
-
-    window.returnWasteToPool = function(wasteId, binType, e) {
-      if (e) e.stopPropagation();
-      window.playSound('click');
-      const chipInBin = document.querySelector(`#bin-${binType} .dropped-chip[data-id="${wasteId}"]`);
-      if (chipInBin) chipInBin.remove();
-
-      const chipInPool = document.querySelector(`.waste-item-chip[data-id="${wasteId}"]`);
-      if (chipInPool) chipInPool.style.display = 'inline-flex';
-
-      updateBinCounts();
-    };
-
-    function updateBinCounts() {
-      ['paper', 'plastic', 'vinyl', 'can', 'trash'].forEach(bin => {
-        const count = document.querySelectorAll(`#bin-${bin} .dropped-chip`).length;
-        const countEl = document.getElementById(`count-${bin}`);
-        if (countEl) countEl.textContent = `${count}개`;
-      });
-    }
-
-    // 3단계 AI 규칙 추가
-    window.addAiRule = function() {
-      const cond = document.getElementById('ruleCondition').value;
-      const res = document.getElementById('ruleResult').value;
-
-      window.playSound('click');
-      window.addScore(20);
-
-      const list = document.getElementById('rulesHistoryList');
-      const item = document.createElement('div');
-      item.className = 'created-rule-item';
-      item.innerHTML = `
-        <span>🤖 새 규칙: 만약 <strong>${cond}</strong> 👉 <strong>${res}</strong>(으)로 분류한다.</span>
-      `;
-      list.appendChild(item);
-      showToast('🎉 AI에게 새 규칙을 가르쳤습니다! (⭐ +20 EXP)');
-    };
-
-    // 5단계 최종 완료
-    window.finishQuest2 = async function() {
+    // 3단계 저장 및 퀘스트 완료
+    window.saveAndFinishQuest2 = async function() {
       window.playSound('fanfare');
       window.addScore(100);
 
-      const r1 = document.getElementById('fixRule1').value;
-      const r2 = document.getElementById('fixRule2').value;
+      const target = document.getElementById('tplTarget').value.trim() || "우유갑";
+      const visual = document.getElementById('tplVisual').value.trim();
+      const material = document.getElementById('tplMaterial').value.trim();
+      const fullSentence = `"${target}은(는) ${visual}(이)가 있고 ${material}을(를) 지니고 있다."`;
+      const partial = document.getElementById('partialCriteria').value.trim();
+      const avoidBox = document.getElementById('avoidBoxCriteria').value.trim();
+      const avoidPlastic = document.getElementById('avoidPlasticCriteria').value.trim();
 
+      // 요약 카드 반영
+      document.getElementById('sumTarget').textContent = target;
+      document.getElementById('sumSentence').textContent = fullSentence;
+      document.getElementById('sumPartial').textContent = partial;
+      document.getElementById('sumAvoid').textContent = `택배상자 구분: ${avoidBox} / 플라스틱 구분: ${avoidPlastic}`;
+
+      // 로컬 스토리지 저장
       localStorage.setItem("quest2_completed", "true");
+      localStorage.setItem("elementary_badge", "규칙 설계 탐정 🥈");
+      localStorage.setItem("quest2_rule_data", JSON.stringify({
+        target, visual, material, fullSentence, partial, avoidBox, avoidPlastic
+      }));
 
-      if (db) {
+      // Firebase Firestore 저장
+      if (db && studentId && studentId !== "guest") {
         try {
-          await addDoc(collection(db, "quest2_submissions"), {
-            studentName: localStorage.getItem("elementary_studentName") || "학생탐정",
+          await addDoc(collection(db, "quest2_records"), {
+            studentId,
+            studentName,
+            teamCode,
+            target,
+            fullSentence,
+            partial,
+            avoidBox,
+            avoidPlastic,
+            badge: "규칙 설계 탐정 🥈",
             score: window.state.score,
-            rule1: r1,
-            rule2: r2,
-            completedAt: serverTimestamp()
+            createdAt: serverTimestamp()
           });
-        } catch(e) {
-          console.log("Offline fallback");
+        } catch(err) {
+          console.warn("Firebase record save failed:", err);
         }
       }
 
-      alert(`🎉 축하합니다! 2차시 [AI 분류 규칙 만들기] 퀘스트를 성공적으로 마쳤습니다!\n\n총 획득 점수: ${window.state.score} EXP\n메인 화면으로 이동합니다.`);
-      window.location.href = 'main.html';
+      goToStep(4);
+      showToast("🎉 QUEST 2 완료! '규칙 설계 탐정 🥈' 배지를 획득했습니다! (+100 EXP)");
     };
-
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
-    });
   </script>
 </body>
 </html>
