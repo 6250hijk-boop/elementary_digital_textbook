@@ -796,6 +796,39 @@
           </tbody>
         </table>
 
+        <!-- 우리 모둠 탐정 한마디 작성 & 실시간 공유 영역 -->
+        <div style="background:white; border-radius:18px; padding:20px; border:2.5px solid #93C5FD; margin-bottom:24px; text-align:left;">
+          <h4 style="font-family:'Jua'; color:#1D4ED8; font-size:19px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+            <span>💬</span> <span>우리 모둠('${teamCode || '1모둠'}') 탐정 한마디 남기기</span>
+          </h4>
+          <p style="font-size:14px; color:#64748B; margin-bottom:12px;">
+            AI와 사람의 눈을 비교하며 알게 된 점이나 느낀 점을 한 문장으로 남겨 모둠원들과 공유해보세요!
+          </p>
+          <div style="display:flex; gap:10px; flex-direction:column;">
+            <textarea 
+              id="detectiveThought" 
+              class="custom-textarea" 
+              style="min-height:70px; border:2px solid #CBD5E1; border-radius:12px; padding:10px 14px; font-size:15px; font-family:'Pretendard';"
+              placeholder="예: 사람은 흐리거나 가려져도 전체 맥락을 추론하지만, AI는 구체적인 픽셀 특징이 있어야 알아볼 수 있어요."
+            >사람은 흐리거나 가려져도 전체 맥락을 추론하지만, AI는 구체적인 픽셀 특징이 있어야 알아볼 수 있어요.</textarea>
+          </div>
+        </div>
+
+        <!-- 실시간 우리 모둠 피드 -->
+        <div style="background:#F8FAFC; border-radius:18px; padding:20px; border:2px solid #E2E8F0; margin-bottom:24px; text-align:left;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <h4 style="font-family:'Jua'; color:#1E293B; font-size:18px; display:flex; align-items:center; gap:6px;">
+              <span>👥</span> <span>우리 모둠 탐정단 탐구 공유 피드</span>
+            </h4>
+            <span style="font-size:13px; font-weight:700; color:#2563EB; background:#EFF6FF; padding:4px 10px; border-radius:12px;" id="teamMemberCount">실시간 동기화 중...</span>
+          </div>
+          <div id="teamFeedList" style="display:flex; flex-direction:column; gap:10px;">
+            <div style="text-align:center; padding:16px; color:#94A3B8; font-size:14px;">
+              모둠원들의 탐구 기록을 불러오는 중입니다...
+            </div>
+          </div>
+        </div>
+
         <div style="background:white; border-radius:16px; padding:18px; border:2px solid #FFE082; margin-bottom:24px; text-align:left;">
           <h4 style="font-family:'Jua'; color:#2E7D32; font-size:18px; margin-bottom:8px;">💡 다음 퀘스트 안내:</h4>
           <p style="font-size:15px; color:#37474F; line-height:1.6;">
@@ -805,7 +838,7 @@
         </div>
 
         <button class="btn-nav-large btn-next" style="background:linear-gradient(135deg,#2E7D32,#1B5E20); margin:0 auto; font-size:18px; padding:16px 36px;" onclick="finishQuest1()">
-          🎉 1차시 완료 & '견습 탐정' 배지 받기 (+100 EXP) 🚀
+          🎉 탐정 한마디 공유 & 1차시 완료하기 (+100 EXP) 🚀
         </button>
       </div>
 
@@ -823,7 +856,7 @@
   <!-- 스크립트 모듈 -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, updateDoc, doc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, updateDoc, doc, increment, serverTimestamp, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = { 
       apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00", 
@@ -846,8 +879,69 @@
     const studentName = localStorage.getItem("elementary_studentName") || "탐정 학생";
     const teamCode = localStorage.getItem("elementary_teamCode") || "1모둠";
 
+    // 학생 정보 표시
+    const studentDisplay = document.getElementById('studentDisplay');
+    if (studentDisplay) {
+      studentDisplay.textContent = `👤 ${studentName} (${teamCode})`;
+    }
+
     // 전역 상태
     window.state = {
+      score: parseInt(localStorage.getItem("elementary_score") || "0", 10),
+      soundEnabled: true,
+      currentStep: 1,
+      quizDone: { 1: false, 2: false, 3: false }
+    };
+
+    // 실시간 모둠 피드 구독
+    if (db && teamCode) {
+      try {
+        const q = query(collection(db, "quest1_records"), where("teamCode", "==", teamCode));
+        onSnapshot(q, (snapshot) => {
+          const listEl = document.getElementById("teamFeedList");
+          const countEl = document.getElementById("teamMemberCount");
+          if (!listEl) return;
+          
+          if (snapshot.empty) {
+            listEl.innerHTML = `<div style="text-align:center; padding:16px; color:#94A3B8; font-size:14px;">아직 모둠원들의 등록된 탐구 한마디가 없습니다. 먼저 작성하고 완료해보세요! 🚀</div>`;
+            if (countEl) countEl.textContent = `참여 0명`;
+            return;
+          }
+
+          if (countEl) countEl.textContent = `참여 ${snapshot.size}명`;
+
+          const items = [];
+          snapshot.forEach(docSnap => {
+            items.push({ id: docSnap.id, ...docSnap.data() });
+          });
+
+          // 시간 역순 정렬
+          items.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+          listEl.innerHTML = items.map(item => {
+            const isMe = item.studentId === studentId;
+            return `
+              <div style="background:white; border:1.5px solid ${isMe ? '#93C5FD' : '#E2E8F0'}; border-radius:14px; padding:14px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                  <span style="font-family:'Jua'; font-size:15px; color:${isMe ? '#2563EB' : '#1E293B'}; display:flex; align-items:center; gap:6px;">
+                    <span>${isMe ? '⭐ 나 (' + item.studentName + ')' : '👤 ' + item.studentName}</span>
+                    <span style="background:#DCFCE7; color:#15803D; font-size:12px; padding:2px 8px; border-radius:8px;">${item.badge || '견습 탐정 🥉'}</span>
+                  </span>
+                  <span style="font-size:13px; color:#F59E0B; font-weight:800;">⭐ ${item.score || 100} EXP</span>
+                </div>
+                <div style="font-size:14px; color:#334155; line-height:1.5; background:#F8FAFC; padding:10px 12px; border-radius:10px; border-left:3px solid #3B82F6;">
+                  " ${item.thought || '사람의 눈은 부분이나 흐린 사진도 잘 추론하지만, AI는 뚜렷한 특징이 필요해요!'} "
+                </div>
+              </div>
+            `;
+          }).join('');
+        }, (err) => {
+          console.warn("onSnapshot error:", err);
+        });
+      } catch(err) {
+        console.warn("Realtime listener setup failed:", err);
+      }
+    }
       score: parseInt(localStorage.getItem("elementary_score") || "0", 10),
       soundEnabled: true,
       currentStep: 1,
@@ -988,6 +1082,8 @@
       localStorage.setItem("quest1_completed", "true");
       localStorage.setItem("elementary_badge", "견습 탐정 🥉");
 
+      const thought = document.getElementById('detectiveThought') ? document.getElementById('detectiveThought').value.trim() : '';
+
       if (db && studentId && studentId !== "guest") {
         try {
           await addDoc(collection(db, "quest1_records"), {
@@ -995,6 +1091,7 @@
             studentName,
             teamCode,
             quizScore: 3,
+            thought: thought || "사람은 흐리거나 가려져도 맥락을 잘 파악하지만, AI는 구체적인 특징 정보가 필수적입니다!",
             badge: "견습 탐정 🥉",
             score: window.state.score,
             createdAt: serverTimestamp()
@@ -1010,7 +1107,7 @@
         }
       }
 
-      alert(`🎉 축하합니다! QUEST 1 [AI의 눈]을 완료하고 [견습 탐정 🥉] 배지를 획득했습니다!\n\n총 획득 점수: ${window.state.score} EXP\n다음 차시인 [QUEST 2: 사람의 분류 규칙을 AI에게 설명하라]로 이동합니다.`);
+      alert(`🎉 축하합니다! QUEST 1 [AI의 눈]을 완료하고 [견습 탐정 🥉] 배지를 획득했습니다!\n\n총 획득 점수: ${window.state.score} EXP\n다음 차시인 [QUEST 2: 분류기준 만들기]로 이동합니다.`);
       window.location.href = 'quest2.html';
     };
 
