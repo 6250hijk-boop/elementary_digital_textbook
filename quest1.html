@@ -942,11 +942,6 @@
         console.warn("Realtime listener setup failed:", err);
       }
     }
-      score: parseInt(localStorage.getItem("elementary_score") || "0", 10),
-      soundEnabled: true,
-      currentStep: 1,
-      quizDone: { 1: false, 2: false, 3: false }
-    };
 
     // 사운드
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
