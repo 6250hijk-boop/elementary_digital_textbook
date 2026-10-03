@@ -388,120 +388,105 @@
       font-size: 38px;
     }
 
-    /* 메인 퀘스트 그리드 */
-    .section-title {
-      font-family: 'Jua', sans-serif;
-      font-size: 26px;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .quest-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
-
-    .quest-card {
-      background: var(--card-bg);
-      border: 3px solid #C8E6C9;
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.2s ease-in-out;
-    }
-
-    .quest-card:hover {
-      border-color: var(--primary);
-      box-shadow: 0 12px 28px rgba(46, 125, 50, 0.15);
-      transform: translateY(-4px);
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 12px;
-    }
-
-    .quest-icon {
-      font-size: 42px;
-      background: #F1F8E9;
-      padding: 10px;
-      border-radius: 18px;
-      line-height: 1;
-    }
-
-    .quest-title-wrap h4 {
-      font-family: 'Jua', sans-serif;
-      font-size: 24px;
-      color: var(--primary);
-    }
-
-    .subject-badge {
-      display: inline-block;
-      font-size: 13px;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 12px;
-      margin-bottom: 4px;
-      background: #E8F5E9;
-      color: #2E7D32;
-      border: 1px solid #A5D6A7;
-    }
-
-    .badge-science {
-      background: #E1F5FE;
-      color: #0277BD;
-      border-color: #81D4FA;
-    }
-
-    .badge-open {
-      background: #FFF9C4;
-      color: #B45309;
-      border-color: #FDE68A;
-    }
-
-    .badge-ethics {
-      background: #F3E5F5;
-      color: #7B1FA2;
-      border-color: #CE93D8;
-    }
-
-    .quest-desc {
-      font-size: 17px;
-      font-weight: 600;
-      color: #455A64;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
-
-    /* 큰 글씨 버튼 */
-    .btn-quest-start {
+    /* 메인 퀘스트 대지도 맵 */
+    .quest-map-section {
       width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, #4CAF50, #388E3C);
-      color: white;
-      border: none;
-      border-radius: 18px;
-      font-family: 'Jua', sans-serif;
-      font-size: 22px;
+      margin: 15px 0 25px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .quest-map-container {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+      border: 4px solid #C8E6C9;
+      background: #ffffff;
+      user-select: none;
+    }
+
+    .quest-map-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      vertical-align: middle;
+    }
+
+    .quest-hotspot {
+      position: absolute;
+      display: block;
+      border-radius: 16px;
+      border: 2px dashed rgba(234, 179, 8, 0.6);
+      background: rgba(254, 240, 138, 0.08);
       cursor: pointer;
       text-decoration: none;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
-      display: block;
-      transition: all 0.2s;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
     }
 
-    .btn-quest-start:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px 6px rgba(46, 125, 50, 0.2);
+    .quest-hotspot:hover, .quest-hotspot:focus {
+      background: rgba(254, 240, 138, 0.45);
+      border: 3px solid #eab308;
+      box-shadow: 0 0 24px rgba(234, 179, 8, 0.85), inset 0 0 16px rgba(234, 179, 8, 0.4);
+      transform: scale(1.03);
+      z-index: 25;
+    }
+
+    .quest-hotspot:active {
+      transform: scale(0.97);
+    }
+
+    .hotspot-pulse {
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      border: 2px solid rgba(250, 204, 21, 0.7);
+      animation: hotspotGlow 2s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    @keyframes hotspotGlow {
+      0% {
+        box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.5);
+        border-color: rgba(250, 204, 21, 0.4);
+      }
+      50% {
+        box-shadow: 0 0 14px 4px rgba(250, 204, 21, 0.75);
+        border-color: rgba(234, 179, 8, 0.95);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(250, 204, 21, 0);
+        border-color: rgba(250, 204, 21, 0.4);
+      }
+    }
+
+    .hotspot-tooltip {
+      position: absolute;
+      bottom: -32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92);
+      color: #fef08a;
+      font-size: 13px;
+      font-weight: 800;
+      font-family: 'Jua', sans-serif;
+      padding: 5px 12px;
+      border-radius: 8px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+      z-index: 30;
+      border: 1px solid rgba(254, 240, 138, 0.3);
+    }
+
+    .quest-hotspot:hover .hotspot-tooltip {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
     }
 
     /* 실시간 학급 랭킹 하단 바 */
@@ -618,135 +603,60 @@
     </a>
   </div>
 
-  <h3 class="section-title">
-    <span>🗺️</span>
-    <span>AI 자원순환 탐정단 8대 퀘스트</span>
-  </h3>
+  <!-- 메인 퀘스트 대지도 핫스팟 네비게이션 -->
+  <section class="quest-map-section">
+    <div class="quest-map-container" id="questMapContainer">
+      <img src="images/mainpage.png" alt="AI 자원순환 탐정단 8대 퀘스트 맵" class="quest-map-img">
+      
+      <!-- 1: AI의 눈 -->
+      <a href="quest1.html" class="quest-hotspot" style="left: 0.71%; top: 16.34%; width: 12%; height: 21.82%;" title="퀘스트 1: AI의 눈" aria-label="1. AI의 눈">
+        <span class="hotspot-pulse"></span>
+        <span class="hotspot-tooltip">Q1. AI의 눈 👁️</span>
+      </a>
 
-  <!-- 8대 퀘스트 그리드 -->
-  <div class="quest-grid">
+      <!-- 2: 분류기준 만들기 -->
+      <a href="quest2.html" class="quest-hotspot" style="left: 7.91%; top: 39.21%; width: 11.6%; height: 21.47%;" title="퀘스트 2: 분류기준 만들기" aria-label="2. 분류기준 만들기">
+        <span class="hotspot-pulse"></span>
+        <span class="hotspot-tooltip">Q2. 분류기준 만들기 📋</span>
+      </a>
 
-    <!-- 퀘스트 1 -->
-    <div class="quest-card">
-      <div>
-        <div class="card-header">
-          <div class="quest-icon">👁️</div>
-          <div class="quest-title-wrap">
-            <span class="subject-badge badge-science">실과 · 정보</span>
-            <h4>AI의 눈</h4>
-          </div>
-        </div>
-        <p class="quest-desc">흐린 사진, 확대한 사진, 가려진 사진 퀴즈를 풀며 사람과 AI가 사물을 알아보는 차이를 탐구해요!</p>
-      </div>
-      <a href="quest1.html" class="btn-quest-start">퀘스트 1 시작하기 🚀</a>
+      <!-- 3: AI가 잘 배우는 사진 -->
+      <a href="quest3.html" class="quest-hotspot" style="left: 16.41%; top: 62.93%; width: 12.1%; height: 23.36%;" title="퀘스트 3: AI가 잘 배우는 사진" aria-label="3. AI가 잘 배우는 사진">
+        <span class="hotspot-pulse"></span>
+        <span class="hotspot-tooltip">Q3. AI가 잘 배우는 사진 📷</span>
+      </a>
+
+      <!-- 4: 이름표 붙이기 -->
+      <a href="quest4.html" class="quest-hotspot" style="left: 30.31%; top: 74.1%; width: 12.2%; height: 21.82%;" title="퀘스트 4: 이름표 붙이기" aria-label="4. 이름표 붙이기">
+        <span class="hotspot-pulse"></span>
+        <span class="hotspot-tooltip">Q4. 이름표 붙이기 🏷️</span>
+      </a>
+
+      <!-- 5: 교실쓰레기 AI탐정단 -->
+      <a href="quest5.html" class="quest-hotspot" style="left: 44.01%; top: 67.05%; width: 11.9%; height: 23.02%;" title="퀘스트 5: 교실쓰레기 AI탐정단" aria-label="5. 교실쓰레기 AI탐정단">
+        <span class="hotspot-pulse"></span>
+        <span class="hotspot-tooltip">Q5. 교실쓰레기 AI탐정단 🤖</span>
+      </a>
+
+      <!-- 6: 오류박물관 -->
+      <a href="quest6.html" class="quest-hotspot" style="left: 53.21%; top: 43.18%; width: 11.8%; height: 22.33%;" title="퀘스트 6: 오류박물관" aria-label="6. 오류박물관">
+        <span class="hotspot-pulse"></span>
+        <span class="hotspot-tooltip">Q6. 오류박물관 🏛️</span>
+      </a>
+
+      <!-- 7: 실천 규약 초안 -->
+      <a href="quest7.html" class="quest-hotspot" style="left: 67.21%; top: 26.51%; width: 11.5%; height: 21.3%;" title="퀘스트 7: 실천 규약 초안" aria-label="7. 실천 규약 초안">
+        <span class="hotspot-pulse"></span>
+        <span class="hotspot-tooltip">Q7. 실천 규약 초안 ✍️</span>
+      </a>
+
+      <!-- 8: 자원 순환 의회 -->
+      <a href="quest8.html" class="quest-hotspot" style="left: 80.81%; top: 33.73%; width: 12.1%; height: 22.33%;" title="퀘스트 8: 자원 순환 의회" aria-label="8. 자원 순환 의회">
+        <span class="hotspot-pulse"></span>
+        <span class="hotspot-tooltip">Q8. 자원 순환 의회 ⚖️</span>
+      </a>
     </div>
-
-    <!-- 퀘스트 2 -->
-    <div class="quest-card">
-      <div>
-        <div class="card-header">
-          <div class="quest-icon">📋</div>
-          <div class="quest-title-wrap">
-            <span class="subject-badge badge-open">실과 · 과학</span>
-            <h4>분류기준 만들기</h4>
-          </div>
-        </div>
-        <p class="quest-desc">공식 자료 교차 검증과 템플릿 규칙 정립을 통해 AI 학습을 위한 세부 판별 기준을 완성해요!</p>
-      </div>
-      <a href="quest2.html" class="btn-quest-start">퀘스트 2 시작하기 🚀</a>
-    </div>
-
-    <!-- 퀘스트 3 -->
-    <div class="quest-card">
-      <div>
-        <div class="card-header">
-          <div class="quest-icon">📷</div>
-          <div class="quest-title-wrap">
-            <span class="subject-badge badge-science">실과 · 정보</span>
-            <h4>AI가 잘 배우는 사진은 무엇일까?</h4>
-          </div>
-        </div>
-        <p class="quest-desc">재활용 쓰레기 사진을 찍고 깨끗하게 정리하여 AI가 잘 배울 수 있는 데이터를 모아요!</p>
-      </div>
-      <a href="quest3.html" class="btn-quest-start">퀘스트 3 시작하기 🚀</a>
-    </div>
-
-    <!-- 퀘스트 4 -->
-    <div class="quest-card">
-      <div>
-        <div class="card-header">
-          <div class="quest-icon">🏷️</div>
-          <div class="quest-title-wrap">
-            <span class="subject-badge badge-open">실과 · 정보</span>
-            <h4>AI공부자료에 이름표 붙이기</h4>
-          </div>
-        </div>
-        <p class="quest-desc">수집한 사진 속 물체에 정확한 네모 상자 이름표(라벨)를 붙여 똑똑한 인공지능을 만들어요!</p>
-      </div>
-      <a href="quest4.html" class="btn-quest-start">퀘스트 4 시작하기 🚀</a>
-    </div>
-
-    <!-- 퀘스트 5 -->
-    <div class="quest-card">
-      <div>
-        <div class="card-header">
-          <div class="quest-icon">🤖</div>
-          <div class="quest-title-wrap">
-            <span class="subject-badge badge-open">실과 · 정보</span>
-            <h4>교실쓰레기 AI 탐정단</h4>
-          </div>
-        </div>
-        <p class="quest-desc">학습된 AI 비전 스캐너로 교실 쓰레기를 감지하고 올바른 분리배출 방법을 확인해요!</p>
-      </div>
-      <a href="quest5.html" class="btn-quest-start">퀘스트 5 시작하기 🚀</a>
-    </div>
-
-    <!-- 퀘스트 6 -->
-    <div class="quest-card">
-      <div>
-        <div class="card-header">
-          <div class="quest-icon">🏛️</div>
-          <div class="quest-title-wrap">
-            <span class="subject-badge badge-ethics">실과 · 도덕</span>
-            <h4>오류박물관</h4>
-          </div>
-        </div>
-        <p class="quest-desc">교실쓰레기 AI의 오인식 사례를 캡처하여 원인을 태그하고, AI의 한계와 사람의 역할을 모둠과 함께 탐구해요!</p>
-      </div>
-      <a href="quest6.html" class="btn-quest-start">퀘스트 6 시작하기 🚀</a>
-    </div>
-
-    <!-- 퀘스트 7 -->
-    <div class="quest-card">
-      <div>
-        <div class="card-header">
-          <div class="quest-icon">✍️</div>
-          <div class="quest-title-wrap">
-            <span class="subject-badge badge-science">도덕 · 실과</span>
-            <h4>우리 모둠 실천 규약 초안 입력하기</h4>
-          </div>
-        </div>
-        <p class="quest-desc">모둠원들과 함께 학교 분리배출 실천 규약 초안을 작성하고 실시간으로 공유해요!</p>
-      </div>
-      <a href="quest7.html" class="btn-quest-start">퀘스트 7 시작하기 🚀</a>
-    </div>
-
-    <!-- 퀘스트 8 -->
-    <div class="quest-card">
-      <div>
-        <div class="card-header">
-          <div class="quest-icon">🏛️</div>
-          <div class="quest-title-wrap">
-            <span class="subject-badge badge-ethics">과학 · 도덕</span>
-            <h4>우리학교 자원 순환 규약 의회</h4>
-          </div>
-        </div>
-        <p class="quest-desc">모둠별 자원순환 규약을 발의하고 전교생이 지킬 공식 약속을 의회에서 선포해요!</p>
-      </div>
-      <a href="quest8.html" class="btn-quest-start">퀘스트 8 시작하기 🚀</a>
-    </div>
-
-  </div>
+  </section>
 
   <!-- 하단 랭킹 현황 -->
   <footer>
