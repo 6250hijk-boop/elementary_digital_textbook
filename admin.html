@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AI 자원순환 탐정단 - 관리자 및 모둠 관리</title>
+  <title>AI 자원순환 탐정단 - 선생님 관리자 및 실시간 모둠 진도표</title>
   <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua 사용 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,28 +13,33 @@
   <style>
     :root {
       --primary: #2E7D32;
+      --primary-dark: #1B5E20;
       --primary-light: #E8F5E9;
       --accent: #FFB300;
       --card-bg: #FFFFFF;
       --text: #1B5E20;
       --text-dark: #263238;
       --border: #C8E6C9;
+      --done-color: #16A34A;
+      --done-bg: #DCFCE7;
+      --yet-color: #94A3B8;
+      --yet-bg: #F1F5F9;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
 
     body {
-      background: #F1F8E9;
+      background: #F4FBF4;
       color: var(--text-dark);
       min-height: 100vh;
-      padding: 20px;
+      padding: 24px 16px 60px;
       display: flex;
       justify-content: center;
     }
 
     .admin-container {
       width: 100%;
-      max-width: 1100px;
+      max-width: 1200px;
       display: flex;
       flex-direction: column;
       gap: 24px;
@@ -45,13 +50,13 @@
       background: #FFFFFF;
       border: 3px solid #A5D6A7;
       border-radius: 24px;
-      padding: 20px 24px;
-      box-shadow: 0 8px 20px rgba(46, 125, 50, 0.1);
+      padding: 20px 26px;
+      box-shadow: 0 8px 24px rgba(46, 125, 50, 0.1);
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 16px;
     }
 
     .admin-title-area h1 {
@@ -60,18 +65,19 @@
       color: var(--primary);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .admin-title-area p {
       font-size: 14px;
       color: #558B2F;
       font-weight: 600;
+      margin-top: 4px;
     }
 
     .header-btns {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
@@ -79,7 +85,7 @@
       padding: 10px 18px;
       border-radius: 14px;
       font-family: 'Jua', sans-serif;
-      font-size: 16px;
+      font-size: 15px;
       cursor: pointer;
       border: none;
       transition: all 0.2s;
@@ -94,21 +100,19 @@
       color: white;
       box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
     }
+    .btn-green:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(46, 125, 50, 0.35); }
 
     .btn-ghost {
       background: #FFFFFF;
       border: 2px solid #C8E6C9;
       color: #2E7D32;
     }
+    .btn-ghost:hover { background: #E8F5E9; }
 
-    .btn-ghost:hover {
-      background: #E8F5E9;
-    }
-
-    /* 요약 통계 카드 */
+    /* 요약 통계 카드 그리드 */
     .stat-cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 16px;
     }
 
@@ -116,28 +120,99 @@
       background: #FFFFFF;
       border: 2px solid #C8E6C9;
       border-radius: 20px;
-      padding: 20px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
-      text-align: center;
+      padding: 18px 20px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
     }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: var(--primary);
+      border-radius: 6px 0 0 6px;
+    }
+
+    .stat-card.accent::after { background: var(--accent); }
+    .stat-card.blue::after { background: #0284C7; }
+    .stat-card.purple::after { background: #7C3AED; }
 
     .stat-num {
       font-family: 'Jua', sans-serif;
       font-size: 32px;
       color: var(--primary);
     }
+    .stat-card.accent .stat-num { color: #D97706; }
+    .stat-card.blue .stat-num { color: #0284C7; }
+    .stat-card.purple .stat-num { color: #7C3AED; }
 
     .stat-label {
-      font-size: 14px;
-      font-weight: 600;
-      color: #558B2F;
+      font-size: 13px;
+      font-weight: 700;
+      color: #64748B;
       margin-top: 4px;
     }
 
-    /* 모둠 코드 생성 & 관리 섹션 */
+    /* 8대 퀘스트별 학급 현황 퀵 바 */
+    .quest-overview-card {
+      background: #FFFFFF;
+      border: 2px solid #C8E6C9;
+      border-radius: 20px;
+      padding: 18px 22px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    }
+    .quest-overview-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 17px;
+      color: var(--primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .quest-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 10px;
+    }
+    .quest-mini-box {
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .quest-mini-box.active {
+      background: #ECFDF5;
+      border-color: #86EFAC;
+    }
+    .quest-mini-name {
+      font-size: 12px;
+      font-weight: 800;
+      color: #334155;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .quest-mini-count {
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      color: #16A34A;
+    }
+
+    /* 메인 카드 레이아웃 */
     .manage-card {
       background: #FFFFFF;
-      border: 3px solid #81C784;
+      border: 3px solid #A5D6A7;
       border-radius: 24px;
       padding: 24px;
       box-shadow: 0 8px 24px rgba(46, 125, 50, 0.08);
@@ -147,7 +222,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
       gap: 12px;
     }
@@ -161,7 +236,7 @@
       gap: 8px;
     }
 
-    /* 모둠 생성 폼 인풋 */
+    /* 새 모둠 추가 폼 */
     .add-team-box {
       background: #F1F8E9;
       border: 2px dashed #A5D6A7;
@@ -175,49 +250,53 @@
     }
 
     .add-team-box input {
-      padding: 12px 16px;
+      padding: 11px 16px;
       border: 2px solid #C8E6C9;
       border-radius: 12px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       outline: none;
       color: #1B5E20;
+      background: white;
     }
 
     .add-team-box input:focus {
       border-color: var(--primary);
-      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
     }
 
+    /* 반응형 테이블 */
     .table-wrapper {
       overflow-x: auto;
+      border-radius: 16px;
+      border: 1.5px solid #E2E8F0;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 15px;
-      text-align: left;
+      font-size: 14px;
+      text-align: center;
     }
 
     th {
-      background: #E8F5E9;
+      background: #F1F8E9;
       color: #1B5E20;
       font-family: 'Jua', sans-serif;
-      font-size: 17px;
-      padding: 14px;
+      font-size: 15px;
+      padding: 14px 10px;
       border-bottom: 2px solid #C8E6C9;
       white-space: nowrap;
     }
 
     td {
-      padding: 14px;
-      border-bottom: 1px solid #E0E0E0;
+      padding: 12px 10px;
+      border-bottom: 1px solid #E2E8F0;
       vertical-align: middle;
       white-space: nowrap;
     }
 
-    tr:hover {
+    tr:hover td {
       background: #F9FBE7;
     }
 
@@ -225,11 +304,12 @@
       font-family: monospace;
       background: #E8F5E9;
       color: #1B5E20;
-      padding: 6px 12px;
+      padding: 5px 10px;
       border-radius: 8px;
-      font-weight: bold;
-      font-size: 16px;
+      font-weight: 800;
+      font-size: 15px;
       border: 1px solid #A5D6A7;
+      display: inline-block;
     }
 
     .member-pill {
@@ -237,27 +317,52 @@
       background: #E1F5FE;
       color: #0277BD;
       border: 1px solid #81D4FA;
-      padding: 3px 8px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 600;
-      margin: 2px;
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      margin: 1px;
+    }
+
+    /* 퀘스트 완료 매트릭스 뱃지 */
+    .quest-cell-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 14px;
+      font-weight: bold;
+      transition: transform 0.2s;
+    }
+    .quest-cell-badge.done {
+      background: var(--done-bg);
+      color: var(--done-color);
+      border: 2px solid #86EFAC;
+      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.2);
+    }
+    .quest-cell-badge.yet {
+      background: var(--yet-bg);
+      color: #94A3B8;
+      border: 2px dashed #CBD5E1;
     }
 
     .badge-tag {
       background: #FFF9C4;
-      color: #F57F17;
-      border: 1px solid #FBC02D;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 13px;
+      color: #B45309;
+      border: 1px solid #FDE68A;
+      padding: 4px 8px;
+      border-radius: 10px;
+      font-size: 12px;
       font-weight: bold;
+      display: inline-block;
     }
 
     .progress-bar-wrap {
-      width: 100px;
-      height: 10px;
-      background: #E0E0E0;
+      width: 70px;
+      height: 8px;
+      background: #E2E8F0;
       border-radius: 6px;
       overflow: hidden;
       display: inline-block;
@@ -267,21 +372,116 @@
 
     .progress-bar-fill {
       height: 100%;
-      background: linear-gradient(90deg, #81C784, #388E3C);
+      background: linear-gradient(90deg, #4ADE80, #16A34A);
       border-radius: 6px;
+      transition: width 0.4s ease;
     }
 
     .btn-sm-action {
-      padding: 6px 12px;
-      font-size: 13px;
+      padding: 6px 10px;
+      font-size: 12px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 700;
+      font-family: 'Jua', sans-serif;
+      transition: transform 0.15s;
+    }
+    .btn-sm-action:hover { transform: scale(1.04); }
+
+    .btn-sm-view { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; margin-right: 3px; }
+    .btn-sm-edit { background: #ECFDF5; color: #15803D; border: 1px solid #BBF7D0; margin-right: 3px; }
+    .btn-sm-del { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+
+    /* 팝업 모달 (모둠 제출물 열람) */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal-content {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 800px;
+      max-height: 85vh;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      border: 3px solid #81C784;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .btn-sm-edit { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
-    .btn-sm-del { background: #FFEBEE; color: #C62828; border: 1px solid #FFCDD2; margin-left: 4px; }
+    @keyframes modalPop {
+      0% { transform: scale(0.92); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      background: #F1F8E9;
+      padding: 18px 24px;
+      border-bottom: 2px solid #C8E6C9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      color: var(--primary);
+    }
+
+    .btn-modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #64748B;
+      line-height: 1;
+    }
+
+    .modal-body {
+      padding: 20px 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .artifact-card {
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .artifact-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      color: #0F172A;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .artifact-content {
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.6;
+      background: white;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #CBD5E1;
+    }
   </style>
 </head>
 <body>
@@ -291,12 +491,13 @@
   <!-- 헤더 -->
   <header>
     <div class="admin-title-area">
-      <h1>👑 선생님 관리자 모드 (모둠 코드 & 진도 관리)</h1>
-      <p>AI 자원순환 탐정단 초등 5학년 교육용 교과서</p>
+      <h1>👑 선생님 관리자 모드 (실시간 모둠 8대 퀘스트 진도판)</h1>
+      <p>AI 자원순환 탐정단 • 실시간 학급 전체 모둠 진도 및 제출물 모니터링</p>
     </div>
 
     <div class="header-btns">
       <a href="main.html" class="btn-action btn-ghost">🏠 학생 메인 화면</a>
+      <a href="dashboard.html" class="btn-action btn-ghost" style="border-color:#38BDF8; color:#0284C7;">📊 학급 공개 현황판</a>
       <button onclick="logoutAdmin()" class="btn-action btn-ghost" style="color:#C62828;border-color:#FFCDD2;">🚪 로그아웃</button>
     </div>
   </header>
@@ -307,75 +508,129 @@
       <div class="stat-num" id="statTotalTeams">0개</div>
       <div class="stat-label">👥 개설된 모둠(팀) 수</div>
     </div>
-    <div class="stat-card">
+    <div class="stat-card blue">
       <div class="stat-num" id="statTotalStudents">0명</div>
       <div class="stat-label">👤 총 접속 학생 수</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-num" id="statAvgScore">0점</div>
-      <div class="stat-label">⭐ 전체 모둠 평균 점수</div>
+    <div class="stat-card accent">
+      <div class="stat-num" id="statAvgProgress">0%</div>
+      <div class="stat-label">📈 학급 전체 평균 진도율</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-num" id="statMasterTeams">0개</div>
+      <div class="stat-label">🏆 8대 퀘스트 마스터 모둠</div>
     </div>
   </div>
 
-  <!-- 1. 모둠 코드 등록 및 실시간 관리 섹션 -->
+  <!-- 8대 퀘스트별 학급 완수 현황 미니 바 -->
+  <div class="quest-overview-card">
+    <div class="quest-overview-title">
+      <span>🗺️</span>
+      <span>8대 퀘스트별 학급 완수 모둠 현황 (실시간 집계)</span>
+    </div>
+    <div class="quest-mini-grid" id="questMiniGrid">
+      <div class="quest-mini-box" id="qBox-1">
+        <div class="quest-mini-name">Q1. AI의 눈 👁️</div>
+        <div class="quest-mini-count" id="qCount-1">0팀</div>
+      </div>
+      <div class="quest-mini-box" id="qBox-2">
+        <div class="quest-mini-name">Q2. 분류기준 📋</div>
+        <div class="quest-mini-count" id="qCount-2">0팀</div>
+      </div>
+      <div class="quest-mini-box" id="qBox-3">
+        <div class="quest-mini-name">Q3. 사진수집 📷</div>
+        <div class="quest-mini-count" id="qCount-3">0팀</div>
+      </div>
+      <div class="quest-mini-box" id="qBox-4">
+        <div class="quest-mini-name">Q4. 이름표 🏷️</div>
+        <div class="quest-mini-count" id="qCount-4">0팀</div>
+      </div>
+      <div class="quest-mini-box" id="qBox-5">
+        <div class="quest-mini-name">Q5. AI탐정 🤖</div>
+        <div class="quest-mini-count" id="qCount-5">0팀</div>
+      </div>
+      <div class="quest-mini-box" id="qBox-6">
+        <div class="quest-mini-name">Q6. 오류관 🏛️</div>
+        <div class="quest-mini-count" id="qCount-6">0팀</div>
+      </div>
+      <div class="quest-mini-box" id="qBox-7">
+        <div class="quest-mini-name">Q7. 실천규약 ✍️</div>
+        <div class="quest-mini-count" id="qCount-7">0팀</div>
+      </div>
+      <div class="quest-mini-box" id="qBox-8">
+        <div class="quest-mini-name">Q8. 의회선포 ⚖️</div>
+        <div class="quest-mini-count" id="qCount-8">0팀</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. 모둠별 8대 퀘스트 실시간 진도 매트릭스 -->
   <div class="manage-card">
     <div class="section-header">
-      <h2>🏷️ 모둠 코드(팀코드) 생성 및 실시간 관리</h2>
-      <div style="display:flex;gap:8px;">
-        <button onclick="loadAdminData()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;">🔄 새로고침</button>
-        <button onclick="quickBatchCreateTeams()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;background:#E8F5E9;">✨ 1모둠~6모둠 자동 생성</button>
+      <h2>📊 모둠별 8대 퀘스트 실시간 진도 매트릭스</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="downloadAdminCSV()" class="btn-action btn-green" style="font-size:14px;padding:8px 14px;">📥 모둠 진도표 CSV 다운로드</button>
+        <button onclick="quickBatchCreateTeams()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;background:#E8F5E9;">✨ 1모둠~6모둠 일괄 생성</button>
       </div>
     </div>
 
     <!-- 새 모둠 코드 추가 폼 -->
     <div class="add-team-box">
-      <strong style="color:#2E7D32;font-family:'Jua',sans-serif;font-size:17px;">➕ 새 모둠 추가:</strong>
-      <input type="text" id="newTeamCode" placeholder="모둠 코드 (예: 1모둠, GREEN)" style="flex:1;min-width:160px;">
-      <input type="text" id="newTeamAiName" placeholder="기본 AI 이름 (예: 에코봇)" style="flex:1;min-width:160px;">
-      <button onclick="addNewTeamCode()" class="btn-action btn-green" style="padding:10px 18px;font-size:15px;">➕ 모둠 생성</button>
+      <strong style="color:#2E7D32;font-family:'Jua',sans-serif;font-size:16px;">➕ 새 모둠 코드 개설:</strong>
+      <input type="text" id="newTeamCode" placeholder="모둠 코드 (예: 1모둠, GREEN)" style="flex:1;min-width:140px;">
+      <input type="text" id="newTeamAiName" placeholder="기본 AI 이름 (예: 에코봇)" style="flex:1;min-width:140px;">
+      <button onclick="addNewTeamCode()" class="btn-action btn-green" style="padding:9px 16px;font-size:14px;">➕ 모둠 생성</button>
     </div>
 
-    <!-- 모둠 목록 테이블 -->
+    <!-- 모둠 진도 매트릭스 테이블 -->
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
             <th>모둠 코드</th>
-            <th>모둠 AI 파트너 이름</th>
-            <th>참여 학생 명단</th>
-            <th>모둠 탐정 점수</th>
-            <th>배지</th>
-            <th>퀘스트 진도</th>
-            <th>관리</th>
+            <th>AI 파트너</th>
+            <th>참여 학생</th>
+            <th>Q1<br><span style="font-size:11px;font-weight:normal;">AI의눈</span></th>
+            <th>Q2<br><span style="font-size:11px;font-weight:normal;">분류기준</span></th>
+            <th>Q3<br><span style="font-size:11px;font-weight:normal;">사진수집</span></th>
+            <th>Q4<br><span style="font-size:11px;font-weight:normal;">이름표</span></th>
+            <th>Q5<br><span style="font-size:11px;font-weight:normal;">AI탐정</span></th>
+            <th>Q6<br><span style="font-size:11px;font-weight:normal;">오류관</span></th>
+            <th>Q7<br><span style="font-size:11px;font-weight:normal;">실천규약</span></th>
+            <th>Q8<br><span style="font-size:11px;font-weight:normal;">의회선포</span></th>
+            <th>진도율</th>
+            <th>점수 / 배지</th>
+            <th>관리 및 열람</th>
           </tr>
         </thead>
         <tbody id="teamTableBody">
-          <tr><td colspan="7" style="text-align:center;padding:30px;color:#78909C;">모둠 데이터를 불러오는 중입니다...</td></tr>
+          <tr><td colspan="14" style="text-align:center;padding:30px;color:#78909C;">실시간 모둠 진도 데이터를 연결하고 있습니다...</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- 2. 학생별 개별 접속 현황 & CSV 다운로드 -->
+  <!-- 2. 학생별 개별 접속 및 활동 목록 -->
   <div class="manage-card" style="border-color:#A5D6A7;">
     <div class="section-header">
       <h2>📋 학생별 개별 학습 및 진도 현황</h2>
-      <button onclick="downloadAdminCSV()" class="btn-action btn-green" style="font-size:14px;padding:8px 14px;">📥 모둠 및 학생 명단 CSV 다운로드</button>
+      <span style="font-size:13px;color:#558B2F;font-weight:bold;">총 <span id="studentTableCount">0</span>명 참여 중</span>
     </div>
 
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
-            <th>학생 이름</th>
-            <th>소속 모둠 코드</th>
-            <th>모둠 AI 파트너</th>
-            <th>점수</th>
-            <th>최근 활동</th>
+            <th>학생 닉네임</th>
+            <th>소속 모둠</th>
+            <th>모둠 AI</th>
+            <th>개인 점수</th>
+            <th>완료 퀘스트 수</th>
+            <th>최근 활동 일시</th>
           </tr>
         </thead>
         <tbody id="studentTableBody">
-          <tr><td colspan="5" style="text-align:center;padding:20px;color:#78909C;">학생 목록을 불러오는 중입니다...</td></tr>
+          <tr><td colspan="6" style="text-align:center;padding:20px;color:#78909C;">학생 목록을 불러오는 중입니다...</td></tr>
         </tbody>
       </table>
     </div>
@@ -383,9 +638,24 @@
 
 </div>
 
+<!-- 모둠별 제출물 상세 보기 모달 -->
+<div class="modal-overlay" id="artifactModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalTeamTitle">🔍 [1모둠] 실시간 탐정 제출물 상세 보기</h3>
+      <button class="btn-modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalArtifactBody">
+      <div style="text-align:center;padding:20px;color:#64748B;">제출물 데이터를 불러오는 중...</div>
+    </div>
+  </div>
+</div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { 
+    getFirestore, collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc, serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
@@ -400,99 +670,301 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  let cachedTeams = [];
-  let cachedStudents = [];
+  let teamsCache = [];
+  let studentsCache = [];
+  const questDoneMap = {}; // { teamCode: { q1: true, q2: true, ... }, studentId: { ... } }
+  const questArtifactsMap = {}; // { teamCode: { q1: [...], q2: [...], ... } }
 
-  // 1. 전체 데이터 로드
-  window.loadAdminData = async function() {
-    const teamTbody = document.getElementById("teamTableBody");
-    const studentTbody = document.getElementById("studentTableBody");
-    teamTbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#78909C;">모둠 데이터를 불러오는 중...</td></tr>';
+  // 8대 퀘스트 컬렉션 실시간 구독
+  const questCollections = [
+    { name: "quest1_records", key: "q1", title: "Q1. AI의 눈 👁️" },
+    { name: "quest2_rules", key: "q2", title: "Q2. 분류기준 만들기 📋" },
+    { name: "quest3_data", key: "q3", title: "Q3. 사진 데이터 수집 📷" },
+    { name: "quest4_labeling", key: "q4", title: "Q4. 이름표 붙이기 🏷️" },
+    { name: "quest5_logs", key: "q5", title: "Q5. 교실쓰레기 AI탐정단 🤖" },
+    { name: "quest6_logs", key: "q6", title: "Q6. 오류박물관 🏛️" },
+    { name: "quest6_errors", key: "q6", title: "Q6. 오류 태그 🏛️" },
+    { name: "quest7_rules", key: "q7", title: "Q7. 실천 규약 초안 ✍️" },
+    { name: "quest7_logs", key: "q7", title: "Q7. 실천 규약 ✍️" },
+    { name: "quest8_logs", key: "q8", title: "Q8. 자원 순환 의회 ⚖️" }
+  ];
 
-    try {
-      // 1) 모둠 (teams) 컬렉션 읽기
-      const teamSnap = await getDocs(collection(db, "teams"));
-      cachedTeams = [];
-      teamSnap.forEach(d => {
-        cachedTeams.push({ id: d.id, ...d.data() });
-      });
+  questCollections.forEach(({ name, key, title }) => {
+    onSnapshot(collection(db, name), (snapshot) => {
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const tCode = data.teamCode;
+        const sId = data.studentId;
 
-      // 2) 학생 (students) 컬렉션 읽기
-      const stuSnap = await getDocs(collection(db, "students"));
-      cachedStudents = [];
-      stuSnap.forEach(d => {
-        if (d.id !== "admin") {
-          cachedStudents.push({ id: d.id, ...d.data() });
+        // 모둠 키 등록
+        if (tCode) {
+          if (!questDoneMap[tCode]) questDoneMap[tCode] = {};
+          questDoneMap[tCode][key] = true;
+
+          if (!questArtifactsMap[tCode]) questArtifactsMap[tCode] = {};
+          if (!questArtifactsMap[tCode][key]) questArtifactsMap[tCode][key] = [];
+          questArtifactsMap[tCode][key].push(data);
+        }
+
+        // 학생 키 등록
+        if (sId) {
+          if (!questDoneMap[sId]) questDoneMap[sId] = {};
+          questDoneMap[sId][key] = true;
         }
       });
+      renderAll();
+    }, (err) => console.warn(name, err));
+  });
 
-      // 요약 통계 계산
-      const totalTeams = cachedTeams.length;
-      const totalStudents = cachedStudents.length;
-      const totalScore = cachedTeams.reduce((acc, t) => acc + (t.score || 0), 0);
-      const avgScore = totalTeams ? Math.round(totalScore / totalTeams) : 0;
+  // 모둠(Teams) 실시간 구독
+  onSnapshot(collection(db, "teams"), (snapshot) => {
+    teamsCache = [];
+    snapshot.forEach(d => {
+      teamsCache.push({ id: d.id, ...d.data() });
+    });
+    // 정렬 (1모둠, 2모둠 순서)
+    teamsCache.sort((a, b) => (a.teamCode || a.id).localeCompare(b.teamCode || b.id, undefined, { numeric: true }));
+    renderAll();
+  });
 
-      document.getElementById("statTotalTeams").textContent = totalTeams + "개";
-      document.getElementById("statTotalStudents").textContent = totalStudents + "명";
-      document.getElementById("statAvgScore").textContent = avgScore + "점";
+  // 학생(Students) 실시간 구독
+  onSnapshot(collection(db, "students"), (snapshot) => {
+    studentsCache = [];
+    snapshot.forEach(d => {
+      if (d.id !== "admin") {
+        studentsCache.push({ id: d.id, ...d.data() });
+      }
+    });
+    renderAll();
+  });
 
-      // 모둠 테이블 렌더링
-      if (cachedTeams.length === 0) {
-        teamTbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:30px;color:#78909C;">개설된 모둠이 없습니다. 위에서 새 모둠을 추가해보세요!</td></tr>';
-      } else {
-        teamTbody.innerHTML = cachedTeams.map(t => {
-          const qDone = t.questsDone || 0;
-          const pct = Math.round((qDone / 8) * 100);
-          const membersList = (t.members && t.members.length) 
-            ? t.members.map(m => `<span class="member-pill">👤 ${m}</span>`).join(' ')
-            : '<span style="color:#B0BEC5;font-size:13px;">아직 접속 학생 없음</span>';
+  // 통합 렌더링 함수
+  function renderAll() {
+    renderStatsAndOverview();
+    renderTeamsTable();
+    renderStudentsTable();
+  }
 
-          return `
-            <tr>
-              <td><span class="code-tag">${t.teamCode || t.id}</span></td>
-              <td><strong>🤖 ${t.aiName || '에코봇'}</strong></td>
-              <td>${membersList}</td>
-              <td><strong style="color:#2E7D32;font-size:16px;">${t.score || 10}점</strong></td>
-              <td><span class="badge-tag">🏅 ${t.badge || '신입 탐정'}</span></td>
-              <td>
-                <div class="progress-bar-wrap">
-                  <div class="progress-bar-fill" style="width: ${pct}%"></div>
-                </div>
-                <strong style="font-size:13px;color:#2E7D32;">${qDone}/8 완료</strong>
-              </td>
-              <td>
-                <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit">✏️ AI명 변경</button>
-                <button onclick="deleteTeam('${t.id}')" class="btn-sm-action btn-sm-del">🗑️ 삭제</button>
-              </td>
-            </tr>
-          `;
-        }).join('');
+  // 1. 요약 통계 및 퀘스트별 미니 바 렌더링
+  function renderStatsAndOverview() {
+    const totalTeams = teamsCache.length;
+    const totalStudents = studentsCache.length;
+
+    let totalQuestsCount = 0;
+    let masterTeamsCount = 0;
+    const questCompletedCount = { q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0 };
+
+    teamsCache.forEach(t => {
+      const code = t.teamCode || t.id;
+      const qStatus = questDoneMap[code] || {};
+      let teamDoneCount = 0;
+
+      for (let i = 1; i <= 8; i++) {
+        const isDone = !!qStatus[`q${i}`] || (t.questsDone >= i);
+        if (isDone) {
+          teamDoneCount++;
+          questCompletedCount[`q${i}`]++;
+        }
       }
 
-      // 학생 테이블 렌더링
-      if (cachedStudents.length === 0) {
-        studentTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:#78909C;">접속한 학생 데이터가 없습니다.</td></tr>';
-      } else {
-        studentTbody.innerHTML = cachedStudents.map(s => {
-          return `
-            <tr>
-              <td><strong>${s.studentName || s.id}</strong></td>
-              <td><span class="code-tag" style="font-size:13px;padding:3px 8px;">${s.teamCode || '미지정'}</span></td>
-              <td>🤖 ${s.aiPartnerName || '에코봇'}</td>
-              <td><strong style="color:#2E7D32;">${s.score || 0}점</strong></td>
-              <td style="font-size:13px;color:#78909C;">${s.lastActive ? new Date(s.lastActive.seconds * 1000).toLocaleString('ko-KR') : '-'}</td>
-            </tr>
-          `;
-        }).join('');
-      }
+      totalQuestsCount += teamDoneCount;
+      if (teamDoneCount === 8) masterTeamsCount++;
+    });
 
-    } catch (e) {
-      console.error(e);
-      teamTbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:#C62828;">오류: ${e.message}</td></tr>`;
+    const avgProgress = totalTeams ? Math.round((totalQuestsCount / (totalTeams * 8)) * 100) : 0;
+
+    document.getElementById("statTotalTeams").textContent = `${totalTeams}개`;
+    document.getElementById("statTotalStudents").textContent = `${totalStudents}명`;
+    document.getElementById("statAvgProgress").textContent = `${avgProgress}%`;
+    document.getElementById("statMasterTeams").textContent = `${masterTeamsCount}개`;
+
+    // 8대 퀘스트 미니 바 카운트 반영
+    for (let i = 1; i <= 8; i++) {
+      const countEl = document.getElementById(`qCount-${i}`);
+      const boxEl = document.getElementById(`qBox-${i}`);
+      const cnt = questCompletedCount[`q${i}`];
+      if (countEl) countEl.textContent = `${cnt}팀 완료`;
+      if (boxEl) {
+        if (cnt > 0) boxEl.classList.add("active");
+        else boxEl.classList.remove("active");
+      }
     }
+  }
+
+  // 2. 모둠별 8대 퀘스트 진도 매트릭스 테이블 렌더링
+  function renderTeamsTable() {
+    const tbody = document.getElementById("teamTableBody");
+    if (!teamsCache.length) {
+      tbody.innerHTML = '<tr><td colspan="14" style="text-align:center;padding:30px;color:#78909C;">개설된 모둠이 없습니다. 위에서 새 모둠을 추가해보세요!</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = teamsCache.map(t => {
+      const code = t.teamCode || t.id;
+      const qStatus = questDoneMap[code] || {};
+
+      const isQ1 = !!qStatus.q1;
+      const isQ2 = !!qStatus.q2;
+      const isQ3 = !!qStatus.q3;
+      const isQ4 = !!qStatus.q4;
+      const isQ5 = !!qStatus.q5;
+      const isQ6 = !!qStatus.q6;
+      const isQ7 = !!qStatus.q7;
+      const isQ8 = !!qStatus.q8;
+
+      const completedCount = [isQ1, isQ2, isQ3, isQ4, isQ5, isQ6, isQ7, isQ8].filter(Boolean).length;
+      const pct = Math.round((completedCount / 8) * 100);
+
+      const membersList = (t.members && t.members.length) 
+        ? t.members.map(m => `<span class="member-pill">👤 ${m}</span>`).join(' ')
+        : '<span style="color:#B0BEC5;font-size:12px;">접속 대기</span>';
+
+      const renderBadge = (isDone) => isDone 
+        ? '<span class="quest-cell-badge done" title="완료됨">🟢</span>' 
+        : '<span class="quest-cell-badge yet" title="진행 중">⚪</span>';
+
+      return `
+        <tr>
+          <td><strong class="code-tag">${code}</strong></td>
+          <td><strong style="color:#2E7D32;">🤖 ${t.aiName || '에코봇'}</strong></td>
+          <td style="max-width:180px;white-space:normal;">${membersList}</td>
+          <td>${renderBadge(isQ1)}</td>
+          <td>${renderBadge(isQ2)}</td>
+          <td>${renderBadge(isQ3)}</td>
+          <td>${renderBadge(isQ4)}</td>
+          <td>${renderBadge(isQ5)}</td>
+          <td>${renderBadge(isQ6)}</td>
+          <td>${renderBadge(isQ7)}</td>
+          <td>${renderBadge(isQ8)}</td>
+          <td>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill" style="width: ${pct}%"></div>
+            </div>
+            <strong style="font-size:13px;color:${pct === 100 ? '#16A34A' : '#334155'};">${completedCount}/8 (${pct}%)</strong>
+          </td>
+          <td>
+            <strong style="color:#F59E0B;font-size:14px;">⭐ ${t.score || 10}</strong><br>
+            <span class="badge-tag">${t.badge || '신입 탐정단'}</span>
+          </td>
+          <td>
+            <button onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-view">🔍 제출물 보기</button>
+            <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit">✏️ AI명</button>
+            <button onclick="deleteTeam('${t.id}')" class="btn-sm-action btn-sm-del">🗑️</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // 3. 학생 개별 테이블 렌더링
+  function renderStudentsTable() {
+    const tbody = document.getElementById("studentTableBody");
+    const countEl = document.getElementById("studentTableCount");
+    if (countEl) countEl.textContent = studentsCache.length.toString();
+
+    if (!studentsCache.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#78909C;">접속한 학생 데이터가 없습니다.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = studentsCache.map(s => {
+      const sId = s.studentId || s.id;
+      const qStatus = questDoneMap[sId] || questDoneMap[s.teamCode] || {};
+      const completedCount = [qStatus.q1, qStatus.q2, qStatus.q3, qStatus.q4, qStatus.q5, qStatus.q6, qStatus.q7, qStatus.q8].filter(Boolean).length;
+
+      return `
+        <tr>
+          <td><strong>👤 ${s.studentName || s.id}</strong></td>
+          <td><span class="code-tag" style="font-size:12px;padding:2px 6px;">${s.teamCode || '미지정'}</span></td>
+          <td>🤖 ${s.aiPartnerName || '에코봇'}</td>
+          <td><strong style="color:#2E7D32;">⭐ ${s.score || 0} EXP</strong></td>
+          <td><strong style="color:#16A34A;">${completedCount}/8 완료</strong></td>
+          <td style="font-size:12px;color:#64748B;">${s.lastActive ? new Date(s.lastActive.seconds * 1000).toLocaleString('ko-KR') : '-'}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // 4. 모둠 제출물 모달 열람
+  window.viewTeamArtifacts = function(teamCode, aiName) {
+    const modal = document.getElementById("artifactModal");
+    const titleEl = document.getElementById("modalTeamTitle");
+    const bodyEl = document.getElementById("modalArtifactBody");
+
+    titleEl.textContent = `🔍 [${teamCode} • ${aiName}] 탐정단 실시간 제출물 상세 열람`;
+
+    const artifacts = questArtifactsMap[teamCode] || {};
+    let html = '';
+
+    // Q1 기록
+    const q1List = artifacts.q1 || [];
+    html += `
+      <div class="artifact-card">
+        <div class="artifact-title">👁️ QUEST 1: AI의 눈 (탐정 생각 해설) [${q1List.length}건]</div>
+        <div class="artifact-content">
+          ${q1List.length ? q1List.map(item => `• <b>${item.studentName || '탐정'}:</b> "${item.thought || '사람의 눈과 AI의 눈 차이 탐구 완료'}"`).join('<br>') : '<span style="color:#94A3B8;">아직 작성된 제출물이 없습니다.</span>'}
+        </div>
+      </div>
+    `;
+
+    // Q2 분류 기준
+    const q2List = artifacts.q2 || [];
+    html += `
+      <div class="artifact-card">
+        <div class="artifact-title">📋 QUEST 2: 분류기준 만들기 (발표 템플릿) [${q2List.length}건]</div>
+        <div class="artifact-content">
+          ${q2List.length ? q2List.map(item => `• <b>${item.studentName || '모둠'}:</b> "${item.rule || item.statement || '분류 규칙 수립 완료'}"`).join('<br>') : '<span style="color:#94A3B8;">아직 작성된 분류 기준이 없습니다.</span>'}
+        </div>
+      </div>
+    `;
+
+    // Q3 좋은 데이터 문장
+    const q3List = artifacts.q3 || [];
+    html += `
+      <div class="artifact-card">
+        <div class="artifact-title">📷 QUEST 3: 좋은 데이터란? [${q3List.length}건]</div>
+        <div class="artifact-content">
+          ${q3List.length ? q3List.map(item => `• <b>${item.author || item.studentName || '모둠원'}:</b> "좋은 데이터란 ${item.definition || item.thought || '...'}이다."`).join('<br>') : '<span style="color:#94A3B8;">아직 등록된 정의가 없습니다.</span>'}
+        </div>
+      </div>
+    `;
+
+    // Q6 오류박물관 태그 & 한마디
+    const q6List = artifacts.q6 || [];
+    html += `
+      <div class="artifact-card">
+        <div class="artifact-title">🏛️ QUEST 6: 오류박물관 (오인식 태그 & 한계 탐구) [${q6List.length}건]</div>
+        <div class="artifact-content">
+          ${q6List.length ? q6List.map(item => `• <b>${item.author || item.studentName || '탐정'}:</b> ${item.tag ? `[태그: ${item.tag}] ` : ''}"${item.comment || item.thought || 'AI 오류 탐구 완료'}"`).join('<br>') : '<span style="color:#94A3B8;">등록된 오류 분석이 없습니다.</span>'}
+        </div>
+      </div>
+    `;
+
+    // Q7 실천 규약
+    const q7List = artifacts.q7 || [];
+    html += `
+      <div class="artifact-card">
+        <div class="artifact-title">✍️ QUEST 7: 우리 모둠 실천 규약 [${q7List.length}건]</div>
+        <div class="artifact-content">
+          ${q7List.length ? q7List.map(item => `• <b>규약:</b> ${item.rule || '규약 내용'} <br>&nbsp;&nbsp;<b>이유:</b> ${item.reason || '제시 이유'}`).join('<br><br>') : '<span style="color:#94A3B8;">아직 발의된 실천 규약이 없습니다.</span>'}
+        </div>
+      </div>
+    `;
+
+    bodyEl.innerHTML = html;
+    modal.classList.add("active");
   };
 
-  // 2. 새 모둠 코드 추가
+  window.closeModal = function() {
+    document.getElementById("artifactModal").classList.remove("active");
+  };
+
+  // 모달 바깥 배경 클릭 시 닫기
+  document.getElementById("artifactModal").addEventListener("click", (e) => {
+    if (e.target.id === "artifactModal") closeModal();
+  });
+
+  // 새 모둠 코드 추가
   window.addNewTeamCode = async function() {
     const code = document.getElementById("newTeamCode").value.trim();
     const aiName = document.getElementById("newTeamAiName").value.trim() || "에코봇";
@@ -507,7 +979,7 @@
         aiName: aiName,
         members: [],
         score: 10,
-        badge: "신입 탐정",
+        badge: "신입 탐정단",
         questsDone: 0,
         createdAt: serverTimestamp(),
         lastActive: serverTimestamp()
@@ -516,13 +988,12 @@
       alert(`✅ '${code}' 모둠 코드가 성공적으로 생성되었습니다!`);
       document.getElementById("newTeamCode").value = "";
       document.getElementById("newTeamAiName").value = "";
-      loadAdminData();
     } catch (e) {
       alert("모둠 생성 실패: " + e.message);
     }
   };
 
-  // 3. 1모둠~6모둠 간편 일괄 생성
+  // 1모둠~6모둠 일괄 생성
   window.quickBatchCreateTeams = async function() {
     if (!confirm("1모둠부터 6모둠까지 6개 모둠을 일괄 생성할까요?")) return;
 
@@ -534,20 +1005,19 @@
           aiName: `에코봇-${i}`,
           members: [],
           score: 10,
-          badge: "신입 탐정",
+          badge: "신입 탐정단",
           questsDone: 0,
           createdAt: serverTimestamp(),
           lastActive: serverTimestamp()
         }, { merge: true });
       }
       alert("✅ 1모둠부터 6모둠까지 생성이 완료되었습니다!");
-      loadAdminData();
     } catch (e) {
       alert("일괄 생성 실패: " + e.message);
     }
   };
 
-  // 4. 모둠 AI 이름 변경
+  // AI 이름 변경
   window.editTeamAiName = async function(teamId, currentAi) {
     const newName = prompt(`[${teamId}] 모둠의 새 AI 파트너 이름을 입력하세요:`, currentAi);
     if (!newName || newName.trim() === currentAi) return;
@@ -557,56 +1027,66 @@
         aiName: newName.trim(),
         updatedAt: serverTimestamp()
       });
-      alert(`✅ AI 이름이 '${newName.trim()}'(으)로 변경되었습니다. 모둠원 화면에 실시간 적용됩니다.`);
-      loadAdminData();
+      alert(`✅ AI 이름이 '${newName.trim()}'(으)로 변경되었습니다.`);
     } catch (e) {
       alert("변경 실패: " + e.message);
     }
   };
 
-  // 5. 모둠 삭제
+  // 모둠 삭제
   window.deleteTeam = async function(teamId) {
-    if (!confirm(`'${teamId}' 모둠을 정말 삭제할까요?`)) return;
+    if (!confirm(`'${teamId}' 모둠을 정말 삭제할까요? 관련 모둠 데이터가 모두 삭제됩니다.`)) return;
     try {
       await deleteDoc(doc(db, "teams", teamId));
       alert("✅ 모둠이 삭제되었습니다.");
-      loadAdminData();
     } catch (e) {
       alert("삭제 실패: " + e.message);
     }
   };
 
-  // 6. CSV 다운로드
+  // 진도표 CSV 다운로드
   window.downloadAdminCSV = function() {
-    if (!cachedTeams.length) {
+    if (!teamsCache.length) {
       return alert("다운로드할 모둠 데이터가 없습니다.");
     }
 
-    const header = "모둠코드,AI파트너이름,참여학생명단,모둠점수,퀘스트완료수(진도)";
-    const rows = cachedTeams.map(t => {
-      const qDone = t.questsDone || 0;
-      const cleanCode = (t.teamCode || t.id || '').replace(/"/g, '""');
+    const header = "모둠코드,AI파트너이름,참여학생명단,Q1(AI의눈),Q2(분류기준),Q3(사진데이터),Q4(이름표라벨),Q5(AI탐정),Q6(오류관),Q7(실천규약),Q8(의회선포),진도율,총점수,배지";
+    const rows = teamsCache.map(t => {
+      const code = t.teamCode || t.id;
+      const qStatus = questDoneMap[code] || {};
+      const q1 = qStatus.q1 ? "완료" : "미완료";
+      const q2 = qStatus.q2 ? "완료" : "미완료";
+      const q3 = qStatus.q3 ? "완료" : "미완료";
+      const q4 = qStatus.q4 ? "완료" : "미완료";
+      const q5 = qStatus.q5 ? "완료" : "미완료";
+      const q6 = qStatus.q6 ? "완료" : "미완료";
+      const q7 = qStatus.q7 ? "완료" : "미완료";
+      const q8 = qStatus.q8 ? "완료" : "미완료";
+      const completedCount = [qStatus.q1, qStatus.q2, qStatus.q3, qStatus.q4, qStatus.q5, qStatus.q6, qStatus.q7, qStatus.q8].filter(Boolean).length;
+      const pct = `${Math.round((completedCount / 8) * 100)}% (${completedCount}/8)`;
+
+      const cleanCode = (code || '').replace(/"/g, '""');
       const cleanAi = (t.aiName || '에코봇').replace(/"/g, '""');
       const cleanMembers = ((t.members || []).join(', ')).replace(/"/g, '""');
-      return `"${cleanCode}","${cleanAi}","${cleanMembers}",${t.score||10},"${qDone}/8 완료"`;
+      const cleanBadge = (t.badge || '신입 탐정단').replace(/"/g, '""');
+
+      return `"${cleanCode}","${cleanAi}","${cleanMembers}","${q1}","${q2}","${q3}","${q4}","${q5}","${q6}","${q7}","${q8}","${pct}",${t.score||10},"${cleanBadge}"`;
     });
 
     const csv = '\uFEFF' + [header, ...rows].join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `모둠_진도현황_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `AI자원순환탐정단_모둠별8대퀘스트진도표_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
   };
 
   window.logoutAdmin = function() {
     localStorage.removeItem("elementary_isAdmin");
     localStorage.removeItem("elementary_studentId");
+    localStorage.removeItem("elementary_teamCode");
     window.location.href = "index.html";
   };
-
-  // 초기 실행
-  loadAdminData();
 </script>
 </body>
 </html>
