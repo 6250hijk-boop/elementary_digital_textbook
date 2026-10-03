@@ -1,1 +1,889 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>🗺️ 퀘스트 맵 좌표 매퍼 | AI 자원순환 탐정단</title>
+  
+  <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-light: #f8fafc;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --accent-gold: #f59e0b;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --accent-red: #ef4444;
+      --text-main: #0f172a;
+      --text-sub: #475569;
+      --radius: 20px;
+    }
 
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: var(--bg-light);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(37, 99, 235, 0.06), transparent 35%),
+        radial-gradient(circle at 90% 90%, rgba(245, 158, 11, 0.06), transparent 35%),
+        linear-gradient(to bottom, #f8fafc, #f1f5f9);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* 상단 앱 네비게이션 HUD */
+    .app-header {
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid #e2e8f0;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-back {
+      background: #f1f5f9;
+      border: 2px solid #cbd5e1;
+      color: #334155;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover {
+      background: #e2e8f0;
+      transform: translateY(-1px);
+    }
+
+    .header-title-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-badge {
+      font-family: 'Jua', sans-serif;
+      font-size: 12px;
+      color: #2563eb;
+      background: #eff6ff;
+      padding: 2px 8px;
+      border-radius: 6px;
+      width: fit-content;
+      font-weight: bold;
+    }
+
+    .header-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 20px;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* 모드 전환 토글 탭 */
+    .mode-toggle-group {
+      display: flex;
+      background: #e2e8f0;
+      padding: 4px;
+      border-radius: 14px;
+      gap: 4px;
+    }
+
+    .btn-mode-tab {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      font-family: 'Jua', sans-serif;
+      font-size: 14px;
+      color: #64748b;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-mode-tab.active {
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    }
+
+    /* 메인 레이아웃 */
+    .app-container {
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px 16px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* 퀘스트 선택 팔레트 */
+    .quest-palette-card {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+
+    .palette-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .palette-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 17px;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .palette-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .quest-select-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 2px solid #cbd5e1;
+      background: #f8fafc;
+      font-family: 'Jua', sans-serif;
+      font-size: 14px;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+
+    .quest-select-btn:hover {
+      background: #f1f5f9;
+      transform: translateY(-1px);
+    }
+
+    .quest-select-btn.active {
+      border-color: var(--q-color, #2563eb);
+      background: var(--q-bg, #eff6ff);
+      color: var(--q-color, #2563eb);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+      font-weight: bold;
+    }
+
+    .quest-num-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .quest-select-btn.active .quest-num-badge {
+      background: var(--q-color, #2563eb);
+      color: white;
+    }
+
+    /* 이미지 맵 캔버스 영역 */
+    .map-stage-card {
+      background: white;
+      border: 2.5px solid #cbd5e1;
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .map-stage-toolbar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .map-helper-tip {
+      font-size: 14px;
+      color: #64748b;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .map-helper-tip strong {
+      color: #2563eb;
+    }
+
+    /* 이미지 컨테이너 (상대 비율 100% 고정) */
+    .map-container {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      background: #0f172a;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 3px solid #e2e8f0;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      touch-action: none; /* 스마트폰/웨일북 터치 드래그 */
+    }
+
+    #mainpageImage {
+      width: 100%;
+      height: auto;
+      display: block;
+      pointer-events: none;
+    }
+
+    /* 드래그 중인 임시 사각형 */
+    #dragBox {
+      position: absolute;
+      border: 2.5px dashed #3b82f6;
+      background: rgba(59, 130, 246, 0.25);
+      border-radius: 8px;
+      display: none;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    /* 8개 퀘스트 핫스팟 레이어 */
+    .hotspot-box {
+      position: absolute;
+      border: 2.5px solid var(--q-color, #2563eb);
+      background: var(--q-bg, rgba(37, 99, 235, 0.25));
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 6px;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 10;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    .hotspot-box:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      z-index: 20;
+    }
+
+    .hotspot-label {
+      font-family: 'Jua', sans-serif;
+      font-size: 13px;
+      color: white;
+      background: var(--q-color, #2563eb);
+      padding: 2px 8px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      pointer-events: none;
+    }
+
+    .btn-hotspot-del {
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .btn-hotspot-del:hover {
+      background: #dc2626;
+      transform: scale(1.15);
+    }
+
+    /* 테스트/클릭 모드일 때의 스타일 */
+    body.mode-test .hotspot-box {
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      animation: pulseGlow 2s infinite;
+    }
+
+    body.mode-test .btn-hotspot-del {
+      display: none;
+    }
+
+    body.mode-test .hotspot-box:hover {
+      transform: scale(1.04);
+      border-color: #facc15;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 10px rgba(37, 99, 235, 0.4); }
+      50% { box-shadow: 0 0 22px rgba(37, 99, 235, 0.8); }
+    }
+
+    /* 하단 좌표 JSON 및 코드 익스포트 */
+    .coords-export-card {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+
+    .export-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .code-box {
+      width: 100%;
+      background: #0f172a;
+      color: #38bdf8;
+      font-family: 'Consolas', monospace;
+      font-size: 13px;
+      padding: 16px;
+      border-radius: 14px;
+      line-height: 1.6;
+      overflow-x: auto;
+      max-height: 240px;
+      user-select: text;
+    }
+
+    .btn-action-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-small {
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-family: 'Jua', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      border: 1.5px solid #cbd5e1;
+      background: #f8fafc;
+      color: #334155;
+    }
+
+    .btn-small:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    .btn-small.primary {
+      background: #2563eb;
+      color: white;
+      border-color: #1d4ed8;
+    }
+
+    .btn-small.primary:hover {
+      background: #1d4ed8;
+    }
+
+    /* 토스트 알림창 */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(15, 23, 42, 0.9);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 700;
+      z-index: 2000;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      opacity: 0;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      pointer-events: none;
+    }
+
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 앱 HUD 네비게이션 -->
+  <header class="app-header">
+    <div class="header-left">
+      <a href="main.html" class="btn-back">⬅ 메인으로 이동</a>
+      <div class="header-title-wrap">
+        <span class="header-badge">HOTSPOT MAPPER</span>
+        <h1 class="header-title">🗺️ 퀘스트 맵 좌표 매퍼</h1>
+      </div>
+    </div>
+
+    <!-- 모드 전환 (그리기/편집 vs 클릭 이동 테스트) -->
+    <div class="header-right">
+      <div class="mode-toggle-group">
+        <button class="btn-mode-tab active" id="btnModeEdit" onclick="setMode('edit')">
+          <span>✏️ 좌표 그리기</span>
+        </button>
+        <button class="btn-mode-tab" id="btnModeTest" onclick="setMode('test')">
+          <span>🚀 클릭 이동 테스트</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 컨테이너 -->
+  <main class="app-container">
+
+    <!-- 퀘스트 선택 팔레트 (Quest 1 ~ 8) -->
+    <section class="quest-palette-card">
+      <div class="palette-header">
+        <div class="palette-title">
+          <span>🎯</span> <span>그릴 퀘스트 선택 (선택 후 이미지 위에 사각형을 드래그하세요):</span>
+        </div>
+        <span id="currentQuestIndicator" style="font-size:13px; font-weight:800; color:#2563eb; background:#eff6ff; padding:4px 10px; border-radius:10px;">
+          선택됨: 1️⃣ QUEST 1 (AI의 눈)
+        </span>
+      </div>
+
+      <div class="palette-grid" id="paletteGrid">
+        <!-- Q1 -->
+        <button class="quest-select-btn active" style="--q-color:#2563eb; --q-bg:#eff6ff;" onclick="selectQuest(1)">
+          <span class="quest-num-badge">1</span>
+          <span>👁️ Q1: AI의 눈</span>
+        </button>
+        <!-- Q2 -->
+        <button class="quest-select-btn" style="--q-color:#16a34a; --q-bg:#f0fdf4;" onclick="selectQuest(2)">
+          <span class="quest-num-badge">2</span>
+          <span>📋 Q2: 분류기준 만들기</span>
+        </button>
+        <!-- Q3 -->
+        <button class="quest-select-btn" style="--q-color:#f59e0b; --q-bg:#fefce8;" onclick="selectQuest(3)">
+          <span class="quest-num-badge">3</span>
+          <span>📷 Q3: AI가 잘 배우는 사진</span>
+        </button>
+        <!-- Q4 -->
+        <button class="quest-select-btn" style="--q-color:#0284c7; --q-bg:#f0f9ff;" onclick="selectQuest(4)">
+          <span class="quest-num-badge">4</span>
+          <span>🏷️ Q4: 이름표 붙이기</span>
+        </button>
+        <!-- Q5 -->
+        <button class="quest-select-btn" style="--q-color:#9333ea; --q-bg:#faf5ff;" onclick="selectQuest(5)">
+          <span class="quest-num-badge">5</span>
+          <span>🔍 Q5: 교실쓰레기 AI탐정단</span>
+        </button>
+        <!-- Q6 -->
+        <button class="quest-select-btn" style="--q-color:#dc2626; --q-bg:#fef2f2;" onclick="selectQuest(6)">
+          <span class="quest-num-badge">6</span>
+          <span>🏛️ Q6: 오류박물관</span>
+        </button>
+        <!-- Q7 -->
+        <button class="quest-select-btn" style="--q-color:#ea580c; --q-bg:#fff7ed;" onclick="selectQuest(7)">
+          <span class="quest-num-badge">7</span>
+          <span>✍️ Q7: 실천 규약 초안</span>
+        </button>
+        <!-- Q8 -->
+        <button class="quest-select-btn" style="--q-color:#0d9488; --q-bg:#f0fdfa;" onclick="selectQuest(8)">
+          <span class="quest-num-badge">8</span>
+          <span>🏛️ Q8: 자원 순환 의회</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 인터랙티브 동적 이미지 맵 스테이지 -->
+    <section class="map-stage-card">
+      <div class="map-stage-toolbar">
+        <div class="map-helper-tip" id="modeTip">
+          <span>💡</span> <strong>[편집 모드]:</strong> 마우스/터치로 퀘스트 아이콘 영역을 사각형으로 드래그하면 상대 좌표(%)가 자동 저장됩니다.
+        </div>
+        <div class="btn-action-group">
+          <button class="btn-small" onclick="clearCurrentQuestBox()">🗑️ 선택된 퀘스트 좌표 지우기</button>
+          <button class="btn-small" onclick="clearAllHotspots()">🔄 전체 초기화</button>
+        </div>
+      </div>
+
+      <!-- 이미지 맵 컨테이너 (화면 크기에 따라 100% 반응형으로 자동 리사이즈) -->
+      <div class="map-container" id="mapContainer">
+        <img 
+          id="mainpageImage" 
+          src="images/mainpage.png" 
+          alt="메인페이지 퀘스트 맵 사진"
+          onerror="this.onerror=null; this.src='images/mainpage.jpg'; if(!this.src) drawFallbackCanvas();"
+        >
+        <!-- 드래그 프리뷰 박스 -->
+        <div id="dragBox"></div>
+        <!-- 핫스팟 레이어 컨테이너 -->
+        <div id="hotspotsLayer"></div>
+      </div>
+    </section>
+
+    <!-- 상대 좌표(%) JSON 및 HTML 코드 생성기 -->
+    <section class="coords-export-card">
+      <div class="export-header">
+        <div class="palette-title">
+          <span>📋</span> <span>동적 상대 좌표 (%) 데이터 & 코드 추출:</span>
+        </div>
+        <div class="btn-action-group">
+          <button class="btn-small primary" onclick="copyJsonData()">📋 JSON 복사하기</button>
+          <button class="btn-small" onclick="saveToStorage()">💾 브라우저에 저장</button>
+        </div>
+      </div>
+
+      <pre class="code-box" id="codeDisplay">// 퀘스트 좌표 데이터가 여기에 실시간으로 출력됩니다.</pre>
+    </section>
+
+  </main>
+
+  <!-- 토스트 알림창 -->
+  <div class="toast-msg" id="toastMsg">알림 메시지</div>
+
+  <script>
+    // 퀘스트 메타데이터 (1~8)
+    const QUEST_CONFIG = {
+      1: { name: 'AI의 눈', url: 'quest1.html', color: '#2563eb', bg: 'rgba(37, 99, 235, 0.35)', icon: '👁️' },
+      2: { name: '분류기준 만들기', url: 'quest2.html', color: '#16a34a', bg: 'rgba(22, 163, 74, 0.35)', icon: '📋' },
+      3: { name: 'AI가 잘 배우는 사진', url: 'quest3.html', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.35)', icon: '📷' },
+      4: { name: '이름표 붙이기', url: 'quest4.html', color: '#0284c7', bg: 'rgba(2, 132, 199, 0.35)', icon: '🏷️' },
+      5: { name: '교실쓰레기 AI탐정단', url: 'quest5.html', color: '#9333ea', bg: 'rgba(147, 51, 234, 0.35)', icon: '🔍' },
+      6: { name: '오류박물관', url: 'quest6.html', color: '#dc2626', bg: 'rgba(220, 38, 38, 0.35)', icon: '🏛️' },
+      7: { name: '실천 규약 초안', url: 'quest7.html', color: '#ea580c', bg: 'rgba(234, 88, 12, 0.35)', icon: '✍️' },
+      8: { name: '자원 순환 의회', url: 'quest8.html', color: '#0d9488', bg: 'rgba(13, 148, 136, 0.35)', icon: '🏛️' }
+    };
+
+    // 전역 상태
+    let selectedQuestId = 1;
+    let currentMode = 'edit'; // 'edit' or 'test'
+    let isDragging = false;
+    let startX = 0, startY = 0;
+
+    // 저장된 상대 좌표 (기본값 로드 or 로컬 스토리지)
+    let questHotspots = JSON.parse(localStorage.getItem('mainpage_quest_hotspots') || '{}');
+
+    const mapContainer = document.getElementById('mapContainer');
+    const dragBox = document.getElementById('dragBox');
+    const hotspotsLayer = document.getElementById('hotspotsLayer');
+    const codeDisplay = document.getElementById('codeDisplay');
+
+    // 퀘스트 선택
+    function selectQuest(qId) {
+      selectedQuestId = qId;
+      const q = QUEST_CONFIG[qId];
+      
+      document.querySelectorAll('.quest-select-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx + 1 === qId);
+      });
+
+      document.getElementById('currentQuestIndicator').textContent = 
+        `선택됨: ${q.icon} QUEST ${qId} (${q.name})`;
+      document.getElementById('currentQuestIndicator').style.color = q.color;
+
+      showToast(`🎯 QUEST ${qId} (${q.name})이 선택되었습니다. 이미지 위에 사각형을 그려보세요!`);
+    }
+
+    // 모드 전환 (편집 모드 vs 클릭 이동 테스트 모드)
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('btnModeEdit').classList.toggle('active', mode === 'edit');
+      document.getElementById('btnModeTest').classList.toggle('active', mode === 'test');
+      document.body.classList.toggle('mode-test', mode === 'test');
+
+      const tip = document.getElementById('modeTip');
+      if (mode === 'test') {
+        tip.innerHTML = `<span>🚀</span> <strong>[클릭 이동 테스트 모드]:</strong> 생성된 핫스팟 사각형을 클릭하면 해당 퀘스트 페이지로 즉시 이동합니다!`;
+        showToast("🚀 [클릭 이동 테스트 모드] 활성화! 핫스팟을 클릭해보세요.");
+      } else {
+        tip.innerHTML = `<span>✏️</span> <strong>[편집 모드]:</strong> 마우스/터치로 퀘스트 아이콘 영역을 사각형으로 드래그하면 상대 좌표(%)가 자동 저장됩니다.`;
+        showToast("✏️ [좌표 그리기 모드] 활성화!");
+      }
+      renderHotspots();
+    }
+
+    // 마우스/터치 좌표를 컨테이너 기준 상대 퍼센트(%)로 변환
+    function getRelativeCoordinates(e) {
+      const rect = mapContainer.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      let x = ((clientX - rect.left) / rect.width) * 100;
+      let y = ((clientY - rect.top) / rect.height) * 100;
+
+      // 0 ~ 100% 범위 제한
+      x = Math.max(0, Math.min(100, x));
+      y = Math.max(0, Math.min(100, y));
+
+      return { x, y, px: clientX - rect.left, py: clientY - rect.top };
+    }
+
+    // 드래그 시작 (MouseDown / TouchStart)
+    function handleDragStart(e) {
+      if (currentMode !== 'edit') return;
+      // 삭제 버튼 클릭 시 무시
+      if (e.target.classList.contains('btn-hotspot-del')) return;
+
+      isDragging = true;
+      const coords = getRelativeCoordinates(e);
+      startX = coords.x;
+      startY = coords.y;
+
+      dragBox.style.left = startX + '%';
+      dragBox.style.top = startY + '%';
+      dragBox.style.width = '0%';
+      dragBox.style.height = '0%';
+      dragBox.style.display = 'block';
+    }
+
+    // 드래그 이동 (MouseMove / TouchMove)
+    function handleDragMove(e) {
+      if (!isDragging || currentMode !== 'edit') return;
+      e.preventDefault();
+
+      const coords = getRelativeCoordinates(e);
+      const currentX = coords.x;
+      const currentY = coords.y;
+
+      const left = Math.min(startX, currentX);
+      const top = Math.min(startY, currentY);
+      const width = Math.abs(currentX - startX);
+      const height = Math.abs(currentY - startY);
+
+      dragBox.style.left = left.toFixed(2) + '%';
+      dragBox.style.top = top.toFixed(2) + '%';
+      dragBox.style.width = width.toFixed(2) + '%';
+      dragBox.style.height = height.toFixed(2) + '%';
+    }
+
+    // 드래그 종료 (MouseUp / TouchEnd)
+    function handleDragEnd(e) {
+      if (!isDragging || currentMode !== 'edit') return;
+      isDragging = false;
+      dragBox.style.display = 'none';
+
+      const left = parseFloat(dragBox.style.left);
+      const top = parseFloat(dragBox.style.top);
+      const width = parseFloat(dragBox.style.width);
+      const height = parseFloat(dragBox.style.height);
+
+      // 너무 작은 드래그(1% 미만)는 무시
+      if (width < 1.5 || height < 1.5) return;
+
+      // 선택된 퀘스트에 상대 좌표(%) 저장
+      questHotspots[selectedQuestId] = {
+        left: Number(left.toFixed(2)),
+        top: Number(top.toFixed(2)),
+        width: Number(width.toFixed(2)),
+        height: Number(height.toFixed(2)),
+        questName: QUEST_CONFIG[selectedQuestId].name,
+        targetUrl: QUEST_CONFIG[selectedQuestId].url
+      };
+
+      saveToStorage();
+      renderHotspots();
+
+      showToast(`✨ QUEST ${selectedQuestId} (${QUEST_CONFIG[selectedQuestId].name}) 좌표가 저장되었습니다!`);
+
+      // 다음 퀘스트 번호로 자동 전환 (편의 기능)
+      if (selectedQuestId < 8) {
+        selectQuest(selectedQuestId + 1);
+      }
+    }
+
+    // 핫스팟 렌더링 (화면 크기가 변해도 % 상대 좌표로 완전 고정)
+    function renderHotspots() {
+      hotspotsLayer.innerHTML = '';
+
+      for (let qId = 1; qId <= 8; qId++) {
+        const spot = questHotspots[qId];
+        if (!spot) continue;
+
+        const cfg = QUEST_CONFIG[qId];
+        const el = document.createElement('div');
+        el.className = 'hotspot-box';
+        el.style.setProperty('--q-color', cfg.color);
+        el.style.setProperty('--q-bg', cfg.bg);
+        el.style.left = spot.left + '%';
+        el.style.top = spot.top + '%';
+        el.style.width = spot.width + '%';
+        el.style.height = spot.height + '%';
+
+        el.innerHTML = `
+          <span class="hotspot-label">${cfg.icon} Q${qId}: ${cfg.name}</span>
+          ${currentMode === 'edit' ? `<button class="btn-hotspot-del" onclick="deleteQuestSpot(${qId}, event)" title="좌표 삭제">✕</button>` : ''}
+        `;
+
+        // 클릭 이벤트 (테스트 모드일 때 페이지 이동)
+        el.onclick = (e) => {
+          if (currentMode === 'test') {
+            e.stopPropagation();
+            showToast(`🚀 ${cfg.icon} QUEST ${qId} (${cfg.name}) 페이지로 이동합니다...`);
+            setTimeout(() => {
+              window.location.href = cfg.url;
+            }, 400);
+          } else {
+            selectQuest(qId);
+          }
+        };
+
+        hotspotsLayer.appendChild(el);
+      }
+
+      updateCodeDisplay();
+    }
+
+    // 개별 퀘스트 좌표 삭제
+    function deleteQuestSpot(qId, e) {
+      if (e) e.stopPropagation();
+      delete questHotspots[qId];
+      saveToStorage();
+      renderHotspots();
+      showToast(`🗑️ QUEST ${qId}의 좌표가 삭제되었습니다.`);
+    }
+
+    // 현재 선택된 퀘스트 박스 지우기
+    function clearCurrentQuestBox() {
+      deleteQuestSpot(selectedQuestId);
+    }
+
+    // 전체 초기화
+    function clearAllHotspots() {
+      if (!confirm("모든 퀘스트 핫스팟 좌표를 초기화할까요?")) return;
+      questHotspots = {};
+      saveToStorage();
+      renderHotspots();
+      showToast("🔄 전체 핫스팟 좌표가 초기화되었습니다.");
+    }
+
+    // 브라우저 로컬 저장
+    function saveToStorage() {
+      localStorage.setItem('mainpage_quest_hotspots', JSON.stringify(questHotspots));
+      updateCodeDisplay();
+    }
+
+    // 코드 뷰어 업데이트
+    function updateCodeDisplay() {
+      codeDisplay.textContent = JSON.stringify(questHotspots, null, 2);
+    }
+
+    // JSON 복사
+    function copyJsonData() {
+      const dataStr = JSON.stringify(questHotspots, null, 2);
+      navigator.clipboard.writeText(dataStr).then(() => {
+        showToast("📋 상대 좌표 JSON 데이터가 클립보드에 복사되었습니다!");
+      }).catch(() => {
+        showToast("복사에 실패했습니다.");
+      });
+    }
+
+    // 이미지 로드 실패 시 대체 캔버스 생성
+    function drawFallbackCanvas() {
+      const img = document.getElementById('mainpageImage');
+      img.style.display = 'none';
+      const fallback = document.createElement('div');
+      fallback.style.width = '100%';
+      fallback.style.aspectRatio = '16/9';
+      fallback.style.background = 'linear-gradient(135deg, #1e293b, #0f172a)';
+      fallback.style.display = 'flex';
+      fallback.style.alignItems = 'center';
+      fallback.style.justifyContent = 'center';
+      fallback.style.color = '#38bdf8';
+      fallback.style.fontFamily = 'Jua';
+      fallback.style.fontSize = '24px';
+      fallback.innerHTML = '🗺️ mainpage.png 이미지 영역 (테스트 가능)';
+      mapContainer.prepend(fallback);
+    }
+
+    // 토스트 알림창
+    function showToast(msg) {
+      const toast = document.getElementById('toastMsg');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    // 이벤트 리스너 바인딩 (마우스 & 터치 드래그 지원)
+    mapContainer.addEventListener('mousedown', handleDragStart);
+    window.addEventListener('mousemove', handleDragMove);
+    window.addEventListener('mouseup', handleDragEnd);
+
+    mapContainer.addEventListener('touchstart', handleDragStart, { passive: false });
+    window.addEventListener('touchmove', handleDragMove, { passive: false });
+    window.addEventListener('touchend', handleDragEnd);
+
+    // 초기 실행
+    document.addEventListener('DOMContentLoaded', () => {
+      renderHotspots();
+    });
+  </script>
+</body>
+</html>
