@@ -417,97 +417,70 @@
 
     .quest-hotspot {
       position: absolute;
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 16px;
-      border: 2px dashed rgba(234, 179, 8, 0.6);
-      background: rgba(254, 240, 138, 0.08);
       cursor: pointer;
       text-decoration: none;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
       z-index: 10;
+      overflow: visible;
+    }
+
+    .hotspot-full-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+      transition: all 0.25s ease;
+      pointer-events: none;
     }
 
     .quest-hotspot:hover, .quest-hotspot:focus {
-      background: rgba(254, 240, 138, 0.45);
-      border: 3px solid #eab308;
-      box-shadow: 0 0 24px rgba(234, 179, 8, 0.85), inset 0 0 16px rgba(234, 179, 8, 0.4);
-      transform: scale(1.03);
+      transform: scale(1.08);
       z-index: 25;
     }
 
+    .quest-hotspot:hover .hotspot-full-img {
+      filter: drop-shadow(0 0 16px rgba(250, 204, 21, 0.95)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+    }
+
+    .quest-hotspot.is-completed .hotspot-full-img {
+      filter: drop-shadow(0 4px 12px rgba(34, 197, 94, 0.45));
+    }
+
+    .quest-hotspot.is-completed:hover .hotspot-full-img {
+      filter: drop-shadow(0 0 18px rgba(34, 197, 94, 0.95)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+    }
+
     .quest-hotspot:active {
-      transform: scale(0.97);
+      transform: scale(0.96);
     }
 
     .hotspot-pulse {
       position: absolute;
       inset: 0;
       border-radius: 14px;
-      border: 2px solid rgba(250, 204, 21, 0.7);
+      border: 2px solid rgba(250, 204, 21, 0.6);
       animation: hotspotGlow 2s infinite ease-in-out;
       pointer-events: none;
     }
 
     @keyframes hotspotGlow {
       0% {
-        box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.5);
-        border-color: rgba(250, 204, 21, 0.4);
+        box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.4);
+        border-color: rgba(250, 204, 21, 0.3);
       }
       50% {
-        box-shadow: 0 0 14px 4px rgba(250, 204, 21, 0.75);
-        border-color: rgba(234, 179, 8, 0.95);
+        box-shadow: 0 0 14px 4px rgba(250, 204, 21, 0.7);
+        border-color: rgba(234, 179, 8, 0.9);
       }
       100% {
         box-shadow: 0 0 0 0 rgba(250, 204, 21, 0);
-        border-color: rgba(250, 204, 21, 0.4);
+        border-color: rgba(250, 204, 21, 0.3);
       }
-    }
-
-    .hotspot-status-badge {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      width: clamp(26px, 30%, 42px);
-      height: clamp(26px, 30%, 42px);
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.95);
-      border: 2.5px solid #cbd5e1;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 15;
-      pointer-events: none;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .hotspot-status-badge.unlocked {
-      background: linear-gradient(135deg, #fef9c3, #fef08a);
-      border-color: #eab308;
-      box-shadow: 0 0 16px rgba(234, 179, 8, 0.85), 0 4px 10px rgba(0, 0, 0, 0.2);
-      transform: scale(1.08);
-    }
-
-    .status-img {
-      width: 75%;
-      height: 75%;
-      object-fit: contain;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-      transition: transform 0.2s ease;
-    }
-
-    .quest-hotspot:hover .hotspot-status-badge {
-      transform: scale(1.18);
-    }
-
-    .quest-hotspot.is-completed {
-      border: 2.5px solid #22c55e;
-      background: rgba(34, 197, 94, 0.12);
-    }
-
-    .quest-hotspot.is-completed:hover {
-      border-color: #16a34a;
-      box-shadow: 0 0 24px rgba(34, 197, 94, 0.85), inset 0 0 16px rgba(34, 197, 94, 0.35);
     }
 
     .hotspot-tooltip {
@@ -593,73 +566,57 @@
       
       <!-- 1: AI의 눈 -->
       <a href="quest1.html" class="quest-hotspot" id="hotspot-q1" style="left: 0.71%; top: 16.34%; width: 12%; height: 21.82%;" title="퀘스트 1: AI의 눈" aria-label="1. AI의 눈">
+        <img src="images/lock.png" alt="퀘스트 1: AI의 눈" class="hotspot-full-img" id="icon-q1">
         <span class="hotspot-pulse"></span>
-        <div class="hotspot-status-badge" id="badge-q1">
-          <img src="images/lock.png" alt="미완료" class="status-img" id="icon-q1">
-        </div>
         <span class="hotspot-tooltip">Q1. AI의 눈 👁️</span>
       </a>
 
       <!-- 2: 분류기준 만들기 -->
       <a href="quest2.html" class="quest-hotspot" id="hotspot-q2" style="left: 7.91%; top: 39.21%; width: 11.6%; height: 21.47%;" title="퀘스트 2: 분류기준 만들기" aria-label="2. 분류기준 만들기">
+        <img src="images/lock.png" alt="퀘스트 2: 분류기준 만들기" class="hotspot-full-img" id="icon-q2">
         <span class="hotspot-pulse"></span>
-        <div class="hotspot-status-badge" id="badge-q2">
-          <img src="images/lock.png" alt="미완료" class="status-img" id="icon-q2">
-        </div>
         <span class="hotspot-tooltip">Q2. 분류기준 만들기 📋</span>
       </a>
 
       <!-- 3: AI가 잘 배우는 사진 -->
       <a href="quest3.html" class="quest-hotspot" id="hotspot-q3" style="left: 16.41%; top: 62.93%; width: 12.1%; height: 23.36%;" title="퀘스트 3: AI가 잘 배우는 사진" aria-label="3. AI가 잘 배우는 사진">
+        <img src="images/lock.png" alt="퀘스트 3: AI가 잘 배우는 사진" class="hotspot-full-img" id="icon-q3">
         <span class="hotspot-pulse"></span>
-        <div class="hotspot-status-badge" id="badge-q3">
-          <img src="images/lock.png" alt="미완료" class="status-img" id="icon-q3">
-        </div>
         <span class="hotspot-tooltip">Q3. AI가 잘 배우는 사진 📷</span>
       </a>
 
       <!-- 4: 이름표 붙이기 -->
       <a href="quest4.html" class="quest-hotspot" id="hotspot-q4" style="left: 30.31%; top: 74.1%; width: 12.2%; height: 21.82%;" title="퀘스트 4: 이름표 붙이기" aria-label="4. 이름표 붙이기">
+        <img src="images/lock.png" alt="퀘스트 4: 이름표 붙이기" class="hotspot-full-img" id="icon-q4">
         <span class="hotspot-pulse"></span>
-        <div class="hotspot-status-badge" id="badge-q4">
-          <img src="images/lock.png" alt="미완료" class="status-img" id="icon-q4">
-        </div>
         <span class="hotspot-tooltip">Q4. 이름표 붙이기 🏷️</span>
       </a>
 
       <!-- 5: 교실쓰레기 AI탐정단 -->
       <a href="quest5.html" class="quest-hotspot" id="hotspot-q5" style="left: 44.01%; top: 67.05%; width: 11.9%; height: 23.02%;" title="퀘스트 5: 교실쓰레기 AI탐정단" aria-label="5. 교실쓰레기 AI탐정단">
+        <img src="images/lock.png" alt="퀘스트 5: 교실쓰레기 AI탐정단" class="hotspot-full-img" id="icon-q5">
         <span class="hotspot-pulse"></span>
-        <div class="hotspot-status-badge" id="badge-q5">
-          <img src="images/lock.png" alt="미완료" class="status-img" id="icon-q5">
-        </div>
         <span class="hotspot-tooltip">Q5. 교실쓰레기 AI탐정단 🤖</span>
       </a>
 
       <!-- 6: 오류박물관 -->
       <a href="quest6.html" class="quest-hotspot" id="hotspot-q6" style="left: 53.21%; top: 43.18%; width: 11.8%; height: 22.33%;" title="퀘스트 6: 오류박물관" aria-label="6. 오류박물관">
+        <img src="images/lock.png" alt="퀘스트 6: 오류박물관" class="hotspot-full-img" id="icon-q6">
         <span class="hotspot-pulse"></span>
-        <div class="hotspot-status-badge" id="badge-q6">
-          <img src="images/lock.png" alt="미완료" class="status-img" id="icon-q6">
-        </div>
         <span class="hotspot-tooltip">Q6. 오류박물관 🏛️</span>
       </a>
 
       <!-- 7: 실천 규약 초안 -->
       <a href="quest7.html" class="quest-hotspot" id="hotspot-q7" style="left: 67.21%; top: 26.51%; width: 11.5%; height: 21.3%;" title="퀘스트 7: 실천 규약 초안" aria-label="7. 실천 규약 초안">
+        <img src="images/lock.png" alt="퀘스트 7: 실천 규약 초안" class="hotspot-full-img" id="icon-q7">
         <span class="hotspot-pulse"></span>
-        <div class="hotspot-status-badge" id="badge-q7">
-          <img src="images/lock.png" alt="미완료" class="status-img" id="icon-q7">
-        </div>
         <span class="hotspot-tooltip">Q7. 실천 규약 초안 ✍️</span>
       </a>
 
       <!-- 8: 자원 순환 의회 -->
       <a href="quest8.html" class="quest-hotspot" id="hotspot-q8" style="left: 80.81%; top: 33.73%; width: 12.1%; height: 22.33%;" title="퀘스트 8: 자원 순환 의회" aria-label="8. 자원 순환 의회">
+        <img src="images/lock.png" alt="퀘스트 8: 자원 순환 의회" class="hotspot-full-img" id="icon-q8">
         <span class="hotspot-pulse"></span>
-        <div class="hotspot-status-badge" id="badge-q8">
-          <img src="images/lock.png" alt="미완료" class="status-img" id="icon-q8">
-        </div>
         <span class="hotspot-tooltip">Q8. 자원 순환 의회 ⚖️</span>
       </a>
     </div>
@@ -947,19 +904,16 @@
       const isDone = isDoneLocal || !!completedQuestsState[key];
 
       const iconEl = document.getElementById(`icon-q${i}`);
-      const badgeEl = document.getElementById(`badge-q${i}`);
       const hotspotEl = document.getElementById(`hotspot-q${i}`);
 
-      if (iconEl && badgeEl) {
+      if (iconEl) {
         if (isDone) {
           iconEl.src = "images/unlock.png";
           iconEl.alt = "퀘스트 완료됨";
-          badgeEl.classList.add("unlocked");
           if (hotspotEl) hotspotEl.classList.add("is-completed");
         } else {
           iconEl.src = "images/lock.png";
           iconEl.alt = "퀘스트 미완료";
-          badgeEl.classList.remove("unlocked");
           if (hotspotEl) hotspotEl.classList.remove("is-completed");
         }
       }
