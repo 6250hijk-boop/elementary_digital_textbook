@@ -752,10 +752,16 @@
           </p>
         </div>
 
-        <!-- 모둠 공유 버튼 -->
-        <button class="btn-share-team" id="btnShareRecord" onclick="shareDetectionToTeam()">
-          <span>👥</span> <span>우리 모둠에 탐정 수사 기록 공유하기 (+30 EXP)</span>
-        </button>
+        <!-- 버튼 그룹: 모둠 공유 & 오류박물관 전송 -->
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+          <button class="btn-share-team" style="background:linear-gradient(135deg,#DC2626,#991B1B); box-shadow:0 4px 14px rgba(220,38,38,0.25);" id="btnSendMuseum" onclick="captureAndSendToMuseum()">
+            <span>🚨</span> <span>오류 캡쳐해서 오류박물관으로 전송하기 (+20 EXP) 🏛️</span>
+          </button>
+          
+          <button class="btn-share-team" id="btnShareRecord" onclick="shareDetectionToTeam()">
+            <span>👥</span> <span>우리 모둠에 탐정 수사 기록 공유하기 (+30 EXP)</span>
+          </button>
+        </div>
       </div>
 
     </div>
@@ -929,6 +935,78 @@
         }).join('');
       });
     }
+
+    // 오류 캡처해서 오류박물관으로 전송하는 함수
+    window.captureAndSendToMuseum = async function() {
+      const canvasEl = document.getElementById('displayCanvas');
+      if (!canvasEl) {
+        showToast("⚠️ 캡처할 화면이 없습니다!");
+        return;
+      }
+
+      window.playSound('fanfare');
+      window.addScore(20);
+
+      const pred = window.state.lastPrediction || {
+        name: "오류 의심 쓰레기",
+        score: "50.0",
+        feedback: "AI가 특징을 명확히 잡지 못하고 오인식한 사례입니다."
+      };
+
+      // 캔버스 이미지 스냅샷 (JPEG 압축)
+      let snapshotData = "";
+      try {
+        snapshotData = canvasEl.toDataURL('image/jpeg', 0.85);
+      } catch(e) {
+        console.warn("Canvas capture failed:", e);
+      }
+
+      const museumItem = {
+        studentId,
+        studentName,
+        teamCode,
+        imageData: snapshotData,
+        className: pred.name,
+        confidence: pred.score,
+        feedback: pred.feedback,
+        tags: ["#오류상황", "#원인분석대기"],
+        createdAt: serverTimestamp()
+      };
+
+      // LocalStorage 백업 저장
+      try {
+        const localList = JSON.parse(localStorage.getItem("quest6_museum_local") || "[]");
+        localList.unshift({
+          ...museumItem,
+          id: 'local_' + Date.now(),
+          createdAt: new Date().toISOString()
+        });
+        localStorage.setItem("quest6_museum_local", JSON.stringify(localList.slice(0, 30)));
+      } catch(e) {
+        console.warn("Local storage save err:", e);
+      }
+
+      // Firestore 저장
+      if (db && studentId && studentId !== "guest") {
+        try {
+          await addDoc(collection(db, "quest6_museum"), museumItem);
+          await updateDoc(doc(db, "students", studentId), {
+            score: increment(20)
+          });
+        } catch(e) {
+          console.warn("Museum record save failed:", e);
+        }
+      }
+
+      showToast("🏛️ 오류 화면이 캡처되어 [오류박물관]으로 전송되었습니다! (+20 EXP)");
+      
+      // 모달/알림으로 바로가기 유도
+      setTimeout(() => {
+        if (confirm("🏛️ 오류가 [QUEST 6: 오류박물관]으로 성공적으로 전송되었습니다!\n\n지금 바로 오류박물관으로 이동하여 원인을 태그하고 분석할까요?")) {
+          window.location.href = 'quest6.html';
+        }
+      }, 700);
+    };
 
     // 모둠 공유 함수
     window.shareDetectionToTeam = async function() {

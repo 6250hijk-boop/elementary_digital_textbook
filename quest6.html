@@ -4,36 +4,47 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <title>QUEST 6: AI는 왜 틀렸을까? | AI 자원순환 탐정단</title>
+  <title>QUEST 6: 오류박물관 | AI 자원순환 탐정단</title>
+  
+  <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-light: #f0f7ff;
+      --bg-light: #f5f3ff;
       --bg-card: #ffffff;
-      --border-card: #d0e4ff;
-      --primary: #2563eb;
-      --primary-light: #eff6ff;
+      --border-card: #ddd6fe;
+      --primary: #7c3aed;
+      --primary-dark: #6d28d9;
+      --primary-light: #ede9fe;
       --accent-gold: #f59e0b;
       --accent-green: #10b981;
       --accent-red: #ef4444;
-      --accent-purple: #8b5cf6;
-      --text-main: #1e293b;
+      --accent-blue: #2563eb;
+      --text-main: #2e1065;
       --text-sub: #475569;
       --text-muted: #64748b;
+      --radius: 22px;
+      --shadow: 0 10px 30px rgba(124, 58, 237, 0.08);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
 
     body {
       font-family: 'Pretendard', sans-serif;
       background-color: var(--bg-light);
       background-image: 
-        radial-gradient(circle at 10% 10%, rgba(37, 99, 235, 0.08), transparent 35%),
-        radial-gradient(circle at 90% 90%, rgba(139, 92, 246, 0.08), transparent 35%),
-        linear-gradient(to bottom, #f0f7ff, #e8f2fc);
+        radial-gradient(circle at 10% 10%, rgba(124, 58, 237, 0.08), transparent 35%),
+        radial-gradient(circle at 90% 90%, rgba(245, 158, 11, 0.08), transparent 35%),
+        linear-gradient(to bottom, #f5f3ff, #ede9fe);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -42,6 +53,7 @@
       overflow-x: hidden;
     }
 
+    /* 상단 앱 HUD 네비게이션 */
     .app-header {
       width: 100%;
       position: sticky;
@@ -57,7 +69,11 @@
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     }
 
-    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
     .btn-back {
       background: #f1f5f9;
@@ -74,843 +90,719 @@
       transition: all 0.2s;
     }
 
-    .btn-back:hover { background: #e2e8f0; transform: translateY(-1px); }
+    .btn-back:hover {
+      background: #e2e8f0;
+      transform: translateY(-1px);
+    }
 
-    .header-title-group { display: flex; flex-direction: column; }
+    .header-title-group {
+      display: flex;
+      flex-direction: column;
+    }
 
     .badge-chasi {
-      font-size: 12px;
-      font-weight: 800;
-      color: #7c3aed;
-      letter-spacing: 0.5px;
-    }
-
-    .header-main-title {
       font-family: 'Jua', sans-serif;
-      font-size: 22px;
-      color: #1e3a8a;
-      letter-spacing: -0.3px;
+      font-size: 12px;
+      color: #7c3aed;
+      background: #ede9fe;
+      padding: 2px 8px;
+      border-radius: 6px;
+      display: inline-block;
+      width: fit-content;
+      font-weight: bold;
     }
 
-    .header-right { display: flex; align-items: center; gap: 10px; }
-
-    .score-badge {
-      background: #fffbeb;
-      border: 2px solid #fde68a;
-      color: #b45309;
-      font-weight: 900;
-      font-size: 16px;
-      padding: 6px 16px;
-      border-radius: 30px;
+    .header-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 20px;
+      color: #1e293b;
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .student-badge {
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .score-badge {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      font-family: 'Jua', sans-serif;
+      font-size: 15px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .btn-sound {
-      background: #f8fafc;
-      border: 2px solid #e2e8f0;
-      padding: 8px 12px;
-      border-radius: 12px;
-      font-size: 16px;
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
     }
 
+    /* 메인 컨테이너 */
     .app-container {
       width: 100%;
-      max-width: 980px;
-      padding: 20px 16px 90px;
+      max-width: 960px;
+      padding: 20px 16px 80px;
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
 
-    .step-tracker {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-      background: #ffffff;
-      padding: 12px;
-      border-radius: 18px;
-      border: 2px solid #e2e8f0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    /* 인트로 배너 */
+    .intro-banner {
+      background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+      border: 2.5px solid #c4b5fd;
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--shadow);
     }
 
-    .step-item {
+    .intro-icon {
+      font-size: 48px;
+      flex-shrink: 0;
+      background: white;
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 10px 6px;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+    }
+
+    .intro-text h2 {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      color: #5b21b6;
+      margin-bottom: 4px;
+    }
+
+    .intro-text p {
+      font-size: 14.5px;
+      color: #334155;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+
+    /* 탭 메뉴 */
+    .museum-nav-tabs {
+      display: flex;
+      gap: 10px;
+      background: white;
+      padding: 8px;
+      border-radius: 16px;
+      border: 2px solid #e2e8f0;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
       border-radius: 12px;
       background: #f8fafc;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      text-align: center;
-    }
-
-    .step-item.active {
-      background: #eff6ff;
-      border-color: var(--primary);
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-      transform: translateY(-2px);
-    }
-
-    .step-item.completed { background: #ecfdf5; border-color: #a7f3d0; }
-    .step-num { font-size: 12px; font-weight: 900; color: #94a3b8; margin-bottom: 2px; }
-    .step-item.active .step-num { color: var(--primary); }
-    .step-name { font-size: 13px; font-weight: 800; color: #475569; }
-    .step-item.active .step-name { color: #1e3a8a; }
-
-    .stage-card {
-      display: none;
-      background: var(--bg-card);
-      border: 2px solid #e2e8f0;
-      border-radius: 24px;
-      padding: clamp(20px, 3vw, 32px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-      animation: fadeIn 0.3s ease-out forwards;
-    }
-
-    .stage-card.active { display: block; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .stage-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #f5f3ff;
-      color: #7c3aed;
-      border: 2px solid #ddd6fe;
-      padding: 6px 14px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 900;
-      margin-bottom: 12px;
-    }
-
-    .stage-title {
       font-family: 'Jua', sans-serif;
-      font-size: clamp(22px, 3.2vw, 28px);
-      color: #0f172a;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .stage-goal {
       font-size: 16px;
-      color: #334155;
-      background: #f8fafc;
-      padding: 14px 18px;
-      border-radius: 14px;
-      border-left: 6px solid #7c3aed;
-      margin-bottom: 24px;
-      line-height: 1.6;
-    }
-
-    .action-bar {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 28px;
-      padding-top: 20px;
-      border-top: 2px dashed #e2e8f0;
-    }
-
-    .btn-nav-large {
-      padding: 14px 24px;
-      border-radius: 16px;
-      font-family: 'Jua', sans-serif;
-      font-size: 18px;
-      cursor: pointer;
-      border: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-    }
-
-    .btn-prev { background: #f1f5f9; color: #475569; border: 2px solid #cbd5e1; }
-    .btn-prev:hover { background: #e2e8f0; }
-    .btn-next { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3); margin-left: auto; }
-    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4); }
-    .btn-finish { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
-
-    .prediction-panel {
-      background: #ffffff;
-      border: 2px solid #e2e8f0;
-      border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 20px;
-    }
-
-    .prediction-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: #1e293b;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .predict-slider-box {
-      background: #f8fafc;
-      border: 2px solid #cbd5e1;
-      border-radius: 16px;
-      padding: 20px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .predict-val-display {
-      font-family: 'Jua', sans-serif;
-      font-size: 38px;
-      color: #2563eb;
-      margin-bottom: 8px;
-    }
-
-    .predict-range-input {
-      width: 100%;
-      height: 12px;
-      border-radius: 6px;
-      background: #cbd5e1;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .predict-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      font-weight: 700;
       color: #64748b;
-      margin-top: 8px;
-    }
-
-    .reason-chip-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 10px 0 16px;
-    }
-
-    .reason-chip {
-      background: #f1f5f9;
-      border: 2px solid #cbd5e1;
-      color: #334155;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 700;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       transition: all 0.2s;
     }
 
-    .reason-chip.selected {
-      background: #eff6ff;
-      border-color: #2563eb;
-      color: #1d4ed8;
-      font-weight: 800;
+    .tab-btn:hover {
+      background: #f1f5f9;
     }
 
-    .custom-textarea {
-      width: 100%;
-      min-height: 90px;
-      padding: 14px;
-      border: 2px solid #cbd5e1;
-      border-radius: 14px;
-      font-family: 'Pretendard', sans-serif;
-      font-size: 15px;
-      outline: none;
-      resize: vertical;
+    .tab-btn.active {
+      background: #7c3aed;
+      color: white;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+    }
+
+    /* 메인 카드 패널 */
+    .museum-section {
       background: #ffffff;
-      color: #1e293b;
+      border: 2.5px solid var(--border-card);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
     }
 
-    .standard-ref-box {
-      background: #eff6ff;
-      border: 2px solid #bfdbfe;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 24px;
+    .section-header-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .standard-ref-title {
+    .section-title {
       font-family: 'Jua', sans-serif;
-      font-size: 18px;
-      color: #1e40af;
-      margin-bottom: 10px;
+      font-size: 22px;
+      color: #5b21b6;
       display: flex;
       align-items: center;
-      gap: 6px;
-    }
-
-    .standard-chips {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
       gap: 8px;
     }
 
-    .std-chip {
-      background: #ffffff;
-      border: 1px solid #93c5fd;
-      padding: 8px 10px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #1e3a8a;
-      text-align: center;
-    }
-
-    .items-record-grid {
+    /* 오류 전시관 카드 그리드 */
+    .museum-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+      margin-top: 14px;
     }
 
-    .item-record-card {
-      background: #ffffff;
-      border: 2px solid #e2e8f0;
+    .museum-card {
+      background: #faf5ff;
+      border: 2px solid #ddd6fe;
       border-radius: 18px;
       padding: 16px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     }
 
-    .item-info-col {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex: 1;
+    .museum-card:hover {
+      border-color: #a78bfa;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(124, 58, 237, 0.1);
     }
 
-    .item-idx-badge {
-      background: #f1f5f9;
-      color: #475569;
-      font-family: 'Jua', sans-serif;
-      font-size: 16px;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .item-icon-box {
-      font-size: 32px;
-      background: #f8fafc;
-      width: 52px;
-      height: 52px;
+    .museum-img-wrap {
+      width: 100%;
+      aspect-ratio: 1;
+      background: #0f172a;
       border-radius: 14px;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
-      border: 1px solid #e2e8f0;
+      border: 2px solid #cbd5e1;
     }
 
-    .item-text-wrap h4 {
-      font-size: 16px;
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 2px;
+    .museum-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    .item-text-wrap p {
+    .museum-card-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .detection-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Jua', sans-serif;
+      font-size: 15px;
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 4px 10px;
+      border-radius: 10px;
+      border: 1.5px solid #fca5a5;
+    }
+
+    .uploader-text {
       font-size: 13px;
       color: #64748b;
       font-weight: 600;
     }
 
-    .select-category-wrap {
+    /* 태그 목록 영역 */
+    .tags-container {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      justify-content: flex-end;
+      gap: 5px;
+      margin: 6px 0;
     }
 
-    .btn-cat-choice {
-      padding: 8px 12px;
-      border-radius: 10px;
-      border: 2px solid #cbd5e1;
-      background: #f8fafc;
-      color: #334155;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .btn-cat-choice.selected {
-      background: #2563eb;
-      border-color: #2563eb;
-      color: #ffffff;
-      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
-    }
-
-    .lab-summary-bar {
-      background: #ffffff;
-      border: 2px solid #e2e8f0;
-      border-radius: 18px;
-      padding: 16px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .lab-stats-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .stat-pill {
-      font-size: 14px;
-      font-weight: 800;
-      padding: 6px 14px;
-      border-radius: 20px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .stat-pill.total { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
-    .stat-pill.match { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
-    .stat-pill.mismatch { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-
-    .btn-auto-fill {
-      background: linear-gradient(135deg, #7c3aed, #6d28d9);
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 12px;
-      font-family: 'Jua', sans-serif;
-      font-size: 15px;
-      cursor: pointer;
-    }
-
-    .compare-item-card {
-      background: #ffffff;
-      border: 2px solid #e2e8f0;
-      border-radius: 18px;
-      padding: 18px;
-      display: grid;
-      grid-template-columns: 1.2fr 1fr 1.6fr 0.9fr;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .compare-item-card.is-matched { border-color: #a7f3d0; background: #fafdfb; }
-    .compare-item-card.is-mismatched { border-color: #fecaca; background: #fffafa; }
-
-    .human-judged-box {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      padding: 8px 12px;
-      border-radius: 12px;
-      text-align: center;
-    }
-
-    .human-judged-label { font-size: 11px; font-weight: 800; color: #2563eb; margin-bottom: 2px; }
-    .human-judged-val { font-size: 14px; font-weight: 800; color: #1e3a8a; }
-    .ai-select-col { display: flex; flex-direction: column; gap: 6px; }
-    .ai-select-label { font-size: 12px; font-weight: 800; color: #7c3aed; }
-    .ai-btn-group { display: flex; flex-wrap: wrap; gap: 4px; }
-
-    .btn-ai-choice {
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: 1.5px solid #cbd5e1;
-      background: #f8fafc;
-      color: #334155;
+    .tag-badge {
+      background: #ede9fe;
+      color: #6d28d9;
+      border: 1px solid #c4b5fd;
       font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .btn-ai-choice.selected {
-      background: #7c3aed;
-      border-color: #7c3aed;
-      color: #ffffff;
-    }
-
-    .badge-match-result {
-      padding: 8px 14px;
-      border-radius: 14px;
-      font-size: 13px;
-      font-weight: 900;
-      text-align: center;
-      width: 100%;
-    }
-
-    .badge-match-result.match { background: #ecfdf5; color: #059669; border: 1.5px solid #10b981; }
-    .badge-match-result.mismatch { background: #fef2f2; color: #dc2626; border: 1.5px solid #ef4444; }
-    .badge-match-result.waiting { background: #f1f5f9; color: #94a3b8; border: 1.5px solid #cbd5e1; }
-
-    .fail-analysis-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    @media (max-width: 768px) {
-      .fail-analysis-grid { grid-template-columns: 1fr; }
-      .compare-item-card { grid-template-columns: 1fr; }
-    }
-
-    .fail-case-card {
-      background: #ffffff;
-      border: 2px solid #fecaca;
-      border-radius: 18px;
-      padding: 16px;
-      background: linear-gradient(to bottom right, #ffffff, #fffaf0);
-    }
-
-    .fail-case-badge {
-      display: inline-block;
-      background: #fee2e2;
-      color: #b91c1c;
-      font-size: 12px;
-      font-weight: 900;
-      padding: 4px 10px;
-      border-radius: 20px;
-      margin-bottom: 8px;
-    }
-
-    .fail-case-title { font-size: 16px; font-weight: 800; color: #1e293b; margin-bottom: 6px; }
-    .fail-case-desc { font-size: 13px; color: #475569; line-height: 1.5; margin-bottom: 10px; }
-    .fail-cause-tag { background: #fef3c7; border: 1px solid #fde68a; color: #92400e; padding: 4px 8px; border-radius: 8px; font-size: 12px; font-weight: 700; display: inline-block; }
-
-    .community-feed {
-      background: #f8fafc;
-      border: 2px solid #e2e8f0;
-      border-radius: 18px;
-      padding: 16px;
-      max-height: 250px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .feed-item { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 14px; padding: 12px 14px; }
-    .feed-author { font-size: 13px; font-weight: 800; color: #1e3a8a; display: flex; justify-content: space-between; margin-bottom: 4px; }
-    .feed-text { font-size: 14px; color: #334155; line-height: 1.4; }
-
-    .btn-feed-like {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1d4ed8;
-      font-size: 12px;
-      font-weight: 800;
+      font-weight: 700;
       padding: 3px 8px;
       border-radius: 8px;
-      cursor: pointer;
+    }
+
+    /* 태그 추가 폼 */
+    .tag-add-form {
+      display: flex;
+      gap: 6px;
       margin-top: 6px;
     }
 
-    .quiz-container { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
-    .quiz-card { background: #ffffff; border: 2px solid #e2e8f0; border-radius: 18px; padding: 20px; }
-    .quiz-num { font-family: 'Jua', sans-serif; font-size: 16px; color: #7c3aed; margin-bottom: 6px; }
-    .quiz-question { font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 14px; line-height: 1.5; }
-    .quiz-options { display: grid; grid-template-columns: 1fr; gap: 8px; }
-    .quiz-opt-btn { text-align: left; padding: 12px 16px; border-radius: 12px; border: 2px solid #cbd5e1; background: #f8fafc; color: #334155; font-size: 14px; font-weight: 700; cursor: pointer; }
-    .quiz-opt-btn.correct { background: #ecfdf5; border-color: #10b981; color: #065f46; }
-    .quiz-opt-btn.wrong { background: #fef2f2; border-color: #ef4444; color: #991b1b; }
-    .quiz-feedback { margin-top: 10px; font-size: 13px; font-weight: 800; padding: 8px 12px; border-radius: 8px; display: none; }
-    .quiz-feedback.show-ok { display: block; background: #ecfdf5; color: #065f46; }
-    .quiz-feedback.show-err { display: block; background: #fef2f2; color: #991b1b; }
+    .tag-input {
+      flex: 1;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 13px;
+      font-family: 'Pretendard', sans-serif;
+      outline: none;
+      user-select: text;
+    }
 
+    .tag-input:focus {
+      border-color: #7c3aed;
+    }
+
+    .btn-add-tag {
+      background: #7c3aed;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-family: 'Jua', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .quick-tags-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .quick-tag-chip {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      font-size: 11px;
+      font-weight: 700;
+      color: #475569;
+      padding: 2px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .quick-tag-chip:hover {
+      background: #ede9fe;
+      border-color: #7c3aed;
+      color: #6d28d9;
+    }
+
+    /* ==================== 2단계: AI 한계와 사람의 역할 한문장 작성 ==================== */
+    .reflection-builder-card {
+      background: linear-gradient(135deg, #fefce8, #fef9c3);
+      border: 2.5px solid #facc15;
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 18px rgba(250, 204, 21, 0.15);
+    }
+
+    .sentence-template-row {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .template-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .template-input-label {
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      color: #854d0e;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .template-input {
+      width: 100%;
+      background: white;
+      border: 2px solid #fde047;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-family: 'Pretendard', sans-serif;
+      font-weight: 600;
+      color: #1e293b;
+      outline: none;
+      user-select: text;
+    }
+
+    .template-input:focus {
+      border-color: #eab308;
+      box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.2);
+    }
+
+    .final-sentence-preview {
+      background: white;
+      border: 2px solid #eab308;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-family: 'Jua', sans-serif;
+      font-size: 19px;
+      color: #713f12;
+      line-height: 1.6;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .final-sentence-preview span.hl {
+      color: #7c3aed;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .btn-submit-thought {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 14px;
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+      transition: all 0.2s;
+    }
+
+    .btn-submit-thought:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(124, 58, 237, 0.35);
+    }
+
+    /* 토론 게시판 피드 */
+    .reflection-feed-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .reflection-card {
+      background: #faf5ff;
+      border: 2px solid #ddd6fe;
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .reflection-card.is-me {
+      background: #f5f3ff;
+      border-color: #a78bfa;
+    }
+
+    .reflection-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .author-name {
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      color: #6d28d9;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .reflection-body {
+      background: white;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-family: 'Jua', sans-serif;
+      font-size: 17px;
+      color: #2e1065;
+      line-height: 1.5;
+      border-left: 4px solid #7c3aed;
+    }
+
+    .reflection-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    .reaction-btns {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-react {
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+
+    .btn-react:hover {
+      background: #ede9fe;
+      border-color: #7c3aed;
+      color: #6d28d9;
+    }
+
+    .del-btn {
+      background: #fee2e2;
+      border: 1px solid #fca5a5;
+      border-radius: 8px;
+      padding: 3px 8px;
+      color: #b91c1c;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* 최종 완료 배지 상자 */
+    .cert-box {
+      background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+      border: 3px solid #c4b5fd;
+      border-radius: 24px;
+      padding: 28px 24px;
+      text-align: center;
+      margin-top: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .cert-icon { font-size: 52px; margin-bottom: 8px; }
+    .cert-title { font-family: 'Jua', sans-serif; font-size: 26px; color: #5b21b6; margin-bottom: 6px; }
+
+    /* 토스트 알림창 */
     .toast-msg {
       position: fixed;
-      bottom: 30px;
+      bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(15, 23, 42, 0.9);
       color: white;
       padding: 12px 24px;
       border-radius: 30px;
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 700;
       z-index: 1000;
-      transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      opacity: 0;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
       pointer-events: none;
     }
-    .toast-msg.show { transform: translateX(-50%) translateY(0); }
+
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
 
-  <!-- 앱 헤더 -->
+  <!-- 상단 앱 HUD 네비게이션 -->
   <header class="app-header">
     <div class="header-left">
-      <a href="main.html" class="btn-back">⬅ 메인화면</a>
+      <a href="main.html" class="btn-back">⬅ 본부로 이동</a>
       <div class="header-title-group">
-        <span class="badge-chasi">QUEST 6</span>
-        <h1 class="header-main-title">AI는 왜 틀렸을까?</h1>
+        <span class="badge-chasi">QUEST 6 • AI 윤리 & 오류 분석</span>
+        <h1 class="header-title">🏛️ 오류박물관</h1>
       </div>
     </div>
     <div class="header-right">
+      <div class="student-badge" id="studentDisplay">👤 탐정 학생 (1모둠)</div>
       <div class="score-badge" id="scoreDisplay">⭐ 0 EXP</div>
       <button class="btn-sound" id="soundToggle" onclick="toggleSound()">🔊</button>
     </div>
   </header>
 
-  <!-- 메인 앱 컨테이너 -->
+  <!-- 메인 컨테이너 -->
   <main class="app-container">
 
-    <!-- 단계 네비게이터 트래커 -->
-    <nav class="step-tracker">
-      <div class="step-item active" onclick="goToStep(1)">
-        <span class="step-num">1단계</span>
-        <span class="step-name">성공률 예측</span>
+    <!-- 인트로 배너 -->
+    <div class="intro-banner">
+      <div class="intro-icon">🏛️</div>
+      <div class="intro-text">
+        <h2>교실쓰레기 AI의 오인식 사례를 전시하고 원인을 탐색해보세요!</h2>
+        <p>
+          QUEST 5에서 캡처한 AI의 오인식 순간들을 박물관에 전시하고, 모둠원들과 함께 <strong>오류 원인 태그</strong>를 달며 <strong>AI의 한계와 사람의 역할</strong>을 정립해봅시다.
+        </p>
       </div>
-      <div class="step-item" onclick="goToStep(2)">
-        <span class="step-num">2단계</span>
-        <span class="step-name">사람 생각 적기</span>
-      </div>
-      <div class="step-item" onclick="goToStep(3)">
-        <span class="step-num">3단계</span>
-        <span class="step-name">AI와 비교하기</span>
-      </div>
-      <div class="step-item" onclick="goToStep(4)">
-        <span class="step-num">4단계</span>
-        <span class="step-name">오류 이유 찾기</span>
-      </div>
-      <div class="step-item" onclick="goToStep(5)">
-        <span class="step-num">5단계</span>
-        <span class="step-name">정리 퀴즈</span>
-      </div>
+    </div>
+
+    <!-- 네비게이션 탭 -->
+    <nav class="museum-nav-tabs">
+      <button class="tab-btn active" id="tabGalleryBtn" onclick="switchTab('gallery')">
+        <span>🖼️ 1전시관: 교실쓰레기 AI 오류 갤러리</span>
+      </button>
+      <button class="tab-btn" id="tabEthicsBtn" onclick="switchTab('ethics')">
+        <span>💭 2전시관: AI의 한계와 사람의 역할 토론장</span>
+      </button>
     </nav>
 
-    <!-- 1: 도입 -->
-    <section class="stage-card active" id="stage-1">
-      <div class="stage-badge">💡 AI는 쓰레기를 얼마나 잘 맞힐까?</div>
-      <h2 class="stage-title">🎯 AI 쓰레기 분류 실력 예측하기</h2>
-      <div class="stage-goal">
-        인공지능(AI)이 우리 교실 쓰레기 10개를 보았을 때, <strong>몇 개나 맞힐 수 있을지 슬라이더로 예상</strong>하고 그 까닭을 적어보세요!
+    <!-- ==================== [1전시관] AI 오류 사진 갤러리 & 원인 태그 ==================== -->
+    <section class="museum-section" id="gallerySection">
+      <div class="section-header-wrap">
+        <div class="section-title">
+          <span>🖼️</span> <span>교실쓰레기 AI 오류 수집품 (<span id="museumCount">0</span>점)</span>
+        </div>
+        <a href="quest5.html" class="btn-back" style="background:#ede9fe; color:#6d28d9; border-color:#c4b5fd;">
+          ➕ QUEST 5 가서 오류 캡처해오기 📸
+        </a>
       </div>
 
-      <div class="prediction-panel">
-        <h3 class="prediction-title">📊 1. AI는 10개 중 몇 개를 맞힐까요?</h3>
-        <div class="predict-slider-box">
-          <div class="predict-val-display" id="predictValueText">8개 (80%)</div>
-          <input type="range" min="0" max="10" value="8" class="predict-range-input" id="predictSlider" oninput="handleSliderChange(this.value)">
-          <div class="predict-labels">
-            <span>0개 (다 틀림)</span>
-            <span>5개 (절반 성공)</span>
-            <span>10개 (다 맞힘)</span>
-          </div>
-        </div>
+      <p style="font-size:14px; color:#64748b; margin-bottom:14px;">
+        💡 같은 모둠 친구들이 전송한 오류 사진들을 보고, 왜 AI가 착각했는지 <strong>원인 태그</strong>를 직접 추가해보세요! (실시간 모둠 공유)
+      </p>
 
-        <h3 class="prediction-title">💬 2. 그렇게 예상한 까닭은 무엇인가요?</h3>
-        <p style="font-size:13px; color:#64748b; font-weight:600; margin-bottom:6px;">도움말 칩을 누르거나 직접 적어보세요:</p>
-        <div class="reason-chip-group">
-          <button class="reason-chip" onclick="toggleReasonChip('찌그러진 모양 때문에 헷갈릴 것 같아서', this)">#찌그러진 모양</button>
-          <button class="reason-chip" onclick="toggleReasonChip('음식물 양념이 묻어 색이 달라서', this)">#양념 오염</button>
-          <button class="reason-chip" onclick="toggleReasonChip('투명해서 빛이 반사되기 때문에', this)">#빛 반사</button>
-          <button class="reason-chip" onclick="toggleReasonChip('크기가 너무 작은 물체라서', this)">#작은 크기</button>
-          <button class="reason-chip" onclick="toggleReasonChip('공부한 사진이 많아서 잘 맞힐 것 같아서', this)">#많은 사진 공부</button>
+      <!-- 오류 전시물 그리드 -->
+      <div class="museum-grid" id="museumGrid">
+        <div style="text-align:center; padding:32px; color:#94a3b8; font-size:15px; grid-column:1/-1;">
+          오류 전시물을 불러오는 중입니다... ⏳
         </div>
-        <textarea id="predictReasonInput" class="custom-textarea" placeholder="AI가 잘 맞히거나 틀릴 것 같은 까닭을 적어주세요. (예: 캔이나 페트병은 잘 맞히겠지만, 양념 묻은 라면 용기는 헷갈려할 것 같습니다.)"></textarea>
-      </div>
-
-      <div class="action-bar">
-        <div></div>
-        <button class="btn-nav-large btn-next" onclick="submitStep1()">
-          내 예상 저장하고 다음으로 ➔
-        </button>
       </div>
     </section>
 
-    <!-- 2: 준비 -->
-    <section class="stage-card" id="stage-2">
-      <div class="stage-badge">📋 쓰레기 10개 내 생각 먼저 고르기</div>
-      <h2 class="stage-title">📋 사람(우리)의 생각 먼저 기록하기</h2>
-      <div class="stage-goal">
-        선생님이 알려주신 <strong>올바른 분리배출 방법</strong>을 확인하고, AI의 판별 결과를 보기 전에 <strong>내 생각을 10개 쓰레기에 대해 먼저 골라보세요</strong>.
-      </div>
-
-      <div class="standard-ref-box">
-        <h3 class="standard-ref-title">📖 올바른 분리배출 안내 기준</h3>
-        <div class="standard-chips">
-          <div class="std-chip">🥫 캔류: 찌그러져도 캔</div>
-          <div class="std-chip">🧴 페트/플라스틱: 깨끗한 통</div>
-          <div class="std-chip">📦 종이류: 깨끗한 종이</div>
-          <div class="std-chip">🛍️ 비닐류: 깨끗한 비닐</div>
-          <div class="std-chip">🍶 유리병: 깨끗한 병</div>
-          <div class="std-chip">🗑️ 일반쓰레기: 오염/작은물건</div>
+    <!-- ==================== [2전시관] AI 한계와 사람의 역할 한문장 게시판 ==================== -->
+    <section class="museum-section" id="ethicsSection" style="display:none;">
+      <div class="section-header-wrap">
+        <div class="section-title">
+          <span>💭</span> <span>AI의 한계와 사람의 역할: 한 문장 발표 게시판</span>
         </div>
+        <span style="font-size:13px; font-weight:800; background:#fef08a; color:#854d0e; padding:4px 10px; border-radius:12px;" id="thoughtCount">
+          우리 모둠 생각 0건
+        </span>
       </div>
 
-      <div class="items-record-grid" id="itemsRecordList"></div>
+      <p style="font-size:14px; color:#64748b; margin-bottom:16px;">
+        오류 분석을 통해 깨달은 <strong>인공지능의 한계</strong>와 <strong>인간의 책임과 역할</strong>을 한 문장으로 정리하여 모둠 게시판에 공유해봅시다.
+      </p>
 
-      <div class="action-bar">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(1)">⬅ 이전으로</button>
-        <button class="btn-nav-large btn-next" onclick="submitStep2()">
-          내 생각 저장하고 AI와 비교하기 ➔
-        </button>
-      </div>
-    </section>
-
-    <!-- 3: 탐구 -->
-    <section class="stage-card" id="stage-3">
-      <div class="stage-badge">🤖 AI 결과 확인하고 맞힘/틀림 비교하기</div>
-      <h2 class="stage-title">🤖 AI 판별 결과 기록 & 사람 생각 비교</h2>
-      <div class="stage-goal">
-        학습된 AI로 교실 쓰레기 10개를 테스트하고, <strong>AI가 판독한 결과</strong>를 선택하여 <strong>사람 기준과 맞힘(⭕) / 틀림(❌)</strong>을 비교해보세요!
-      </div>
-
-      <div class="lab-summary-bar">
-        <div class="lab-stats-group">
-          <div class="stat-pill total" id="labTotalProgress">기록 완료: 0/10</div>
-          <div class="stat-pill match" id="labMatchStat">⭕ 맞힘: 0개</div>
-          <div class="stat-pill mismatch" id="labMismatchStat">❌ 틀림: 0개</div>
-        </div>
-        <button class="btn-auto-fill" onclick="fillDefaultAiExperimentData()">
-          ⚡ 표준 실험 데이터 채우기
-        </button>
-      </div>
-
-      <div class="items-record-grid" id="compareItemsList"></div>
-
-      <div class="action-bar">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(2)">⬅ 이전으로</button>
-        <button class="btn-nav-large btn-next" onclick="submitStep3()">
-          비교 완료하고 생각 나누기 ➔
-        </button>
-      </div>
-    </section>
-
-    <!-- 4: 생각·발표 -->
-    <section class="stage-card" id="stage-4">
-      <div class="stage-badge">📢 AI가 왜 틀렸을까? 생각 나누기</div>
-      <h2 class="stage-title">💡 AI가 실수한 까닭 찾기 & 의견 발표</h2>
-      <div class="stage-goal">
-        AI가 잘못 판별한 쓰레기가 몇 개인지 확인하고, <strong>AI가 왜 헷갈렸는지 까닭을 찾아 친구들과 의견을 나눠보세요!</strong>
-      </div>
-
-      <h3 style="font-size:18px; font-weight:800; color:#1e293b; margin-bottom:12px;">🚨 AI가 헷갈려한 쓰레기 살펴보기</h3>
-      <div class="fail-analysis-grid">
-        <div class="fail-case-card">
-          <span class="fail-case-badge">실수 사례 1</span>
-          <h4 class="fail-case-title">🍜 국물 양념 묻은 컵라면 용기</h4>
-          <p class="fail-case-desc">
-            • <strong>AI 생각:</strong> 스티로폼/플라스틱 (88% 확신)<br>
-            • <strong>진짜 정답:</strong> 일반쓰레기 (국물 오염으로 재활용 안 됨)
-          </p>
-          <span class="fail-cause-tag">까닭: 겉모양만 보고 빨간 양념 오염을 알지 못함</span>
-        </div>
-
-        <div class="fail-case-card">
-          <span class="fail-case-badge">실수 사례 2</span>
-          <h4 class="fail-case-title">🥤 일회용 플라스틱 빨대</h4>
-          <p class="fail-case-desc">
-            • <strong>AI 생각:</strong> 플라스틱 (91% 확신)<br>
-            • <strong>진짜 정답:</strong> 일반쓰레기 (크기가 너무 작아 선별기 통과 불가)
-          </p>
-          <span class="fail-cause-tag">까닭: 재질만 보고 작은 크기 조건을 알지 못함</span>
-        </div>
-      </div>
-
-      <div style="background:#ffffff; border:2px solid #e2e8f0; border-radius:20px; padding:20px;">
-        <h3 style="font-size:17px; font-weight:800; color:#1e293b; margin-bottom:10px;">✍️ 나만의 탐정 생각 발표문 쓰기</h3>
-        <textarea id="failAnalysisInput" class="custom-textarea" placeholder="AI가 왜 실수를 했을까요? 그리고 AI가 더 똑똑해지려면 어떤 사진을 더 가르쳐줘야 할까요?"></textarea>
-        <button class="btn-nav-large btn-next" style="margin-top:12px; width:100%; justify-content:center;" onclick="submitPresentationComment()">
-          📢 내 생각 등록하고 친구들과 공유하기 (⭐ +20 EXP)
-        </button>
-
-        <div class="community-feed" id="communityFeedList"></div>
-      </div>
-
-      <div class="action-bar">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(3)">⬅ 이전으로</button>
-        <button class="btn-nav-large btn-next" onclick="goToStep(5)">
-          정리 퀴즈 풀러 가기 ➔
-        </button>
-      </div>
-    </section>
-
-    <!-- 5: 퀴즈 & 정리 -->
-    <section class="stage-card" id="stage-5">
-      <div class="stage-badge">🎮 배운 내용 정리 퀴즈</div>
-      <h2 class="stage-title">🎮 AI 실전 퀴즈로 오늘 배운 내용 정리</h2>
-      <div class="stage-goal">
-        오늘 활동을 통해 배운 내용을 생각하며 <strong>재미있는 퀴즈 3문제</strong>를 풀고 퀘스트를 완료하세요!
-      </div>
-
-      <div class="quiz-container">
-        <div class="quiz-card" id="quizCard1">
-          <div class="quiz-num">문제 1</div>
-          <div class="quiz-question">Q1. AI가 깨끗한 캔은 잘 맞히지만, 심하게 찌그러진 캔이나 양념 묻은 라면용기를 잘못 판별하는 주된 이유는 무엇일까요?</div>
-          <div class="quiz-options">
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(1, 0, false, this)">① AI의 컴퓨터 성능이 너무 느려서</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(1, 1, true, this)">② 오염되거나 형태가 변형된 학습 데이터가 부족해서</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(1, 2, false, this)">③ 쓰레기통의 위치가 잘못 배치되어서</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(1, 3, false, this)">④ 쓰레기 냄새를 감지하지 못해서</button>
+      <!-- 문장 빌더 -->
+      <div class="reflection-builder-card">
+        <div class="sentence-template-row">
+          <div class="template-input-group">
+            <label class="template-input-label">① 인공지능(AI)의 한계점:</label>
+            <input 
+              type="text" 
+              id="aiLimitInput" 
+              class="template-input" 
+              value="사진 속 겉모습(픽셀)만 보고 판단하여 가려지거나 구겨진 상황에서 쉽게 착각" 
+              placeholder="예: 사진 속 겉모습만 보고 판단하여 가려지거나 구겨진 상황에서 쉽게 착각"
+              oninput="updateSentencePreview()"
+            >
           </div>
-          <div class="quiz-feedback" id="quizFb1"></div>
+
+          <div class="template-input-group">
+            <label class="template-input-label">② 우리 사람(인간)의 책임과 역할:</label>
+            <input 
+              type="text" 
+              id="humanRoleInput" 
+              class="template-input" 
+              value="맥락과 실제 용도를 종합적으로 파악해 최종 검증하고 올바른 학습 데이터를 제공" 
+              placeholder="예: 맥락과 실제 용도를 종합적으로 파악해 최종 검증하고 올바른 학습 데이터를 제공"
+              oninput="updateSentencePreview()"
+            >
+          </div>
         </div>
 
-        <div class="quiz-card" id="quizCard2">
-          <div class="quiz-num">문제 2</div>
-          <div class="quiz-question">Q2. 플라스틱 빨대처럼 재질은 플라스틱이지만 크기가 작아 재활용이 안 되는 경우, AI에게 어떻게 가르쳐야 할까요?</div>
-          <div class="quiz-options">
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(2, 0, false, this)">① 무조건 플라스틱으로 분류하도록 둔다.</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(2, 1, true, this)">② '길이나 크기가 작으면 일반쓰레기'라는 분류 규칙과 라벨 데이터를 추가 학습시킨다.</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(2, 2, false, this)">③ 카메라 렌즈를 빨간색으로 교체한다.</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(2, 3, false, this)">④ 모든 쓰레기를 통째로 버리게 한다.</button>
-          </div>
-          <div class="quiz-feedback" id="quizFb2"></div>
+        <!-- 실시간 완성 프리뷰 -->
+        <div class="final-sentence-preview" id="sentencePreview">
+          "AI는 <span class="hl">사진 속 겉모습(픽셀)만 보고 판단하여 가려지거나 구겨진 상황에서 쉽게 착각</span>하지만, 사람은 <span class="hl">맥락과 실제 용도를 종합적으로 파악해 최종 검증하고 올바른 학습 데이터를 제공</span>해야 한다."
         </div>
 
-        <div class="quiz-card" id="quizCard3">
-          <div class="quiz-num">문제 3</div>
-          <div class="quiz-question">Q3. AI 판별 실험에서 사람이 먼저 기준표를 확인하고 비교·검증하는 과정이 꼭 필요한 까닭은?</div>
-          <div class="quiz-options">
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(3, 0, false, this)">① AI는 절대 실수를 하지 않음을 자랑하기 위해</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(3, 1, false, this)">② 사람이 더 우월함을 보여주기 위해</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(3, 2, true, this)">③ AI의 한계와 오류를 발견하여 더 신뢰할 수 있는 규칙과 데이터를 보완하기 위해</button>
-            <button class="quiz-opt-btn" onclick="checkQuizAnswer(3, 3, false, this)">④ 단순히 게임 점수만 높이기 위해</button>
-          </div>
-          <div class="quiz-feedback" id="quizFb3"></div>
+        <div style="display:flex; justify-content:flex-end;">
+          <button class="btn-submit-thought" onclick="submitReflection()">
+            💾 우리 모둠 게시판에 게시하기 (+30 EXP) 🚀
+          </button>
         </div>
       </div>
 
-      <div class="action-bar">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(4)">⬅ 이전 단계</button>
-        <button class="btn-nav-large btn-finish btn-next" onclick="finishQuest6()">
-          🎉 6차시 퀘스트 완료 (⭐ +100 EXP) ➔
-        </button>
+      <!-- 실시간 모둠 게시판 피드 -->
+      <div style="margin-top:20px;">
+        <h4 style="font-family:'Jua'; color:#1e293b; font-size:18px; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+          <span>👥</span> <span id="feedBoardTitle">우리 모둠('1모둠') 생각 나눔 게시판</span>
+        </h4>
+
+        <div class="reflection-feed-grid" id="reflectionFeedGrid">
+          <div style="text-align:center; padding:24px; color:#94a3b8; font-size:14px;">
+            모둠원들의 생각을 불러오는 중입니다...
+          </div>
+        </div>
+      </div>
+
+      <!-- 최종 완료 배지 -->
+      <div class="cert-box">
+        <div class="cert-icon">🏛️ 🥇 ✨</div>
+        <h2 class="cert-title">QUEST 6: 오류박물관 큐레이션 완료!</h2>
+        <p style="font-size:15px; color:#4c1d95; font-weight:700; margin-bottom:18px;">
+          AI의 오류 원인을 날카롭게 분석하고 사람의 역할을 성공적으로 정립하여<br>
+          <strong>'오류 큐레이터 🥇'</strong> 배지를 획득했습니다!
+        </p>
+
+        <a href="quest7.html" class="btn-submit-thought" style="text-decoration:none; font-size:17px; padding:14px 32px;">
+          🚀 다음 차시 [QUEST 7: 우리 모둠 실천 규약]으로 나아가기
+        </a>
       </div>
     </section>
 
   </main>
 
+  <!-- 토스트 알림창 -->
   <div class="toast-msg" id="toastMsg">알림 메시지</div>
 
+  <!-- Firebase 모듈 -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, doc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, updateDoc, doc, increment, serverTimestamp, query, where, onSnapshot, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = { 
       apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00", 
@@ -926,42 +818,33 @@
       const app = initializeApp(firebaseConfig);
       db = getFirestore(app);
     } catch(e) {
-      console.warn("Firebase offline or local mode:", e);
+      console.warn("Firebase offline:", e);
     }
 
-    const WASTE_ITEMS = [
-      { id: 1, name: "찌그러진 알루미늄 캔", icon: "🥫", desc: "음료를 마신 후 발로 밟아 찌그러진 캔", defaultStd: "캔류", defaultAi: "캔류" },
-      { id: 2, name: "라벨 붙은 투명 페트병", icon: "🧴", desc: "비닐 라벨 스티커가 붙어있는 생수병", defaultStd: "플라스틱", defaultAi: "플라스틱" },
-      { id: 3, name: "양념 묻은 컵라면 용기", icon: "🍜", desc: "빨간 떡볶이 국물이 물들어 지워지지 않음", defaultStd: "일반쓰레기", defaultAi: "플라스틱" },
-      { id: 4, name: "깨끗하게 접은 신문지", icon: "📰", desc: "이물질 없이 반듯하게 모은 신문지", defaultStd: "종이류", defaultAi: "종이류" },
-      { id: 5, name: "씻어 말린 종이 우유팩", icon: "🥛", desc: "물로 헹군 뒤 펼쳐서 건조한 우유팩", defaultStd: "종이류", defaultAi: "종이류" },
-      { id: 6, name: "일회용 플라스틱 빨대", icon: "🥤", desc: "음료수에 꽂아 쓰던 얇은 빨대", defaultStd: "일반쓰레기", defaultAi: "플라스틱" },
-      { id: 7, name: "사용한 나무 젓가락", icon: "🥢", desc: "컵라면을 먹을 때 쓴 나무 젓가락", defaultStd: "일반쓰레기", defaultAi: "일반쓰레기" },
-      { id: 8, name: "은박 과자 비닐봉지", icon: "🍿", desc: "내부에 은박 코팅이 된 과자 포장재", defaultStd: "비닐류", defaultAi: "비닐류" },
-      { id: 9, name: "뚜껑 분리한 유리 주스병", icon: "🍶", desc: "내용물을 비우고 뚜껑을 따로 뺀 유리병", defaultStd: "유리", defaultAi: "유리" },
-      { id: 10, name: "송장 붙은 택배 박스", icon: "📦", desc: "비닐 테이프와 송장이 붙은 골판지 박스", defaultStd: "종이류", defaultAi: "종이류" }
-    ];
+    const studentId = localStorage.getItem("elementary_studentId") || "guest";
+    const studentName = localStorage.getItem("elementary_studentName") || "탐정 학생";
+    const teamCode = localStorage.getItem("elementary_teamCode") || "1모둠";
 
-    const CATEGORIES = ["종이류", "플라스틱", "비닐류", "캔류", "유리", "일반쓰레기"];
+    // 학생 정보 표시
+    const studentDisplay = document.getElementById('studentDisplay');
+    if (studentDisplay) {
+      studentDisplay.textContent = `👤 ${studentName} (${teamCode})`;
+    }
+    const feedBoardTitle = document.getElementById('feedBoardTitle');
+    if (feedBoardTitle) {
+      feedBoardTitle.textContent = `우리 모둠('${teamCode}') 생각 나눔 게시판`;
+    }
 
+    // 전역 상태
     window.state = {
-      score: parseInt(localStorage.getItem("elementary_score") || "0"),
+      score: parseInt(localStorage.getItem("elementary_score") || "0", 10),
       soundEnabled: true,
-      step: 1,
-      predictedCount: parseInt(localStorage.getItem("quest6_pred_count") || "8"),
-      humanJudgments: JSON.parse(localStorage.getItem("quest6_human_judgments") || "{}"),
-      aiJudgments: JSON.parse(localStorage.getItem("quest6_ai_judgments") || "{}"),
-      quizAnswers: {},
-      feedComments: JSON.parse(localStorage.getItem("quest6_feed_comments") || "[]")
+      currentTab: 'gallery'
     };
 
-    if (window.state.feedComments.length === 0) {
-      window.state.feedComments = [
-        { id: 'f1', author: '선임탐정 에코', text: '라면 국물 묻은 용기는 AI가 겉모양만 보고 스티로폼/플라스틱으로 착각했네요! 색상 오염 감지 규칙이 필요해요.', likes: 5 },
-        { id: 'f2', author: '그린봇', text: '빨대는 재질이 플라스틱이라도 크기가 작아 선별장에서 버려진다는 사실을 AI에게 라벨 데이터로 알려줘야겠어요.', likes: 4 }
-      ];
-    }
+    document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
 
+    // 오디오 사운드
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     window.playSound = function(type) {
       if (!window.state.soundEnabled) return;
@@ -972,20 +855,15 @@
       const now = audioCtx.currentTime;
 
       if (type === 'click') {
-        osc.type = 'sine'; osc.frequency.setValueAtTime(500, now);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(520, now);
         osc.frequency.exponentialRampToValueAtTime(900, now + 0.08);
-        gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+        gain.gain.setValueAtTime(0.18, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
         osc.start(now); osc.stop(now + 0.08);
-      } else if (type === 'correct') {
-        osc.type = 'triangle'; osc.frequency.setValueAtTime(523.25, now);
-        osc.frequency.setValueAtTime(659.25, now + 0.1);
-        gain.gain.setValueAtTime(0.25, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
-        osc.start(now); osc.stop(now + 0.25);
-      } else if (type === 'wrong') {
-        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, now);
-        osc.frequency.linearRampToValueAtTime(180, now + 0.2);
-        gain.gain.setValueAtTime(0.25, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
-        osc.start(now); osc.stop(now + 0.2);
+      } else if (type === 'tag') {
+        osc.type = 'sine'; osc.frequency.setValueAtTime(650, now);
+        osc.frequency.exponentialRampToValueAtTime(1100, now + 0.1);
+        gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
+        osc.start(now); osc.stop(now + 0.1);
       } else if (type === 'fanfare') {
         [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
           const o = audioCtx.createOscillator();
@@ -1017,307 +895,305 @@
       localStorage.setItem("elementary_score", window.state.score);
     };
 
-    window.goToStep = function(stepNum) {
+    // 탭 전환
+    window.switchTab = function(tabName) {
       window.playSound('click');
-      window.state.step = stepNum;
-      document.querySelectorAll('.stage-card').forEach((c, idx) => c.classList.toggle('active', idx + 1 === stepNum));
-      document.querySelectorAll('.step-item').forEach((item, idx) => {
-        item.classList.toggle('active', idx + 1 === stepNum);
-        if (idx + 1 < stepNum) item.classList.add('completed');
-      });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.state.currentTab = tabName;
+      document.getElementById('tabGalleryBtn').classList.toggle('active', tabName === 'gallery');
+      document.getElementById('tabEthicsBtn').classList.toggle('active', tabName === 'ethics');
+      document.getElementById('gallerySection').style.display = tabName === 'gallery' ? 'block' : 'none';
+      document.getElementById('ethicsSection').style.display = tabName === 'ethics' ? 'block' : 'none';
     };
 
-    window.handleSliderChange = function(val) {
-      window.state.predictedCount = parseInt(val);
-      document.getElementById('predictValueText').textContent = `${val}개 (${val * 10}%)`;
-    };
-
-    window.toggleReasonChip = function(text, btn) {
-      window.playSound('click');
-      btn.classList.toggle('selected');
-      const input = document.getElementById('predictReasonInput');
-      if (btn.classList.contains('selected')) {
-        if (!input.value.includes(text)) {
-          input.value = input.value ? (input.value + " " + text) : text;
-        }
+    // 기본 샘플 오류 데이터 (전송된 데이터가 없을 경우 기본 전시)
+    const SAMPLE_ERRORS = [
+      {
+        id: 'sample_1',
+        studentName: '에코탐정단 예시',
+        className: '일반 종이 (Paper)',
+        confidence: '58.4',
+        imageData: 'images/quest1-q3.png',
+        feedback: '벽 뒤에 가려져 모서리 일부만 보이자 일반 종이상자로 오인식함',
+        tags: ['#가려짐/일부노출', '#모서리삼각날개미인식', '#우유갑오분류']
+      },
+      {
+        id: 'sample_2',
+        studentName: '에코탐정단 예시',
+        className: '건전지 (Battery)',
+        confidence: '62.1',
+        imageData: 'images/quest1-q2.png',
+        feedback: '캔 뚜껑의 은색 손잡이 부분만 크게 확대되자 금속 조각/건전지로 착각함',
+        tags: ['#부분확대/전체미확인', '#금속반사광', '#캔류오인식']
+      },
+      {
+        id: 'sample_3',
+        studentName: '에코탐정단 예시',
+        className: '오이 / 나뭇잎',
+        confidence: '51.3',
+        imageData: 'images/quest1-q1.png',
+        feedback: '초록색 페트병 사진이 흐려져 경계선 픽셀이 뭉개지자 엉뚱한 식물로 오판',
+        tags: ['#초점흐림/화질저하', '#색상만단순인식', '#페트병오분류']
       }
-    };
+    ];
 
-    window.submitStep1 = function() {
-      const reason = document.getElementById('predictReasonInput').value.trim();
-      if (!reason) {
-        showToast('예측한 이유(까닭)를 간단히 적어주세요!');
-        return;
-      }
-      window.playSound('correct');
-      window.addScore(20);
-      localStorage.setItem("quest6_pred_count", window.state.predictedCount);
-      localStorage.setItem("quest6_pred_reason", reason);
-      showToast('🎉 1단계 예측 완료! (⭐ +20 EXP)');
-      goToStep(2);
-    };
+    // 실시간 오류박물관 갤러리 구독
+    function subscribeMuseumItems() {
+      const grid = document.getElementById("museumGrid");
+      const countEl = document.getElementById("museumCount");
 
-    function renderStep2Items() {
-      const container = document.getElementById('itemsRecordList');
-      if (!container) return;
-      container.innerHTML = '';
+      if (db && teamCode) {
+        const q = query(collection(db, "quest6_museum"), where("teamCode", "==", teamCode));
+        onSnapshot(q, (snapshot) => {
+          let items = [];
+          snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
 
-      WASTE_ITEMS.forEach(item => {
-        const selectedCat = window.state.humanJudgments[item.id] || '';
-        const card = document.createElement('div');
-        card.className = 'item-record-card';
-        card.innerHTML = `
-          <div class="item-info-col">
-            <div class="item-idx-badge">#${item.id}</div>
-            <div class="item-icon-box">${item.icon}</div>
-            <div class="item-text-wrap">
-              <h4>${item.name}</h4>
-              <p>${item.desc}</p>
-            </div>
-          </div>
-          <div class="select-category-wrap">
-            ${CATEGORIES.map(cat => `
-              <button class="btn-cat-choice ${selectedCat === cat ? 'selected' : ''}" onclick="selectHumanCategory(${item.id}, '${cat}')">
-                ${cat}
-              </button>
-            `).join('')}
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
+          // 로컬 백업과 샘플 결합
+          const localList = JSON.parse(localStorage.getItem("quest6_museum_local") || "[]");
+          const merged = [...items, ...localList];
+          
+          // 중복 ID 제거
+          const uniqueMap = new Map();
+          merged.forEach(item => {
+            if (item.id && !uniqueMap.has(item.id)) uniqueMap.set(item.id, item);
+          });
+          
+          let displayList = Array.from(uniqueMap.values());
+          if (displayList.length === 0) {
+            displayList = SAMPLE_ERRORS;
+          }
 
-    window.selectHumanCategory = function(itemId, cat) {
-      window.playSound('click');
-      window.state.humanJudgments[itemId] = cat;
-      localStorage.setItem("quest6_human_judgments", JSON.stringify(window.state.humanJudgments));
-      renderStep2Items();
-    };
+          if (countEl) countEl.textContent = displayList.length;
 
-    window.submitStep2 = function() {
-      const judgedCount = Object.keys(window.state.humanJudgments).length;
-      if (judgedCount < 10) {
-        showToast(`10개 품목에 대해 모두 사람 판단을 선택해주세요! (${judgedCount}/10 완료)`);
-        return;
-      }
-      window.playSound('correct');
-      window.addScore(20);
-      showToast('🎉 2단계 사람 판단 기록 완료! (⭐ +20 EXP)');
-      goToStep(3);
-      renderStep3CompareList();
-    };
-
-    function renderStep3CompareList() {
-      const container = document.getElementById('compareItemsList');
-      if (!container) return;
-      container.innerHTML = '';
-
-      let matchCount = 0;
-      let mismatchCount = 0;
-      let recordedCount = 0;
-
-      WASTE_ITEMS.forEach(item => {
-        const humanChoice = window.state.humanJudgments[item.id] || item.defaultStd;
-        const aiChoice = window.state.aiJudgments[item.id] || '';
-        const isRecorded = !!aiChoice;
-        let isMatch = false;
-
-        if (isRecorded) {
-          recordedCount++;
-          isMatch = (humanChoice === aiChoice);
-          if (isMatch) matchCount++;
-          else mismatchCount++;
-        }
-
-        const card = document.createElement('div');
-        card.className = `compare-item-card ${isRecorded ? (isMatch ? 'is-matched' : 'is-mismatched') : ''}`;
-        card.innerHTML = `
-          <div class="item-info-col">
-            <div class="item-idx-badge">#${item.id}</div>
-            <div class="item-icon-box">${item.icon}</div>
-            <div class="item-text-wrap">
-              <h4>${item.name}</h4>
-              <p>${item.desc}</p>
-            </div>
-          </div>
-
-          <div class="human-judged-box">
-            <div class="human-judged-label">👤 사람 기준 판단</div>
-            <div class="human-judged-val">${humanChoice}</div>
-          </div>
-
-          <div class="ai-select-col">
-            <span class="ai-select-label">🤖 AI 판별 결과 선택:</span>
-            <div class="ai-btn-group">
-              ${CATEGORIES.map(cat => `
-                <button class="btn-ai-choice ${aiChoice === cat ? 'selected' : ''}" onclick="selectAiCategory(${item.id}, '${cat}')">
-                  ${cat}
-                </button>
-              `).join('')}
-            </div>
-          </div>
-
-          <div class="match-status-col">
-            ${isRecorded ? (
-              isMatch 
-                ? '<div class="badge-match-result match">⭕ 일치 (정답)</div>'
-                : '<div class="badge-match-result mismatch">❌ 불일치 (오류)</div>'
-            ) : '<div class="badge-match-result waiting">선택 대기</div>'}
-          </div>
-        `;
-        container.appendChild(card);
-      });
-
-      document.getElementById('labTotalProgress').textContent = `기록 완료: ${recordedCount}/10`;
-      document.getElementById('labMatchStat').textContent = `⭕ 맞힘: ${matchCount}개`;
-      document.getElementById('labMismatchStat').textContent = `❌ 틀림: ${mismatchCount}개`;
-    }
-
-    window.selectAiCategory = function(itemId, cat) {
-      window.playSound('click');
-      window.state.aiJudgments[itemId] = cat;
-      localStorage.setItem("quest6_ai_judgments", JSON.stringify(window.state.aiJudgments));
-      renderStep3CompareList();
-    };
-
-    window.fillDefaultAiExperimentData = function() {
-      window.playSound('correct');
-      WASTE_ITEMS.forEach(it => {
-        window.state.aiJudgments[it.id] = it.defaultAi;
-      });
-      localStorage.setItem("quest6_ai_judgments", JSON.stringify(window.state.aiJudgments));
-      renderStep3CompareList();
-      showToast('⚡ 표준 AI 실험 데이터가 적용되었습니다! (8개 일치, 2개 불일치)');
-    };
-
-    window.submitStep3 = function() {
-      const recordedCount = Object.keys(window.state.aiJudgments).length;
-      if (recordedCount < 10) {
-        showToast(`10개 품목의 AI 판별 결과를 모두 기록해주세요! (${recordedCount}/10 완료)`);
-        return;
-      }
-      window.playSound('correct');
-      window.addScore(20);
-      showToast('🎉 3단계 AI 판별 비교 완료! (⭐ +20 EXP)');
-      goToStep(4);
-    };
-
-    function renderCommunityFeed() {
-      const list = document.getElementById('communityFeedList');
-      if (!list) return;
-      list.innerHTML = '';
-
-      window.state.feedComments.forEach(c => {
-        const item = document.createElement('div');
-        item.className = 'feed-item';
-        item.innerHTML = `
-          <div class="feed-author">
-            <span>🕵️ ${c.author}</span>
-            <button class="btn-feed-like" onclick="likeFeed('${c.id}')">👍 공감 ${c.likes || 0}</button>
-          </div>
-          <div class="feed-text">${c.text}</div>
-        `;
-        list.appendChild(item);
-      });
-    }
-
-    window.submitPresentationComment = function() {
-      const input = document.getElementById('failAnalysisInput');
-      const text = input ? input.value.trim() : '';
-      if (!text) {
-        showToast('나만의 분석 발표 의견을 입력해주세요!');
-        return;
-      }
-      window.playSound('click');
-      window.addScore(20);
-      const studentName = localStorage.getItem("elementary_studentName") || "나의 탐정";
-      window.state.feedComments.unshift({
-        id: 'f_' + Date.now(),
-        author: studentName,
-        text: text,
-        likes: 1
-      });
-      localStorage.setItem("quest6_feed_comments", JSON.stringify(window.state.feedComments));
-      input.value = '';
-      renderCommunityFeed();
-      showToast('🎉 발표문이 등록되었습니다! (⭐ +20 EXP)');
-    };
-
-    window.likeFeed = function(id) {
-      window.playSound('click');
-      const target = window.state.feedComments.find(c => c.id === id);
-      if (target) {
-        target.likes = (target.likes || 0) + 1;
-        renderCommunityFeed();
-      }
-    };
-
-    window.checkQuizAnswer = function(qNum, optIdx, isCorrect, btnEl) {
-      const parent = btnEl.parentElement;
-      parent.querySelectorAll('.quiz-opt-btn').forEach(b => {
-        b.disabled = true;
-      });
-
-      const fb = document.getElementById(`quizFb${qNum}`);
-      if (isCorrect) {
-        btnEl.classList.add('correct');
-        window.playSound('correct');
-        fb.textContent = '🎉 정답입니다! 멋진 AI 탐정이네요!';
-        fb.className = 'quiz-feedback show-ok';
-        window.state.quizAnswers[qNum] = true;
+          renderMuseumGrid(displayList);
+        }, (err) => {
+          console.warn("Museum onSnapshot error:", err);
+          renderMuseumGrid(SAMPLE_ERRORS);
+        });
       } else {
-        btnEl.classList.add('wrong');
-        window.playSound('wrong');
-        fb.textContent = '💡 아쉬워요! 해설을 확인하고 다시 생각해보세요.';
-        fb.className = 'quiz-feedback show-err';
-        window.state.quizAnswers[qNum] = false;
+        renderMuseumGrid(SAMPLE_ERRORS);
       }
+    }
+
+    function renderMuseumGrid(items) {
+      const grid = document.getElementById("museumGrid");
+      if (!grid) return;
+
+      grid.innerHTML = items.map(item => {
+        const tags = item.tags || ['#오류분석대기'];
+        const isSample = item.id && item.id.startsWith('sample_');
+
+        return `
+          <div class="museum-card" id="card-${item.id}">
+            <div class="museum-img-wrap">
+              <img src="${item.imageData || 'images/quest1-q1.png'}" alt="오류 캡처 사진" onerror="this.src='images/quest1-q1.png'">
+            </div>
+
+            <div class="museum-card-info">
+              <div class="detection-badge">
+                <span>⚠️ AI 오인식:</span>
+                <strong>${item.className || '오류 품목'}</strong>
+                <span>(${parseFloat(item.confidence || 50).toFixed(1)}%)</span>
+              </div>
+              <div class="uploader-text">
+                👤 수집 탐정: <strong>${item.studentName || '탐정'}</strong>
+              </div>
+
+              <!-- 태그 목록 -->
+              <div style="font-size:12px; font-weight:800; color:#5b21b6; margin-top:4px;">🏷️ 오류 원인 태그:</div>
+              <div class="tags-container" id="tags-${item.id}">
+                ${tags.map(t => `<span class="tag-badge">${t}</span>`).join('')}
+              </div>
+
+              <!-- 빠른 태그 추가 칩 -->
+              <div class="quick-tags-wrap">
+                <span class="quick-tag-chip" onclick="addQuickTag('${item.id}', '#가려짐/일부노출')">+ 가려짐</span>
+                <span class="quick-tag-chip" onclick="addQuickTag('${item.id}', '#구겨짐/찌그러짐')">+ 구겨짐</span>
+                <span class="quick-tag-chip" onclick="addQuickTag('${item.id}', '#조명/반사광')">+ 조명반사</span>
+                <span class="quick-tag-chip" onclick="addQuickTag('${item.id}', '#배경혼동')">+ 배경혼동</span>
+              </div>
+
+              <!-- 직접 태그 입력 -->
+              <div class="tag-add-form">
+                <input type="text" id="tagInput-${item.id}" class="tag-input" placeholder="직접 원인 입력 (예: #빛반사)">
+                <button class="btn-add-tag" onclick="submitCustomTag('${item.id}')">태그 추가</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 태그 추가 함수 (모둠 실시간 동기화)
+    window.addQuickTag = async function(docId, tagText) {
+      window.playSound('tag');
+      window.addScore(10);
+
+      // DOM 즉시 반영
+      const container = document.getElementById(`tags-${docId}`);
+      if (container) {
+        const newTag = document.createElement('span');
+        newTag.className = 'tag-badge';
+        newTag.textContent = tagText;
+        container.appendChild(newTag);
+      }
+
+      if (db && !docId.startsWith('sample_') && !docId.startsWith('local_')) {
+        try {
+          await updateDoc(doc(db, "quest6_museum", docId), {
+            tags: arrayUnion(tagText)
+          });
+        } catch(e) {
+          console.warn("Tag update failed:", e);
+        }
+      }
+
+      showToast(`🏷️ '${tagText}' 원인 태그가 모둠에 추가되었습니다! (+10 EXP)`);
     };
 
-    window.finishQuest6 = async function() {
-      const qSolved = Object.keys(window.state.quizAnswers).length;
-      if (qSolved < 3) {
-        showToast('3문제를 모두 풀어보세요!');
+    window.submitCustomTag = function(docId) {
+      const input = document.getElementById(`tagInput-${docId}`);
+      if (!input || !input.value.trim()) return;
+
+      let tagVal = input.value.trim();
+      if (!tagVal.startsWith('#')) tagVal = '#' + tagVal;
+
+      window.addQuickTag(docId, tagVal);
+      input.value = '';
+    };
+
+    // 문장 실시간 프리뷰 갱신
+    window.updateSentencePreview = function() {
+      const limit = document.getElementById('aiLimitInput').value.trim() || "겉모습만 보고 판단";
+      const role = document.getElementById('humanRoleInput').value.trim() || "맥락을 파악해 최종 검증";
+
+      const preview = document.getElementById('sentencePreview');
+      preview.innerHTML = `"AI는 <span class="hl">${limit}</span>하지만, 사람은 <span class="hl">${role}</span>해야 한다."`;
+    };
+
+    // 한 문장 게시글 제출
+    window.submitReflection = async function() {
+      const limit = document.getElementById('aiLimitInput').value.trim();
+      const role = document.getElementById('humanRoleInput').value.trim();
+
+      if (!limit || !role) {
+        alert("AI의 한계와 사람의 역할을 모두 입력해주세요!");
         return;
       }
 
       window.playSound('fanfare');
-      window.addScore(100);
-      localStorage.setItem("quest6_completed", "true");
+      window.addScore(30);
 
-      const studentId = localStorage.getItem("elementary_studentId");
-      const studentName = localStorage.getItem("elementary_studentName");
+      const sentence = `"AI는 ${limit}하지만, 사람은 ${role}해야 한다."`;
 
-      if (db && studentId) {
+      if (db && studentId && studentId !== "guest") {
         try {
-          await addDoc(collection(db, "quest6_logs"), {
+          await addDoc(collection(db, "quest6_reflections"), {
             studentId,
             studentName,
-            predictedCount: window.state.predictedCount,
-            humanJudgments: window.state.humanJudgments,
-            aiJudgments: window.state.aiJudgments,
-            score: window.state.score,
+            teamCode,
+            limit,
+            role,
+            sentence,
+            reactions: { like: 1, think: 0, cheer: 0 },
             createdAt: serverTimestamp()
           });
+
           await updateDoc(doc(db, "students", studentId), {
-            score: increment(100),
-            questsDone: increment(1)
+            score: increment(30),
+            badge: "오류 큐레이터 🥇"
           });
         } catch(e) {
-          console.warn("Firestore save error:", e);
+          console.warn("Reflection save err:", e);
         }
       }
 
-      alert(`🎉 축하합니다! QUEST 6 [AI는 왜 틀렸을까?]를 완료했습니다!\n\n총 획득 점수: ${window.state.score} EXP\n다음 퀘스트로 이동합니다!`);
-      window.location.href = 'quest7.html';
+      localStorage.setItem("quest6_completed", "true");
+      localStorage.setItem("elementary_badge", "오류 큐레이터 🥇");
+      showToast("🎉 우리 모둠 생각 게시판에 나의 한 문장이 공유되었습니다! (+30 EXP)");
     };
 
+    // 실시간 모둠 생각 피드 구독
+    function subscribeReflections() {
+      if (!db || !teamCode) return;
+
+      const q = query(collection(db, "quest6_reflections"), where("teamCode", "==", teamCode));
+      onSnapshot(q, (snapshot) => {
+        const feedGrid = document.getElementById("reflectionFeedGrid");
+        const countEl = document.getElementById("thoughtCount");
+        if (!feedGrid) return;
+
+        if (snapshot.empty) {
+          feedGrid.innerHTML = `<div style="text-align:center; padding:24px; color:#94a3b8; font-size:14px;">아직 등록된 모둠원들의 생각이 없습니다. 상단에서 첫 번째 한 문장을 게시해보세요! 🚀</div>`;
+          if (countEl) countEl.textContent = `우리 모둠 생각 0건`;
+          return;
+        }
+
+        if (countEl) countEl.textContent = `우리 모둠 생각 ${snapshot.size}건`;
+
+        const items = [];
+        snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+        items.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+        feedGrid.innerHTML = items.map(item => {
+          const isMe = item.studentId === studentId;
+          const rx = item.reactions || { like: 0, think: 0, cheer: 0 };
+          return `
+            <div class="reflection-card ${isMe ? 'is-me' : ''}">
+              <div class="reflection-header">
+                <div class="author-name">
+                  <span>${isMe ? '⭐ 나 (' + item.studentName + ')' : '👤 ' + item.studentName}</span>
+                </div>
+                ${isMe ? `<button class="del-btn" onclick="deleteReflection('${item.id}')">🗑️ 삭제</button>` : ''}
+              </div>
+
+              <div class="reflection-body">
+                ${item.sentence}
+              </div>
+
+              <div class="reflection-footer">
+                <div class="reaction-btns">
+                  <button class="btn-react" onclick="reactReflection('${item.id}', 'like')">👍 공감 ${rx.like || 0}</button>
+                  <button class="btn-react" onclick="reactReflection('${item.id}', 'think')">💡 깊은 생각 ${rx.think || 0}</button>
+                  <button class="btn-react" onclick="reactReflection('${item.id}', 'cheer')">👏 멋져요 ${rx.cheer || 0}</button>
+                </div>
+                <div>${item.createdAt?.seconds ? new Date(item.createdAt.seconds * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '방금 전'}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      });
+    }
+
+    window.reactReflection = async function(docId, reactKey) {
+      window.playSound('click');
+      if (!db) return;
+      try {
+        const ref = doc(db, "quest6_reflections", docId);
+        await updateDoc(ref, {
+          [`reactions.${reactKey}`]: increment(1)
+        });
+      } catch(e) {
+        console.warn(e);
+      }
+    };
+
+    window.deleteReflection = async function(docId) {
+      if (!confirm("작성한 한 문장 게시글을 삭제할까요?")) return;
+      if (!db) return;
+      try {
+        await updateDoc(doc(db, "quest6_reflections", docId), {
+          teamCode: "_deleted_"
+        });
+        showToast("삭제되었습니다.");
+      } catch(e) {
+        alert("삭제 실패: " + e.message);
+      }
+    };
+
+    // 초기화 실행
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
-      renderStep2Items();
-      renderStep3CompareList();
-      renderCommunityFeed();
+      subscribeMuseumItems();
+      subscribeReflections();
     });
   </script>
 </body>
