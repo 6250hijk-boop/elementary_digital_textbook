@@ -3,31 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
   <title>QUEST 2: 분류기준 만들기 | AI 자원순환 탐정단</title>
   
-  <!-- 무료 웹폰트 Pretendard 및 Jua -->
+  <!-- 웹폰트 Pretendard 및 Jua -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-light: #f0fdf4;
-      --bg-card: #ffffff;
-      --border-card: #bbf7d0;
-      --primary: #16a34a;
-      --primary-dark: #15803d;
-      --primary-light: #dcfce7;
-      --accent-gold: #f59e0b;
-      --accent-blue: #2563eb;
-      --accent-purple: #9333ea;
-      --accent-red: #ef4444;
-      --text-main: #14532d;
-      --text-sub: #334155;
-      --text-muted: #64748b;
-      --radius: 22px;
+      --bg-light: #F0FDF4;
+      --bg-card: #FFFFFF;
+      --border-card: #BBF7D0;
+      --primary: #16A34A;
+      --primary-dark: #15803D;
+      --primary-light: #DCFCE7;
+      --accent-gold: #F59E0B;
+      --accent-blue: #2563EB;
+      --text-main: #14532D;
+      --text-dark: #1E293B;
+      --text-muted: #64748B;
+      --radius: 20px;
       --shadow: 0 10px 30px rgba(22, 163, 74, 0.08);
     }
 
@@ -36,7 +32,6 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
-      user-select: none;
     }
 
     body {
@@ -45,29 +40,29 @@
       background-image: 
         radial-gradient(circle at 10% 10%, rgba(22, 163, 74, 0.08), transparent 35%),
         radial-gradient(circle at 90% 90%, rgba(37, 99, 235, 0.08), transparent 35%),
-        linear-gradient(to bottom, #f0fdf4, #eafaf1);
-      color: var(--text-main);
+        linear-gradient(to bottom, #F0FDF4, #EAFBF1);
+      color: var(--text-dark);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      overflow-x: hidden;
+      padding-bottom: 60px;
     }
 
-    /* 상단 앱 HUD 네비게이션 */
+    /* 상단 네비게이션 헤더 */
     .app-header {
       width: 100%;
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(12px);
-      border-bottom: 2px solid #e2e8f0;
+      border-bottom: 2px solid #E2E8F0;
       padding: 12px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     }
 
     .header-left {
@@ -77,12 +72,12 @@
     }
 
     .btn-back {
-      background: #f1f5f9;
-      border: 2px solid #cbd5e1;
+      background: #F1F5F9;
+      border: 2px solid #CBD5E1;
       color: #334155;
       padding: 8px 16px;
       border-radius: 12px;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
       text-decoration: none;
       display: flex;
@@ -92,7 +87,7 @@
     }
 
     .btn-back:hover {
-      background: #e2e8f0;
+      background: #E2E8F0;
       transform: translateY(-1px);
     }
 
@@ -104,8 +99,8 @@
     .header-quest-badge {
       font-family: 'Jua', sans-serif;
       font-size: 12px;
-      color: #16a34a;
-      background: #dcfce7;
+      color: #16A34A;
+      background: #DCFCE7;
       padding: 2px 8px;
       border-radius: 6px;
       display: inline-block;
@@ -116,7 +111,7 @@
     .header-title {
       font-family: 'Jua', sans-serif;
       font-size: 20px;
-      color: #1e293b;
+      color: #1E293B;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -129,667 +124,392 @@
     }
 
     .student-badge {
-      background: #f8fafc;
-      border: 1.5px solid #cbd5e1;
+      background: #F8FAFC;
+      border: 1.5px solid #CBD5E1;
       padding: 6px 14px;
       border-radius: 20px;
       font-size: 14px;
       font-weight: 700;
       color: #334155;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
     .score-badge {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
+      background: linear-gradient(135deg, #F59E0B, #D97706);
       color: white;
       font-family: 'Jua', sans-serif;
       font-size: 15px;
       padding: 6px 14px;
       border-radius: 20px;
       box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .btn-sound {
-      background: #f1f5f9;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 50%;
-      width: 38px;
-      height: 38px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
     }
 
     /* 메인 컨테이너 */
     .app-container {
       width: 100%;
       max-width: 960px;
-      padding: 24px 16px 80px;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* 인트로 안내 배너 */
+    .intro-card {
+      background: #FFFFFF;
+      border: 3px solid #86EFAC;
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .intro-icon {
+      font-size: 38px;
+      background: #ECFDF5;
+      padding: 12px;
+      border-radius: 18px;
+      line-height: 1;
+    }
+
+    .intro-text h2 {
+      font-family: 'Jua', sans-serif;
+      font-size: 24px;
+      color: #15803D;
+      margin-bottom: 6px;
+    }
+
+    .intro-text p {
+      font-size: 15px;
+      color: #475569;
+      line-height: 1.6;
+    }
+
+    /* 5대 품목 입력 섹션 */
+    .form-card {
+      background: #FFFFFF;
+      border: 3px solid #A7F3D0;
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
 
-    /* 단계 네비게이터 */
-    .step-tracker {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      background: #ffffff;
-      padding: 12px;
-      border-radius: 18px;
-      border: 2px solid #e2e8f0;
-      box-shadow: var(--shadow);
+    .form-section-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid #E2E8F0;
+      padding-bottom: 12px;
     }
 
-    @media (max-width: 640px) {
-      .step-tracker {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    .step-item {
+    .rule-input-grid {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 10px 8px;
-      border-radius: 12px;
-      background: #f8fafc;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
+      gap: 18px;
     }
 
-    .step-item:hover {
-      background: #f1f5f9;
+    .rule-item-box {
+      background: #F8FAFC;
+      border: 2px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 16px 20px;
+      transition: all 0.25s;
     }
 
-    .step-item.active {
-      background: #dcfce7;
-      border-color: #16a34a;
-      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.15);
+    .rule-item-box:focus-within {
+      border-color: #16A34A;
+      background: #FFFFFF;
+      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.12);
     }
 
-    .step-item.completed {
-      background: #f0fdf4;
-      border-color: #86efac;
-    }
-
-    .step-num {
-      font-family: 'Jua', sans-serif;
-      font-size: 13px;
-      color: #64748b;
-      margin-bottom: 2px;
-    }
-
-    .step-item.active .step-num {
-      color: #15803d;
-      font-weight: bold;
-    }
-
-    .step-name {
-      font-size: 14px;
-      font-weight: 800;
-      color: #334155;
-    }
-
-    .step-item.active .step-name {
-      color: #14532d;
-    }
-
-    /* 스테이지 카드 */
-    .stage-card {
-      background: #ffffff;
-      border-radius: var(--radius);
-      border: 2.5px solid var(--border-card);
-      padding: 30px;
-      box-shadow: var(--shadow);
-      display: none;
-      animation: fadeIn 0.3s ease-out forwards;
-    }
-
-    .stage-card.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .stage-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #dcfce7;
-      color: #15803d;
-      font-family: 'Jua', sans-serif;
-      font-size: 15px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      margin-bottom: 12px;
-      border: 1.5px solid #86efac;
-    }
-
-    .stage-title {
-      font-family: 'Jua', sans-serif;
-      font-size: 26px;
-      color: #14532d;
-      line-height: 1.4;
-      margin-bottom: 12px;
-    }
-
-    .stage-desc {
-      font-size: 15px;
-      color: #475569;
-      line-height: 1.6;
-      margin-bottom: 24px;
-      font-weight: 500;
-    }
-
-    /* 대상 선택 탭 */
-    .target-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-
-    .target-tab-btn {
-      flex: 1;
-      min-width: 140px;
-      background: #f8fafc;
-      border: 2px solid #cbd5e1;
-      border-radius: 14px;
-      padding: 12px 16px;
-      font-family: 'Jua', sans-serif;
-      font-size: 16px;
-      color: #475569;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s;
-    }
-
-    .target-tab-btn:hover {
-      background: #f1f5f9;
-      border-color: #94a3b8;
-    }
-
-    .target-tab-btn.active {
-      background: #16a34a;
-      border-color: #15803d;
-      color: #ffffff;
-      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
-    }
-
-    /* 박스 공통 */
-    .info-box {
-      background: #f8fafc;
-      border: 2px solid #e2e8f0;
-      border-radius: 18px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
-    .info-box-title {
-      font-family: 'Jua', sans-serif;
-      font-size: 18px;
-      color: #1e293b;
-      margin-bottom: 12px;
+    .rule-item-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      margin-bottom: 8px;
     }
 
-    /* 텍스트 입력창 */
-    .custom-textarea {
+    .rule-label {
+      font-family: 'Jua', sans-serif;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tag-paper { color: #2563EB; }
+    .tag-plastic { color: #0284C7; }
+    .tag-can { color: #D97706; }
+    .tag-milk { color: #16A34A; }
+    .tag-general { color: #64748B; }
+
+    .rule-textarea {
       width: 100%;
-      background: #ffffff;
-      border: 2px solid #cbd5e1;
-      border-radius: 14px;
-      padding: 14px 16px;
-      font-size: 15px;
-      font-family: 'Pretendard', sans-serif;
-      color: #1e293b;
-      line-height: 1.6;
-      resize: vertical;
-      min-height: 80px;
-      outline: none;
-      transition: all 0.2s;
-      user-select: text;
-    }
-
-    .custom-textarea:focus {
-      border-color: #16a34a;
-      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.15);
-    }
-
-    .custom-input {
-      width: 100%;
-      background: #ffffff;
-      border: 2px solid #cbd5e1;
+      min-height: 58px;
+      padding: 12px 14px;
+      border: 1.5px solid #CBD5E1;
       border-radius: 12px;
-      padding: 12px 16px;
       font-size: 15px;
-      font-family: 'Pretendard', sans-serif;
-      color: #1e293b;
+      font-weight: 500;
+      color: #1E293B;
       outline: none;
+      resize: vertical;
+      line-height: 1.5;
+      background: #FFFFFF;
+      transition: border-color 0.2s;
+    }
+
+    .rule-textarea:focus {
+      border-color: #16A34A;
+    }
+
+    .btn-submit-rules {
+      background: linear-gradient(135deg, #16A34A, #15803D);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 16px 24px;
+      font-family: 'Jua', sans-serif;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       transition: all 0.2s;
-      user-select: text;
+      margin-top: 10px;
     }
 
-    .custom-input:focus {
-      border-color: #16a34a;
-      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.15);
+    .btn-submit-rules:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(22, 163, 74, 0.4);
     }
 
-    /* 체크리스트 영역 */
-    .checklist-container {
+    .btn-submit-rules:active {
+      transform: translateY(1px);
+    }
+
+    /* 실시간 모둠 공유 게시판 */
+    .board-card {
+      background: #FFFFFF;
+      border: 3px solid #86EFAC;
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-top: 12px;
+      gap: 20px;
     }
 
-    .check-card {
-      background: #ffffff;
-      border: 2px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 16px 18px;
-      cursor: pointer;
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .check-card:hover {
-      border-color: #16a34a;
-      transform: translateY(-2px);
-    }
-
-    .check-card.checked {
-      background: #f0fdf4;
-      border-color: #16a34a;
-      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.12);
-    }
-
-    .check-box-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      border: 2px solid #cbd5e1;
+    .board-header {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      font-weight: 900;
-      color: transparent;
-      background: #ffffff;
-      flex-shrink: 0;
-      transition: all 0.2s;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-bottom: 2px solid #E2E8F0;
+      padding-bottom: 12px;
     }
 
-    .check-card.checked .check-box-icon {
-      background: #16a34a;
-      border-color: #15803d;
-      color: #ffffff;
+    .board-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      color: #15803D;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .check-content-wrap {
-      flex: 1;
-    }
-
-    .check-title {
-      font-size: 16px;
-      font-weight: 800;
-      color: #1e293b;
-      margin-bottom: 4px;
-    }
-
-    .check-desc {
+    .board-count-badge {
+      background: #DCFCE7;
+      color: #15803D;
+      font-family: 'Jua', sans-serif;
       font-size: 14px;
-      color: #475569;
-      line-height: 1.5;
+      padding: 4px 12px;
+      border-radius: 12px;
+      border: 1px solid #86EFAC;
     }
 
-    .check-tag {
-      display: inline-block;
-      background: #dbeafe;
-      color: #1e40af;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 6px;
-      margin-top: 6px;
-    }
-
-    /* 챗봇 도우미 팝업 / 상시 카드 */
-    .chatbot-helper-box {
-      background: linear-gradient(135deg, #eff6ff, #dbeafe);
-      border: 2px solid #93c5fd;
-      border-radius: 18px;
-      padding: 18px 20px;
-      margin-bottom: 20px;
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-    }
-
-    .chatbot-avatar {
-      width: 46px;
-      height: 46px;
-      background: #2563eb;
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      flex-shrink: 0;
-      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
-    }
-
-    .chatbot-speech {
-      flex: 1;
-      font-size: 14.5px;
-      color: #1e3a8a;
-      line-height: 1.6;
-    }
-
-    .chatbot-speech strong {
-      color: #1d4ed8;
-    }
-
-    /* 템플릿 빌더 (2단계) */
-    .template-builder-card {
-      background: #ffffff;
-      border: 2.5px solid #93c5fd;
-      border-radius: 20px;
-      padding: 24px;
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
-      margin-bottom: 24px;
-    }
-
-    .builder-row {
+    .posts-grid {
       display: flex;
       flex-direction: column;
       gap: 16px;
-      margin-bottom: 20px;
     }
 
-    .builder-input-group {
+    .post-card {
+      background: #F8FAFC;
+      border: 2px solid #E2E8F0;
+      border-radius: 18px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-    }
-
-    .builder-label {
-      font-family: 'Jua', sans-serif;
-      font-size: 15px;
-      color: #1e40af;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* 실시간 완성 문장 프리뷰 카드 */
-    .sentence-preview-box {
-      background: linear-gradient(135deg, #fef3c7, #fde68a);
-      border: 2.5px solid #f59e0b;
-      border-radius: 18px;
-      padding: 22px;
-      text-align: center;
-      margin-bottom: 20px;
-      position: relative;
-    }
-
-    .preview-badge {
-      position: absolute;
-      top: -12px;
-      left: 20px;
-      background: #d97706;
-      color: white;
-      font-family: 'Jua', sans-serif;
-      font-size: 13px;
-      padding: 3px 12px;
-      border-radius: 12px;
-    }
-
-    .preview-text {
-      font-family: 'Jua', sans-serif;
-      font-size: 22px;
-      color: #78350f;
-      line-height: 1.6;
-      margin-top: 6px;
-      word-break: keep-all;
-    }
-
-    .preview-text span.hl {
-      color: #15803d;
-      text-decoration: underline;
-      text-decoration-color: #22c55e;
-      text-underline-offset: 4px;
-    }
-
-    /* 예시 카드 그리드 */
-    .examples-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
       gap: 14px;
-      margin-bottom: 24px;
-    }
-
-    @media (max-width: 640px) {
-      .examples-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .example-card {
-      background: #f8fafc;
-      border: 2px dashed #cbd5e1;
-      border-radius: 16px;
-      padding: 16px;
-      cursor: pointer;
       transition: all 0.2s;
     }
 
-    .example-card:hover {
-      background: #f0fdf4;
-      border-color: #16a34a;
-      transform: translateY(-2px);
+    .post-card.my-post {
+      background: #FFFFFF;
+      border-color: #86EFAC;
+      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.1);
     }
 
-    .example-tag {
-      font-family: 'Jua', sans-serif;
-      font-size: 13px;
-      color: #15803d;
-      background: #dcfce7;
-      padding: 2px 8px;
-      border-radius: 6px;
-      display: inline-block;
-      margin-bottom: 8px;
-    }
-
-    .example-content {
-      font-size: 14px;
-      color: #334155;
-      line-height: 1.5;
-      font-weight: 600;
-    }
-
-    /* 3단계 상세 기준 카드 & 키워드 태그 */
-    .keyword-pill-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-      margin-bottom: 12px;
-    }
-
-    .keyword-pill {
-      background: #f1f5f9;
-      border: 1.5px solid #cbd5e1;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #334155;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .keyword-pill:hover {
-      background: #dcfce7;
-      border-color: #16a34a;
-      color: #15803d;
-      transform: scale(1.03);
-    }
-
-    /* 버튼 액션 바 */
-    .action-bar {
+    .post-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 28px;
-      padding-top: 20px;
-      border-top: 2px solid #f1f5f9;
-      gap: 12px;
     }
 
-    .btn-nav-large {
-      padding: 14px 28px;
-      border-radius: 16px;
-      font-size: 17px;
-      font-weight: 800;
-      font-family: 'Jua', sans-serif;
-      cursor: pointer;
-      display: inline-flex;
+    .post-author-wrap {
+      display: flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
-      border: none;
+      gap: 10px;
     }
 
-    .btn-prev {
-      background: #f1f5f9;
-      border: 2px solid #cbd5e1;
+    .author-avatar {
+      font-size: 24px;
+      background: #DCFCE7;
+      padding: 6px;
+      border-radius: 50%;
+      border: 1.5px solid #86EFAC;
+    }
+
+    .author-name {
+      font-family: 'Jua', sans-serif;
+      font-size: 18px;
+      color: #1E293B;
+    }
+
+    .author-tag {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 8px;
+      background: #E2E8F0;
       color: #475569;
     }
 
-    .btn-prev:hover {
-      background: #e2e8f0;
+    .author-tag.me {
+      background: #DCFCE7;
+      color: #15803D;
+      border: 1px solid #86EFAC;
     }
 
-    .btn-next {
-      background: linear-gradient(135deg, #16a34a, #15803d);
-      color: #ffffff;
-      box-shadow: 0 6px 20px rgba(22, 163, 74, 0.25);
-    }
-
-    .btn-next:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(22, 163, 74, 0.35);
-    }
-
-    .btn-action-small {
-      background: #f1f5f9;
-      border: 1.5px solid #cbd5e1;
-      padding: 6px 14px;
-      border-radius: 10px;
+    .post-date {
       font-size: 13px;
-      font-weight: 800;
-      color: #334155;
-      cursor: pointer;
-      transition: all 0.2s;
+      color: #94A3B8;
     }
 
-    .btn-action-small:hover {
-      background: #e2e8f0;
-      border-color: #94a3b8;
+    .post-rules-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
     }
 
-    /* 최종 완료 배지 상자 */
-    .cert-box {
-      background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
-      border: 3px solid #86efac;
-      border-radius: 24px;
-      padding: 32px 24px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(22, 163, 74, 0.12);
-      margin-bottom: 24px;
-    }
-
-    .cert-icon {
-      font-size: 56px;
-      margin-bottom: 12px;
-      animation: bounce 2s infinite;
-    }
-
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-12px); }
-      60% { transform: translateY(-6px); }
-    }
-
-    .cert-title {
-      font-family: 'Jua', sans-serif;
-      font-size: 28px;
-      color: #14532d;
-      margin-bottom: 8px;
-    }
-
-    .rule-summary-card {
-      background: #ffffff;
-      border: 2px solid #86efac;
-      border-radius: 18px;
-      padding: 20px;
-      text-align: left;
-      margin: 20px 0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-    }
-
-    .rule-summary-row {
+    .rule-pill-box {
+      background: #FFFFFF;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 12px 14px;
       display: flex;
-      margin-bottom: 12px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #f1f5f9;
-      font-size: 15px;
-      line-height: 1.6;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    .rule-summary-row:last-child {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: none;
-    }
-
-    .rule-summary-label {
+    .rule-pill-header {
       font-family: 'Jua', sans-serif;
-      color: #15803d;
-      width: 130px;
-      flex-shrink: 0;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .rule-summary-val {
-      color: #1e293b;
-      font-weight: 600;
-      flex: 1;
+    .rule-pill-text {
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .post-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      border-top: 1px solid #E2E8F0;
+      padding-top: 10px;
+    }
+
+    .btn-post-del {
+      background: #FEE2E2;
+      color: #B91C1C;
+      border: 1px solid #FECACA;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-family: 'Jua', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-post-del:hover {
+      background: #FCA5A5;
+      color: #7F1D1D;
+    }
+
+    /* 다음 퀘스트 완료 이동 바 */
+    .next-quest-banner {
+      background: linear-gradient(135deg, #1E293B, #0F172A);
+      color: white;
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .next-quest-info h3 {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      color: #FEF08A;
+      margin-bottom: 4px;
+    }
+
+    .next-quest-info p {
+      font-size: 14px;
+      color: #CBD5E1;
+    }
+
+    .btn-go-next {
+      background: linear-gradient(135deg, #F59E0B, #D97706);
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 16px;
+      font-family: 'Jua', sans-serif;
+      font-size: 18px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+      transition: transform 0.2s;
+    }
+
+    .btn-go-next:hover {
+      transform: scale(1.04);
     }
 
     /* 토스트 알림창 */
@@ -798,17 +518,17 @@
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
-      background: rgba(15, 23, 42, 0.9);
-      color: white;
-      padding: 12px 24px;
-      border-radius: 30px;
+      background: #1E293B;
+      color: #FFFFFF;
+      padding: 14px 28px;
+      border-radius: 40px;
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 800;
       z-index: 1000;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      opacity: 0;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
       pointer-events: none;
+      opacity: 0;
     }
 
     .toast-msg.show {
@@ -819,364 +539,117 @@
 </head>
 <body>
 
-  <!-- 상단 앱 HUD 네비게이션 -->
+  <!-- 상단 헤더 -->
   <header class="app-header">
     <div class="header-left">
-      <a href="main.html" class="btn-back">⬅ 본부로 이동</a>
+      <a href="main.html" class="btn-back">⬅ 메인으로</a>
       <div class="header-title-group">
-        <span class="header-quest-badge">QUEST 2 • 실과/과학 연계</span>
+        <span class="header-quest-badge">QUEST 2</span>
         <h1 class="header-title">📋 분류기준 만들기</h1>
       </div>
     </div>
     <div class="header-right">
-      <div class="student-badge" id="studentDisplay">👤 탐정 학생 (1모둠)</div>
+      <div class="student-badge" id="dispStudent">👤 학생 탐정 (1모둠)</div>
       <div class="score-badge" id="scoreDisplay">⭐ 0 EXP</div>
-      <button class="btn-sound" id="soundToggle" onclick="toggleSound()">🔊</button>
     </div>
   </header>
 
   <!-- 메인 컨테이너 -->
   <main class="app-container">
-    
-    <!-- 4단계 네비게이터 -->
-    <nav class="step-tracker">
-      <div class="step-item active" id="stepNav-1" onclick="goToStep(1)">
-        <span class="step-num">1단계</span>
-        <span class="step-name">🔍 교차 검증</span>
-      </div>
-      <div class="step-item" id="stepNav-2" onclick="goToStep(2)">
-        <span class="step-num">2단계</span>
-        <span class="step-name">🗣️ 규칙 정립</span>
-      </div>
-      <div class="step-item" id="stepNav-3" onclick="goToStep(3)">
-        <span class="step-num">3단계</span>
-        <span class="step-name">🤖 AI 판별 기준</span>
-      </div>
-      <div class="step-item" id="stepNav-4" onclick="goToStep(4)">
-        <span class="step-num">완료 단계</span>
-        <span class="step-name">🏅 배지 획득</span>
-      </div>
-    </nav>
 
-    <!-- ==================== [1단계] 챗봇·공식 자료 교차 검증 (기준 보완) ==================== -->
-    <section class="stage-card active" id="stage-1">
-      <div class="stage-badge">1단계 • 챗봇·공식 자료 교차 검증</div>
-      <h2 class="stage-title">🔍 직관적으로 보던 특징을 공식 기준과 대조하여 보완하기</h2>
-      <p class="stage-desc">
-        우리가 눈으로 어렴풋이 보던 재활용품의 특징을 챗봇 및 환경부 공식 분리배출 기준과 대조하여 핵심 단서를 날카롭게 다듬어 봅시다.
-      </p>
-
-      <!-- 비교 대상 선택 탭 -->
-      <div class="info-box-title" style="margin-bottom: 8px;">
-        <span>🎯 비교 대상 선택:</span>
-      </div>
-      <div class="target-tabs">
-        <button class="target-tab-btn active" onclick="switchTarget('milk', this)">
-          <span>🥛 우유갑 (살균팩·멸균팩)</span>
-        </button>
-        <button class="target-tab-btn" onclick="switchTarget('can', this)">
-          <span>🥫 캔류 (알루미늄·철캔)</span>
-        </button>
-        <button class="target-tab-btn" onclick="switchTarget('pet', this)">
-          <span>🍶 페트병 (투명·유색)</span>
-        </button>
-      </div>
-
-      <!-- 우리가 처음 생각했던 기준 -->
-      <div class="info-box">
-        <div class="info-box-title">
-          <span>💭 우리가 처음 생각했던 기준:</span>
-          <button class="btn-action-small" onclick="loadSampleInitial()">💡 예시 불러오기</button>
-        </div>
-        <textarea 
-          id="initialCriteria" 
-          class="custom-textarea" 
-          placeholder="예: '종이 재질이고 네모나면 우유갑이다'"
-        >종이 재질이고 네모나면 우유갑이다</textarea>
-      </div>
-
-      <!-- 챗봇·공식 자료 확인 가이드 박스 -->
-      <div class="chatbot-helper-box">
-        <div class="chatbot-avatar">🤖</div>
-        <div class="chatbot-speech">
-          <strong>에코봇의 공식 분리배출 가이드 힌트:</strong><br>
-          "우유갑은 일반 종이와 달리 물이 새지 않도록 <strong>폴리에틸렌 방수 코팅</strong>이 되어 있으며, 상온 보관용 멸균팩은 빛을 막기 위해 내부에 <strong>알루미늄 은박</strong>이 들어있어요! 공식 체크리스트를 확인해보세요."
-        </div>
-      </div>
-
-      <!-- 챗봇/공식 자료 확인 후 발견한 사실 (체크리스트 영역) -->
-      <div class="info-box">
-        <div class="info-box-title">
-          <span>📋 챗봇/공식 자료 확인 후 발견한 사실 (체크리스트):</span>
-          <span style="font-size:13px; color:#16a34a; font-weight:700;">모두 클릭하여 확인해보세요!</span>
-        </div>
-        
-        <div class="checklist-container" id="checklistArea">
-          <!-- 체크 1 -->
-          <div class="check-card" onclick="toggleCheck(this, 1)">
-            <div class="check-box-icon">✓</div>
-            <div class="check-content-wrap">
-              <div class="check-title">겉면 코팅(폴리에틸렌) 및 내부 은박(알루미늄 멸균팩) 유무</div>
-              <div class="check-desc">일반 종이와 달리 물에 젖지 않는 방수 코팅막과 은박 차단막이 존재함</div>
-              <span class="check-tag">재질/보호막 단서</span>
-            </div>
-          </div>
-
-          <!-- 체크 2 -->
-          <div class="check-card" onclick="toggleCheck(this, 2)">
-            <div class="check-box-icon">✓</div>
-            <div class="check-content-wrap">
-              <div class="check-title">빨대 꽂는 은박 구멍이나 플라스틱 캡 유무</div>
-              <div class="check-desc">상단에 스트로우를 꽂을 수 있는 원형 은박 홀 또는 돌려 따는 마개가 결합되어 있음</div>
-              <span class="check-tag">구조적 형태 단서</span>
-            </div>
-          </div>
-
-          <!-- 체크 3 -->
-          <div class="check-card" onclick="toggleCheck(this, 3)">
-            <div class="check-box-icon">✓</div>
-            <div class="check-content-wrap">
-              <div class="check-title">일반 파지와 분리배출해야 하는 살균팩/멸균팩 기호</div>
-              <div class="check-desc">고급 천연 펄프로 재활용하기 위해 일반 신문지/상자와 분리하는 전용 마크가 인쇄됨</div>
-              <span class="check-tag">공식 인증 마크</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 수정한 핵심 단서 -->
-      <div class="info-box" style="background:#f0fdf4; border-color:#86efac;">
-        <div class="info-box-title">
-          <span style="color:#14532d;">✨ 교차 검증 후 수정한 핵심 단서:</span>
-          <button class="btn-action-small" style="background:#dcfce7; color:#15803d; border-color:#86efac;" onclick="loadSampleRevised()">💡 추천 단서 채우기</button>
-        </div>
-        <textarea 
-          id="revisedClue" 
-          class="custom-textarea" 
-          placeholder="예: '접힌 모서리 날개와 상단 삼각 지붕 형태, 내부 방수 코팅 재질'"
-        >접힌 모서리 날개와 상단 삼각 지붕 형태, 내부 방수 코팅 재질</textarea>
-      </div>
-
-      <div class="action-bar">
-        <div></div>
-        <button class="btn-nav-large btn-next" onclick="goToStep(2)">
-          2단계: 모둠 분류 규칙 정립 ➔
-        </button>
-      </div>
-    </section>
-
-    <!-- ==================== [2단계] 모둠 분류 규칙 정립 (한 문장 발표용) ==================== -->
-    <section class="stage-card" id="stage-2">
-      <div class="stage-badge">2단계 • 모둠 분류 규칙 정립</div>
-      <h2 class="stage-title">🗣️ 한 문장 발표용 템플릿으로 분류 규칙 완성하기</h2>
-      <p class="stage-desc">
-        발표 시 모든 모둠원이 명확하고 일관되게 설명할 수 있도록 표준 문장 템플릿에 맞추어 규칙을 정립합니다.
-      </p>
-
-      <!-- 작성 예시 카드 -->
-      <div class="info-box-title">
-        <span>💡 표준 작성 예시 (클릭하면 템플릿에 자동 적용):</span>
-      </div>
-      <div class="examples-grid">
-        <div class="example-card" onclick="applyTemplateExample('milk')">
-          <span class="example-tag">🥛 우유갑 표준 예시</span>
-          <div class="example-content">
-            "우유갑은 상단에 삼각 지붕 형태의 접힌 날개가 있고, 내외부에 방수 코팅이 된 사각 기둥 모양이다."
-          </div>
-        </div>
-        <div class="example-card" onclick="applyTemplateExample('can')">
-          <span class="example-tag">🥫 알루미늄 캔 표준 예시</span>
-          <div class="example-content">
-            "알루미늄 캔은 상단에 링풀(손잡이 탭)과 음료 배출구가 레이저 절개선으로 맞물려 있는 원통형이다."
-          </div>
-        </div>
-      </div>
-
-      <!-- 발표 템플릿 빌더 -->
-      <div class="template-builder-card">
-        <div class="info-box-title" style="color:#1d4ed8; margin-bottom:16px;">
-          <span>📝 발표 템플릿 조립기:</span>
-          <span style="font-size:13px; color:#64748b;">빈칸을 채우면 실시간 문장이 완성됩니다</span>
-        </div>
-
-        <div class="builder-row">
-          <div class="builder-input-group">
-            <label class="builder-label">① 분류 대상 [ 대상 ]</label>
-            <input type="text" id="tplTarget" class="custom-input" value="우유갑" placeholder="예: 우유갑" oninput="updateSentencePreview()">
-          </div>
-
-          <div class="builder-input-group">
-            <label class="builder-label">② 핵심 시각 단서 [ 핵심 시각 단서/특징 ]</label>
-            <input type="text" id="tplVisual" class="custom-input" value="상단에 삼각 지붕 형태의 접힌 날개" placeholder="예: 상단에 삼각 지붕 형태의 접힌 날개" oninput="updateSentencePreview()">
-          </div>
-
-          <div class="builder-input-group">
-            <label class="builder-label">③ 재질 및 구조 [ 재질/구조적 특성 ]</label>
-            <input type="text" id="tplMaterial" class="custom-input" value="내외부에 방수 코팅이 된 사각 기둥 모양" placeholder="예: 내외부에 방수 코팅이 된 사각 기둥 모양" oninput="updateSentencePreview()">
-          </div>
-        </div>
-
-        <!-- 실시간 완성 문장 프리뷰 -->
-        <div class="sentence-preview-box">
-          <span class="preview-badge">📢 완성된 모둠 발표 문장</span>
-          <div class="preview-text" id="sentencePreview">
-            "<span class="hl">우유갑</span>은(는) <span class="hl">상단에 삼각 지붕 형태의 접힌 날개</span>(이)가 있고 <span class="hl">내외부에 방수 코팅이 된 사각 기둥 모양</span>을(를) 지니고 있다."
-          </div>
-        </div>
-
-        <!-- 음성 발표 연습 버튼 -->
-        <div style="display:flex; justify-content:center; gap:10px;">
-          <button class="btn-action-small" style="background:#eff6ff; border-color:#93c5fd; color:#1d4ed8; padding:10px 18px; font-size:14px;" onclick="speakSentence()">
-            🔊 AI 음성으로 문장 들어보기 (발표 연습)
-          </button>
-        </div>
-      </div>
-
-      <div class="action-bar">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(1)">⬅ 1단계 교차 검증</button>
-        <button class="btn-nav-large btn-next" onclick="goToStep(3)">
-          3단계: AI 상세 판별 기준 ➔
-        </button>
-      </div>
-    </section>
-
-    <!-- ==================== [3단계] AI 학습을 위한 상세 판별 기준 (입력창) ==================== -->
-    <section class="stage-card" id="stage-3">
-      <div class="stage-badge">3단계 • AI 학습용 상세 기준 입력</div>
-      <h2 class="stage-title">🤖 사진 속 일부만 보이거나 구겨져도 판별하는 세부 기준</h2>
-      <p class="stage-desc">
-        AI 카메라는 쓰레기가 구겨지거나 다른 물건 뒤에 숨어있을 때 혼란을 겪습니다. AI가 어떤 조건에서도 정확히 판별할 수 있도록 세부 기준을 작성해주세요.
-      </p>
-
-      <!-- 1. 전체 형태가 안 보일 때의 식별 기준 -->
-      <div class="info-box">
-        <div class="info-box-title">
-          <span>🔍 1. 전체 형태가 안 보일 때의 식별 기준:</span>
-        </div>
-        <p style="font-size:14px; color:#64748b; margin-bottom:8px;">
-          💡 추천 키워드를 클릭하면 내용에 빠르게 추가할 수 있습니다:
+    <!-- 인트로 안내 카드 -->
+    <section class="intro-card">
+      <div class="intro-icon">📋✨</div>
+      <div class="intro-text">
+        <h2>5대 쓰레기 품목별 분류 규칙 정립하기</h2>
+        <p>
+          AI가 교실 쓰레기를 헷갈리지 않고 정확히 인식할 수 있도록, <strong>종이, 플라스틱, 캔, 우유팩, 일반쓰레기</strong>의 구체적인 분류 기준과 분리배출 규칙을 작성해 보세요.<br>
+          작성한 규칙은 게시판에 실시간으로 공유되어 같은 모둠원들과 함께 비교하고 발전시킬 수 있습니다!
         </p>
-        <div class="keyword-pill-group">
-          <span class="keyword-pill" onclick="appendKeyword('partialCriteria', '모서리 접합선 및 접힌 삼각 날개')">+ 모서리 접합선/삼각 날개</span>
-          <span class="keyword-pill" onclick="appendKeyword('partialCriteria', '상단 은박 빨대 투입구')">+ 상단 은박 빨대 투입구</span>
-          <span class="keyword-pill" onclick="appendKeyword('partialCriteria', '플라스틱 스크류 캡')">+ 플라스틱 캡</span>
-          <span class="keyword-pill" onclick="appendKeyword('partialCriteria', '살균팩/멸균팩 분리배출 마크')">+ 분리배출 마크 노출</span>
-        </div>
-        <textarea 
-          id="partialCriteria" 
-          class="custom-textarea" 
-          placeholder="예: 모서리 접합선, 접힌 삼각 날개 부분, 상단 은박 빨대 투입구 또는 플라스틱 캡, 브랜드 로고나 분리배출 마크의 일부 노출"
-        >모서리 접합선, 접힌 삼각 날개 부분, 상단 은박 빨대 투입구 또는 플라스틱 캡, 브랜드 로고나 분리배출 마크의 일부 노출</textarea>
-      </div>
-
-      <!-- 2. 오분류 방지 예외 기준 -->
-      <div class="info-box" style="background:#fffbeb; border-color:#fde68a;">
-        <div class="info-box-title" style="color:#92400e;">
-          <span>⚠️ 2. 오분류 방지 예외 기준 (다른 쓰레기와 헷갈리지 않는 조건):</span>
-        </div>
-
-        <!-- 세부 기준 1: 택배 상자와 구분 -->
-        <div style="margin-bottom: 16px;">
-          <label style="font-size:14px; font-weight:800; color:#b45309; display:block; margin-bottom:6px;">
-            📦 종이 상자(택배 박스)와 혼동하지 않는 기준:
-          </label>
-          <input 
-            type="text" 
-            id="avoidBoxCriteria" 
-            class="custom-input" 
-            value="방수 코팅 표면 및 모서리 실링 처리, 얇은 방수 백색 펄프 단면" 
-            placeholder="예: 방수 코팅 표면 및 모서리 실링 처리"
-          >
-        </div>
-
-        <!-- 세부 기준 2: 플라스틱 통과 구분 -->
-        <div>
-          <label style="font-size:14px; font-weight:800; color:#b45309; display:block; margin-bottom:6px;">
-            🧴 플라스틱 통과 혼동하지 않는 기준:
-          </label>
-          <input 
-            type="text" 
-            id="avoidPlasticCriteria" 
-            class="custom-input" 
-            value="눌렀을 때 생기는 종이 특유의 각진 접힘 주름 및 내부 종이 단면" 
-            placeholder="예: 눌렀을 때 생기는 종이 접힘 주름"
-          >
-        </div>
-      </div>
-
-      <div class="action-bar">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(2)">⬅ 2단계 규칙 정립</button>
-        <button class="btn-nav-large btn-next" style="background:linear-gradient(135deg,#f59e0b,#d97706);" onclick="saveAndFinishQuest2()">
-          💾 우리 모둠 AI 규칙 저장 & 완료 ➔
-        </button>
       </div>
     </section>
 
-    <!-- ==================== [4단계] 완료 & 배지 수여 ==================== -->
-    <section class="stage-card" id="stage-4">
-      <div class="cert-box">
-        <div class="cert-icon">📋 🥈 🌟</div>
-        <h2 class="cert-title">QUEST 2: 분류기준 만들기 완료!</h2>
-        <p style="font-size:16px; color:#14532d; font-weight:700; margin-bottom:16px;">
-          축하합니다! 공식 기준 교차 검증과 발표 템플릿, AI 세부 판별 기준을 모두 수립하여<br>
-          <strong>'규칙 설계 탐정 🥈'</strong> 배지를 획득했습니다!
-        </p>
+    <!-- 5대 품목 분류 규칙 작성 폼 -->
+    <section class="form-card">
+      <h3 class="form-section-title">
+        <span>✍️</span>
+        <span>우리 모둠 5대 품목 분류 규칙 작성하기</span>
+      </h3>
 
-        <!-- 완성된 모둠 규칙 요약표 -->
-        <div class="rule-summary-card">
-          <div class="rule-summary-row">
-            <div class="rule-summary-label">🎯 분류 대상</div>
-            <div class="rule-summary-val" id="sumTarget">우유갑 (살균팩·멸균팩)</div>
+      <div class="rule-input-grid">
+        <!-- 1. 종이 -->
+        <div class="rule-item-box">
+          <div class="rule-item-header">
+            <span class="rule-label tag-paper">📄 1. 종이류 분류 규칙</span>
           </div>
-          <div class="rule-summary-row">
-            <div class="rule-summary-label">🗣️ 나의 발표 규칙</div>
-            <div class="rule-summary-val" id="sumSentence">"우유갑은 상단에 삼각 지붕 형태의 접힌 날개가 있고, 내외부에 방수 코팅이 된 사각 기둥 모양이다."</div>
-          </div>
-          <div class="rule-summary-row">
-            <div class="rule-summary-label">🔍 부분 식별 기준</div>
-            <div class="rule-summary-val" id="sumPartial">모서리 접합선, 접힌 삼각 날개, 상단 은박 빨대 투입구/플라스틱 캡</div>
-          </div>
-          <div class="rule-summary-row">
-            <div class="rule-summary-label">⚠️ 오분류 방지 기준</div>
-            <div class="rule-summary-val" id="sumAvoid">택배 상자와 구분(방수 코팅 실링), 플라스틱과 구분(각진 접힘 주름)</div>
-          </div>
+          <textarea id="rulePaper" class="rule-textarea" placeholder="종이류 판별 및 올바른 분리배출 규칙을 입력하세요."></textarea>
         </div>
 
-        <!-- 실시간 우리 모둠 분류 규칙 공유 게시판 -->
-        <div style="background:#FFFFFF; border-radius:20px; padding:22px; border:2.5px solid #86EFAC; margin-bottom:24px; text-align:left; box-shadow:0 4px 16px rgba(22,163,74,0.06);">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-            <h4 style="font-family:'Jua'; color:#14532D; font-size:20px; display:flex; align-items:center; gap:8px;">
-              <span>👥</span> <span>우리 모둠('${teamCode}') 분류 규칙 모음판</span>
-            </h4>
-            <span style="font-size:13px; font-weight:800; color:#15803D; background:#DCFCE7; padding:4px 12px; border-radius:12px;" id="teamRuleCount">동기화 중...</span>
+        <!-- 2. 플라스틱 -->
+        <div class="rule-item-box">
+          <div class="rule-item-header">
+            <span class="rule-label tag-plastic">🧴 2. 플라스틱류 분류 규칙</span>
           </div>
-          <p style="font-size:14px; color:#64748B; margin-bottom:14px;">
-            같은 모둠 코드를 사용하는 친구들이 작성한 한 문장 규칙과 세부 기준을 실시간으로 비교하고, 가장 훌륭한 규칙을 우리 모둠 대표 규칙으로 정해보세요!
-          </p>
-          <div id="teamRuleList" style="display:flex; flex-direction:column; gap:12px;">
-            <div style="text-align:center; padding:18px; color:#94A3B8; font-size:14px;">
-              모둠원들의 분류 규칙을 불러오는 중입니다...
-            </div>
-          </div>
+          <textarea id="rulePlastic" class="rule-textarea" placeholder="플라스틱류 판별 및 올바른 분리배출 규칙을 입력하세요."></textarea>
         </div>
 
-        <div style="background:white; border-radius:16px; padding:18px; border:2px solid #bbf7d0; margin-bottom:24px; text-align:left;">
-          <h4 style="font-family:'Jua'; color:#15803d; font-size:18px; margin-bottom:8px;">💡 다음 퀘스트 안내:</h4>
-          <p style="font-size:15px; color:#334155; line-height:1.6;">
-            우리가 만든 분류 기준을 바탕으로, AI가 헷갈리지 않고 가장 잘 학습할 수 있는 사진 데이터를 직접 선별해보는<br>
-            <strong>[QUEST 3: AI가 잘 배우는 사진은 무엇일까?]</strong>로 나아갑시다!
-          </p>
+        <!-- 3. 캔류 -->
+        <div class="rule-item-box">
+          <div class="rule-item-header">
+            <span class="rule-label tag-can">🥫 3. 캔류(철캔·알루미늄캔) 분류 규칙</span>
+          </div>
+          <textarea id="ruleCan" class="rule-textarea" placeholder="캔류 판별 및 올바른 분리배출 규칙을 입력하세요."></textarea>
         </div>
 
-        <a href="quest3.html" class="btn-nav-large btn-next" style="text-decoration:none; margin:0 auto; font-size:18px; padding:16px 36px; display:inline-flex;">
-          🚀 다음 차시 [QUEST 3: AI가 잘 배우는 사진] 시작하기
-        </a>
+        <!-- 4. 우유팩 -->
+        <div class="rule-item-box">
+          <div class="rule-item-header">
+            <span class="rule-label tag-milk">🥛 4. 우유팩(살균팩·멸균팩) 분류 규칙</span>
+          </div>
+          <textarea id="ruleMilk" class="rule-textarea" placeholder="우유팩(종이팩) 판별 및 일반 종이류와의 구분 분리배출 규칙을 입력하세요."></textarea>
+        </div>
+
+        <!-- 5. 일반쓰레기 -->
+        <div class="rule-item-box">
+          <div class="rule-item-header">
+            <span class="rule-label tag-general">🗑️ 5. 일반쓰레기(종량제) 분류 규칙</span>
+          </div>
+          <textarea id="ruleGeneral" class="rule-textarea" placeholder="재활용이 불가능하여 일반 종량제 봉투에 버려야 하는 기준을 입력하세요."></textarea>
+        </div>
       </div>
 
-      <div class="action-bar" style="margin-top:20px;">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(3)">⬅ 3단계 기준 다시 수정하기</button>
-        <div></div>
+      <button id="btnSaveRules" class="btn-submit-rules" onclick="submitRules()">
+        <span>💾</span>
+        <span>우리 모둠 분류 규칙 저장 및 게시판에 등록 (+100 EXP)</span>
+      </button>
+    </section>
+
+    <!-- 실시간 모둠 공유 게시판 -->
+    <section class="board-card">
+      <div class="board-header">
+        <div class="board-title">
+          <span>👥</span>
+          <span>우리 모둠 실시간 분류 규칙 게시판</span>
+        </div>
+        <span class="board-count-badge" id="boardCountBadge">등록 0건</span>
       </div>
+
+      <div class="posts-grid" id="postsContainer">
+        <div style="text-align:center; padding:30px; color:#94A3B8; font-size:15px;">
+          아직 모둠원들이 등록한 분류 규칙이 없습니다. 위에서 먼저 작성하고 등록해보세요! 🚀
+        </div>
+      </div>
+    </section>
+
+    <!-- 다음 퀘스트 완료 이동 배너 -->
+    <section class="next-quest-banner">
+      <div class="next-quest-info">
+        <h3>🎉 다음 퀘스트 도전 준비 완료!</h3>
+        <p>분류 기준을 세웠다면, AI 학습에 필요한 깨끗한 사진 데이터를 수집하러 떠나요.</p>
+      </div>
+      <a href="quest3.html" class="btn-go-next">
+        <span>QUEST 3: 사진 데이터 수집 ➔</span>
+      </a>
     </section>
 
   </main>
@@ -1184,394 +657,245 @@
   <!-- 토스트 알림창 -->
   <div class="toast-msg" id="toastMsg">알림 메시지</div>
 
-  <!-- Firebase 및 스크립트 모듈 -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, updateDoc, doc, serverTimestamp, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { 
+      getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, where, serverTimestamp, increment 
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    const firebaseConfig = { 
-      apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00", 
-      authDomain: "elemeelementary-textbook.firebaseapp.com", 
-      projectId: "elemeelementary-textbook", 
-      storageBucket: "elemeelementary-textbook.firebasestorage.app", 
-      messagingSenderId: "713149004420", 
-      appId: "1:713149004420:web:8483273681e16f5a8fa0d1" 
+    const firebaseConfig = {
+      apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+      authDomain: "elemeelementary-textbook.firebaseapp.com",
+      projectId: "elemeelementary-textbook",
+      storageBucket: "elemeelementary-textbook.firebasestorage.app",
+      messagingSenderId: "713149004420",
+      appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
+      measurementId: "G-TZT282J9E8"
     };
 
     let db = null;
     try {
       const app = initializeApp(firebaseConfig);
       db = getFirestore(app);
-    } catch(e) {
-      console.warn("Firebase offline/local mode:", e);
+    } catch (e) {
+      console.warn("Firebase 초기화 오류:", e);
     }
 
     const studentId = localStorage.getItem("elementary_studentId") || "guest";
-    const studentName = localStorage.getItem("elementary_studentName") || "탐정 학생";
+    const studentName = localStorage.getItem("elementary_studentName") || "학생 탐정";
     const teamCode = localStorage.getItem("elementary_teamCode") || "1모둠";
+    let currentScore = parseInt(localStorage.getItem("elementary_score") || "0", 10);
 
-    // 학생 정보 표시
-    const studentDisplay = document.getElementById('studentDisplay');
-    if (studentDisplay) {
-      studentDisplay.textContent = `👤 ${studentName} (${teamCode})`;
-    }
+    // 상단 HUD 표시
+    document.getElementById("dispStudent").textContent = `👤 ${studentName} (${teamCode})`;
+    document.getElementById("scoreDisplay").textContent = `⭐ ${currentScore} EXP`;
 
-    // 전역 상태
-    window.state = {
-      score: parseInt(localStorage.getItem("elementary_score") || "0", 10),
-      soundEnabled: true,
-      currentStep: 1,
-      targetType: 'milk',
-      checksDone: { 1: false, 2: false, 3: false }
-    };
-
-    // 점수 표시
-    document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
-
-    // 오디오 사운드
+    // 사운드 시스템
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    window.playSound = function(type) {
-      if (!window.state.soundEnabled) return;
+    function playSound(type) {
       if (audioCtx.state === 'suspended') audioCtx.resume();
+      const now = audioCtx.currentTime;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.connect(gain); gain.connect(audioCtx.destination);
-      const now = audioCtx.currentTime;
 
       if (type === 'click') {
-        osc.type = 'sine'; osc.frequency.setValueAtTime(500, now);
-        osc.frequency.exponentialRampToValueAtTime(850, now + 0.08);
-        gain.gain.setValueAtTime(0.18, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+        gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
         osc.start(now); osc.stop(now + 0.08);
-      } else if (type === 'check') {
-        osc.type = 'sine'; osc.frequency.setValueAtTime(600, now);
-        osc.frequency.exponentialRampToValueAtTime(1200, now + 0.12);
-        gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
-        osc.start(now); osc.stop(now + 0.12);
-      } else if (type === 'fanfare') {
+      } else if (type === 'success') {
         [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
           const o = audioCtx.createOscillator();
           const g = audioCtx.createGain();
           o.connect(g); g.connect(audioCtx.destination);
-          o.frequency.setValueAtTime(freq, now + i * 0.12);
-          g.gain.setValueAtTime(0.25, now + i * 0.12);
-          g.gain.linearRampToValueAtTime(0.01, now + i * 0.12 + 0.25);
-          o.start(now + i * 0.12); o.stop(now + i * 0.12 + 0.25);
+          o.frequency.setValueAtTime(freq, now + i * 0.1);
+          g.gain.setValueAtTime(0.2, now + i * 0.1);
+          g.gain.linearRampToValueAtTime(0.01, now + i * 0.1 + 0.2);
+          o.start(now + i * 0.1); o.stop(now + i * 0.1 + 0.2);
         });
       }
-    };
+    }
 
-    window.toggleSound = function() {
-      window.state.soundEnabled = !window.state.soundEnabled;
-      document.getElementById('soundToggle').textContent = window.state.soundEnabled ? '🔊' : '🔇';
-    };
-
-    window.showToast = function(msg) {
+    function showToast(msg) {
       const toast = document.getElementById('toastMsg');
       toast.textContent = msg;
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2500);
-    };
+    }
 
-    window.addScore = function(pts) {
-      window.state.score += pts;
-      document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
-      localStorage.setItem("elementary_score", window.state.score);
-    };
+    function addScore(pts) {
+      currentScore += pts;
+      document.getElementById('scoreDisplay').textContent = `⭐ ${currentScore} EXP`;
+      localStorage.setItem("elementary_score", currentScore.toString());
+    }
 
-    // 단계 전환
-    window.goToStep = function(stepNum) {
-      window.playSound('click');
-      window.state.currentStep = stepNum;
-      for (let i = 1; i <= 4; i++) {
-        const stepCard = document.getElementById(`stage-${i}`);
-        const navItem = document.getElementById(`stepNav-${i}`);
-        if (stepCard) stepCard.classList.toggle('active', i === stepNum);
-        if (navItem) {
-          navItem.classList.toggle('active', i === stepNum);
-          if (i < stepNum) navItem.classList.add('completed');
-        }
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+    // 1. 규칙 저장 및 게시
+    window.submitRules = async function() {
+      playSound('click');
+      const paper = document.getElementById("rulePaper").value.trim();
+      const plastic = document.getElementById("rulePlastic").value.trim();
+      const can = document.getElementById("ruleCan").value.trim();
+      const milk = document.getElementById("ruleMilk").value.trim();
+      const general = document.getElementById("ruleGeneral").value.trim();
 
-    // 1단계 대상 전환
-    window.switchTarget = function(type, btnEl) {
-      window.playSound('click');
-      window.state.targetType = type;
-      document.querySelectorAll('.target-tab-btn').forEach(b => b.classList.remove('active'));
-      btnEl.classList.add('active');
-
-      const initialEl = document.getElementById('initialCriteria');
-      const revisedEl = document.getElementById('revisedClue');
-      const helperSpeech = document.querySelector('.chatbot-speech');
-
-      if (type === 'milk') {
-        initialEl.value = "종이 재질이고 네모나면 우유갑이다";
-        revisedEl.value = "접힌 모서리 날개와 상단 삼각 지붕 형태, 내부 방수 코팅 재질";
-        helperSpeech.innerHTML = `<strong>에코봇의 공식 분리배출 가이드 힌트:</strong><br>우유갑은 일반 종이와 달리 <strong>폴리에틸렌 방수 코팅</strong> 및 <strong>내부 알루미늄 은박</strong>이 들어있어 일반 파지와 따로 모아야 해요!`;
-      } else if (type === 'can') {
-        initialEl.value = "반짝이는 쇠붙이이고 가벼우면 캔이다";
-        revisedEl.value = "상단 링풀 탭 손잡이, 레이저 배출구 절개선, 알루미늄/철 압축 원통형";
-        helperSpeech.innerHTML = `<strong>에코봇의 공식 분리배출 가이드 힌트:</strong><br>캔류는 <strong>알루미늄 캔</strong>과 <strong>철캔</strong>으로 나뉘며 뚜껑의 링풀(따개)과 자석 부착 여부로 쉽게 구별할 수 있어요!`;
-      } else if (type === 'pet') {
-        initialEl.value = "투명하고 음료수가 담긴 통이면 페트병이다";
-        revisedEl.value = "하단 5개 발 모양 돌기(페탈로이드), 상단 스크류 나사선 입구, 무색 투명 PET 재질";
-        helperSpeech.innerHTML = `<strong>에코봇의 공식 분리배출 가이드 힌트:</strong><br>투명 페트병은 고품질 섬유로 재활용되므로 <strong>라벨 제거 여부</strong>와 <strong>바닥면 페탈로이드 형태</strong>가 중요한 단서예요!`;
-      }
-      showToast(`🎯 대상이 '${btnEl.textContent.trim()}'(으)로 전환되었습니다.`);
-    };
-
-    // 체크리스트 토글
-    window.toggleCheck = function(cardEl, checkIdx) {
-      window.playSound('check');
-      cardEl.classList.toggle('checked');
-      const isChecked = cardEl.classList.contains('checked');
-      window.state.checksDone[checkIdx] = isChecked;
-
-      if (isChecked) {
-        window.addScore(10);
-        showToast('✨ 공식 기준 교차 검증 단서 확인! (+10 EXP)');
-      }
-    };
-
-    // 1단계 예시 불러오기
-    window.loadSampleInitial = function() {
-      window.playSound('click');
-      document.getElementById('initialCriteria').value = "종이 재질이고 네모나면 우유갑이다";
-      showToast("💡 '처음 생각했던 기준' 예시가 입력되었습니다.");
-    };
-
-    window.loadSampleRevised = function() {
-      window.playSound('click');
-      document.getElementById('revisedClue').value = "접힌 모서리 날개와 상단 삼각 지붕 형태, 내부 방수 코팅 재질";
-      showToast("✨ '수정한 핵심 단서'가 반영되었습니다.");
-    };
-
-    // 2단계 문장 실시간 프리뷰 갱신
-    window.updateSentencePreview = function() {
-      const target = document.getElementById('tplTarget').value.trim() || "대상";
-      const visual = document.getElementById('tplVisual').value.trim() || "핵심 시각 단서";
-      const material = document.getElementById('tplMaterial').value.trim() || "재질/구조적 특성";
-
-      const previewEl = document.getElementById('sentencePreview');
-      previewEl.innerHTML = `"<span class="hl">${target}</span>은(는) <span class="hl">${visual}</span>(이)가 있고 <span class="hl">${material}</span>을(를) 지니고 있다."`;
-    };
-
-    // 2단계 템플릿 예시 적용
-    window.applyTemplateExample = function(type) {
-      window.playSound('click');
-      if (type === 'milk') {
-        document.getElementById('tplTarget').value = "우유갑";
-        document.getElementById('tplVisual').value = "상단에 삼각 지붕 형태의 접힌 날개";
-        document.getElementById('tplMaterial').value = "내외부에 방수 코팅이 된 사각 기둥 모양";
-      } else if (type === 'can') {
-        document.getElementById('tplTarget').value = "알루미늄 캔";
-        document.getElementById('tplVisual').value = "상단에 링풀(손잡이 탭)과 음료 배출구가 레이저 절개선으로 맞물려 있는";
-        document.getElementById('tplMaterial').value = "가볍고 단단한 원통형 금속 구조";
-      }
-      updateSentencePreview();
-      showToast("💡 표준 발표 템플릿 예시가 적용되었습니다.");
-    };
-
-    // 음성 낭독 (Web Speech API)
-    window.speakSentence = function() {
-      window.playSound('click');
-      const target = document.getElementById('tplTarget').value.trim() || "우유갑";
-      const visual = document.getElementById('tplVisual').value.trim() || "핵심 단서";
-      const material = document.getElementById('tplMaterial').value.trim() || "재질 특성";
-      const textToRead = `${target}은 ${visual}가 있고 ${material}을 지니고 있다.`;
-
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(textToRead);
-        utter.lang = 'ko-KR';
-        utter.rate = 0.95;
-        window.speechSynthesis.speak(utter);
-        showToast("🔊 모둠 발표 문장을 낭독합니다.");
-      } else {
-        showToast("📢 음성 합성을 지원하지 않는 브라우저입니다.");
-      }
-    };
-
-    // 3단계 키워드 태그 클릭 추가
-    window.appendKeyword = function(textareaId, kwText) {
-      window.playSound('click');
-      const el = document.getElementById(textareaId);
-      if (el.value.includes(kwText)) {
-        showToast("이미 포함된 키워드입니다.");
+      if (!paper && !plastic && !can && !milk && !general) {
+        alert("⚠️ 최소 하나 이상의 분류 규칙을 작성해주세요!");
+        document.getElementById("rulePaper").focus();
         return;
       }
-      if (el.value.trim().length > 0) {
-        el.value = el.value.trim() + ", " + kwText;
-      } else {
-        el.value = kwText;
+
+      const btn = document.getElementById("btnSaveRules");
+      btn.disabled = true;
+      btn.textContent = "💾 저장 및 게시판 등록 중...";
+
+      try {
+        const postData = {
+          studentId: studentId,
+          studentName: studentName,
+          teamCode: teamCode,
+          paperRule: paper || "규칙 미작성",
+          plasticRule: plastic || "규칙 미작성",
+          canRule: can || "규칙 미작성",
+          milkRule: milk || "규칙 미작성",
+          generalRule: general || "규칙 미작성",
+          statement: `[종이] ${paper || '-'} / [플라스틱] ${plastic || '-'} / [캔] ${can || '-'} / [우유팩] ${milk || '-'} / [일반] ${general || '-'}`,
+          createdAt: serverTimestamp()
+        };
+
+        if (db) {
+          await addDoc(collection(db, "quest2_rules"), postData);
+
+          // 점수 및 퀘스트 완료 처리
+          if (studentId && studentId !== "guest") {
+            await updateDoc(doc(db, "students", studentId), {
+              score: increment(100),
+              questsDone: increment(1),
+              q2Done: true
+            }).catch(e => console.warn(e));
+
+            await updateDoc(doc(db, "teams", teamCode), {
+              score: increment(100),
+              questsDone: increment(1),
+              lastActive: serverTimestamp()
+            }).catch(e => console.warn(e));
+          }
+        }
+
+        // 로컬 상태 완료 반영
+        addScore(100);
+        localStorage.setItem("quest2_completed", "true");
+        localStorage.setItem("elementary_q2_done", "true");
+
+        playSound('success');
+        showToast("🎉 분류 규칙이 성공적으로 게시판에 등록되었습니다! (+100 EXP)");
+
+        // 폼 초기화
+        document.getElementById("rulePaper").value = "";
+        document.getElementById("rulePlastic").value = "";
+        document.getElementById("ruleCan").value = "";
+        document.getElementById("ruleMilk").value = "";
+        document.getElementById("ruleGeneral").value = "";
+
+      } catch (err) {
+        console.error(err);
+        alert("등록 중 오류가 발생했습니다: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>💾</span><span>우리 모둠 분류 규칙 저장 및 게시판에 등록 (+100 EXP)</span>`;
       }
-      showToast(`+ '${kwText}' 단서가 추가되었습니다.`);
     };
 
-    // 3단계 저장 및 퀘스트 완료
-    window.saveAndFinishQuest2 = async function() {
-      window.playSound('fanfare');
-      window.addScore(100);
-
-      const target = document.getElementById('tplTarget').value.trim() || "우유갑";
-      const visual = document.getElementById('tplVisual').value.trim();
-      const material = document.getElementById('tplMaterial').value.trim();
-      const fullSentence = `"${target}은(는) ${visual}(이)가 있고 ${material}을(를) 지니고 있다."`;
-      const partial = document.getElementById('partialCriteria').value.trim();
-      const avoidBox = document.getElementById('avoidBoxCriteria').value.trim();
-      const avoidPlastic = document.getElementById('avoidPlasticCriteria').value.trim();
-
-      // 요약 카드 반영
-      document.getElementById('sumTarget').textContent = target;
-      document.getElementById('sumSentence').textContent = fullSentence;
-      document.getElementById('sumPartial').textContent = partial;
-      document.getElementById('sumAvoid').textContent = `택배상자 구분: ${avoidBox} / 플라스틱 구분: ${avoidPlastic}`;
-
-      // 로컬 스토리지 저장
-      localStorage.setItem("quest2_completed", "true");
-      localStorage.setItem("elementary_badge", "규칙 설계 탐정 🥈");
-      localStorage.setItem("quest2_rule_data", JSON.stringify({
-        target, visual, material, fullSentence, partial, avoidBox, avoidPlastic
-      }));
-
-      // Firebase Firestore 저장
-      if (db && studentId && studentId !== "guest") {
-        try {
-          await addDoc(collection(db, "quest2_records"), {
-            studentId,
-            studentName,
-            teamCode,
-            target,
-            fullSentence,
-            partial,
-            avoidBox,
-            avoidPlastic,
-            badge: "규칙 설계 탐정 🥈",
-            score: window.state.score,
-            createdAt: serverTimestamp()
-          });
-        } catch(err) {
-          console.warn("Firebase record save failed:", err);
+    // 2. 글 삭제
+    window.deleteRulePost = async function(postId) {
+      if (!confirm("작성하신 분류 규칙 게시글을 삭제할까요?")) return;
+      try {
+        if (db) {
+          await deleteDoc(doc(db, "quest2_rules", postId));
+          showToast("🗑️ 게시글이 삭제되었습니다.");
         }
+      } catch (err) {
+        alert("삭제 실패: " + err.message);
       }
-
-      // 실시간 우리 모둠 분류 규칙 피드 구독
-      if (db && teamCode) {
-        try {
-          const q = query(collection(db, "quest2_records"), where("teamCode", "==", teamCode));
-          onSnapshot(q, (snapshot) => {
-            const listEl = document.getElementById("teamRuleList");
-            const countEl = document.getElementById("teamRuleCount");
-            if (!listEl) return;
-            
-            if (snapshot.empty) {
-              listEl.innerHTML = `<div style="text-align:center; padding:18px; color:#94A3B8; font-size:14px;">아직 모둠원들의 등록된 규칙이 없습니다. 먼저 규칙을 저장해보세요! 🚀</div>`;
-              if (countEl) countEl.textContent = `참여 0명`;
-              return;
-            }
-
-            if (countEl) countEl.textContent = `등록된 규칙 ${snapshot.size}건`;
-
-            const items = [];
-            snapshot.forEach(docSnap => {
-              items.push({ id: docSnap.id, ...docSnap.data() });
-            });
-
-            items.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-
-            listEl.innerHTML = items.map(item => {
-              const isMe = item.studentId === studentId;
-              return `
-                <div style="background:#F8FAFC; border:2px solid ${isMe ? '#86EFAC' : '#E2E8F0'}; border-radius:16px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <div style="font-family:'Jua'; font-size:16px; color:${isMe ? '#15803D' : '#1E293B'}; display:flex; align-items:center; gap:8px;">
-                      <span>${isMe ? '⭐ 나 (' + item.studentName + ')' : '👤 ' + item.studentName}</span>
-                      <span style="background:#DCFCE7; color:#15803D; font-size:12px; padding:2px 8px; border-radius:8px;">${item.target || '우유갑'}</span>
-                    </div>
-                    <span style="font-size:13px; color:#F59E0B; font-weight:800;">⭐ ${item.score || 100} EXP</span>
-                  </div>
-                  
-                  <div style="background:white; border-radius:12px; padding:12px 14px; border-left:4px solid #16A34A; margin-bottom:8px;">
-                    <div style="font-size:13px; font-weight:800; color:#15803D; margin-bottom:2px;">📢 한 문장 발표 규칙:</div>
-                    <div style="font-family:'Jua'; font-size:16px; color:#1E293B; line-height:1.5;">${item.fullSentence || '규칙 작성됨'}</div>
-                  </div>
-
-                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:13px;">
-                    <div style="background:#EFF6FF; padding:8px 10px; border-radius:10px; color:#1E40AF;">
-                      <strong>🔍 부분 식별:</strong> ${item.partial ? item.partial.slice(0, 35) + '...' : '미작성'}
-                    </div>
-                    <div style="background:#FEF3C7; padding:8px 10px; border-radius:10px; color:#92400E;">
-                      <strong>⚠️ 오분류 방지:</strong> ${item.avoidBox ? item.avoidBox.slice(0, 35) + '...' : '미작성'}
-                    </div>
-                  </div>
-                </div>
-              `;
-            }).join('');
-          }, (err) => {
-            console.warn("quest2 onSnapshot error:", err);
-          });
-        } catch(err) {
-          console.warn("quest2 realtime setup failed:", err);
-        }
-      }
-
-      goToStep(4);
-      showToast("🎉 QUEST 2 완료! '규칙 설계 탐정 🥈' 배지를 획득했습니다! (+100 EXP)");
     };
 
-    // 초기 로딩 시 실시간 모둠 피드 구독 활성화
+    // 3. 실시간 같은 모둠 게시판 구독
     if (db && teamCode) {
-      const q = query(collection(db, "quest2_records"), where("teamCode", "==", teamCode));
+      const q = query(collection(db, "quest2_rules"), where("teamCode", "==", teamCode));
       onSnapshot(q, (snapshot) => {
-        const listEl = document.getElementById("teamRuleList");
-        const countEl = document.getElementById("teamRuleCount");
-        if (!listEl) return;
-        
+        const container = document.getElementById("postsContainer");
+        const countBadge = document.getElementById("boardCountBadge");
+
         if (snapshot.empty) {
-          listEl.innerHTML = `<div style="text-align:center; padding:18px; color:#94A3B8; font-size:14px;">아직 모둠원들의 등록된 규칙이 없습니다. 먼저 규칙을 저장해보세요! 🚀</div>`;
-          if (countEl) countEl.textContent = `참여 0명`;
+          container.innerHTML = `
+            <div style="text-align:center; padding:30px; color:#94A3B8; font-size:15px;">
+              아직 모둠원들이 등록한 분류 규칙이 없습니다. 위에서 먼저 작성하고 등록해보세요! 🚀
+            </div>
+          `;
+          countBadge.textContent = "등록 0건";
           return;
         }
 
-        if (countEl) countEl.textContent = `등록된 규칙 ${snapshot.size}건`;
+        countBadge.textContent = `등록 ${snapshot.size}건`;
 
-        const items = [];
+        const posts = [];
         snapshot.forEach(docSnap => {
-          items.push({ id: docSnap.id, ...docSnap.data() });
+          posts.push({ id: docSnap.id, ...docSnap.data() });
         });
 
-        items.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+        // 최신순 정렬
+        posts.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
-        listEl.innerHTML = items.map(item => {
-          const isMe = item.studentId === studentId;
+        container.innerHTML = posts.map(post => {
+          const isMe = (post.studentId === studentId) || (post.studentName === studentName);
+          const timeStr = post.createdAt?.seconds 
+            ? new Date(post.createdAt.seconds * 1000).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) 
+            : '방금 전';
+
           return `
-            <div style="background:#F8FAFC; border:2px solid ${isMe ? '#86EFAC' : '#E2E8F0'}; border-radius:16px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                <div style="font-family:'Jua'; font-size:16px; color:${isMe ? '#15803D' : '#1E293B'}; display:flex; align-items:center; gap:8px;">
-                  <span>${isMe ? '⭐ 나 (' + item.studentName + ')' : '👤 ' + item.studentName}</span>
-                  <span style="background:#DCFCE7; color:#15803D; font-size:12px; padding:2px 8px; border-radius:8px;">${item.target || '우유갑'}</span>
+            <div class="post-card ${isMe ? 'my-post' : ''}">
+              <div class="post-top">
+                <div class="post-author-wrap">
+                  <div class="author-avatar">${isMe ? '⭐' : '🕵️'}</div>
+                  <div class="author-name">${post.studentName || '탐정 모둠원'}</div>
+                  <span class="author-tag ${isMe ? 'me' : ''}">${isMe ? '내가 쓴 글' : '모둠원'}</span>
                 </div>
-                <span style="font-size:13px; color:#F59E0B; font-weight:800;">⭐ ${item.score || 100} EXP</span>
-              </div>
-              
-              <div style="background:white; border-radius:12px; padding:12px 14px; border-left:4px solid #16A34A; margin-bottom:8px;">
-                <div style="font-size:13px; font-weight:800; color:#15803D; margin-bottom:2px;">📢 한 문장 발표 규칙:</div>
-                <div style="font-family:'Jua'; font-size:16px; color:#1E293B; line-height:1.5;">${item.fullSentence || '규칙 작성됨'}</div>
+                <div class="post-date">⏰ ${timeStr}</div>
               </div>
 
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:13px;">
-                <div style="background:#EFF6FF; padding:8px 10px; border-radius:10px; color:#1E40AF;">
-                  <strong>🔍 부분 식별:</strong> ${item.partial ? item.partial.slice(0, 35) + '...' : '미작성'}
+              <div class="post-rules-content">
+                <div class="rule-pill-box">
+                  <div class="rule-pill-header tag-paper">📄 종이류</div>
+                  <div class="rule-pill-text">${post.paperRule || '-'}</div>
                 </div>
-                <div style="background:#FEF3C7; padding:8px 10px; border-radius:10px; color:#92400E;">
-                  <strong>⚠️ 오분류 방지:</strong> ${item.avoidBox ? item.avoidBox.slice(0, 35) + '...' : '미작성'}
+                <div class="rule-pill-box">
+                  <div class="rule-pill-header tag-plastic">🧴 플라스틱류</div>
+                  <div class="rule-pill-text">${post.plasticRule || '-'}</div>
+                </div>
+                <div class="rule-pill-box">
+                  <div class="rule-pill-header tag-can">🥫 캔류</div>
+                  <div class="rule-pill-text">${post.canRule || '-'}</div>
+                </div>
+                <div class="rule-pill-box">
+                  <div class="rule-pill-header tag-milk">🥛 우유팩(살균/멸균)</div>
+                  <div class="rule-pill-text">${post.milkRule || '-'}</div>
+                </div>
+                <div class="rule-pill-box">
+                  <div class="rule-pill-header tag-general">🗑️ 일반쓰레기</div>
+                  <div class="rule-pill-text">${post.generalRule || '-'}</div>
                 </div>
               </div>
+
+              ${isMe ? `
+                <div class="post-actions">
+                  <button class="btn-post-del" onclick="deleteRulePost('${post.id}')">🗑️ 내 글 삭제</button>
+                </div>
+              ` : ''}
             </div>
           `;
         }).join('');
+      }, (err) => {
+        console.warn("게시판 로드 실패:", err);
       });
     }
   </script>
