@@ -726,7 +726,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { 
-    getFirestore, collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc, serverTimestamp 
+    getFirestore, collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc, serverTimestamp, increment 
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -780,7 +780,10 @@
 
             if (!questArtifactsMap[tCode]) questArtifactsMap[tCode] = {};
             if (!questArtifactsMap[tCode][key]) questArtifactsMap[tCode][key] = [];
-            questArtifactsMap[tCode][key].push(data);
+            const exists = questArtifactsMap[tCode][key].some(item => item.__id === docSnap.id);
+            if (!exists) {
+              questArtifactsMap[tCode][key].push({ __id: docSnap.id, ...data });
+            }
           }
 
           // 학생 키 등록
@@ -802,8 +805,9 @@
     snapshot.forEach(d => {
       teamsCache.push({ id: d.id, ...d.data() });
     });
-    // 정렬 (1모둠, 2모둠 순서)
-    teamsCache.sort((a, b) => (a.teamCode || a.id).localeCompare(b.teamCode || b.id, undefined, { numeric: true }));
+    renderAll();
+  }, (err) => {
+    console.error("Teams listener error:", err);
     renderAll();
   });
 
@@ -816,26 +820,122 @@
       }
     });
     renderAll();
+  }, (err) => {
+    console.error("Students listener error:", err);
+    renderAll();
   });
+
+  function formatDateTime(val) {
+    if (!val) return "-";
+    try {
+      if (typeof val === "object" && val.toDate) {
+        return val.toDate().toLocaleString('ko-KR');
+      }
+      if (typeof val === "object" && val.seconds) {
+        return new Date(val.seconds * 1000).toLocaleString('ko-KR');
+      }
+      if (typeof val === "string" || typeof val === "number") {
+        return new Date(val).toLocaleString('ko-KR');
+      }
+    } catch(e) {
+      return String(val);
+    }
+    return "-";
+  }
+
+  // 모둠 데이터 병합 (teams 컬렉션 + 학생 데이터 + 제출된 모둠 데이터)
+  function getAllMergedTeams() {
+    const teamMap = {};
+
+    // 1. 기존 teams 데이터
+    teamsCache.forEach(t => {
+      const code = t.teamCode || t.id;
+      teamMap[code] = {
+        id: t.id || code,
+        teamCode: code,
+        aiName: t.aiName || "에코봇",
+        score: t.score !== undefined ? t.score : 10,
+        badge: t.badge || "신입 탐정단",
+        approvedQuests: t.approvedQuests || {},
+        members: t.members ? [...t.members] : []
+      };
+    });
+
+    // 2. 학생 목록에서 발견된 모둠 코드 자동 병합
+    studentsCache.forEach(s => {
+      const code = s.teamCode;
+      if (!code) return;
+      if (!teamMap[code]) {
+        teamMap[code] = {
+          id: code,
+          teamCode: code,
+          aiName: s.aiPartnerName || "에코봇",
+          score: 10,
+          badge: "신입 탐정단",
+          approvedQuests: {},
+          members: []
+        };
+      }
+      const sName = s.studentName || s.name || s.id;
+      if (sName && !teamMap[code].members.includes(sName)) {
+        teamMap[code].members.push(sName);
+      }
+    });
+
+    // 3. 퀘스트 제출 목록에서 발견된 모둠 코드 병합
+    Object.keys(questSubmittedMap).forEach(code => {
+      if (!code) return;
+      if (!teamMap[code]) {
+        teamMap[code] = {
+          id: code,
+          teamCode: code,
+          aiName: "에코봇",
+          score: 10,
+          badge: "신입 탐정단",
+          approvedQuests: {},
+          members: []
+        };
+      }
+    });
+
+    // 4. 데이터가 하나도 없을 때 기본 1~6모둠 가이드
+    const keys = Object.keys(teamMap);
+    if (keys.length === 0) {
+      for (let i = 1; i <= 6; i++) {
+        const code = `${i}모둠`;
+        teamMap[code] = {
+          id: code,
+          teamCode: code,
+          aiName: "에코봇",
+          score: 10,
+          badge: "신입 탐정단",
+          approvedQuests: {},
+          members: []
+        };
+      }
+    }
+
+    return Object.values(teamMap).sort((a, b) => (a.teamCode || '').localeCompare(b.teamCode || '', 'ko-KR', { numeric: true }));
+  }
 
   // 통합 렌더링 함수
   function renderAll() {
-    renderStatsAndOverview();
-    renderTeamsTable();
-    renderStudentsTable();
+    const mergedTeams = getAllMergedTeams();
+    renderStatsAndOverview(mergedTeams);
+    renderTeamsTable(mergedTeams);
+    renderStudentsTable(mergedTeams);
   }
 
   // 1. 요약 통계 및 퀘스트별 미니 바 렌더링
-  function renderStatsAndOverview() {
-    const totalTeams = teamsCache.length;
+  function renderStatsAndOverview(mergedTeams) {
+    const totalTeams = mergedTeams.length;
     const totalStudents = studentsCache.length;
 
     let totalQuestsApprovedCount = 0;
     let masterTeamsCount = 0;
     const questCompletedCount = { q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0 };
 
-    teamsCache.forEach(t => {
-      const code = t.teamCode || t.id;
+    mergedTeams.forEach(t => {
       const approved = t.approvedQuests || {};
       let teamApprovedCount = 0;
 
@@ -853,10 +953,15 @@
 
     const avgProgress = totalTeams ? Math.round((totalQuestsApprovedCount / (totalTeams * 8)) * 100) : 0;
 
-    document.getElementById("statTotalTeams").textContent = `${totalTeams}개`;
-    document.getElementById("statTotalStudents").textContent = `${totalStudents}명`;
-    document.getElementById("statAvgProgress").textContent = `${avgProgress}%`;
-    document.getElementById("statMasterTeams").textContent = `${masterTeamsCount}개`;
+    const elTotalTeams = document.getElementById("statTotalTeams");
+    const elTotalStudents = document.getElementById("statTotalStudents");
+    const elAvgProgress = document.getElementById("statAvgProgress");
+    const elMasterTeams = document.getElementById("statMasterTeams");
+
+    if (elTotalTeams) elTotalTeams.textContent = `${totalTeams}개`;
+    if (elTotalStudents) elTotalStudents.textContent = `${totalStudents}명`;
+    if (elAvgProgress) elAvgProgress.textContent = `${avgProgress}%`;
+    if (elMasterTeams) elMasterTeams.textContent = `${masterTeamsCount}개`;
 
     // 8대 퀘스트 미니 바 카운트 반영
     for (let i = 1; i <= 8; i++) {
@@ -872,14 +977,16 @@
   }
 
   // 2. 모둠별 8대 퀘스트 진도 매트릭스 테이블 렌더링
-  function renderTeamsTable() {
+  function renderTeamsTable(mergedTeams) {
     const tbody = document.getElementById("teamTableBody");
-    if (!teamsCache.length) {
+    if (!tbody) return;
+
+    if (!mergedTeams.length) {
       tbody.innerHTML = '<tr><td colspan="14" style="text-align:center;padding:30px;color:#78909C;">개설된 모둠이 없습니다. 위에서 새 모둠을 추가해보세요!</td></tr>';
       return;
     }
 
-    tbody.innerHTML = teamsCache.map(t => {
+    tbody.innerHTML = mergedTeams.map(t => {
       const code = t.teamCode || t.id;
       const approved = t.approvedQuests || {};
       const submitted = questSubmittedMap[code] || {};
@@ -897,7 +1004,7 @@
         } else if (isSubmitted) {
           return `<span class="quest-cell-badge pending" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 📝 과제 제출됨! 클릭하여 확인 및 승인하기">🟡</span>`;
         } else {
-          return `<span class="quest-cell-badge yet" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] ⚪ 아직 미제출">⚪</span>`;
+          return `<span class="quest-cell-badge yet" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] ⚪ 아직 미제출 (클릭하여 직접 승인 가능)">⚪</span>`;
         }
       };
 
@@ -950,31 +1057,32 @@
   }
 
   // 3. 학생 개별 테이블 렌더링
-  function renderStudentsTable() {
+  function renderStudentsTable(mergedTeams) {
     const tbody = document.getElementById("studentTableBody");
     const countEl = document.getElementById("studentTableCount");
     if (countEl) countEl.textContent = studentsCache.length.toString();
+    if (!tbody) return;
 
     if (!studentsCache.length) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#78909C;">접속한 학생 데이터가 없습니다.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#78909C;">접속한 학생 데이터가 없습니다. 학생 로그인 시 자동 등록됩니다.</td></tr>';
       return;
     }
 
     tbody.innerHTML = studentsCache.map(s => {
       const sId = s.studentId || s.id;
       const tCode = s.teamCode || '';
-      const team = teamsCache.find(t => (t.teamCode || t.id) === tCode);
+      const team = mergedTeams.find(t => (t.teamCode || t.id) === tCode);
       const approved = team?.approvedQuests || {};
       const completedCount = ['q1','q2','q3','q4','q5','q6','q7','q8'].filter(k => approved[k]).length;
 
       return `
         <tr>
-          <td><strong>👤 ${s.studentName || s.id}</strong></td>
+          <td><strong>👤 ${s.studentName || s.name || s.id}</strong></td>
           <td><span class="code-tag" style="font-size:12px;padding:2px 6px;">${s.teamCode || '미지정'}</span></td>
           <td>🤖 ${s.aiPartnerName || team?.aiName || '에코봇'}</td>
           <td><strong style="color:#2E7D32;">⭐ ${s.score || 0} EXP</strong></td>
           <td><strong style="color:#16A34A;">${completedCount}/8 승인됨</strong></td>
-          <td style="font-size:12px;color:#64748B;">${s.lastActive ? new Date(s.lastActive.seconds * 1000).toLocaleString('ko-KR') : '-'}</td>
+          <td style="font-size:12px;color:#64748B;">${formatDateTime(s.lastActive || s.joinedAt || s.createdAt)}</td>
         </tr>
       `;
     }).join('');
@@ -985,15 +1093,16 @@
     const modal = document.getElementById("artifactModal");
     const titleEl = document.getElementById("modalTeamTitle");
     const bodyEl = document.getElementById("modalArtifactBody");
+    if (!modal || !bodyEl) return;
 
-    const team = teamsCache.find(t => (t.teamCode || t.id) === teamCode) || {};
+    const team = getAllMergedTeams().find(t => (t.teamCode || t.id) === teamCode) || {};
     const approved = team.approvedQuests || {};
     const artifacts = questArtifactsMap[teamCode] || {};
     const submitted = questSubmittedMap[teamCode] || {};
 
     titleEl.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;width:100%;flex-wrap:wrap;gap:10px;">
-        <span>🔍 [${teamCode} • ${aiName}] 과제 검토 & 승인 센터</span>
+        <span>🔍 [${teamCode} • ${aiName || team.aiName || '에코봇'}] 과제 검토 & 승인 센터</span>
         <button onclick="approveAllQuestsForTeam('${teamCode}')" class="btn-batch-approve">✨ 전체 8개 퀘스트 일괄 승인</button>
       </div>
     `;
@@ -1027,7 +1136,7 @@
       let contentHtml = '';
       if (qDef.key === 'q1') {
         contentHtml = list.length 
-          ? list.map(item => `• <b>${item.studentName || '탐정'}:</b> "${item.thought || '사람의 눈과 AI 눈 차이 탐구 완료'}"`).join('<br>')
+          ? list.map(item => `• <b>${item.studentName || '탐정'}:</b> "${item.thought || item.text || '사람의 눈과 AI 눈 차이 탐구 완료'}"`).join('<br>')
           : '<span style="color:#94A3B8;">아직 작성된 제출물이 없습니다.</span>';
       } else if (qDef.key === 'q2') {
         contentHtml = list.length 
@@ -1120,21 +1229,23 @@
   window.approveQuest = async function(teamCode, qKey) {
     try {
       const teamRef = doc(db, "teams", teamCode);
-      await updateDoc(teamRef, {
-        [`approvedQuests.${qKey}`]: true,
+      await setDoc(teamRef, {
+        teamCode: teamCode,
+        approvedQuests: {
+          [qKey]: true
+        },
         score: increment(50),
         updatedAt: serverTimestamp()
-      });
+      }, { merge: true });
 
-      // 캐시 업데이트
       const team = teamsCache.find(t => (t.teamCode || t.id) === teamCode);
       if (team) {
         if (!team.approvedQuests) team.approvedQuests = {};
         team.approvedQuests[qKey] = true;
-        team.score = (team.score || 0) + 50;
-        viewTeamArtifacts(teamCode, team.aiName || '에코봇', qKey);
+        team.score = (team.score || 10) + 50;
       }
       renderAll();
+      viewTeamArtifacts(teamCode, team?.aiName || '에코봇', qKey);
       alert(`🎉 [${teamCode}]의 ${qKey.toUpperCase()} 퀘스트가 승인되었습니다!\n학생 화면에서 즉시 잠금 해제(Unlock)됩니다.`);
     } catch (err) {
       console.error(err);
@@ -1155,9 +1266,9 @@
       const team = teamsCache.find(t => (t.teamCode || t.id) === teamCode);
       if (team) {
         if (team.approvedQuests) team.approvedQuests[qKey] = false;
-        viewTeamArtifacts(teamCode, team.aiName || '에코봇', qKey);
       }
       renderAll();
+      viewTeamArtifacts(teamCode, team?.aiName || '에코봇', qKey);
     } catch (err) {
       console.error(err);
       alert("승인 취소 실패: " + err.message);
@@ -1170,28 +1281,22 @@
     try {
       const teamRef = doc(db, "teams", teamCode);
       const updates = {
-        "approvedQuests.q1": true,
-        "approvedQuests.q2": true,
-        "approvedQuests.q3": true,
-        "approvedQuests.q4": true,
-        "approvedQuests.q5": true,
-        "approvedQuests.q6": true,
-        "approvedQuests.q7": true,
-        "approvedQuests.q8": true,
-        questsDone: 8,
+        teamCode: teamCode,
+        approvedQuests: {
+          q1: true, q2: true, q3: true, q4: true, q5: true, q6: true, q7: true, q8: true
+        },
         badge: "마스터 탐정 🏆",
         updatedAt: serverTimestamp()
       };
-      await updateDoc(teamRef, updates);
+      await setDoc(teamRef, updates, { merge: true });
 
       const team = teamsCache.find(t => (t.teamCode || t.id) === teamCode);
       if (team) {
         team.approvedQuests = { q1:true, q2:true, q3:true, q4:true, q5:true, q6:true, q7:true, q8:true };
-        team.questsDone = 8;
         team.badge = "마스터 탐정 🏆";
-        viewTeamArtifacts(teamCode, team.aiName || '에코봇');
       }
       renderAll();
+      viewTeamArtifacts(teamCode, team?.aiName || '에코봇');
       alert(`🎉 [${teamCode}]의 전체 8대 퀘스트가 일괄 승인 완료되었습니다!`);
     } catch (err) {
       console.error(err);
@@ -1199,23 +1304,22 @@
     }
   };
 
-    bodyEl.innerHTML = html;
-    modal.classList.add("active");
-  };
-
   window.closeModal = function() {
-    document.getElementById("artifactModal").classList.remove("active");
+    const modal = document.getElementById("artifactModal");
+    if (modal) modal.classList.remove("active");
   };
 
   // 모달 바깥 배경 클릭 시 닫기
-  document.getElementById("artifactModal").addEventListener("click", (e) => {
+  document.getElementById("artifactModal")?.addEventListener("click", (e) => {
     if (e.target.id === "artifactModal") closeModal();
   });
 
   // 새 모둠 코드 추가
   window.addNewTeamCode = async function() {
-    const code = document.getElementById("newTeamCode").value.trim();
-    const aiName = document.getElementById("newTeamAiName").value.trim() || "에코봇";
+    const codeInput = document.getElementById("newTeamCode");
+    const aiInput = document.getElementById("newTeamAiName");
+    const code = codeInput ? codeInput.value.trim() : "";
+    const aiName = aiInput ? aiInput.value.trim() || "에코봇" : "에코봇";
 
     if (!code) {
       return alert("모둠 코드를 입력해주세요! (예: 1모둠, GREEN)");
@@ -1228,89 +1332,100 @@
         members: [],
         score: 10,
         badge: "신입 탐정단",
-        questsDone: 0,
-        createdAt: serverTimestamp(),
-        lastActive: serverTimestamp()
+        approvedQuests: {},
+        createdAt: serverTimestamp()
       }, { merge: true });
 
-      alert(`✅ '${code}' 모둠 코드가 성공적으로 생성되었습니다!`);
-      document.getElementById("newTeamCode").value = "";
-      document.getElementById("newTeamAiName").value = "";
-    } catch (e) {
-      alert("모둠 생성 실패: " + e.message);
+      if (codeInput) codeInput.value = "";
+      if (aiInput) aiInput.value = "";
+      alert(`🎉 새로운 모둠 [${code}]이(가) 등록되었습니다!`);
+      renderAll();
+    } catch (err) {
+      console.error(err);
+      alert("모둠 등록 실패: " + err.message);
     }
   };
 
-  // 1모둠~6모둠 일괄 생성
+  // 1모둠~6모둠 일괄 자동 생성
   window.quickBatchCreateTeams = async function() {
-    if (!confirm("1모둠부터 6모둠까지 6개 모둠을 일괄 생성할까요?")) return;
-
+    if (!confirm("1모둠부터 6모둠까지 기본 모둠을 일괄 생성/동기화할까요?")) return;
     try {
       for (let i = 1; i <= 6; i++) {
         const code = `${i}모둠`;
         await setDoc(doc(db, "teams", code), {
           teamCode: code,
-          aiName: `에코봇-${i}`,
-          members: [],
+          aiName: "에코봇",
           score: 10,
           badge: "신입 탐정단",
-          questsDone: 0,
-          createdAt: serverTimestamp(),
-          lastActive: serverTimestamp()
+          approvedQuests: {},
+          createdAt: serverTimestamp()
         }, { merge: true });
       }
-      alert("✅ 1모둠부터 6모둠까지 생성이 완료되었습니다!");
-    } catch (e) {
-      alert("일괄 생성 실패: " + e.message);
+      alert("✅ 1모둠~6모둠이 성공적으로 생성되었습니다!");
+      renderAll();
+    } catch (err) {
+      console.error(err);
+      alert("일괄 생성 중 오류: " + err.message);
     }
   };
 
-  // AI 이름 변경
-  window.editTeamAiName = async function(teamId, currentAi) {
-    const newName = prompt(`[${teamId}] 모둠의 새 AI 파트너 이름을 입력하세요:`, currentAi);
-    if (!newName || newName.trim() === currentAi) return;
+  // AI 파트너 이름 수정
+  window.editTeamAiName = async function(teamId, currentName) {
+    const newName = prompt(`[${teamId}]의 AI 파트너 이름을 입력하세요:`, currentName || "에코봇");
+    if (!newName || !newName.trim()) return;
 
     try {
       await updateDoc(doc(db, "teams", teamId), {
         aiName: newName.trim(),
         updatedAt: serverTimestamp()
       });
-      alert(`✅ AI 이름이 '${newName.trim()}'(으)로 변경되었습니다.`);
-    } catch (e) {
-      alert("변경 실패: " + e.message);
+      alert(`AI 파트너 이름이 '${newName.trim()}'(으)로 변경되었습니다.`);
+      renderAll();
+    } catch (err) {
+      console.error(err);
+      alert("수정 실패: " + err.message);
     }
   };
 
   // 모둠 삭제
   window.deleteTeam = async function(teamId) {
-    if (!confirm(`'${teamId}' 모둠을 정말 삭제할까요? 관련 모둠 데이터가 모두 삭제됩니다.`)) return;
+    if (!confirm(`정말로 [${teamId}] 모둠을 삭제하시겠습니까?`)) return;
+
     try {
       await deleteDoc(doc(db, "teams", teamId));
-      alert("✅ 모둠이 삭제되었습니다.");
-    } catch (e) {
-      alert("삭제 실패: " + e.message);
+      alert(`[${teamId}] 모둠이 삭제되었습니다.`);
+      renderAll();
+    } catch (err) {
+      console.error(err);
+      alert("삭제 실패: " + err.message);
     }
   };
 
-  // 진도표 CSV 다운로드
+  // CSV 다운로드
   window.downloadAdminCSV = function() {
-    if (!teamsCache.length) {
-      return alert("다운로드할 모둠 데이터가 없습니다.");
+    const mergedTeams = getAllMergedTeams();
+    if (!mergedTeams.length) {
+      alert("내보낼 모둠 데이터가 없습니다.");
+      return;
     }
 
     const header = "모둠코드,AI파트너이름,참여학생명단,Q1(AI의눈),Q2(분류기준),Q3(사진데이터),Q4(이름표라벨),Q5(AI탐정),Q6(오류관),Q7(실천규약),Q8(의회선포),진도율,총점수,배지";
-    const rows = teamsCache.map(t => {
+    const rows = mergedTeams.map(t => {
       const code = t.teamCode || t.id;
-      const qStatus = questDoneMap[code] || {};
-      const q1 = qStatus.q1 ? "완료" : "미완료";
-      const q2 = qStatus.q2 ? "완료" : "미완료";
-      const q3 = qStatus.q3 ? "완료" : "미완료";
-      const q4 = qStatus.q4 ? "완료" : "미완료";
-      const q5 = qStatus.q5 ? "완료" : "미완료";
-      const q6 = qStatus.q6 ? "완료" : "미완료";
-      const q7 = qStatus.q7 ? "완료" : "미완료";
-      const q8 = qStatus.q8 ? "완료" : "미완료";
-      const completedCount = [qStatus.q1, qStatus.q2, qStatus.q3, qStatus.q4, qStatus.q5, qStatus.q6, qStatus.q7, qStatus.q8].filter(Boolean).length;
+      const approved = t.approvedQuests || {};
+      const q1 = approved.q1 ? "완료" : (questSubmittedMap[code]?.q1 ? "제출됨" : "미완료");
+      const q2 = approved.q2 ? "완료" : (questSubmittedMap[code]?.q2 ? "제출됨" : "미완료");
+      const q3 = approved.q3 ? "완료" : (questSubmittedMap[code]?.q3 ? "제출됨" : "미완료");
+      const q4 = approved.q4 ? "완료" : (questSubmittedMap[code]?.q4 ? "제출됨" : "미완료");
+      const q5 = approved.q5 ? "완료" : (questSubmittedMap[code]?.q5 ? "제출됨" : "미완료");
+      const q6 = approved.q6 ? "완료" : (questSubmittedMap[code]?.q6 ? "제출됨" : "미완료");
+      const q7 = approved.q7 ? "완료" : (questSubmittedMap[code]?.q7 ? "제출됨" : "미완료");
+      const q8 = approved.q8 ? "완료" : (questSubmittedMap[code]?.q8 ? "제출됨" : "미완료");
+      
+      let completedCount = 0;
+      for (let i = 1; i <= 8; i++) {
+        if (approved[`q${i}`] === true) completedCount++;
+      }
       const pct = `${Math.round((completedCount / 8) * 100)}% (${completedCount}/8)`;
 
       const cleanCode = (code || '').replace(/"/g, '""');
@@ -1335,6 +1450,9 @@
     localStorage.removeItem("elementary_teamCode");
     window.location.href = "index.html";
   };
+
+  // 즉시 렌더링 호출
+  renderAll();
 </script>
 </body>
 </html>
