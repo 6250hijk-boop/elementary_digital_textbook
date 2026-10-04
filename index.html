@@ -278,15 +278,28 @@
       const teamCode = rawTeamCode;
       const studentId = `${teamCode}_${studentName}`;
 
-      // 1. 교사가 생성한 모둠(Team) 존재 여부 검증
+      // 1. 교사가 생성한 모둠(Team) 존재 여부 검증 (단, test 코드는 테스트용으로 항시 허용)
+      const isTestCode = (rawTeamCode.toLowerCase() === "test");
       const teamRef = doc(db, "teams", teamCode);
       const teamSnap = await getDoc(teamRef);
 
-      if (!teamSnap.exists()) {
-        alert(`⚠️ '${teamCode}'(은)는 아직 생성되지 않은 모둠 코드입니다!\n선생님이 개설해주신 올바른 모둠 코드를 입력해주세요.`);
+      if (!teamSnap.exists() && !isTestCode) {
+        alert(`⚠️ '${teamCode}'(은)는 선생님이 개설하지 않은 모둠 코드입니다!\n선생님이 만드신 올바른 모둠 코드를 입력해주세요. (테스트용: test)`);
         loginBtn.disabled = false;
         loginBtn.textContent = "🚀 모둠 대기방 입장하기";
         return;
+      }
+
+      // test 모둠이 데이터베이스에 아직 없는 경우 기본 데이터 자동 생성
+      if (!teamSnap.exists() && isTestCode) {
+        await setDoc(teamRef, {
+          teamCode: "test",
+          aiName: "테스트봇",
+          score: 10,
+          badge: "신입 탐정단",
+          approvedQuests: {},
+          createdAt: serverTimestamp()
+        }, { merge: true });
       }
 
       const ex = teamSnap.data();

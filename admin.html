@@ -586,6 +586,73 @@
       border-radius: 10px;
       border: 1px solid #CBD5E1;
     }
+
+    /* 탭 네비게이션 */
+    .admin-tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: #FFFFFF;
+      padding: 8px 12px;
+      border-radius: 20px;
+      border: 2px solid #C8E6C9;
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.06);
+    }
+    .tab-btn {
+      padding: 10px 20px;
+      border-radius: 14px;
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      background: transparent;
+      color: #558B2F;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab-btn:hover {
+      background: #E8F5E9;
+      color: var(--primary);
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: white;
+      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.25);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* 모둠 코드 관리 전용 그리드 & 카드 */
+    .team-mgmt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .team-mgmt-card {
+      background: #FFFFFF;
+      border: 2px solid #C8E6C9;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .team-mgmt-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(46, 125, 50, 0.12);
+    }
+    .team-mgmt-card.test-card {
+      border-color: #C4B5FD;
+      background: #FAF5FF;
+    }
   </style>
 </head>
 <body>
@@ -600,7 +667,6 @@
     </div>
 
     <div class="header-btns">
-      <a href="main.html" class="btn-action btn-ghost">🏠 학생 메인 화면</a>
       <a href="dashboard.html" class="btn-action btn-ghost" style="border-color:#38BDF8; color:#0284C7;">📊 학급 공개 현황판</a>
       <button onclick="logoutAdmin()" class="btn-action btn-ghost" style="color:#C62828;border-color:#FFCDD2;">🚪 로그아웃</button>
     </div>
@@ -626,120 +692,157 @@
     </div>
   </div>
 
-  <!-- 8대 퀘스트별 학급 완수 현황 미니 바 -->
-  <div class="quest-overview-card">
-    <div class="quest-overview-title">
-      <span>🗺️</span>
-      <span>8대 퀘스트별 학급 완수 모둠 현황 (실시간 집계)</span>
+  <!-- 탭 네비게이션 -->
+  <div class="admin-tabs">
+    <button class="tab-btn active" data-tab="tab-matrix" onclick="switchTab('tab-matrix')">📊 실시간 모둠 8대 퀘스트 진도표</button>
+    <button class="tab-btn" data-tab="tab-team-mgmt" onclick="switchTab('tab-team-mgmt')">🏷️ 모둠 코드 개설 및 관리</button>
+    <button class="tab-btn" data-tab="tab-students" onclick="switchTab('tab-students')">📋 학생별 개별 학습 현황</button>
+  </div>
+
+  <!-- TAB 1: 실시간 모둠 8대 퀘스트 진도표 -->
+  <div class="tab-content active" id="tab-matrix">
+    <!-- 8대 퀘스트별 학급 완수 현황 미니 바 -->
+    <div class="quest-overview-card">
+      <div class="quest-overview-title">
+        <span>🗺️</span>
+        <span>8대 퀘스트별 학급 완수 모둠 현황 (실시간 집계)</span>
+      </div>
+      <div class="quest-mini-grid" id="questMiniGrid">
+        <div class="quest-mini-box" id="qBox-1">
+          <div class="quest-mini-name">Q1. AI의 눈 👁️</div>
+          <div class="quest-mini-count" id="qCount-1">0팀</div>
+        </div>
+        <div class="quest-mini-box" id="qBox-2">
+          <div class="quest-mini-name">Q2. 분류기준 📋</div>
+          <div class="quest-mini-count" id="qCount-2">0팀</div>
+        </div>
+        <div class="quest-mini-box" id="qBox-3">
+          <div class="quest-mini-name">Q3. 사진수집 📷</div>
+          <div class="quest-mini-count" id="qCount-3">0팀</div>
+        </div>
+        <div class="quest-mini-box" id="qBox-4">
+          <div class="quest-mini-name">Q4. 이름표 🏷️</div>
+          <div class="quest-mini-count" id="qCount-4">0팀</div>
+        </div>
+        <div class="quest-mini-box" id="qBox-5">
+          <div class="quest-mini-name">Q5. AI탐정 🤖</div>
+          <div class="quest-mini-count" id="qCount-5">0팀</div>
+        </div>
+        <div class="quest-mini-box" id="qBox-6">
+          <div class="quest-mini-name">Q6. 오류관 🏛️</div>
+          <div class="quest-mini-count" id="qCount-6">0팀</div>
+        </div>
+        <div class="quest-mini-box" id="qBox-7">
+          <div class="quest-mini-name">Q7. 실천규약 ✍️</div>
+          <div class="quest-mini-count" id="qCount-7">0팀</div>
+        </div>
+        <div class="quest-mini-box" id="qBox-8">
+          <div class="quest-mini-name">Q8. 의회선포 ⚖️</div>
+          <div class="quest-mini-count" id="qCount-8">0팀</div>
+        </div>
+      </div>
     </div>
-    <div class="quest-mini-grid" id="questMiniGrid">
-      <div class="quest-mini-box" id="qBox-1">
-        <div class="quest-mini-name">Q1. AI의 눈 👁️</div>
-        <div class="quest-mini-count" id="qCount-1">0팀</div>
+
+    <!-- 모둠별 8대 퀘스트 실시간 진도 매트릭스 -->
+    <div class="manage-card">
+      <div class="section-header">
+        <h2>📊 모둠별 8대 퀘스트 실시간 진도 매트릭스</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button onclick="downloadAdminCSV()" class="btn-action btn-green" style="font-size:14px;padding:8px 14px;">📥 모둠 진도표 CSV 다운로드</button>
+          <button onclick="quickBatchCreateTeams()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;background:#E8F5E9;">✨ 1모둠~6모둠 일괄 생성</button>
+        </div>
       </div>
-      <div class="quest-mini-box" id="qBox-2">
-        <div class="quest-mini-name">Q2. 분류기준 📋</div>
-        <div class="quest-mini-count" id="qCount-2">0팀</div>
-      </div>
-      <div class="quest-mini-box" id="qBox-3">
-        <div class="quest-mini-name">Q3. 사진수집 📷</div>
-        <div class="quest-mini-count" id="qCount-3">0팀</div>
-      </div>
-      <div class="quest-mini-box" id="qBox-4">
-        <div class="quest-mini-name">Q4. 이름표 🏷️</div>
-        <div class="quest-mini-count" id="qCount-4">0팀</div>
-      </div>
-      <div class="quest-mini-box" id="qBox-5">
-        <div class="quest-mini-name">Q5. AI탐정 🤖</div>
-        <div class="quest-mini-count" id="qCount-5">0팀</div>
-      </div>
-      <div class="quest-mini-box" id="qBox-6">
-        <div class="quest-mini-name">Q6. 오류관 🏛️</div>
-        <div class="quest-mini-count" id="qCount-6">0팀</div>
-      </div>
-      <div class="quest-mini-box" id="qBox-7">
-        <div class="quest-mini-name">Q7. 실천규약 ✍️</div>
-        <div class="quest-mini-count" id="qCount-7">0팀</div>
-      </div>
-      <div class="quest-mini-box" id="qBox-8">
-        <div class="quest-mini-name">Q8. 의회선포 ⚖️</div>
-        <div class="quest-mini-count" id="qCount-8">0팀</div>
+
+      <!-- 모둠 진도 매트릭스 테이블 -->
+      <div class="table-wrapper">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th class="col-team">모둠 (AI 파트너)</th>
+              <th class="col-members">참여 학생</th>
+              <th class="col-quest" title="Q1. AI의 눈 👁️">Q1<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">눈</span></th>
+              <th class="col-quest" title="Q2. 분류기준 만들기 📋">Q2<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">기준</span></th>
+              <th class="col-quest" title="Q3. 사진 데이터 수집 📷">Q3<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">사진</span></th>
+              <th class="col-quest" title="Q4. 이름표 붙이기 🏷️">Q4<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">라벨</span></th>
+              <th class="col-quest" title="Q5. 교실쓰레기 AI탐정단 🤖">Q5<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">탐정</span></th>
+              <th class="col-quest" title="Q6. 오류박물관 🏛️">Q6<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">오류</span></th>
+              <th class="col-quest" title="Q7. 실천 규약 초안 ✍️">Q7<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">규약</span></th>
+              <th class="col-quest" title="Q8. 자원 순환 의회 ⚖️">Q8<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">의회</span></th>
+              <th class="col-progress">진도율</th>
+              <th class="col-score">점수/배지</th>
+              <th class="col-action">과제 검토 및 관리</th>
+            </tr>
+          </thead>
+          <tbody id="teamTableBody">
+            <tr><td colspan="13" style="text-align:center;padding:30px;color:#78909C;">실시간 모둠 진도 데이터를 연결하고 있습니다...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 
-  <!-- 1. 모둠별 8대 퀘스트 실시간 진도 매트릭스 -->
-  <div class="manage-card">
-    <div class="section-header">
-      <h2>📊 모둠별 8대 퀘스트 실시간 진도 매트릭스</h2>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button onclick="downloadAdminCSV()" class="btn-action btn-green" style="font-size:14px;padding:8px 14px;">📥 모둠 진도표 CSV 다운로드</button>
-        <button onclick="quickBatchCreateTeams()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;background:#E8F5E9;">✨ 1모둠~6모둠 일괄 생성</button>
+  <!-- TAB 2: 모둠 코드 개설 및 관리 -->
+  <div class="tab-content" id="tab-team-mgmt">
+    <div class="manage-card">
+      <div class="section-header">
+        <h2>🏷️ 학급 모둠 코드 개설 및 학생 입장 관리</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button onclick="quickBatchCreateTeams()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;background:#E8F5E9;">✨ 1모둠~6모둠 일괄 생성</button>
+          <button onclick="quickCreateTestTeam()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;background:#F3E8FF;color:#6D28D9;border-color:#DDD6FE;">🧪 test 모둠 생성</button>
+        </div>
       </div>
-    </div>
 
-    <!-- 새 모둠 코드 추가 폼 -->
-    <div class="add-team-box">
-      <strong style="color:#2E7D32;font-family:'Jua',sans-serif;font-size:16px;">➕ 새 모둠 코드 개설:</strong>
-      <input type="text" id="newTeamCode" placeholder="모둠 코드 (예: 1모둠, GREEN)" style="flex:1;min-width:140px;">
-      <input type="text" id="newTeamAiName" placeholder="기본 AI 이름 (예: 에코봇)" style="flex:1;min-width:140px;">
-      <button onclick="addNewTeamCode()" class="btn-action btn-green" style="padding:9px 16px;font-size:14px;">➕ 모둠 생성</button>
-    </div>
+      <div style="background:#ECFDF5;border:1.5px solid #A7F3D0;border-radius:14px;padding:12px 16px;margin-bottom:18px;font-size:13px;color:#065F46;line-height:1.5;">
+        📢 <strong>학생 로그인 보안 안내</strong>: 학생들은 <strong>선생님이 개설한 모둠 코드(또는 test)로만 로그인</strong>할 수 있습니다. 새 수업을 진행할 모둠 코드를 개설한 후 학생들에게 알려주세요!
+      </div>
 
-    <!-- 모둠 진도 매트릭스 테이블 -->
-    <div class="table-wrapper">
-      <table class="matrix-table">
-        <thead>
-          <tr>
-            <th class="col-team">모둠 (AI 파트너)</th>
-            <th class="col-members">참여 학생</th>
-            <th class="col-quest" title="Q1. AI의 눈 👁️">Q1<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">눈</span></th>
-            <th class="col-quest" title="Q2. 분류기준 만들기 📋">Q2<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">기준</span></th>
-            <th class="col-quest" title="Q3. 사진 데이터 수집 📷">Q3<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">사진</span></th>
-            <th class="col-quest" title="Q4. 이름표 붙이기 🏷️">Q4<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">라벨</span></th>
-            <th class="col-quest" title="Q5. 교실쓰레기 AI탐정단 🤖">Q5<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">탐정</span></th>
-            <th class="col-quest" title="Q6. 오류박물관 🏛️">Q6<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">오류</span></th>
-            <th class="col-quest" title="Q7. 실천 규약 초안 ✍️">Q7<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">규약</span></th>
-            <th class="col-quest" title="Q8. 자원 순환 의회 ⚖️">Q8<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">의회</span></th>
-            <th class="col-progress">진도율</th>
-            <th class="col-score">점수/배지</th>
-            <th class="col-action">과제 검토 및 관리</th>
-          </tr>
-        </thead>
-        <tbody id="teamTableBody">
-          <tr><td colspan="13" style="text-align:center;padding:30px;color:#78909C;">실시간 모둠 진도 데이터를 연결하고 있습니다...</td></tr>
-        </tbody>
-      </table>
+      <!-- 새 모둠 코드 추가 폼 -->
+      <div class="add-team-box">
+        <strong style="color:#2E7D32;font-family:'Jua',sans-serif;font-size:16px;">➕ 새 모둠 코드 개설:</strong>
+        <input type="text" id="newTeamCode" placeholder="모둠 코드 (예: 1모둠, GREEN, 탐정단)" style="flex:1;min-width:140px;">
+        <input type="text" id="newTeamAiName" placeholder="기본 AI 이름 (예: 에코봇)" style="flex:1;min-width:140px;">
+        <button onclick="addNewTeamCode()" class="btn-action btn-green" style="padding:9px 16px;font-size:14px;">➕ 모둠 생성</button>
+      </div>
+
+      <!-- 개설된 모둠 카드 목록 -->
+      <div style="margin-top:20px;">
+        <h3 style="font-family:'Jua',sans-serif;font-size:18px;color:#1B5E20;margin-bottom:12px;">📋 현재 개설된 모둠 목록</h3>
+        <div class="team-mgmt-grid" id="teamMgmtGrid">
+          <div style="text-align:center;padding:30px;color:#78909C;grid-column:1/-1;">모둠 목록을 불러오는 중입니다...</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- 2. 학생별 개별 접속 및 활동 목록 -->
-  <div class="manage-card" style="border-color:#A5D6A7;">
-    <div class="section-header">
-      <h2>📋 학생별 개별 학습 및 진도 현황</h2>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-        <span style="font-size:13px;color:#558B2F;font-weight:bold;">총 <span id="studentTableCount">0</span>명 참여 중</span>
-        <button onclick="deleteAllStudents()" class="btn-action btn-ghost" style="font-size:13px;padding:6px 12px;color:#C62828;border-color:#FFCDD2;background:#FFEBEE;">🗑️ 전체 학생 데이터 초기화</button>
+  <!-- TAB 3: 학생별 개별 학습 현황 -->
+  <div class="tab-content" id="tab-students">
+    <div class="manage-card" style="border-color:#A5D6A7;">
+      <div class="section-header">
+        <h2>📋 학생별 개별 학습 및 진도 현황</h2>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <span style="font-size:13px;color:#558B2F;font-weight:bold;">총 <span id="studentTableCount">0</span>명 참여 중</span>
+          <button onclick="deleteAllStudents()" class="btn-action btn-ghost" style="font-size:13px;padding:6px 12px;color:#C62828;border-color:#FFCDD2;background:#FFEBEE;">🗑️ 전체 학생 데이터 초기화</button>
+        </div>
       </div>
-    </div>
 
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>학생 닉네임</th>
-            <th>소속 모둠</th>
-            <th>모둠 AI</th>
-            <th>개인 점수</th>
-            <th>완료 퀘스트 수</th>
-            <th>최근 활동 일시</th>
-            <th>관리</th>
-          </tr>
-        </thead>
-        <tbody id="studentTableBody">
-          <tr><td colspan="7" style="text-align:center;padding:20px;color:#78909C;">학생 목록을 불러오는 중입니다...</td></tr>
-        </tbody>
-      </table>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>학생 닉네임</th>
+              <th>소속 모둠</th>
+              <th>모둠 AI</th>
+              <th>개인 점수</th>
+              <th>완료 퀘스트 수</th>
+              <th>최근 활동 일시</th>
+              <th>관리</th>
+            </tr>
+          </thead>
+          <tbody id="studentTableBody">
+            <tr><td colspan="7" style="text-align:center;padding:20px;color:#78909C;">학생 목록을 불러오는 중입니다...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -958,6 +1061,7 @@
     const mergedTeams = getAllMergedTeams();
     renderStatsAndOverview(mergedTeams);
     renderTeamsTable(mergedTeams);
+    renderTeamMgmtGrid(mergedTeams);
     renderStudentsTable(mergedTeams);
   }
 
@@ -1428,6 +1532,102 @@
     } catch (err) {
       console.error(err);
       alert("삭제 실패: " + err.message);
+    }
+  };
+
+  // 모둠 관리 그리드 렌더링
+  function renderTeamMgmtGrid(mergedTeams) {
+    const grid = document.getElementById("teamMgmtGrid");
+    if (!grid) return;
+
+    if (!mergedTeams.length) {
+      grid.innerHTML = '<div style="text-align:center;padding:30px;color:#78909C;grid-column:1/-1;">개설된 모둠이 없습니다. 위의 입력창에서 모둠을 개설해주세요!</div>';
+      return;
+    }
+
+    grid.innerHTML = mergedTeams.map(t => {
+      const code = t.teamCode || t.id;
+      const members = t.members || [];
+      const memberCount = members.length;
+      const approved = t.approvedQuests || {};
+      const completedCount = ['q1','q2','q3','q4','q5','q6','q7','q8'].filter(k => approved[k]).length;
+      const isTest = (code.toLowerCase() === 'test');
+
+      const membersListHtml = memberCount > 0
+        ? members.map(m => `<span class="member-pill">👤${m}</span>`).join(' ')
+        : '<span style="color:#94A3B8;font-size:12px;">아직 입장한 학생 없음</span>';
+
+      return `
+        <div class="team-mgmt-card" style="${isTest ? 'border-color:#C084FC;background:#FAF5FF;' : ''}">
+          <div class="team-mgmt-header">
+            <div>
+              <span class="code-tag" style="font-size:14px;padding:3px 8px;${isTest ? 'background:#F3E8FF;color:#7E22CE;border-color:#D8B4FE;' : ''}">${code}</span>
+              ${isTest ? '<span style="font-size:11px;background:#E9D5FF;color:#6B21A8;padding:2px 6px;border-radius:6px;margin-left:4px;font-weight:bold;">TEST</span>' : ''}
+              <div style="font-size:12px;color:#2E7D32;margin-top:4px;font-weight:700;">🤖 ${t.aiName || '에코봇'}</div>
+            </div>
+            <button onclick="copyTeamCode('${code}')" class="btn-sm-action btn-sm-view" style="font-size:11px;padding:4px 8px;" title="모둠코드 복사">📋 코드복사</button>
+          </div>
+          <div class="team-mgmt-meta">
+            <div>👥 접속 학생: <b>${memberCount}명</b></div>
+            <div>🏆 퀘스트 승인: <b>${completedCount}/8</b></div>
+            <div>⭐ 모둠 점수: <b>${t.score || 10} EXP</b></div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <div style="font-size:11px;color:#64748B;font-weight:bold;margin-bottom:4px;">참여 학생 명단:</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;max-height:60px;overflow-y:auto;">
+              ${membersListHtml}
+            </div>
+          </div>
+          <div class="team-mgmt-actions">
+            <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit" style="flex:1;">✏️ AI 이름 수정</button>
+            <button onclick="deleteTeam('${t.id}')" class="btn-sm-action btn-sm-del" style="flex:0.8;">🗑️ 모둠 삭제</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // 탭 전환
+  window.switchTab = function(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      if (btn.getAttribute('data-tab') === tabId) btn.classList.add('active');
+      else btn.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-content').forEach(content => {
+      if (content.id === tabId) content.classList.add('active');
+      else content.classList.remove('active');
+    });
+  };
+
+  // 모둠 코드 클립보드 복사
+  window.copyTeamCode = function(code) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(() => {
+        alert(`📋 모둠 코드 [${code}]이(가) 클립보드에 복사되었습니다!`);
+      }).catch(() => {
+        prompt("모둠 코드를 복사하세요:", code);
+      });
+    } else {
+      prompt("모둠 코드를 복사하세요:", code);
+    }
+  };
+
+  // test 모둠 빠른 생성
+  window.quickCreateTestTeam = async function() {
+    try {
+      await setDoc(doc(db, "teams", "test"), {
+        teamCode: "test",
+        aiName: "테스트봇",
+        score: 10,
+        badge: "신입 탐정단",
+        approvedQuests: {},
+        createdAt: serverTimestamp()
+      }, { merge: true });
+      alert("🧪 test 모둠이 성공적으로 생성/동기화되었습니다!");
+      renderAll();
+    } catch(err) {
+      console.error(err);
+      alert("test 모둠 생성 실패: " + err.message);
     }
   };
 
