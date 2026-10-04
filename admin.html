@@ -332,20 +332,92 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: bold;
-      transition: transform 0.2s;
+      transition: all 0.2s;
+      cursor: pointer;
+      user-select: none;
+    }
+    .quest-cell-badge:hover {
+      transform: scale(1.22);
     }
     .quest-cell-badge.done {
       background: var(--done-bg);
       color: var(--done-color);
       border: 2px solid #86EFAC;
-      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.2);
+      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);
+    }
+    .quest-cell-badge.pending {
+      background: #FEF3C7;
+      color: #D97706;
+      border: 2px solid #F59E0B;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.55);
+      animation: pulsePending 1.5s infinite;
+    }
+    @keyframes pulsePending {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 4px rgba(245, 158, 11, 0.4); }
+      50% { transform: scale(1.14); box-shadow: 0 0 14px rgba(245, 158, 11, 0.9); }
     }
     .quest-cell-badge.yet {
       background: var(--yet-bg);
       color: #94A3B8;
       border: 2px dashed #CBD5E1;
+      opacity: 0.75;
+    }
+
+    /* 모달 상태 뱃지 & 액션 버튼 */
+    .status-pill {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .status-pill.approved { background: #DCFCE7; color: #15803D; border: 1.5px solid #86EFAC; }
+    .status-pill.pending { background: #FEF3C7; color: #B45309; border: 1.5px solid #FCD34D; }
+    .status-pill.none { background: #F1F5F9; color: #64748B; border: 1.5px solid #CBD5E1; }
+
+    .btn-modal-approve {
+      background: linear-gradient(135deg, #22C55E, #16A34A);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 9px 18px;
+      font-family: 'Jua', sans-serif;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+      transition: all 0.2s;
+    }
+    .btn-modal-approve:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35);
+    }
+    .btn-modal-revoke {
+      background: #FEE2E2;
+      color: #DC2626;
+      border: 1.5px solid #FCA5A5;
+      border-radius: 10px;
+      padding: 6px 12px;
+      font-family: 'Jua', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-modal-revoke:hover { background: #FCA5A5; color: white; }
+
+    .btn-batch-approve {
+      background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 8px 16px;
+      font-family: 'Jua', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(29, 78, 216, 0.2);
     }
 
     .badge-tag {
@@ -672,7 +744,7 @@
 
   let teamsCache = [];
   let studentsCache = [];
-  const questDoneMap = {}; // { teamCode: { q1: true, q2: true, ... }, studentId: { ... } }
+  const questSubmittedMap = {}; // { teamCode: { q1: true, q2: true, ... }, studentId: { ... } }
   const questArtifactsMap = {}; // { teamCode: { q1: [...], q2: [...], ... } }
 
   // 8대 퀘스트 컬렉션 실시간 구독
@@ -680,40 +752,48 @@
     { name: "quest1_records", key: "q1", title: "Q1. AI의 눈 👁️" },
     { name: "quest2_rules", key: "q2", title: "Q2. 분류기준 만들기 📋" },
     { name: "quest3_data", key: "q3", title: "Q3. 사진 데이터 수집 📷" },
+    { name: "uploads", key: "q3", title: "Q3. 사진 업로드 📷" },
     { name: "quest4_labeling", key: "q4", title: "Q4. 이름표 붙이기 🏷️" },
+    { name: "labels", key: "q4", title: "Q4. 라벨 데이터 🏷️" },
     { name: "quest5_logs", key: "q5", title: "Q5. 교실쓰레기 AI탐정단 🤖" },
+    { name: "quest5_records", key: "q5", title: "Q5. AI 탐정 기록 🤖" },
     { name: "quest6_logs", key: "q6", title: "Q6. 오류박물관 🏛️" },
     { name: "quest6_errors", key: "q6", title: "Q6. 오류 태그 🏛️" },
+    { name: "quest6_museum", key: "q6", title: "Q6. 오류 큐레이션 🏛️" },
     { name: "quest7_rules", key: "q7", title: "Q7. 실천 규약 초안 ✍️" },
     { name: "quest7_logs", key: "q7", title: "Q7. 실천 규약 ✍️" },
     { name: "quest8_logs", key: "q8", title: "Q8. 자원 순환 의회 ⚖️" }
   ];
 
-  questCollections.forEach(({ name, key, title }) => {
-    onSnapshot(collection(db, name), (snapshot) => {
-      snapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        const tCode = data.teamCode;
-        const sId = data.studentId;
+  questCollections.forEach(({ name, key }) => {
+    try {
+      onSnapshot(collection(db, name), (snapshot) => {
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          const tCode = data.teamCode;
+          const sId = data.studentId || data.userId;
 
-        // 모둠 키 등록
-        if (tCode) {
-          if (!questDoneMap[tCode]) questDoneMap[tCode] = {};
-          questDoneMap[tCode][key] = true;
+          // 모둠 키 등록
+          if (tCode) {
+            if (!questSubmittedMap[tCode]) questSubmittedMap[tCode] = {};
+            questSubmittedMap[tCode][key] = true;
 
-          if (!questArtifactsMap[tCode]) questArtifactsMap[tCode] = {};
-          if (!questArtifactsMap[tCode][key]) questArtifactsMap[tCode][key] = [];
-          questArtifactsMap[tCode][key].push(data);
-        }
+            if (!questArtifactsMap[tCode]) questArtifactsMap[tCode] = {};
+            if (!questArtifactsMap[tCode][key]) questArtifactsMap[tCode][key] = [];
+            questArtifactsMap[tCode][key].push(data);
+          }
 
-        // 학생 키 등록
-        if (sId) {
-          if (!questDoneMap[sId]) questDoneMap[sId] = {};
-          questDoneMap[sId][key] = true;
-        }
-      });
-      renderAll();
-    }, (err) => console.warn(name, err));
+          // 학생 키 등록
+          if (sId) {
+            if (!questSubmittedMap[sId]) questSubmittedMap[sId] = {};
+            questSubmittedMap[sId][key] = true;
+          }
+        });
+        renderAll();
+      }, (err) => console.warn(name, err));
+    } catch(e) {
+      console.warn("Collection sub err:", name, e);
+    }
   });
 
   // 모둠(Teams) 실시간 구독
@@ -750,28 +830,28 @@
     const totalTeams = teamsCache.length;
     const totalStudents = studentsCache.length;
 
-    let totalQuestsCount = 0;
+    let totalQuestsApprovedCount = 0;
     let masterTeamsCount = 0;
     const questCompletedCount = { q1: 0, q2: 0, q3: 0, q4: 0, q5: 0, q6: 0, q7: 0, q8: 0 };
 
     teamsCache.forEach(t => {
       const code = t.teamCode || t.id;
-      const qStatus = questDoneMap[code] || {};
-      let teamDoneCount = 0;
+      const approved = t.approvedQuests || {};
+      let teamApprovedCount = 0;
 
       for (let i = 1; i <= 8; i++) {
-        const isDone = !!qStatus[`q${i}`] || (t.questsDone >= i);
+        const isDone = !!approved[`q${i}`];
         if (isDone) {
-          teamDoneCount++;
+          teamApprovedCount++;
           questCompletedCount[`q${i}`]++;
         }
       }
 
-      totalQuestsCount += teamDoneCount;
-      if (teamDoneCount === 8) masterTeamsCount++;
+      totalQuestsApprovedCount += teamApprovedCount;
+      if (teamApprovedCount === 8) masterTeamsCount++;
     });
 
-    const avgProgress = totalTeams ? Math.round((totalQuestsCount / (totalTeams * 8)) * 100) : 0;
+    const avgProgress = totalTeams ? Math.round((totalQuestsApprovedCount / (totalTeams * 8)) * 100) : 0;
 
     document.getElementById("statTotalTeams").textContent = `${totalTeams}개`;
     document.getElementById("statTotalStudents").textContent = `${totalStudents}명`;
@@ -783,7 +863,7 @@
       const countEl = document.getElementById(`qCount-${i}`);
       const boxEl = document.getElementById(`qBox-${i}`);
       const cnt = questCompletedCount[`q${i}`];
-      if (countEl) countEl.textContent = `${cnt}팀 완료`;
+      if (countEl) countEl.textContent = `${cnt}팀 승인 완료`;
       if (boxEl) {
         if (cnt > 0) boxEl.classList.add("active");
         else boxEl.classList.remove("active");
@@ -801,41 +881,54 @@
 
     tbody.innerHTML = teamsCache.map(t => {
       const code = t.teamCode || t.id;
-      const qStatus = questDoneMap[code] || {};
+      const approved = t.approvedQuests || {};
+      const submitted = questSubmittedMap[code] || {};
 
-      const isQ1 = !!qStatus.q1;
-      const isQ2 = !!qStatus.q2;
-      const isQ3 = !!qStatus.q3;
-      const isQ4 = !!qStatus.q4;
-      const isQ5 = !!qStatus.q5;
-      const isQ6 = !!qStatus.q6;
-      const isQ7 = !!qStatus.q7;
-      const isQ8 = !!qStatus.q8;
+      let completedCount = 0;
 
-      const completedCount = [isQ1, isQ2, isQ3, isQ4, isQ5, isQ6, isQ7, isQ8].filter(Boolean).length;
+      const renderQuestBadge = (num) => {
+        const key = `q${num}`;
+        const isApproved = !!approved[key];
+        const isSubmitted = !!submitted[key];
+
+        if (isApproved) {
+          completedCount++;
+          return `<span class="quest-cell-badge done" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] ✅ 승인 완료됨 (클릭하여 과제 확인/반려)">🟢</span>`;
+        } else if (isSubmitted) {
+          return `<span class="quest-cell-badge pending" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 📝 과제 제출됨! 클릭하여 확인 및 승인하기">🟡</span>`;
+        } else {
+          return `<span class="quest-cell-badge yet" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] ⚪ 아직 미제출">⚪</span>`;
+        }
+      };
+
+      const b1 = renderQuestBadge(1);
+      const b2 = renderQuestBadge(2);
+      const b3 = renderQuestBadge(3);
+      const b4 = renderQuestBadge(4);
+      const b5 = renderQuestBadge(5);
+      const b6 = renderQuestBadge(6);
+      const b7 = renderQuestBadge(7);
+      const b8 = renderQuestBadge(8);
+
       const pct = Math.round((completedCount / 8) * 100);
 
       const membersList = (t.members && t.members.length) 
         ? t.members.map(m => `<span class="member-pill">👤 ${m}</span>`).join(' ')
         : '<span style="color:#B0BEC5;font-size:12px;">접속 대기</span>';
 
-      const renderBadge = (isDone) => isDone 
-        ? '<span class="quest-cell-badge done" title="완료됨">🟢</span>' 
-        : '<span class="quest-cell-badge yet" title="진행 중">⚪</span>';
-
       return `
         <tr>
           <td><strong class="code-tag">${code}</strong></td>
           <td><strong style="color:#2E7D32;">🤖 ${t.aiName || '에코봇'}</strong></td>
           <td style="max-width:180px;white-space:normal;">${membersList}</td>
-          <td>${renderBadge(isQ1)}</td>
-          <td>${renderBadge(isQ2)}</td>
-          <td>${renderBadge(isQ3)}</td>
-          <td>${renderBadge(isQ4)}</td>
-          <td>${renderBadge(isQ5)}</td>
-          <td>${renderBadge(isQ6)}</td>
-          <td>${renderBadge(isQ7)}</td>
-          <td>${renderBadge(isQ8)}</td>
+          <td>${b1}</td>
+          <td>${b2}</td>
+          <td>${b3}</td>
+          <td>${b4}</td>
+          <td>${b5}</td>
+          <td>${b6}</td>
+          <td>${b7}</td>
+          <td>${b8}</td>
           <td>
             <div class="progress-bar-wrap">
               <div class="progress-bar-fill" style="width: ${pct}%"></div>
@@ -847,7 +940,7 @@
             <span class="badge-tag">${t.badge || '신입 탐정단'}</span>
           </td>
           <td>
-            <button onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-view">🔍 제출물 보기</button>
+            <button onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-view">🔍 과제 검토 & 승인</button>
             <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit">✏️ AI명</button>
             <button onclick="deleteTeam('${t.id}')" class="btn-sm-action btn-sm-del">🗑️</button>
           </td>
@@ -869,87 +962,242 @@
 
     tbody.innerHTML = studentsCache.map(s => {
       const sId = s.studentId || s.id;
-      const qStatus = questDoneMap[sId] || questDoneMap[s.teamCode] || {};
-      const completedCount = [qStatus.q1, qStatus.q2, qStatus.q3, qStatus.q4, qStatus.q5, qStatus.q6, qStatus.q7, qStatus.q8].filter(Boolean).length;
+      const tCode = s.teamCode || '';
+      const team = teamsCache.find(t => (t.teamCode || t.id) === tCode);
+      const approved = team?.approvedQuests || {};
+      const completedCount = ['q1','q2','q3','q4','q5','q6','q7','q8'].filter(k => approved[k]).length;
 
       return `
         <tr>
           <td><strong>👤 ${s.studentName || s.id}</strong></td>
           <td><span class="code-tag" style="font-size:12px;padding:2px 6px;">${s.teamCode || '미지정'}</span></td>
-          <td>🤖 ${s.aiPartnerName || '에코봇'}</td>
+          <td>🤖 ${s.aiPartnerName || team?.aiName || '에코봇'}</td>
           <td><strong style="color:#2E7D32;">⭐ ${s.score || 0} EXP</strong></td>
-          <td><strong style="color:#16A34A;">${completedCount}/8 완료</strong></td>
+          <td><strong style="color:#16A34A;">${completedCount}/8 승인됨</strong></td>
           <td style="font-size:12px;color:#64748B;">${s.lastActive ? new Date(s.lastActive.seconds * 1000).toLocaleString('ko-KR') : '-'}</td>
         </tr>
       `;
     }).join('');
   }
 
-  // 4. 모둠 제출물 모달 열람
-  window.viewTeamArtifacts = function(teamCode, aiName) {
+  // 4. 모둠 제출물 모달 열람 및 선생님 승인
+  window.viewTeamArtifacts = function(teamCode, aiName, targetQKey = null) {
     const modal = document.getElementById("artifactModal");
     const titleEl = document.getElementById("modalTeamTitle");
     const bodyEl = document.getElementById("modalArtifactBody");
 
-    titleEl.textContent = `🔍 [${teamCode} • ${aiName}] 탐정단 실시간 제출물 상세 열람`;
-
+    const team = teamsCache.find(t => (t.teamCode || t.id) === teamCode) || {};
+    const approved = team.approvedQuests || {};
     const artifacts = questArtifactsMap[teamCode] || {};
+    const submitted = questSubmittedMap[teamCode] || {};
+
+    titleEl.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;width:100%;flex-wrap:wrap;gap:10px;">
+        <span>🔍 [${teamCode} • ${aiName}] 과제 검토 & 승인 센터</span>
+        <button onclick="approveAllQuestsForTeam('${teamCode}')" class="btn-batch-approve">✨ 전체 8개 퀘스트 일괄 승인</button>
+      </div>
+    `;
+
+    const questDefs = [
+      { key: "q1", title: "QUEST 1: AI의 눈 👁️", desc: "사람의 눈과 AI의 차이점 탐구 생각" },
+      { key: "q2", title: "QUEST 2: 분류기준 만들기 📋", desc: "5대 품목(종이, 플라스틱, 캔, 우유팩, 일반쓰레기) 분류 규칙" },
+      { key: "q3", title: "QUEST 3: 사진 데이터 수집 📷", desc: "AI 학습용 깨끗한 사진 데이터 등록" },
+      { key: "q4", title: "QUEST 4: 이름표 붙이기 🏷️", desc: "바운딩 박스 라벨링 데이터" },
+      { key: "q5", title: "QUEST 5: 교실쓰레기 AI탐정단 🤖", desc: "실시간 AI 객체 감지 및 탐정 수사 기록" },
+      { key: "q6", title: "QUEST 6: 오류박물관 🏛️", desc: "AI 오인식 원인 분석 및 태그" },
+      { key: "q7", title: "QUEST 7: 실천 규약 초안 ✍️", desc: "우리 모둠 실천 규약 및 제시 이유" },
+      { key: "q8", title: "QUEST 8: 자원 순환 의회 ⚖️", desc: "최종 헌장 비준 및 전자 서명" }
+    ];
+
     let html = '';
 
-    // Q1 기록
-    const q1List = artifacts.q1 || [];
-    html += `
-      <div class="artifact-card">
-        <div class="artifact-title">👁️ QUEST 1: AI의 눈 (탐정 생각 해설) [${q1List.length}건]</div>
-        <div class="artifact-content">
-          ${q1List.length ? q1List.map(item => `• <b>${item.studentName || '탐정'}:</b> "${item.thought || '사람의 눈과 AI의 눈 차이 탐구 완료'}"`).join('<br>') : '<span style="color:#94A3B8;">아직 작성된 제출물이 없습니다.</span>'}
-        </div>
-      </div>
-    `;
+    questDefs.forEach((qDef, idx) => {
+      const qNum = idx + 1;
+      const isApproved = !!approved[qDef.key];
+      const isSubmitted = !!submitted[qDef.key];
+      const list = artifacts[qDef.key] || [];
 
-    // Q2 분류 기준
-    const q2List = artifacts.q2 || [];
-    html += `
-      <div class="artifact-card">
-        <div class="artifact-title">📋 QUEST 2: 분류기준 만들기 (발표 템플릿) [${q2List.length}건]</div>
-        <div class="artifact-content">
-          ${q2List.length ? q2List.map(item => `• <b>${item.studentName || '모둠'}:</b> "${item.rule || item.statement || '분류 규칙 수립 완료'}"`).join('<br>') : '<span style="color:#94A3B8;">아직 작성된 분류 기준이 없습니다.</span>'}
-        </div>
-      </div>
-    `;
+      let statusBadge = '<span class="status-pill none">⚪ 미제출</span>';
+      if (isApproved) {
+        statusBadge = '<span class="status-pill approved">🟢 승인 완료</span>';
+      } else if (isSubmitted) {
+        statusBadge = '<span class="status-pill pending">🟡 과제 제출됨 (선생님 확인 대기)</span>';
+      }
 
-    // Q3 좋은 데이터 문장
-    const q3List = artifacts.q3 || [];
-    html += `
-      <div class="artifact-card">
-        <div class="artifact-title">📷 QUEST 3: 좋은 데이터란? [${q3List.length}건]</div>
-        <div class="artifact-content">
-          ${q3List.length ? q3List.map(item => `• <b>${item.author || item.studentName || '모둠원'}:</b> "좋은 데이터란 ${item.definition || item.thought || '...'}이다."`).join('<br>') : '<span style="color:#94A3B8;">아직 등록된 정의가 없습니다.</span>'}
-        </div>
-      </div>
-    `;
+      let contentHtml = '';
+      if (qDef.key === 'q1') {
+        contentHtml = list.length 
+          ? list.map(item => `• <b>${item.studentName || '탐정'}:</b> "${item.thought || '사람의 눈과 AI 눈 차이 탐구 완료'}"`).join('<br>')
+          : '<span style="color:#94A3B8;">아직 작성된 제출물이 없습니다.</span>';
+      } else if (qDef.key === 'q2') {
+        contentHtml = list.length 
+          ? list.map(item => `
+              <div style="background:#F1F8E9;border:1px solid #C8E6C9;border-radius:10px;padding:10px;margin-bottom:6px;">
+                <b>👤 ${item.studentName || '모둠원'}:</b><br>
+                📄 종이: ${item.paperRule || '-'}<br>
+                🧴 플라스틱: ${item.plasticRule || '-'}<br>
+                🥫 캔: ${item.canRule || '-'}<br>
+                🥛 우유팩: ${item.milkRule || '-'}<br>
+                🗑️ 일반: ${item.generalRule || '-'}
+              </div>
+            `).join('')
+          : '<span style="color:#94A3B8;">아직 등록된 분류 기준이 없습니다.</span>';
+      } else if (qDef.key === 'q3') {
+        contentHtml = list.length 
+          ? `총 <b>${list.length}건</b>의 사진 데이터가 등록되었습니다.<br>` + list.slice(0, 5).map(item => `• <b>${item.originalName || item.fileName || '사진'}:</b> ${item.category || '자원순환'}`).join('<br>') + (list.length > 5 ? `<br><small style="color:#64748B;">외 ${list.length - 5}건 더 있음</small>` : '')
+          : '<span style="color:#94A3B8;">아직 업로드된 사진 데이터가 없습니다.</span>';
+      } else if (qDef.key === 'q4') {
+        contentHtml = list.length 
+          ? `총 <b>${list.length}개</b>의 라벨링 데이터가 기록되었습니다.`
+          : '<span style="color:#94A3B8;">아직 라벨링 작업 기록이 없습니다.</span>';
+      } else if (qDef.key === 'q5') {
+        contentHtml = list.length 
+          ? list.map(item => `• <b>${item.studentName || '탐정'}:</b> ${item.className || '품목'} (${Math.round((item.confidence||0.9)*100)}% 정확도) - <i>"${item.feedback || '탐정 수사 완료'}"</i>`).join('<br>')
+          : '<span style="color:#94A3B8;">아직 AI 탐정 수사 기록이 없습니다.</span>';
+      } else if (qDef.key === 'q6') {
+        contentHtml = list.length 
+          ? list.map(item => `• <b>${item.studentName || item.author || '탐정'}:</b> ${item.tag ? `<span style="background:#EDE9FE;color:#6D28D9;padding:2px 6px;border-radius:6px;font-weight:bold;">[${item.tag}]</span> ` : ''}"${item.reason || item.comment || item.thought || '오류 원인 분석 완료'}"`).join('<br>')
+          : '<span style="color:#94A3B8;">아직 등록된 오류 분석이 없습니다.</span>';
+      } else if (qDef.key === 'q7') {
+        contentHtml = list.length 
+          ? list.map(item => `• <b>[규약]</b> ${item.ruleContent || item.rule || '-'} <br>&nbsp;&nbsp;<b>[이유]</b> ${item.reason || '-'}`).join('<br><br>')
+          : '<span style="color:#94A3B8;">아직 발의된 실천 규약이 없습니다.</span>';
+      } else if (qDef.key === 'q8') {
+        contentHtml = list.length 
+          ? list.map(item => `• <b>${item.studentName || '대표 의원'}:</b> 헌장 전자 서명 및 의회 의결 완료 ✅`).join('<br>')
+          : '<span style="color:#94A3B8;">아직 비준 서명 기록이 없습니다.</span>';
+      }
 
-    // Q6 오류박물관 태그 & 한마디
-    const q6List = artifacts.q6 || [];
-    html += `
-      <div class="artifact-card">
-        <div class="artifact-title">🏛️ QUEST 6: 오류박물관 (오인식 태그 & 한계 탐구) [${q6List.length}건]</div>
-        <div class="artifact-content">
-          ${q6List.length ? q6List.map(item => `• <b>${item.author || item.studentName || '탐정'}:</b> ${item.tag ? `[태그: ${item.tag}] ` : ''}"${item.comment || item.thought || 'AI 오류 탐구 완료'}"`).join('<br>') : '<span style="color:#94A3B8;">등록된 오류 분석이 없습니다.</span>'}
-        </div>
-      </div>
-    `;
+      let actionBtnHtml = '';
+      if (isApproved) {
+        actionBtnHtml = `
+          <div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:12px;padding-top:10px;border-top:1px solid #E2E8F0;">
+            <span style="color:#16A34A;font-weight:800;font-size:14px;">✅ 선생님 승인 완료됨 (학생 화면에 잠금 해제됨)</span>
+            <button class="btn-modal-revoke" onclick="revokeQuestApproval('${teamCode}', '${qDef.key}')">↩️ 승인 취소/반려</button>
+          </div>
+        `;
+      } else {
+        actionBtnHtml = `
+          <div style="display:flex;justify-content:flex-end;width:100%;margin-top:12px;padding-top:10px;border-top:1px solid #E2E8F0;">
+            <button class="btn-modal-approve" onclick="approveQuest('${teamCode}', '${qDef.key}')">
+              ✅ [Q${qNum}] 과제 확인 및 승인하기 (+50 EXP)
+            </button>
+          </div>
+        `;
+      }
 
-    // Q7 실천 규약
-    const q7List = artifacts.q7 || [];
-    html += `
-      <div class="artifact-card">
-        <div class="artifact-title">✍️ QUEST 7: 우리 모둠 실천 규약 [${q7List.length}건]</div>
-        <div class="artifact-content">
-          ${q7List.length ? q7List.map(item => `• <b>규약:</b> ${item.rule || '규약 내용'} <br>&nbsp;&nbsp;<b>이유:</b> ${item.reason || '제시 이유'}`).join('<br><br>') : '<span style="color:#94A3B8;">아직 발의된 실천 규약이 없습니다.</span>'}
+      html += `
+        <div class="artifact-card" id="artifact-card-${qDef.key}" style="border: 2px solid ${isApproved ? '#86EFAC' : (isSubmitted ? '#FCD34D' : '#E2E8F0')};">
+          <div class="artifact-title" style="justify-content:space-between;">
+            <div>${qDef.title}</div>
+            <div>${statusBadge}</div>
+          </div>
+          <div style="font-size:13px;color:#64748B;margin-bottom:8px;">${qDef.desc}</div>
+          <div class="artifact-content">
+            ${contentHtml}
+          </div>
+          ${actionBtnHtml}
         </div>
-      </div>
-    `;
+      `;
+    });
+
+    bodyEl.innerHTML = html;
+    modal.classList.add("active");
+
+    if (targetQKey) {
+      setTimeout(() => {
+        const targetEl = document.getElementById(`artifact-card-${targetQKey}`);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          targetEl.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.7)';
+          setTimeout(() => { targetEl.style.boxShadow = ''; }, 2000);
+        }
+      }, 200);
+    }
+  };
+
+  // 개별 퀘스트 승인
+  window.approveQuest = async function(teamCode, qKey) {
+    try {
+      const teamRef = doc(db, "teams", teamCode);
+      await updateDoc(teamRef, {
+        [`approvedQuests.${qKey}`]: true,
+        score: increment(50),
+        updatedAt: serverTimestamp()
+      });
+
+      // 캐시 업데이트
+      const team = teamsCache.find(t => (t.teamCode || t.id) === teamCode);
+      if (team) {
+        if (!team.approvedQuests) team.approvedQuests = {};
+        team.approvedQuests[qKey] = true;
+        team.score = (team.score || 0) + 50;
+        viewTeamArtifacts(teamCode, team.aiName || '에코봇', qKey);
+      }
+      renderAll();
+      alert(`🎉 [${teamCode}]의 ${qKey.toUpperCase()} 퀘스트가 승인되었습니다!\n학생 화면에서 즉시 잠금 해제(Unlock)됩니다.`);
+    } catch (err) {
+      console.error(err);
+      alert("승인 처리 실패: " + err.message);
+    }
+  };
+
+  // 개별 퀘스트 승인 취소
+  window.revokeQuestApproval = async function(teamCode, qKey) {
+    if (!confirm(`[${teamCode}]의 ${qKey.toUpperCase()} 퀘스트 승인을 취소할까요?`)) return;
+    try {
+      const teamRef = doc(db, "teams", teamCode);
+      await updateDoc(teamRef, {
+        [`approvedQuests.${qKey}`]: false,
+        updatedAt: serverTimestamp()
+      });
+
+      const team = teamsCache.find(t => (t.teamCode || t.id) === teamCode);
+      if (team) {
+        if (team.approvedQuests) team.approvedQuests[qKey] = false;
+        viewTeamArtifacts(teamCode, team.aiName || '에코봇', qKey);
+      }
+      renderAll();
+    } catch (err) {
+      console.error(err);
+      alert("승인 취소 실패: " + err.message);
+    }
+  };
+
+  // 전체 퀘스트 일괄 승인
+  window.approveAllQuestsForTeam = async function(teamCode) {
+    if (!confirm(`[${teamCode}]의 모든 퀘스트(Q1~Q8)를 일괄 승인하시겠습니까?`)) return;
+    try {
+      const teamRef = doc(db, "teams", teamCode);
+      const updates = {
+        "approvedQuests.q1": true,
+        "approvedQuests.q2": true,
+        "approvedQuests.q3": true,
+        "approvedQuests.q4": true,
+        "approvedQuests.q5": true,
+        "approvedQuests.q6": true,
+        "approvedQuests.q7": true,
+        "approvedQuests.q8": true,
+        questsDone: 8,
+        badge: "마스터 탐정 🏆",
+        updatedAt: serverTimestamp()
+      };
+      await updateDoc(teamRef, updates);
+
+      const team = teamsCache.find(t => (t.teamCode || t.id) === teamCode);
+      if (team) {
+        team.approvedQuests = { q1:true, q2:true, q3:true, q4:true, q5:true, q6:true, q7:true, q8:true };
+        team.questsDone = 8;
+        team.badge = "마스터 탐정 🏆";
+        viewTeamArtifacts(teamCode, team.aiName || '에코봇');
+      }
+      renderAll();
+      alert(`🎉 [${teamCode}]의 전체 8대 퀘스트가 일괄 승인 완료되었습니다!`);
+    } catch (err) {
+      console.error(err);
+      alert("일괄 승인 실패: " + err.message);
+    }
+  };
 
     bodyEl.innerHTML = html;
     modal.classList.add("active");

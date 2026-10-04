@@ -523,6 +523,23 @@
       color: #DCFCE7;
     }
 
+    .quest-hotspot.is-pending .hotspot-full-img {
+      filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.85)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+      animation: pendingHotspotGlow 1.8s infinite ease-in-out;
+    }
+
+    @keyframes pendingHotspotGlow {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.7)); }
+      50% { transform: scale(1.05); filter: drop-shadow(0 0 18px rgba(245, 158, 11, 1)); }
+    }
+
+    .quest-hotspot.is-pending .hotspot-title-overlay {
+      border-color: #F59E0B;
+      color: #FEF3C7;
+      background: linear-gradient(135deg, rgba(69, 26, 3, 0.95), rgba(120, 53, 15, 0.95));
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.75);
+    }
+
     .quest-hotspot.is-completed:hover .hotspot-title-overlay {
       border-color: #86EFAC;
       box-shadow: 0 0 18px rgba(34, 197, 94, 0.9), 0 6px 16px rgba(0, 0, 0, 0.5);
@@ -587,56 +604,56 @@
       <a href="quest1.html" class="quest-hotspot" id="hotspot-q1" style="left: 0.71%; top: 16.34%; width: 12%; height: 21.82%;" title="퀘스트 1: AI의 눈" aria-label="1. AI의 눈">
         <img src="images/lock.png" alt="퀘스트 1: AI의 눈" class="hotspot-full-img" id="icon-q1">
         <span class="hotspot-pulse"></span>
-        <span class="hotspot-title-overlay">Q1. AI의 눈 👁️</span>
+        <span class="hotspot-title-overlay" id="overlay-q1">Q1. AI의 눈 👁️</span>
       </a>
 
       <!-- 2: 분류기준 만들기 -->
       <a href="quest2.html" class="quest-hotspot" id="hotspot-q2" style="left: 7.91%; top: 39.21%; width: 11.6%; height: 21.47%;" title="퀘스트 2: 분류기준 만들기" aria-label="2. 분류기준 만들기">
         <img src="images/lock.png" alt="퀘스트 2: 분류기준 만들기" class="hotspot-full-img" id="icon-q2">
         <span class="hotspot-pulse"></span>
-        <span class="hotspot-title-overlay">Q2. 분류기준 📋</span>
+        <span class="hotspot-title-overlay" id="overlay-q2">Q2. 분류기준 📋</span>
       </a>
 
       <!-- 3: AI가 잘 배우는 사진 -->
       <a href="quest3.html" class="quest-hotspot" id="hotspot-q3" style="left: 16.41%; top: 62.93%; width: 12.1%; height: 23.36%;" title="퀘스트 3: AI가 잘 배우는 사진" aria-label="3. AI가 잘 배우는 사진">
         <img src="images/lock.png" alt="퀘스트 3: AI가 잘 배우는 사진" class="hotspot-full-img" id="icon-q3">
         <span class="hotspot-pulse"></span>
-        <span class="hotspot-title-overlay">Q3. 사진수집 📷</span>
+        <span class="hotspot-title-overlay" id="overlay-q3">Q3. 사진수집 📷</span>
       </a>
 
       <!-- 4: 이름표 붙이기 -->
       <a href="quest4.html" class="quest-hotspot" id="hotspot-q4" style="left: 30.31%; top: 74.1%; width: 12.2%; height: 21.82%;" title="퀘스트 4: 이름표 붙이기" aria-label="4. 이름표 붙이기">
         <img src="images/lock.png" alt="퀘스트 4: 이름표 붙이기" class="hotspot-full-img" id="icon-q4">
         <span class="hotspot-pulse"></span>
-        <span class="hotspot-title-overlay">Q4. 이름표 🏷️</span>
+        <span class="hotspot-title-overlay" id="overlay-q4">Q4. 이름표 🏷️</span>
       </a>
 
       <!-- 5: 교실쓰레기 AI탐정단 -->
       <a href="quest5.html" class="quest-hotspot" id="hotspot-q5" style="left: 44.01%; top: 67.05%; width: 11.9%; height: 23.02%;" title="퀘스트 5: 교실쓰레기 AI탐정단" aria-label="5. 교실쓰레기 AI탐정단">
         <img src="images/lock.png" alt="퀘스트 5: 교실쓰레기 AI탐정단" class="hotspot-full-img" id="icon-q5">
         <span class="hotspot-pulse"></span>
-        <span class="hotspot-title-overlay">Q5. AI탐정 🤖</span>
+        <span class="hotspot-title-overlay" id="overlay-q5">Q5. AI탐정 🤖</span>
       </a>
 
       <!-- 6: 오류박물관 -->
       <a href="quest6.html" class="quest-hotspot" id="hotspot-q6" style="left: 53.21%; top: 43.18%; width: 11.8%; height: 22.33%;" title="퀘스트 6: 오류박물관" aria-label="6. 오류박물관">
         <img src="images/lock.png" alt="퀘스트 6: 오류박물관" class="hotspot-full-img" id="icon-q6">
         <span class="hotspot-pulse"></span>
-        <span class="hotspot-title-overlay">Q6. 오류관 🏛️</span>
+        <span class="hotspot-title-overlay" id="overlay-q6">Q6. 오류관 🏛️</span>
       </a>
 
       <!-- 7: 실천 규약 초안 -->
       <a href="quest7.html" class="quest-hotspot" id="hotspot-q7" style="left: 67.21%; top: 26.51%; width: 11.5%; height: 21.3%;" title="퀘스트 7: 실천 규약 초안" aria-label="7. 실천 규약 초안">
         <img src="images/lock.png" alt="퀘스트 7: 실천 규약 초안" class="hotspot-full-img" id="icon-q7">
         <span class="hotspot-pulse"></span>
-        <span class="hotspot-title-overlay">Q7. 실천규약 ✍️</span>
+        <span class="hotspot-title-overlay" id="overlay-q7">Q7. 실천규약 ✍️</span>
       </a>
 
       <!-- 8: 자원 순환 의회 -->
       <a href="quest8.html" class="quest-hotspot" id="hotspot-q8" style="left: 80.81%; top: 33.73%; width: 12.1%; height: 22.33%;" title="퀘스트 8: 자원 순환 의회" aria-label="8. 자원 순환 의회">
         <img src="images/lock.png" alt="퀘스트 8: 자원 순환 의회" class="hotspot-full-img" id="icon-q8">
         <span class="hotspot-pulse"></span>
-        <span class="hotspot-title-overlay">Q8. 의회선포 ⚖️</span>
+        <span class="hotspot-title-overlay" id="overlay-q8">Q8. 의회선포 ⚖️</span>
       </a>
     </div>
   </section>
@@ -799,7 +816,69 @@
     }).catch(e => console.warn(e));
   }
 
-  // 1. 실시간 모둠(Team) 데이터 구독 (대기방 멤버, AI 이름, 점수, 배지)
+  // 1. 실시간 모둠(Team) 데이터 구독 (대기방 멤버, AI 이름, 점수, 배지, 선생님 승인 상태)
+  let approvedQuestsState = {};
+  const submittedQuestsState = {
+    q1: false, q2: false, q3: false, q4: false,
+    q5: false, q6: false, q7: false, q8: false
+  };
+
+  const QUEST_INFO = {
+    q1: { name: "Q1. AI의 눈 👁️", title: "퀘스트 1: AI의 눈" },
+    q2: { name: "Q2. 분류기준 📋", title: "퀘스트 2: 분류기준 만들기" },
+    q3: { name: "Q3. 사진수집 📷", title: "퀘스트 3: 사진 데이터 수집" },
+    q4: { name: "Q4. 이름표 🏷️", title: "퀘스트 4: 이름표 붙이기" },
+    q5: { name: "Q5. AI탐정 🤖", title: "퀘스트 5: 교실쓰레기 AI탐정단" },
+    q6: { name: "Q6. 오류관 🏛️", title: "퀘스트 6: 오류박물관" },
+    q7: { name: "Q7. 실천규약 ✍️", title: "퀘스트 7: 실천 규약 초안" },
+    q8: { name: "Q8. 의회선포 ⚖️", title: "퀘스트 8: 자원 순환 의회" }
+  };
+
+  function updateQuestLockImages() {
+    for (let i = 1; i <= 8; i++) {
+      const key = `q${i}`;
+      const isApproved = !!approvedQuestsState[key];
+      const isSubmitted = !!submittedQuestsState[key] || 
+                          (localStorage.getItem(`quest${i}_submitted`) === "true") ||
+                          (localStorage.getItem(`quest${i}_completed`) === "true");
+
+      const iconEl = document.getElementById(`icon-q${i}`);
+      const hotspotEl = document.getElementById(`hotspot-q${i}`);
+      const overlayEl = document.getElementById(`overlay-q${i}`);
+      const qMeta = QUEST_INFO[key] || { name: `Q${i}`, title: `퀘스트 ${i}` };
+
+      if (iconEl && hotspotEl) {
+        if (isApproved) {
+          iconEl.src = "images/unlock.png";
+          iconEl.alt = "퀘스트 승인 완료됨";
+          hotspotEl.classList.add("is-completed");
+          hotspotEl.classList.remove("is-pending");
+          hotspotEl.title = `[${qMeta.title}] ✅ 선생님 승인 완료!`;
+          if (overlayEl) {
+            overlayEl.innerHTML = `${qMeta.name} ✅`;
+          }
+        } else if (isSubmitted) {
+          iconEl.src = "images/lock.png";
+          iconEl.alt = "과제 제출됨 (선생님 확인 대기 중)";
+          hotspotEl.classList.remove("is-completed");
+          hotspotEl.classList.add("is-pending");
+          hotspotEl.title = `[${qMeta.title}] 📝 과제 제출 완료! 선생님 확인 및 승인 대기 중입니다.`;
+          if (overlayEl) {
+            overlayEl.innerHTML = `${qMeta.name} ⏳`;
+          }
+        } else {
+          iconEl.src = "images/lock.png";
+          iconEl.alt = "퀘스트 미완료";
+          hotspotEl.classList.remove("is-completed", "is-pending");
+          hotspotEl.title = qMeta.title;
+          if (overlayEl) {
+            overlayEl.innerHTML = qMeta.name;
+          }
+        }
+      }
+    }
+  }
+
   if (teamCode) {
     onSnapshot(doc(db, "teams", teamCode), (docSnap) => {
       if (docSnap.exists()) {
@@ -816,10 +895,56 @@
         if (d.badge) {
           document.getElementById("dispBadge").textContent = `🏅 ${d.badge}`;
         }
+        if (d.approvedQuests) {
+          approvedQuestsState = { ...d.approvedQuests };
+        }
 
+        updateQuestLockImages();
         renderLobby(d.members || [], d.lastStudentName || "");
       } else {
         renderLobby([studentName], "");
+      }
+    });
+  }
+
+  // 초기 로컬 상태 반영
+  updateQuestLockImages();
+
+  // Firestore 컬렉션 실시간 구독으로 내 학생/모둠의 퀘스트 과제 제출 여부 감지
+  if (studentId || teamCode) {
+    const questCollections = [
+      { col: "quest1_records", key: "q1" },
+      { col: "quest2_rules", key: "q2" },
+      { col: "quest3_data", key: "q3" },
+      { col: "uploads", key: "q3" },
+      { col: "quest4_labeling", key: "q4" },
+      { col: "labels", key: "q4" },
+      { col: "quest5_logs", key: "q5" },
+      { col: "quest5_records", key: "q5" },
+      { col: "quest6_logs", key: "q6" },
+      { col: "quest6_errors", key: "q6" },
+      { col: "quest6_museum", key: "q6" },
+      { col: "quest7_rules", key: "q7" },
+      { col: "quest7_logs", key: "q7" },
+      { col: "quest8_logs", key: "q8" }
+    ];
+
+    questCollections.forEach(({ col, key }) => {
+      try {
+        onSnapshot(collection(db, col), (snapshot) => {
+          snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            if (
+              (studentId && (data.studentId === studentId || data.userId === studentId)) ||
+              (teamCode && data.teamCode === teamCode)
+            ) {
+              submittedQuestsState[key] = true;
+            }
+          });
+          updateQuestLockImages();
+        }, (err) => console.warn(col, err));
+      } catch (e) {
+        console.warn("Snapshot error for", col, e);
       }
     });
   }
@@ -900,93 +1025,6 @@
     });
     document.getElementById("liveRanking").textContent = list.join("  ｜  ") || "모둠 랭킹 정보를 불러오는 중...";
   });
-
-  // 5. 각 퀘스트 완료 상태 실시간 확인 및 Lock / Unlock 이미지 동기화
-  const completedQuestsState = {
-    q1: false, q2: false, q3: false, q4: false,
-    q5: false, q6: false, q7: false, q8: false
-  };
-
-  function updateQuestLockImages() {
-    for (let i = 1; i <= 8; i++) {
-      const key = `q${i}`;
-      // 로컬 스토리지 확인
-      const isDoneLocal = (localStorage.getItem(`quest${i}_completed`) === "true") || 
-                          (localStorage.getItem(`elementary_q${i}_done`) === "true");
-      const isDone = isDoneLocal || !!completedQuestsState[key];
-
-      const iconEl = document.getElementById(`icon-q${i}`);
-      const hotspotEl = document.getElementById(`hotspot-q${i}`);
-
-      if (iconEl) {
-        if (isDone) {
-          iconEl.src = "images/unlock.png";
-          iconEl.alt = "퀘스트 완료됨";
-          if (hotspotEl) hotspotEl.classList.add("is-completed");
-        } else {
-          iconEl.src = "images/lock.png";
-          iconEl.alt = "퀘스트 미완료";
-          if (hotspotEl) hotspotEl.classList.remove("is-completed");
-        }
-      }
-    }
-  }
-
-  // 초기 로컬 상태 반영
-  updateQuestLockImages();
-
-  // Firestore 컬렉션 실시간 구독으로 내 학생/모둠의 퀘스트 완료 여부 감지
-  if (studentId || teamCode) {
-    const questCollections = [
-      { col: "quest1_records", key: "q1" },
-      { col: "quest2_rules", key: "q2" },
-      { col: "quest3_data", key: "q3" },
-      { col: "quest4_labeling", key: "q4" },
-      { col: "quest5_logs", key: "q5" },
-      { col: "quest6_logs", key: "q6" },
-      { col: "quest6_errors", key: "q6" },
-      { col: "quest7_rules", key: "q7" },
-      { col: "quest7_logs", key: "q7" },
-      { col: "quest8_logs", key: "q8" }
-    ];
-
-    questCollections.forEach(({ col, key }) => {
-      try {
-        onSnapshot(collection(db, col), (snapshot) => {
-          snapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-            if (
-              (studentId && data.studentId === studentId) ||
-              (teamCode && data.teamCode === teamCode)
-            ) {
-              completedQuestsState[key] = true;
-            }
-          });
-          updateQuestLockImages();
-        }, (err) => console.warn(col, err));
-      } catch (e) {
-        console.warn("Snapshot error for", col, e);
-      }
-    });
-
-    // 학생 개별 문서의 완료 플래그 감지
-    if (studentId) {
-      onSnapshot(doc(db, "students", studentId), (docSnap) => {
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          if (data.q1Done) completedQuestsState.q1 = true;
-          if (data.q2Done) completedQuestsState.q2 = true;
-          if (data.q3Done) completedQuestsState.q3 = true;
-          if (data.q4Done) completedQuestsState.q4 = true;
-          if (data.q5Done) completedQuestsState.q5 = true;
-          if (data.q6Done) completedQuestsState.q6 = true;
-          if (data.q7Done) completedQuestsState.q7 = true;
-          if (data.q8Done) completedQuestsState.q8 = true;
-          updateQuestLockImages();
-        }
-      });
-    }
-  }
 
   window.logout = async function() {
     if (teamCode && studentName) {
