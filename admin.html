@@ -39,7 +39,7 @@
 
     .admin-container {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1440px;
       display: flex;
       flex-direction: column;
       gap: 24px;
@@ -270,12 +270,13 @@
       overflow-x: auto;
       border-radius: 16px;
       border: 1.5px solid #E2E8F0;
+      background: white;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 14px;
+      font-size: 13px;
       text-align: center;
     }
 
@@ -283,17 +284,46 @@
       background: #F1F8E9;
       color: #1B5E20;
       font-family: 'Jua', sans-serif;
-      font-size: 15px;
-      padding: 14px 10px;
+      font-size: 14px;
+      padding: 10px 6px;
       border-bottom: 2px solid #C8E6C9;
-      white-space: nowrap;
     }
 
     td {
-      padding: 12px 10px;
+      padding: 8px 6px;
       border-bottom: 1px solid #E2E8F0;
       vertical-align: middle;
-      white-space: nowrap;
+    }
+
+    /* 모둠 진도 매트릭스 전용 컴팩트 스타일 */
+    .matrix-table {
+      table-layout: auto;
+      width: 100%;
+    }
+
+    .matrix-table th, .matrix-table td {
+      padding: 8px 4px;
+    }
+
+    .matrix-table th.col-quest, .matrix-table td.col-quest {
+      width: 44px;
+      padding: 6px 2px;
+      text-align: center;
+    }
+
+    .matrix-table th.col-team { min-width: 100px; text-align: left; padding-left: 10px; }
+    .matrix-table td.col-team { text-align: left; padding-left: 10px; }
+    .matrix-table th.col-members { min-width: 130px; text-align: left; }
+    .matrix-table td.col-members { text-align: left; }
+    .matrix-table th.col-progress { min-width: 80px; }
+    .matrix-table th.col-score { min-width: 80px; }
+    .matrix-table th.col-action { min-width: 130px; }
+
+    .matrix-actions {
+      display: flex;
+      gap: 3px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     tr:hover td {
@@ -304,10 +334,10 @@
       font-family: monospace;
       background: #E8F5E9;
       color: #1B5E20;
-      padding: 5px 10px;
+      padding: 4px 8px;
       border-radius: 8px;
       font-weight: 800;
-      font-size: 15px;
+      font-size: 14px;
       border: 1px solid #A5D6A7;
       display: inline-block;
     }
@@ -317,11 +347,12 @@
       background: #E1F5FE;
       color: #0277BD;
       border: 1px solid #81D4FA;
-      padding: 2px 7px;
-      border-radius: 8px;
-      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 11px;
       font-weight: 700;
       margin: 1px;
+      white-space: nowrap;
     }
 
     /* 퀘스트 완료 매트릭스 뱃지 */
@@ -329,39 +360,40 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      font-size: 15px;
+      font-size: 13px;
       font-weight: bold;
-      transition: all 0.2s;
+      transition: all 0.15s;
       cursor: pointer;
       user-select: none;
+      margin: 0 auto;
     }
     .quest-cell-badge:hover {
-      transform: scale(1.22);
+      transform: scale(1.2);
     }
     .quest-cell-badge.done {
       background: var(--done-bg);
       color: var(--done-color);
       border: 2px solid #86EFAC;
-      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);
+      box-shadow: 0 1px 4px rgba(22, 163, 74, 0.2);
     }
     .quest-cell-badge.pending {
       background: #FEF3C7;
       color: #D97706;
       border: 2px solid #F59E0B;
-      box-shadow: 0 0 10px rgba(245, 158, 11, 0.55);
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
       animation: pulsePending 1.5s infinite;
     }
     @keyframes pulsePending {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 4px rgba(245, 158, 11, 0.4); }
-      50% { transform: scale(1.14); box-shadow: 0 0 14px rgba(245, 158, 11, 0.9); }
+      0%, 100% { transform: scale(1); box-shadow: 0 0 3px rgba(245, 158, 11, 0.4); }
+      50% { transform: scale(1.12); box-shadow: 0 0 10px rgba(245, 158, 11, 0.8); }
     }
     .quest-cell-badge.yet {
       background: var(--yet-bg);
       color: #94A3B8;
-      border: 2px dashed #CBD5E1;
+      border: 1.5px dashed #CBD5E1;
       opacity: 0.75;
     }
 
@@ -656,27 +688,26 @@
 
     <!-- 모둠 진도 매트릭스 테이블 -->
     <div class="table-wrapper">
-      <table>
+      <table class="matrix-table">
         <thead>
           <tr>
-            <th>모둠 코드</th>
-            <th>AI 파트너</th>
-            <th>참여 학생</th>
-            <th>Q1<br><span style="font-size:11px;font-weight:normal;">AI의눈</span></th>
-            <th>Q2<br><span style="font-size:11px;font-weight:normal;">분류기준</span></th>
-            <th>Q3<br><span style="font-size:11px;font-weight:normal;">사진수집</span></th>
-            <th>Q4<br><span style="font-size:11px;font-weight:normal;">이름표</span></th>
-            <th>Q5<br><span style="font-size:11px;font-weight:normal;">AI탐정</span></th>
-            <th>Q6<br><span style="font-size:11px;font-weight:normal;">오류관</span></th>
-            <th>Q7<br><span style="font-size:11px;font-weight:normal;">실천규약</span></th>
-            <th>Q8<br><span style="font-size:11px;font-weight:normal;">의회선포</span></th>
-            <th>진도율</th>
-            <th>점수 / 배지</th>
-            <th>관리 및 열람</th>
+            <th class="col-team">모둠 (AI 파트너)</th>
+            <th class="col-members">참여 학생</th>
+            <th class="col-quest" title="Q1. AI의 눈 👁️">Q1<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">눈</span></th>
+            <th class="col-quest" title="Q2. 분류기준 만들기 📋">Q2<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">기준</span></th>
+            <th class="col-quest" title="Q3. 사진 데이터 수집 📷">Q3<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">사진</span></th>
+            <th class="col-quest" title="Q4. 이름표 붙이기 🏷️">Q4<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">라벨</span></th>
+            <th class="col-quest" title="Q5. 교실쓰레기 AI탐정단 🤖">Q5<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">탐정</span></th>
+            <th class="col-quest" title="Q6. 오류박물관 🏛️">Q6<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">오류</span></th>
+            <th class="col-quest" title="Q7. 실천 규약 초안 ✍️">Q7<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">규약</span></th>
+            <th class="col-quest" title="Q8. 자원 순환 의회 ⚖️">Q8<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">의회</span></th>
+            <th class="col-progress">진도율</th>
+            <th class="col-score">점수/배지</th>
+            <th class="col-action">과제 검토 및 관리</th>
           </tr>
         </thead>
         <tbody id="teamTableBody">
-          <tr><td colspan="14" style="text-align:center;padding:30px;color:#78909C;">실시간 모둠 진도 데이터를 연결하고 있습니다...</td></tr>
+          <tr><td colspan="13" style="text-align:center;padding:30px;color:#78909C;">실시간 모둠 진도 데이터를 연결하고 있습니다...</td></tr>
         </tbody>
       </table>
     </div>
@@ -986,7 +1017,7 @@
     if (!tbody) return;
 
     if (!mergedTeams.length) {
-      tbody.innerHTML = '<tr><td colspan="14" style="text-align:center;padding:30px;color:#78909C;">개설된 모둠이 없습니다. 위에서 새 모둠을 추가해보세요!</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="13" style="text-align:center;padding:30px;color:#78909C;">개설된 모둠이 없습니다. 위에서 새 모둠을 추가해보세요!</td></tr>';
       return;
     }
 
@@ -1004,56 +1035,46 @@
 
         if (isApproved) {
           completedCount++;
-          return `<span class="quest-cell-badge done" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] ✅ 승인 완료됨 (클릭하여 과제 확인/반려)">🟢</span>`;
+          return `<td class="col-quest"><span class="quest-cell-badge done" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] ✅ 승인 완료됨 (클릭하여 확인/반려)">🟢</span></td>`;
         } else if (isSubmitted) {
-          return `<span class="quest-cell-badge pending" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 📝 과제 제출됨! 클릭하여 확인 및 승인하기">🟡</span>`;
+          return `<td class="col-quest"><span class="quest-cell-badge pending" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 📝 과제 제출됨! 클릭하여 확인 및 승인하기">🟡</span></td>`;
         } else {
-          return `<span class="quest-cell-badge yet" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] ⚪ 아직 미제출 (클릭하여 직접 승인 가능)">⚪</span>`;
+          return `<td class="col-quest"><span class="quest-cell-badge yet" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] ⚪ 아직 미제출 (클릭하여 직접 승인 가능)">⚪</span></td>`;
         }
       };
 
-      const b1 = renderQuestBadge(1);
-      const b2 = renderQuestBadge(2);
-      const b3 = renderQuestBadge(3);
-      const b4 = renderQuestBadge(4);
-      const b5 = renderQuestBadge(5);
-      const b6 = renderQuestBadge(6);
-      const b7 = renderQuestBadge(7);
-      const b8 = renderQuestBadge(8);
+      const qTds = [1, 2, 3, 4, 5, 6, 7, 8].map(num => renderQuestBadge(num)).join('');
 
       const pct = Math.round((completedCount / 8) * 100);
 
       const membersList = (t.members && t.members.length) 
-        ? t.members.map(m => `<span class="member-pill">👤 ${m}</span>`).join(' ')
-        : '<span style="color:#B0BEC5;font-size:12px;">접속 대기</span>';
+        ? t.members.map(m => `<span class="member-pill">👤${m}</span>`).join(' ')
+        : '<span style="color:#B0BEC5;font-size:11px;">접속 대기</span>';
 
       return `
         <tr>
-          <td><strong class="code-tag">${code}</strong></td>
-          <td><strong style="color:#2E7D32;">🤖 ${t.aiName || '에코봇'}</strong></td>
-          <td style="max-width:180px;white-space:normal;">${membersList}</td>
-          <td>${b1}</td>
-          <td>${b2}</td>
-          <td>${b3}</td>
-          <td>${b4}</td>
-          <td>${b5}</td>
-          <td>${b6}</td>
-          <td>${b7}</td>
-          <td>${b8}</td>
-          <td>
-            <div class="progress-bar-wrap">
+          <td class="col-team">
+            <strong class="code-tag">${code}</strong>
+            <div style="font-size:11px;color:#2E7D32;margin-top:2px;font-weight:700;">🤖 ${t.aiName || '에코봇'}</div>
+          </td>
+          <td class="col-members">${membersList}</td>
+          ${qTds}
+          <td class="col-progress">
+            <div class="progress-bar-wrap" style="width:48px;margin-bottom:2px;">
               <div class="progress-bar-fill" style="width: ${pct}%"></div>
             </div>
-            <strong style="font-size:13px;color:${pct === 100 ? '#16A34A' : '#334155'};">${completedCount}/8 (${pct}%)</strong>
+            <div style="font-size:11px;font-weight:800;color:${pct === 100 ? '#16A34A' : '#334155'};">${completedCount}/8 (${pct}%)</div>
           </td>
-          <td>
-            <strong style="color:#F59E0B;font-size:14px;">⭐ ${t.score || 10}</strong><br>
-            <span class="badge-tag">${t.badge || '신입 탐정단'}</span>
+          <td class="col-score">
+            <strong style="color:#F59E0B;font-size:13px;">⭐ ${t.score || 10}</strong><br>
+            <span class="badge-tag" style="font-size:10px;padding:2px 5px;margin-top:2px;">${t.badge || '신입 탐정단'}</span>
           </td>
-          <td>
-            <button onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-view">🔍 과제 검토 & 승인</button>
-            <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit">✏️ AI명</button>
-            <button onclick="deleteTeam('${t.id}')" class="btn-sm-action btn-sm-del">🗑️</button>
+          <td class="col-action">
+            <div class="matrix-actions">
+              <button onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-view" title="과제 검토 및 승인">🔍 검토</button>
+              <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit" title="AI 파트너 이름 수정">✏️ AI</button>
+              <button onclick="deleteTeam('${t.id}')" class="btn-sm-action btn-sm-del" title="모둠 삭제">🗑️</button>
+            </div>
           </td>
         </tr>
       `;
