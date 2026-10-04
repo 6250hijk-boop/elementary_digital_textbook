@@ -686,7 +686,10 @@
   <div class="manage-card" style="border-color:#A5D6A7;">
     <div class="section-header">
       <h2>📋 학생별 개별 학습 및 진도 현황</h2>
-      <span style="font-size:13px;color:#558B2F;font-weight:bold;">총 <span id="studentTableCount">0</span>명 참여 중</span>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;color:#558B2F;font-weight:bold;">총 <span id="studentTableCount">0</span>명 참여 중</span>
+        <button onclick="deleteAllStudents()" class="btn-action btn-ghost" style="font-size:13px;padding:6px 12px;color:#C62828;border-color:#FFCDD2;background:#FFEBEE;">🗑️ 전체 학생 데이터 초기화</button>
+      </div>
     </div>
 
     <div class="table-wrapper">
@@ -699,10 +702,11 @@
             <th>개인 점수</th>
             <th>완료 퀘스트 수</th>
             <th>최근 활동 일시</th>
+            <th>관리</th>
           </tr>
         </thead>
         <tbody id="studentTableBody">
-          <tr><td colspan="6" style="text-align:center;padding:20px;color:#78909C;">학생 목록을 불러오는 중입니다...</td></tr>
+          <tr><td colspan="7" style="text-align:center;padding:20px;color:#78909C;">학생 목록을 불러오는 중입니다...</td></tr>
         </tbody>
       </table>
     </div>
@@ -1064,25 +1068,30 @@
     if (!tbody) return;
 
     if (!studentsCache.length) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#78909C;">접속한 학생 데이터가 없습니다. 학생 로그인 시 자동 등록됩니다.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#78909C;">접속한 학생 데이터가 없습니다. 학생 로그인 시 자동 등록됩니다.</td></tr>';
       return;
     }
 
     tbody.innerHTML = studentsCache.map(s => {
       const sId = s.studentId || s.id;
+      const sName = s.studentName || s.name || s.id;
       const tCode = s.teamCode || '';
       const team = mergedTeams.find(t => (t.teamCode || t.id) === tCode);
       const approved = team?.approvedQuests || {};
       const completedCount = ['q1','q2','q3','q4','q5','q6','q7','q8'].filter(k => approved[k]).length;
+      const cleanName = (sName || '').replace(/'/g, "\\'");
 
       return `
         <tr>
-          <td><strong>👤 ${s.studentName || s.name || s.id}</strong></td>
+          <td><strong>👤 ${sName}</strong></td>
           <td><span class="code-tag" style="font-size:12px;padding:2px 6px;">${s.teamCode || '미지정'}</span></td>
           <td>🤖 ${s.aiPartnerName || team?.aiName || '에코봇'}</td>
           <td><strong style="color:#2E7D32;">⭐ ${s.score || 0} EXP</strong></td>
           <td><strong style="color:#16A34A;">${completedCount}/8 승인됨</strong></td>
           <td style="font-size:12px;color:#64748B;">${formatDateTime(s.lastActive || s.joinedAt || s.createdAt)}</td>
+          <td>
+            <button onclick="deleteStudent('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-del" style="padding:4px 8px;font-size:12px;">🗑️ 삭제</button>
+          </td>
         </tr>
       `;
     }).join('');
@@ -1398,6 +1407,69 @@
     } catch (err) {
       console.error(err);
       alert("삭제 실패: " + err.message);
+    }
+  };
+
+  // 학생 개별 데이터 삭제
+  window.deleteStudent = async function(studentId, studentName) {
+    if (!confirm(`정말로 [${studentName}] 학생의 데이터를 삭제하시겠습니까?\n(개인 점수 및 학습 참여 기록이 삭제됩니다.)`)) return;
+
+    try {
+      await deleteDoc(doc(db, "students", studentId));
+
+      // 소속 모둠의 members 배열에서도 학생 이름 제거
+      const student = studentsCache.find(s => (s.studentId || s.id) === studentId);
+      const teamCode = student?.teamCode;
+      if (teamCode) {
+        const teamDoc = teamsCache.find(t => (t.teamCode || t.id) === teamCode);
+        if (teamDoc && teamDoc.members && teamDoc.members.length > 0) {
+          const newMembers = teamDoc.members.filter(m => m !== studentName && m !== studentId);
+          await updateDoc(doc(db, "teams", teamDoc.id || teamCode), {
+            members: newMembers,
+            updatedAt: serverTimestamp()
+          });
+        }
+      }
+
+      alert(`[${studentName}] 학생 데이터가 삭제되었습니다.`);
+      renderAll();
+    } catch(err) {
+      console.error(err);
+      alert("학생 삭제 실패: " + err.message);
+    }
+  };
+
+  // 전체 학생 데이터 일괄 삭제/초기화
+  window.deleteAllStudents = async function() {
+    if (!studentsCache.length) {
+      return alert("삭제할 학생 데이터가 없습니다.");
+    }
+
+    if (!confirm(`⚠️ 경고: 현재 등록된 모든 학생(${studentsCache.length}명) 데이터를 일괄 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+
+    try {
+      for (const s of studentsCache) {
+        const sId = s.studentId || s.id;
+        if (sId && sId !== "admin") {
+          await deleteDoc(doc(db, "students", sId));
+        }
+      }
+
+      // 모둠 내 members 명단도 초기화
+      for (const t of teamsCache) {
+        if (t.members && t.members.length > 0) {
+          await updateDoc(doc(db, "teams", t.id || t.teamCode), {
+            members: [],
+            updatedAt: serverTimestamp()
+          });
+        }
+      }
+
+      alert("모든 학생 데이터가 성공적으로 초기화되었습니다.");
+      renderAll();
+    } catch(err) {
+      console.error(err);
+      alert("학생 일괄 삭제 실패: " + err.message);
     }
   };
 
