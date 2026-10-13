@@ -568,16 +568,16 @@
     <!-- 4단계 네비게이터 -->
     <nav class="step-tracker">
       <div class="step-item active" id="stepNav-1" onclick="goToStep(1)">
-        <span class="step-num">문제 1</span>
-        <span class="step-name">🌫️ 흐린 사진</span>
+        <span class="step-num">Q1</span>
+        <span class="step-name">문제 1</span>
       </div>
       <div class="step-item" id="stepNav-2" onclick="goToStep(2)">
-        <span class="step-num">문제 2</span>
-        <span class="step-name">🔍 확대한 사진</span>
+        <span class="step-num">Q2</span>
+        <span class="step-name">문제 2</span>
       </div>
       <div class="step-item" id="stepNav-3" onclick="goToStep(3)">
-        <span class="step-num">문제 3</span>
-        <span class="step-name">🧱 가려진 사진</span>
+        <span class="step-num">Q3</span>
+        <span class="step-name">문제 3</span>
       </div>
       <div class="step-item" id="stepNav-4" onclick="goToStep(4)">
         <span class="step-num">최종 정리</span>
@@ -585,24 +585,24 @@
       </div>
     </nav>
 
-    <!-- ==================== 문제 1: 흐린 사진 (quest1-q1) ==================== -->
+    <!-- ==================== 문제 1: quest1-q1 ==================== -->
     <section class="stage-card active" id="stage-1">
-      <div class="stage-badge">문제 1 • 흐린 사진 탐색</div>
-      <h2 class="stage-title">🌫️ "안개 속을 걷는 것처럼 흐려진 이 물건은 무엇일까요?"</h2>
+      <div class="stage-badge">문제 1</div>
+      <h2 class="stage-title">"이 사진 속 물건은 무엇일까요?"</h2>
       
       <div class="quiz-intro-box">
-        💡 <strong>[탐정 수사]:</strong> 아래 흐려진 사진을 보고 어떤 재활용품인지 정답을 골라보세요. 정답을 맞힌 후 AI는 왜 이 사진을 어려워하는지 해설을 확인해 보세요!
+        💡 <strong>[탐정 수사]:</strong> 아래 사진을 보고 어떤 재활용품인지 정답을 골라보세요. 정답을 맞힌 후 AI는 왜 이 사진을 어려워하는지 해설을 확인해 보세요!
       </div>
 
       <!-- 보기 사진 (images/quest1-q1) -->
       <div class="quiz-photo-box">
         <img 
           src="images/quest1-q1.png" 
-          alt="문제 1 보기 사진 (흐린 사진)" 
+          alt="문제 1 보기 사진" 
           class="quiz-img-display"
-          onerror="this.onerror=null; this.src='images/quest1-q1.jpg'; if(!this.src) handleFallbackSvg(this, '흐린 사진 (quest1-q1)');"
+          onerror="this.onerror=null; this.src='images/quest1-q1.jpg'; if(!this.src) handleFallbackSvg(this, '문제 1 보기 사진');"
         >
-        <div class="photo-tag-pill">📷 보기 사진: quest1-q1</div>
+        <div class="photo-tag-pill">📷 보기 사진: 문제 1</div>
       </div>
 
       <!-- 4지 선다 보기 -->
@@ -638,29 +638,29 @@
       <div class="action-bar">
         <div></div>
         <button class="btn-nav-large btn-next" onclick="goToStep(2)">
-          다음 문제 (문제 2: 확대한 사진) ➔
+          다음 문제 (문제 2) ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== 문제 2: 확대한 사진 (quest1-q2) ==================== -->
+    <!-- ==================== 문제 2: quest1-q2 ==================== -->
     <section class="stage-card" id="stage-2">
-      <div class="stage-badge">문제 2 • 부분 확대 사진 탐색</div>
-      <h2 class="stage-title">🔍 "돋보기로 아주 가깝게 확대한 이 부품! 어떤 쓰레기의 일부분일까요?"</h2>
+      <div class="stage-badge">문제 2</div>
+      <h2 class="stage-title">"어떤 물건의 일부분일까요?"</h2>
       
       <div class="quiz-intro-box">
-        💡 <strong>[탐정 수사]:</strong> 아주 가깝게 확대된 작은 금속 고리 모양을 보고 전체 물건을 추리해보세요!
+        💡 <strong>[탐정 수사]:</strong> 아래 사진을 보고 전체 물건을 추리해보세요!
       </div>
 
       <!-- 보기 사진 (images/quest1-q2) -->
       <div class="quiz-photo-box">
         <img 
           src="images/quest1-q2.png" 
-          alt="문제 2 보기 사진 (확대 사진)" 
+          alt="문제 2 보기 사진" 
           class="quiz-img-display"
-          onerror="this.onerror=null; this.src='images/quest1-q2.jpg'; if(!this.src) handleFallbackSvg(this, '확대한 사진 (quest1-q2)');"
+          onerror="this.onerror=null; this.src='images/quest1-q2.jpg'; if(!this.src) handleFallbackSvg(this, '문제 2 보기 사진');"
         >
-        <div class="photo-tag-pill">📷 보기 사진: quest1-q2</div>
+        <div class="photo-tag-pill">📷 보기 사진: 문제 2</div>
       </div>
 
       <!-- 4지 선다 보기 -->
@@ -696,29 +696,29 @@
       <div class="action-bar">
         <button class="btn-nav-large btn-prev" onclick="goToStep(1)">⬅ 이전 문제</button>
         <button class="btn-nav-large btn-next" onclick="goToStep(3)">
-          다음 문제 (문제 3: 가려진 사진) ➔
+          다음 문제 (문제 3) ➔
         </button>
       </div>
     </section>
 
-    <!-- ==================== 문제 3: 가려진 사진 (quest1-q3) ==================== -->
+    <!-- ==================== 문제 3: quest1-q3 ==================== -->
     <section class="stage-card" id="stage-3">
-      <div class="stage-badge">문제 3 • 가려진 사진 탐색</div>
-      <h2 class="stage-title">🧱 "벽 뒤에 숨어 몸의 일부만 살짝 보이는 이 재활용품은 무엇일까요?"</h2>
+      <div class="stage-badge">문제 3</div>
+      <h2 class="stage-title">"이 재활용품은 무엇일까요?"</h2>
       
       <div class="quiz-intro-box">
-        💡 <strong>[탐정 수사]:</strong> 다른 물건에 가려져 일부분만 보이는 재활용품의 형태를 찾아보세요!
+        💡 <strong>[탐정 수사]:</strong> 사진 속 재활용품의 형태를 찾아보세요!
       </div>
 
       <!-- 보기 사진 (images/quest1-q3) -->
       <div class="quiz-photo-box">
         <img 
           src="images/quest1-q3.png" 
-          alt="문제 3 보기 사진 (가려진 사진)" 
+          alt="문제 3 보기 사진" 
           class="quiz-img-display"
-          onerror="this.onerror=null; this.src='images/quest1-q3.jpg'; if(!this.src) handleFallbackSvg(this, '가려진 사진 (quest1-q3)');"
+          onerror="this.onerror=null; this.src='images/quest1-q3.jpg'; if(!this.src) handleFallbackSvg(this, '문제 3 보기 사진');"
         >
-        <div class="photo-tag-pill">📷 보기 사진: quest1-q3</div>
+        <div class="photo-tag-pill">📷 보기 사진: 문제 3</div>
       </div>
 
       <!-- 4지 선다 보기 -->
@@ -779,17 +779,17 @@
           </thead>
           <tbody>
             <tr>
-              <td><strong>흐린 사진</strong></td>
+              <td><strong>문제 1</strong></td>
               <td>대략적인 색상과 실루엣으로 유추 가능</td>
               <td>픽셀 경계선이 뭉개져 인식 실패 또는 오작동</td>
             </tr>
             <tr>
-              <td><strong>확대한 사진</strong></td>
+              <td><strong>문제 2</strong></td>
               <td>작은 고리나 손잡이로 전체 물건 연상</td>
               <td>전체 모양이 없으면 단순 금속 조각으로 착각</td>
             </tr>
             <tr>
-              <td><strong>가려진 사진</strong></td>
+              <td><strong>문제 3</strong></td>
               <td>접힌 모서리나 빨대 구멍으로 추론</td>
               <td>가려진 부분을 배경으로 처리하여 놓치기 쉬움</td>
             </tr>
@@ -843,7 +843,7 @@
       </div>
 
       <div class="action-bar" style="margin-top:20px;">
-        <button class="btn-nav-large btn-prev" onclick="goToStep(3)">⬅ 퀴즈 3 다시보기</button>
+        <button class="btn-nav-large btn-prev" onclick="goToStep(3)">⬅ 문제 3 다시보기</button>
         <div></div>
       </div>
     </section>

@@ -840,7 +840,8 @@
       const isApproved = !!approvedQuestsState[key];
       const isSubmitted = !!submittedQuestsState[key] || 
                           (localStorage.getItem(`quest${i}_submitted`) === "true") ||
-                          (localStorage.getItem(`quest${i}_completed`) === "true");
+                          (localStorage.getItem(`quest${i}_completed`) === "true") ||
+                          (localStorage.getItem(`elementary_q${i}_done`) === "true");
 
       const iconEl = document.getElementById(`icon-q${i}`);
       const hotspotEl = document.getElementById(`hotspot-q${i}`);
@@ -848,23 +849,24 @@
       const qMeta = QUEST_INFO[key] || { name: `Q${i}`, title: `퀘스트 ${i}` };
 
       if (iconEl && hotspotEl) {
-        if (isApproved) {
+        if (isApproved || isSubmitted) {
+          // 완료 또는 승인된 퀘스트는 unlock.png 이미지로 확실하게 변경
           iconEl.src = "images/unlock.png";
-          iconEl.alt = "퀘스트 승인 완료됨";
+          iconEl.alt = isApproved ? "퀘스트 승인 완료됨" : "퀘스트 완료됨";
           hotspotEl.classList.add("is-completed");
-          hotspotEl.classList.remove("is-pending");
-          hotspotEl.title = `[${qMeta.title}] ✅ 선생님 승인 완료!`;
-          if (overlayEl) {
-            overlayEl.innerHTML = `${qMeta.name} ✅`;
-          }
-        } else if (isSubmitted) {
-          iconEl.src = "images/lock.png";
-          iconEl.alt = "과제 제출됨 (선생님 확인 대기 중)";
-          hotspotEl.classList.remove("is-completed");
-          hotspotEl.classList.add("is-pending");
-          hotspotEl.title = `[${qMeta.title}] 📝 과제 제출 완료! 선생님 확인 및 승인 대기 중입니다.`;
-          if (overlayEl) {
-            overlayEl.innerHTML = `${qMeta.name} ⏳`;
+
+          if (isApproved) {
+            hotspotEl.classList.remove("is-pending");
+            hotspotEl.title = `[${qMeta.title}] ✅ 승인 완료!`;
+            if (overlayEl) {
+              overlayEl.innerHTML = `${qMeta.name} ✅`;
+            }
+          } else {
+            hotspotEl.classList.add("is-pending");
+            hotspotEl.title = `[${qMeta.title}] 📝 과제 완료! (선생님 확인 대기)`;
+            if (overlayEl) {
+              overlayEl.innerHTML = `${qMeta.name} 🔓`;
+            }
           }
         } else {
           iconEl.src = "images/lock.png";
@@ -896,13 +898,46 @@
           document.getElementById("dispBadge").textContent = `🏅 ${d.badge}`;
         }
         if (d.approvedQuests) {
-          approvedQuestsState = { ...d.approvedQuests };
+          for (let i = 1; i <= 8; i++) {
+            if (d.approvedQuests[`q${i}`] || d.approvedQuests[`Q${i}`]) {
+              approvedQuestsState[`q${i}`] = true;
+            }
+          }
+        }
+        if (typeof d.questsDone === "number" && d.questsDone > 0) {
+          for (let i = 1; i <= d.questsDone; i++) {
+            submittedQuestsState[`q${i}`] = true;
+          }
         }
 
         updateQuestLockImages();
         renderLobby(d.members || [], d.lastStudentName || "");
       } else {
         renderLobby([studentName], "");
+      }
+    });
+  }
+
+  // 학생 개별 문서 구독 (점수 및 완료 퀘스트 동기화)
+  if (studentId) {
+    onSnapshot(doc(db, "students", studentId), (docSnap) => {
+      if (docSnap.exists()) {
+        const sd = docSnap.data();
+        if (sd.q1Done) submittedQuestsState.q1 = true;
+        if (sd.q2Done) submittedQuestsState.q2 = true;
+        if (sd.q3_done || sd.q3Done) submittedQuestsState.q3 = true;
+        if (sd.q4_done || sd.q4Done) submittedQuestsState.q4 = true;
+        if (sd.q5Done) submittedQuestsState.q5 = true;
+        if (sd.q6Done) submittedQuestsState.q6 = true;
+        if (sd.q7Done) submittedQuestsState.q7 = true;
+        if (sd.q8Done) submittedQuestsState.q8 = true;
+
+        if (typeof sd.questsDone === "number" && sd.questsDone > 0) {
+          for (let i = 1; i <= sd.questsDone; i++) {
+            submittedQuestsState[`q${i}`] = true;
+          }
+        }
+        updateQuestLockImages();
       }
     });
   }
@@ -916,6 +951,7 @@
       { col: "quest1_records", key: "q1" },
       { col: "quest2_rules", key: "q2" },
       { col: "quest3_data", key: "q3" },
+      { col: "quest3_ideas", key: "q3" },
       { col: "uploads", key: "q3" },
       { col: "quest4_labeling", key: "q4" },
       { col: "labels", key: "q4" },
@@ -924,6 +960,7 @@
       { col: "quest6_logs", key: "q6" },
       { col: "quest6_errors", key: "q6" },
       { col: "quest6_museum", key: "q6" },
+      { col: "quest6_reflections", key: "q6" },
       { col: "quest7_rules", key: "q7" },
       { col: "quest7_logs", key: "q7" },
       { col: "quest8_logs", key: "q8" }
@@ -934,10 +971,12 @@
         onSnapshot(collection(db, col), (snapshot) => {
           snapshot.forEach((docSnap) => {
             const data = docSnap.data();
-            if (
-              (studentId && (data.studentId === studentId || data.userId === studentId)) ||
-              (teamCode && data.teamCode === teamCode)
-            ) {
+            const sidMatch = studentId && (data.studentId === studentId || data.userId === studentId);
+            const tCodeA = String(data.teamCode || "").trim().toLowerCase();
+            const tCodeB = String(teamCode || "").trim().toLowerCase();
+            const teamMatch = teamCode && tCodeA && (tCodeA === tCodeB);
+
+            if (sidMatch || teamMatch) {
               submittedQuestsState[key] = true;
             }
           });
