@@ -259,6 +259,30 @@
       color: #FFFFFF !important;
       box-shadow: 0 0 20px rgba(56, 189, 248, 1) !important;
     }
+
+    /* 🔒 잠겨있는 퀘스트 (앞단계 미완료) 스타일 */
+    .quest-hotspot.is-locked {
+      opacity: 0.55;
+      filter: grayscale(85%) contrast(0.85);
+      cursor: not-allowed !important;
+    }
+
+    .quest-hotspot.is-locked .hotspot-pulse {
+      display: none !important;
+    }
+
+    .quest-hotspot.is-locked:hover,
+    .quest-hotspot.is-locked:focus {
+      transform: none !important;
+      filter: grayscale(80%) contrast(0.9) !important;
+    }
+
+    .quest-hotspot.is-locked .hotspot-title-overlay {
+      border-color: #64748B !important;
+      color: #94A3B8 !important;
+      background: rgba(15, 23, 42, 0.95) !important;
+      box-shadow: none !important;
+    }
   </style>
 </head>
 <body>
@@ -269,12 +293,12 @@
     
     <!-- 🏠 추가 네모: 우리 모둠 아지트 (My Home) -->
     <!-- 크기: quest4와 동일(width: 12.2%, height: 21.82%) | x축: quest4 위치(left: 30.31%) | y축: quest1(16.34%)과 quest2(39.21%) 사이(top: 27.77%) -->
-    <a href="myhome.html" class="quest-hotspot hotspot-myhome" id="hotspot-myhome" style="left: 30.31%; top: 27.77%; width: 12.2%; height: 21.82%;" title="우리 모둠 아지트 (My Home) 가기" aria-label="우리 모둠 아지트">
+    <a href="myhome.html" class="quest-hotspot hotspot-myhome" id="hotspot-myhome" style="left: 30.31%; top: 27.77%; width: 12.2%; height: 21.82%;" title="모둠 아지트 가기" aria-label="우리 모둠 아지트">
       <div class="myhome-box-inner">
         <span class="myhome-icon">🏠</span>
       </div>
       <span class="hotspot-pulse myhome-pulse"></span>
-      <span class="hotspot-title-overlay myhome-overlay">🏠 모둠 아지트 (My Home)</span>
+      <span class="hotspot-title-overlay myhome-overlay" id="myhomeOverlay">🏠 모둠 아지트</span>
     </a>
 
     <!-- 1: AI의 눈 -->
@@ -367,7 +391,21 @@
     }).catch(e => console.warn(e));
   }
 
-  // 1. 실시간 퀘스트 승인/완료 상태 동기화 및 맵 아이콘 업데이트
+  // 모둠 이름에 따른 아지트 이름 동적 반영
+  function updateMyHomeTitle() {
+    const overlayEl = document.getElementById("myhomeOverlay");
+    const hotspotEl = document.getElementById("hotspot-myhome");
+    const currentTeam = localStorage.getItem("elementary_teamCode") || teamCode || "";
+    const nameText = currentTeam ? `${currentTeam}의 아지트` : "우리 모둠 아지트";
+    if (overlayEl) {
+      overlayEl.textContent = `🏠 ${nameText}`;
+    }
+    if (hotspotEl) {
+      hotspotEl.title = `[${nameText}] 바로가기 (클릭)`;
+    }
+  }
+
+  // 1. 실시간 퀘스트 승인/완료 상태 동기화 및 맵 아이콘/순차 잠금 업데이트
   let approvedQuestsState = {};
   const submittedQuestsState = {
     q1: false, q2: false, q3: false, q4: false,
@@ -385,14 +423,30 @@
     q8: { name: "Q8. 의회선포 ⚖️", title: "퀘스트 8: 자원 순환 의회" }
   };
 
+  // 특정 퀘스트가 완료되어 unlock 이미지가 표시되는 상태인지 검사
+  function isQuestUnlocked(num) {
+    const key = `q${num}`;
+    return !!approvedQuestsState[key] || 
+           !!submittedQuestsState[key] || 
+           (localStorage.getItem(`quest${num}_submitted`) === "true") ||
+           (localStorage.getItem(`quest${num}_completed`) === "true") ||
+           (localStorage.getItem(`elementary_q${num}_done`) === "true");
+  }
+
+  // 특정 퀘스트가 열려있는지 검사 (1단계는 항상 열림, 2단계부터는 앞단계가 unlock이어야 열림)
+  function isQuestOpen(num) {
+    if (num === 1) return true;
+    return isQuestUnlocked(num - 1);
+  }
+
   function updateQuestLockImages() {
+    updateMyHomeTitle();
+
     for (let i = 1; i <= 8; i++) {
       const key = `q${i}`;
       const isApproved = !!approvedQuestsState[key];
-      const isSubmitted = !!submittedQuestsState[key] || 
-                          (localStorage.getItem(`quest${i}_submitted`) === "true") ||
-                          (localStorage.getItem(`quest${i}_completed`) === "true") ||
-                          (localStorage.getItem(`elementary_q${i}_done`) === "true");
+      const isUnlocked = isQuestUnlocked(i);
+      const isOpen = isQuestOpen(i);
 
       const iconEl = document.getElementById(`icon-q${i}`);
       const hotspotEl = document.getElementById(`hotspot-q${i}`);
@@ -400,11 +454,22 @@
       const qMeta = QUEST_INFO[key] || { name: `Q${i}`, title: `퀘스트 ${i}` };
 
       if (iconEl && hotspotEl) {
-        if (isApproved || isSubmitted) {
+        // 앞단계 미완료 퀘스트 클릭 시 친절한 안내 알림창 제공 및 진입 차단
+        hotspotEl.onclick = (e) => {
+          if (!isQuestOpen(i)) {
+            e.preventDefault();
+            e.stopPropagation();
+            alert(`🔒 [${qMeta.name}] 퀘스트는 아직 잠겨있습니다!\n\n앞 단계인 [Q${i-1}. ${QUEST_INFO['q'+(i-1)].name}] 퀘스트를 먼저 완료(Unlock)해야 다음 단계에 도전할 수 있습니다. 🎯`);
+            return false;
+          }
+        };
+
+        if (isUnlocked) {
           // 완료 또는 승인된 퀘스트는 unlock.png 이미지로 확실하게 변경
           iconEl.src = "images/unlock.png";
           iconEl.alt = isApproved ? "퀘스트 승인 완료됨" : "퀘스트 완료됨";
           hotspotEl.classList.add("is-completed");
+          hotspotEl.classList.remove("is-locked");
 
           if (isApproved) {
             hotspotEl.classList.remove("is-pending");
@@ -420,12 +485,25 @@
             }
           }
         } else {
+          // 아직 미완료된 퀘스트는 lock.png 이미지
           iconEl.src = "images/lock.png";
           iconEl.alt = "퀘스트 미완료";
           hotspotEl.classList.remove("is-completed", "is-pending");
-          hotspotEl.title = qMeta.title;
-          if (overlayEl) {
-            overlayEl.innerHTML = qMeta.name;
+
+          if (isOpen) {
+            // 앞단계가 완료되어 현재 단계가 열려있는(도전 가능한) 상태
+            hotspotEl.classList.remove("is-locked");
+            hotspotEl.title = `[${qMeta.title}] 🎯 도전하기! (클릭하여 시작)`;
+            if (overlayEl) {
+              overlayEl.innerHTML = `${qMeta.name} 🎯`;
+            }
+          } else {
+            // 앞단계가 아직 완료되지 않아 잠겨있는 상태
+            hotspotEl.classList.add("is-locked");
+            hotspotEl.title = `[${qMeta.title}] 🔒 이전 단계(Q${i-1})를 먼저 완료해야 열립니다`;
+            if (overlayEl) {
+              overlayEl.innerHTML = `${qMeta.name} 🔒`;
+            }
           }
         }
       }

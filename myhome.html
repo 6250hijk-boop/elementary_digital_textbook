@@ -464,7 +464,7 @@
     <div class="lobby-top">
       <div class="lobby-title-wrap">
         <span style="font-size:28px;">🎮</span>
-        <h3>우리 모둠 탐정 대기실 (모둠 아지트)</h3>
+        <h3 id="lobbyMainTitle">우리 모둠 아지트</h3>
       </div>
       <div class="lobby-badge">
         <span class="pulse-dot"></span>
@@ -550,9 +550,16 @@
     window.location.href = "index.html";
   }
 
-  // 상단 헤더 기본 표시
+  // 상단 헤더 및 아지트 제목 기본 표시
+  const teamHomeName = teamCode ? `${teamCode}의 아지트` : "우리 모둠 아지트";
+  document.title = `${teamHomeName} - AI 자원순환 탐정단`;
+  const lobbyTitleEl = document.getElementById("lobbyMainTitle");
+  if (lobbyTitleEl) {
+    lobbyTitleEl.textContent = `🏠 ${teamHomeName}`;
+  }
+
   document.getElementById("dispStudent").textContent = `${studentName} 탐정`;
-  document.getElementById("dispTeamBadge").textContent = `👥 모둠: ${teamCode}`;
+  document.getElementById("dispTeamBadge").textContent = `👥 ${teamCode || '모둠'}`;
   document.getElementById("dispAiName").textContent = `🤖 모둠 AI: ${currentAiName}`;
 
   // 대기방 아바타 목록 배열 (귀여운 캐릭터 아이콘)
