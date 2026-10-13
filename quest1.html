@@ -79,7 +79,7 @@
       color: #334155;
       padding: 8px 16px;
       border-radius: 12px;
-      font-size: 15px;
+      font-size: 30px;
       font-weight: 800;
       text-decoration: none;
       display: flex;
@@ -99,7 +99,7 @@
     }
 
     .badge-chasi {
-      font-size: 12px;
+      font-size: 30px;
       font-weight: 800;
       color: #d97706;
       letter-spacing: 0.5px;
@@ -107,7 +107,7 @@
 
     .header-main-title {
       font-family: 'Jua', sans-serif;
-      font-size: 22px;
+      font-size: 36px;
       color: #1e3a8a;
       letter-spacing: -0.3px;
     }
@@ -123,7 +123,7 @@
       border: 2px solid #fde68a;
       color: #b45309;
       font-weight: 900;
-      font-size: 15px;
+      font-size: 30px;
       padding: 6px 14px;
       border-radius: 30px;
       display: flex;
@@ -137,7 +137,7 @@
       border: 2px solid #e2e8f0;
       padding: 8px 12px;
       border-radius: 12px;
-      font-size: 16px;
+      font-size: 32px;
       cursor: pointer;
     }
 
@@ -193,7 +193,7 @@
     }
 
     .step-num {
-      font-size: 12px;
+      font-size: 30px;
       font-weight: 900;
       color: #94a3b8;
       margin-bottom: 2px;
@@ -204,7 +204,7 @@
     }
 
     .step-name {
-      font-size: 14px;
+      font-size: 35px;
       font-weight: 800;
       color: #475569;
     }
@@ -242,7 +242,7 @@
       border: 2px solid #bfdbfe;
       padding: 6px 14px;
       border-radius: 30px;
-      font-size: 14px;
+      font-size: 35px;
       font-weight: 900;
       margin-bottom: 12px;
     }
@@ -260,7 +260,7 @@
       border-left: 5px solid var(--primary);
       border-radius: 12px;
       padding: 14px 18px;
-      font-size: 15px;
+      font-size: 30px;
       color: #334155;
       line-height: 1.6;
       margin-bottom: 20px;
@@ -301,7 +301,7 @@
       left: 12px;
       background: rgba(15, 23, 42, 0.85);
       color: white;
-      font-size: 12px;
+      font-size: 30px;
       font-weight: 800;
       padding: 4px 12px;
       border-radius: 20px;
@@ -327,7 +327,7 @@
       border: 2.5px solid #E2E8F0;
       border-radius: 16px;
       padding: 16px 20px;
-      font-size: 16px;
+      font-size: 32px;
       font-weight: 800;
       color: #334155;
       cursor: pointer;
@@ -355,7 +355,7 @@
       align-items: center;
       justify-content: center;
       font-family: 'Jua', sans-serif;
-      font-size: 16px;
+      font-size: 32px;
       flex-shrink: 0;
     }
 
@@ -408,13 +408,13 @@
       align-items: center;
       gap: 8px;
       font-family: 'Jua', sans-serif;
-      font-size: 18px;
+      font-size: 31px;
       color: #E65100;
       margin-bottom: 8px;
     }
 
     .ai-explanation-text {
-      font-size: 15px;
+      font-size: 30px;
       color: #5D4037;
       line-height: 1.7;
       font-weight: 600;
@@ -434,7 +434,7 @@
     .btn-nav-large {
       padding: 14px 28px;
       border-radius: 16px;
-      font-size: 17px;
+      font-size: 30px;
       font-weight: 800;
       font-family: 'Jua', sans-serif;
       cursor: pointer;
@@ -484,13 +484,13 @@
     }
 
     .cert-icon {
-      font-size: 64px;
+      font-size: 77px;
       margin-bottom: 12px;
     }
 
     .cert-title {
       font-family: 'Jua', sans-serif;
-      font-size: 30px;
+      font-size: 42px;
       color: #BF360C;
       margin-bottom: 10px;
     }
@@ -508,7 +508,7 @@
 
     .comparison-table th, .comparison-table td {
       padding: 14px 16px;
-      font-size: 14px;
+      font-size: 35px;
       line-height: 1.6;
       border-bottom: 1px solid #FFF8E1;
     }
@@ -517,7 +517,7 @@
       background: #FFF3E0;
       color: #E65100;
       font-family: 'Jua', sans-serif;
-      font-size: 16px;
+      font-size: 32px;
     }
 
     /* 토스트 알림창 */
@@ -530,7 +530,7 @@
       color: #FFFFFF;
       padding: 14px 28px;
       border-radius: 40px;
-      font-size: 15px;
+      font-size: 30px;
       font-weight: 800;
       z-index: 1000;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
@@ -543,6 +543,26 @@
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
+  
+    /* 🌟 최소 글씨 크기 28px(기존 최소의 2.5배) 가독성 극대화 보장 */
+    html, body {
+      font-size: 28px !important;
+    }
+    .btn-back, a.btn-back {
+      font-family: 'Jua', sans-serif !important;
+      font-size: 28px !important;
+      padding: 10px 22px !important;
+      border-radius: 16px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      text-decoration: none !important;
+      cursor: pointer !important;
+      font-weight: 800 !important;
+    }
+    input, textarea, select, button {
+      font-size: max(28px, 1rem) !important;
+    }
   </style>
 </head>
 <body>
@@ -550,7 +570,7 @@
   <!-- 앱 헤더 -->
   <header class="app-header">
     <div class="header-left">
-      <a href="main.html" class="btn-back">⬅ 메인으로</a>
+      <a href="main.html" class="btn-back">🗺️ 퀘스트지도가기</a>
       <div class="header-title-group">
         <span class="badge-chasi">QUEST 1</span>
         <h1 class="header-main-title">AI의 눈</h1>
@@ -764,7 +784,7 @@
       <div class="cert-box">
         <div class="cert-icon">👁️ 🏅 ✨</div>
         <h2 class="cert-title">QUEST 1: AI의 눈 탐구 완료!</h2>
-        <p style="font-size:16px; color:#5D4037; font-weight:700; margin-bottom:16px;">
+        <p style="font-size: 32px; color:#5D4037; font-weight:700; margin-bottom:16px;">
           3개 퀴즈를 모두 풀고 <strong>사람과 AI가 사진을 보는 방법의 차이</strong>를 완벽히 이해했습니다!
         </p>
 
@@ -798,17 +818,17 @@
 
         <!-- 우리 모둠 탐정 한마디 작성 & 실시간 공유 영역 -->
         <div style="background:white; border-radius:18px; padding:20px; border:2.5px solid #93C5FD; margin-bottom:24px; text-align:left;">
-          <h4 style="font-family:'Jua'; color:#1D4ED8; font-size:19px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+          <h4 style="font-family:'Jua'; color:#1D4ED8; font-size: 32px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
             <span>💬</span> <span>우리 모둠('${teamCode || '1모둠'}') 탐정 한마디 남기기</span>
           </h4>
-          <p style="font-size:14px; color:#64748B; margin-bottom:12px;">
+          <p style="font-size: 35px; color:#64748B; margin-bottom:12px;">
             AI와 사람의 눈을 비교하며 알게 된 점이나 느낀 점을 한 문장으로 남겨 모둠원들과 공유해보세요!
           </p>
           <div style="display:flex; gap:10px; flex-direction:column;">
             <textarea 
               id="detectiveThought" 
               class="custom-textarea" 
-              style="min-height:70px; border:2px solid #CBD5E1; border-radius:12px; padding:10px 14px; font-size:15px; font-family:'Pretendard';"
+              style="min-height:70px; border:2px solid #CBD5E1; border-radius:12px; padding:10px 14px; font-size: 30px; font-family:'Pretendard';"
               placeholder="예: 사람은 흐리거나 가려져도 전체 맥락을 추론하지만, AI는 구체적인 픽셀 특징이 있어야 알아볼 수 있어요."
             >사람은 흐리거나 가려져도 전체 맥락을 추론하지만, AI는 구체적인 픽셀 특징이 있어야 알아볼 수 있어요.</textarea>
           </div>
@@ -817,27 +837,27 @@
         <!-- 실시간 우리 모둠 피드 -->
         <div style="background:#F8FAFC; border-radius:18px; padding:20px; border:2px solid #E2E8F0; margin-bottom:24px; text-align:left;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-            <h4 style="font-family:'Jua'; color:#1E293B; font-size:18px; display:flex; align-items:center; gap:6px;">
+            <h4 style="font-family:'Jua'; color:#1E293B; font-size: 31px; display:flex; align-items:center; gap:6px;">
               <span>👥</span> <span>우리 모둠 탐정단 탐구 공유 피드</span>
             </h4>
-            <span style="font-size:13px; font-weight:700; color:#2563EB; background:#EFF6FF; padding:4px 10px; border-radius:12px;" id="teamMemberCount">실시간 동기화 중...</span>
+            <span style="font-size: 32px; font-weight:700; color:#2563EB; background:#EFF6FF; padding:4px 10px; border-radius:12px;" id="teamMemberCount">실시간 동기화 중...</span>
           </div>
           <div id="teamFeedList" style="display:flex; flex-direction:column; gap:10px;">
-            <div style="text-align:center; padding:16px; color:#94A3B8; font-size:14px;">
+            <div style="text-align:center; padding:16px; color:#94A3B8; font-size: 35px;">
               모둠원들의 탐구 기록을 불러오는 중입니다...
             </div>
           </div>
         </div>
 
         <div style="background:white; border-radius:16px; padding:18px; border:2px solid #FFE082; margin-bottom:24px; text-align:left;">
-          <h4 style="font-family:'Jua'; color:#2E7D32; font-size:18px; margin-bottom:8px;">💡 탐구 완료 안내:</h4>
-          <p style="font-size:15px; color:#37474F; line-height:1.6;">
+          <h4 style="font-family:'Jua'; color:#2E7D32; font-size: 31px; margin-bottom:8px;">💡 탐구 완료 안내:</h4>
+          <p style="font-size: 30px; color:#37474F; line-height:1.6;">
             AI가 사진을 잘 구별하게 하려면 우리가 직접 명확한 규칙을 알려주어야 합니다!<br>
             완료 후 <strong>메인 화면</strong>으로 이동하여 다음 퀘스트를 선택해보세요.
           </p>
         </div>
 
-        <button class="btn-nav-large btn-next" style="background:linear-gradient(135deg,#2E7D32,#1B5E20); margin:0 auto; font-size:18px; padding:16px 36px;" onclick="finishQuest1()">
+        <button class="btn-nav-large btn-next" style="background:linear-gradient(135deg,#2E7D32,#1B5E20); margin:0 auto; font-size: 31px; padding:16px 36px;" onclick="finishQuest1()">
           🎉 탐정 한마디 공유 & 1차시 완료하기 (+100 EXP) 🚀
         </button>
       </div>
@@ -903,7 +923,7 @@
           if (!listEl) return;
           
           if (snapshot.empty) {
-            listEl.innerHTML = `<div style="text-align:center; padding:16px; color:#94A3B8; font-size:14px;">아직 모둠원들의 등록된 탐구 한마디가 없습니다. 먼저 작성하고 완료해보세요! 🚀</div>`;
+            listEl.innerHTML = `<div style="text-align:center; padding:16px; color:#94A3B8; font-size: 35px;">아직 모둠원들의 등록된 탐구 한마디가 없습니다. 먼저 작성하고 완료해보세요! 🚀</div>`;
             if (countEl) countEl.textContent = `참여 0명`;
             return;
           }
@@ -923,13 +943,13 @@
             return `
               <div style="background:white; border:1.5px solid ${isMe ? '#93C5FD' : '#E2E8F0'}; border-radius:14px; padding:14px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                  <span style="font-family:'Jua'; font-size:15px; color:${isMe ? '#2563EB' : '#1E293B'}; display:flex; align-items:center; gap:6px;">
+                  <span style="font-family:'Jua'; font-size: 30px; color:${isMe ? '#2563EB' : '#1E293B'}; display:flex; align-items:center; gap:6px;">
                     <span>${isMe ? '⭐ 나 (' + item.studentName + ')' : '👤 ' + item.studentName}</span>
-                    <span style="background:#DCFCE7; color:#15803D; font-size:12px; padding:2px 8px; border-radius:8px;">${item.badge || '견습 탐정 🥉'}</span>
+                    <span style="background:#DCFCE7; color:#15803D; font-size: 30px; padding:2px 8px; border-radius:8px;">${item.badge || '견습 탐정 🥉'}</span>
                   </span>
-                  <span style="font-size:13px; color:#F59E0B; font-weight:800;">⭐ ${item.score || 100} EXP</span>
+                  <span style="font-size: 32px; color:#F59E0B; font-weight:800;">⭐ ${item.score || 100} EXP</span>
                 </div>
-                <div style="font-size:14px; color:#334155; line-height:1.5; background:#F8FAFC; padding:10px 12px; border-radius:10px; border-left:3px solid #3B82F6;">
+                <div style="font-size: 35px; color:#334155; line-height:1.5; background:#F8FAFC; padding:10px 12px; border-radius:10px; border-left:3px solid #3B82F6;">
                   " ${item.thought || '사람의 눈은 부분이나 흐린 사진도 잘 추론하지만, AI는 뚜렷한 특징이 필요해요!'} "
                 </div>
               </div>
