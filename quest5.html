@@ -1413,9 +1413,11 @@
 
           for (let i = 0; i < numAnchors; i++) {
             let maxScore = 0;
-            let maxClass = 0;
+            let maxClass = -1;
 
             for (let c = 0; c < numClasses; c++) {
+              if (c === 1) continue; // 의류(인덱스 1)는 감지 및 표시에서 제외
+
               const score = output[(4 + c) * numAnchors + i];
               if (score > maxScore) {
                 maxScore = score;
@@ -1426,7 +1428,7 @@
               }
             }
 
-            if (maxScore >= confThresh) {
+            if (maxScore >= confThresh && maxClass !== -1 && maxClass !== 1) {
               const cx = output[0 * numAnchors + i];
               const cy = output[1 * numAnchors + i];
               const w = output[2 * numAnchors + i];
@@ -1449,12 +1451,16 @@
             }
           }
 
-          detectedObjects = nonMaxSuppression(candidateBoxes, 0.45);
+          detectedObjects = nonMaxSuppression(candidateBoxes, 0.45).filter(o => o.classIdx !== 1);
 
-          rankData = classMaxScores.map((score, idx) => ({
-            idx: idx,
-            score: Math.min(Math.max(score, 0.05), 0.99)
-          })).sort((a, b) => b.score - a.score);
+          rankData = classMaxScores
+            .map((score, idx) => ({ idx, score }))
+            .filter(item => item.idx !== 1) // 의류 제외
+            .map(item => ({
+              idx: item.idx,
+              score: Math.min(Math.max(item.score, 0.05), 0.99)
+            }))
+            .sort((a, b) => b.score - a.score);
 
         } else {
           // 대체 비전 시뮬레이션
