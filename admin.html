@@ -864,7 +864,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { 
-    getFirestore, collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc, serverTimestamp, increment 
+    getFirestore, collection, getDocs, onSnapshot, doc, setDoc, updateDoc, deleteDoc, serverTimestamp, increment 
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -1035,23 +1035,6 @@
         };
       }
     });
-
-    // 4. 데이터가 하나도 없을 때 기본 1~6모둠 가이드
-    const keys = Object.keys(teamMap);
-    if (keys.length === 0) {
-      for (let i = 1; i <= 6; i++) {
-        const code = `${i}모둠`;
-        teamMap[code] = {
-          id: code,
-          teamCode: code,
-          aiName: "에코봇",
-          score: 10,
-          badge: "신입 탐정단",
-          approvedQuests: {},
-          members: []
-        };
-      }
-    }
 
     return Object.values(teamMap).sort((a, b) => (a.teamCode || '').localeCompare(b.teamCode || '', 'ko-KR', { numeric: true }));
   }
@@ -1521,17 +1504,123 @@
     }
   };
 
-  // 모둠 삭제
+  // 모둠 완전 삭제 (모둠 + 소속 학생 + 8대 퀘스트 제출물/산출물 전체 cascade delete)
   window.deleteTeam = async function(teamId) {
-    if (!confirm(`정말로 [${teamId}] 모둠을 삭제하시겠습니까?`)) return;
+    if (!confirm(`정말로 [${teamId}] 모둠을 삭제하시겠습니까?\n\n⚠️ 주의: 해당 모둠의 정보뿐만 아니라 소속 학생 데이터 및 제출된 모든 8대 퀘스트(Q1~Q8) 산출물이 함께 영구 삭제됩니다.`)) return;
 
     try {
-      await deleteDoc(doc(db, "teams", teamId));
-      alert(`[${teamId}] 모둠이 삭제되었습니다.`);
+      const matchTeam = (code) => {
+        if (!code || !teamId) return false;
+        return String(code).trim().toLowerCase() === String(teamId).trim().toLowerCase();
+      };
+
+      // 1. 소속 학생 식별 (ID 및 학번/닉네임 Set)
+      const targetStudentIds = new Set();
+      studentsCache.forEach(s => {
+        if (matchTeam(s.teamCode)) {
+          if (s.id) targetStudentIds.add(s.id);
+          if (s.studentId) targetStudentIds.add(s.studentId);
+        }
+      });
+
+      // 2. students 컬렉션에서 해당 학생 문서들 삭제
+      try {
+        const studentDocs = await getDocs(collection(db, "students"));
+        const studentDeletePromises = [];
+        studentDocs.forEach(d => {
+          const data = d.data();
+          if (matchTeam(data.teamCode) || targetStudentIds.has(d.id) || targetStudentIds.has(data.studentId)) {
+            targetStudentIds.add(d.id);
+            if (data.studentId) targetStudentIds.add(data.studentId);
+            studentDeletePromises.push(deleteDoc(d.ref));
+          }
+        });
+        await Promise.all(studentDeletePromises);
+      } catch (err) {
+        console.warn("students 삭제 중 일부 오류:", err);
+      }
+
+      // 3. 8대 퀘스트 산출물 및 관련 컬렉션 일괄 삭제
+      const collectionsToClean = [
+        "quest1_records",
+        "quest2_rules",
+        "quest3_data",
+        "quest3_ideas",
+        "uploads",
+        "quest4_labeling",
+        "labels",
+        "quest5_logs",
+        "quest5_records",
+        "quest6_logs",
+        "quest6_errors",
+        "quest6_museum",
+        "quest6_reflections",
+        "quest7_rules",
+        "quest7_logs",
+        "quest8_logs",
+        "pre_surveys"
+      ];
+
+      for (const colName of collectionsToClean) {
+        try {
+          const colSnap = await getDocs(collection(db, colName));
+          const deletePromises = [];
+          colSnap.forEach(d => {
+            const data = d.data();
+            const isMatch = matchTeam(data.teamCode) ||
+                            matchTeam(data.teamId) ||
+                            matchTeam(data.team) ||
+                            (data.studentId && targetStudentIds.has(data.studentId)) ||
+                            (data.userId && targetStudentIds.has(data.userId)) ||
+                            (data.authorId && targetStudentIds.has(data.authorId)) ||
+                            matchTeam(d.id);
+            if (isMatch) {
+              deletePromises.push(deleteDoc(d.ref));
+            }
+          });
+          await Promise.all(deletePromises);
+        } catch (err) {
+          console.warn(`컬렉션 [${colName}] 삭제 중 오류:`, err);
+        }
+      }
+
+      // 4. teams 컬렉션에서 해당 모둠 문서 삭제
+      try {
+        await deleteDoc(doc(db, "teams", teamId));
+        const teamDocs = await getDocs(collection(db, "teams"));
+        const teamDeletePromises = [];
+        teamDocs.forEach(d => {
+          const data = d.data();
+          if (matchTeam(d.id) || matchTeam(data.teamCode)) {
+            teamDeletePromises.push(deleteDoc(d.ref));
+          }
+        });
+        await Promise.all(teamDeletePromises);
+      } catch (err) {
+        console.warn("teams 문서 삭제 중 오류:", err);
+      }
+
+      // 5. 로컬 메모리 캐시 및 매핑 정리
+      teamsCache = teamsCache.filter(t => !matchTeam(t.teamCode) && !matchTeam(t.id));
+      studentsCache = studentsCache.filter(s => !matchTeam(s.teamCode) && !targetStudentIds.has(s.id) && !targetStudentIds.has(s.studentId));
+      
+      Object.keys(questSubmittedMap).forEach(key => {
+        if (matchTeam(key) || targetStudentIds.has(key)) {
+          delete questSubmittedMap[key];
+        }
+      });
+      Object.keys(questArtifactsMap).forEach(key => {
+        if (matchTeam(key)) {
+          delete questArtifactsMap[key];
+        }
+      });
+
+      alert(`✅ [${teamId}] 모둠과 소속 학생 및 모든 퀘스트 데이터가 완전히 삭제되었습니다.`);
       renderAll();
     } catch (err) {
-      console.error(err);
-      alert("삭제 실패: " + err.message);
+      console.error("모둠 삭제 처리 중 오류:", err);
+      alert("모둠 삭제 중 오류가 발생했습니다: " + err.message);
+      renderAll();
     }
   };
 
