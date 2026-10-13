@@ -637,11 +637,11 @@
 
     <!-- 배너 설명 -->
     <div class="intro-banner">
-      <div class="intro-icon">🤖</div>
+      <div class="intro-icon">📸</div>
       <div class="intro-text">
-        <h2>웨일북 & 스마트폰 카메라로 교실 쓰레기를 비춰보세요!</h2>
+        <h2>교실 쓰레기를 카메라로 비추고 찰칵! 사진을 촬영해보세요!</h2>
         <p>
-          깃허브의 <strong>best.pt (YOLO 쓰레기 분류 모델)</strong> 기반 AI가 사진을 실시간으로 분석하여 어떤 물건인지 <strong>AI 자신감(확률 %)</strong>과 함께 보여줍니다.
+          쓰레기를 카메라 화면 가운데에 맞춘 뒤 <strong>[📸 사진 촬영 및 검출]</strong> 버튼을 누르면 AI가 촬영된 사진을 정밀 분석하여 어떤 품목인지 <strong>AI 자신감(확률 %)</strong>과 함께 찾아냅니다.
         </p>
       </div>
     </div>
@@ -652,7 +652,7 @@
       <!-- 1열: 카메라 / 사진 뷰어 -->
       <div class="card-panel">
         <div class="card-title">
-          <span>📷 실시간 탐지 뷰어</span>
+          <span>📷 카메라 촬영 & AI 탐지기</span>
           <span id="modelStatusBadge" style="font-size:12px; font-weight:800; background:#dbeafe; color:#1e40af; padding:3px 10px; border-radius:10px;">
             AI 모델 로딩 중... ⏳
           </span>
@@ -660,14 +660,17 @@
 
         <!-- 뷰어 캔버스 박스 -->
         <div class="viewport-box" id="viewportBox">
-          <video id="cameraVideo" playsinline autoplay muted></video>
-          <canvas id="displayCanvas" width="640" height="640"></canvas>
+          <video id="cameraVideo" playsinline autoplay muted style="width:100%; height:100%; object-fit:cover; display:none;"></video>
+          <canvas id="displayCanvas" width="640" height="640" style="display:none;"></canvas>
           <div class="scan-line" id="scanLine"></div>
 
-          <!-- 실시간 1초 1프레임 감지 상태 배지 -->
-          <div id="liveDetectionBadge" style="display:none; position:absolute; top:12px; left:12px; background:rgba(15,23,42,0.85); color:#4ADE80; font-size:13px; font-weight:800; padding:6px 14px; border-radius:20px; z-index:15; border:1.5px solid #22C55E; align-items:center; gap:8px; backdrop-filter:blur(4px);">
-            <span style="width:8px; height:8px; background:#22C55E; border-radius:50%; display:inline-block; box-shadow:0 0 8px #4ADE80;"></span>
-            <span id="liveBadgeText">실시간 탐지 중 (1초 1프레임)</span>
+          <!-- 사진 촬영 플래시 효과 오버레이 -->
+          <div id="cameraFlashOverlay" style="position:absolute; inset:0; background:white; opacity:0; pointer-events:none; transition:opacity 0.2s ease; z-index:20;"></div>
+
+          <!-- 카메라 안내 배지 -->
+          <div id="cameraStatusBadge" style="display:none; position:absolute; top:12px; left:12px; background:rgba(15,23,42,0.85); color:#38BDF8; font-size:13px; font-weight:800; padding:6px 14px; border-radius:20px; z-index:15; border:1.5px solid #0284C7; align-items:center; gap:8px; backdrop-filter:blur(4px);">
+            <span style="width:8px; height:8px; background:#38BDF8; border-radius:50%; display:inline-block; box-shadow:0 0 8px #38BDF8;"></span>
+            <span id="cameraStatusText">카메라 촬영 준비 완료</span>
           </div>
           
           <div class="view-placeholder" id="viewPlaceholder">
@@ -677,21 +680,25 @@
         </div>
 
         <!-- 입력 액션 버튼 -->
-        <div class="control-actions">
+        <div class="control-actions" id="controlActions">
+          <!-- 1) 찰칵 사진 촬영 버튼 (카메라 켜졌을 때 최우선 표시) -->
+          <button class="btn-action" id="btnCapturePhoto" onclick="capturePhotoAndDetect()" style="display:none; grid-column:span 2; background:linear-gradient(135deg, #10B981, #059669); color:white; font-size:17px; padding:15px; box-shadow:0 6px 18px rgba(16,185,129,0.35);">
+            <span>📸</span> <span>찰칵! 사진 촬영 및 AI 검출하기 🔍</span>
+          </button>
+
+          <!-- 2) 다시 촬영하기 버튼 (촬영 후 결과 확인 후 재촬영) -->
+          <button class="btn-action" id="btnRetakePhoto" onclick="retakePhoto()" style="display:none; grid-column:span 2; background:#FEF3C7; color:#B45309; border-color:#FCD34D; font-size:16px; padding:13px;">
+            <span>🔄</span> <span>다시 카메라로 사진 촬영하기</span>
+          </button>
+
           <button class="btn-action" id="btnToggleCamera" onclick="toggleCamera()">
             <span>📹</span> <span id="cameraBtnText">카메라 켜기</span>
           </button>
-          <button class="btn-action" id="btnPauseCamera" onclick="togglePauseCamera()" style="display:none; background:#FEF3C7; color:#B45309; border-color:#FCD34D;">
-            <span>⏸️</span> <span id="pauseBtnText">화면 멈춤 (캡처)</span>
-          </button>
+          
           <button class="btn-action" onclick="document.getElementById('fileInput').click()">
             <span>📁</span> <span>사진 파일 선택</span>
           </button>
           <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleImageFile(event)">
-          
-          <button class="btn-action btn-predict" id="btnPredict" onclick="runPrediction(false)">
-            <span>✨</span> <span>AI 쓰레기 분류 & 자신감 측정하기 🚀</span>
-          </button>
         </div>
 
         <!-- 샘플 사진 원클릭 테스트 칩 -->
@@ -865,7 +872,14 @@
       osc.connect(gain); gain.connect(audioCtx.destination);
       const now = audioCtx.currentTime;
 
-      if (type === 'click') {
+      if (type === 'shutter') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.exponentialRampToValueAtTime(120, now + 0.12);
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+        osc.start(now); osc.stop(now + 0.12);
+      } else if (type === 'click') {
         osc.type = 'sine'; osc.frequency.setValueAtTime(500, now);
         osc.frequency.exponentialRampToValueAtTime(900, now + 0.08);
         gain.gain.setValueAtTime(0.18, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
@@ -1098,7 +1112,7 @@
     let cameraStream = null;
     let isCameraActive = false;
     let isPaused = false;
-    let autoDetectTimer = null;
+    let savedCapturedImage = null;
     let isPredicting = false;
     let currentImageElement = null;
     let lastDetectedObjects = [];
@@ -1178,17 +1192,14 @@
       window.playSound('click');
       const btn = document.getElementById('btnToggleCamera');
       const text = document.getElementById('cameraBtnText');
-      const pauseBtn = document.getElementById('btnPauseCamera');
+      const captureBtn = document.getElementById('btnCapturePhoto');
+      const retakeBtn = document.getElementById('btnRetakePhoto');
       const placeholder = document.getElementById('viewPlaceholder');
-      const liveBadge = document.getElementById('liveDetectionBadge');
+      const statusBadge = document.getElementById('cameraStatusBadge');
+      const statusText = document.getElementById('cameraStatusText');
 
       if (isCameraActive) {
         stopCamera();
-        btn.classList.remove('active-camera');
-        text.textContent = '카메라 켜기';
-        if (pauseBtn) pauseBtn.style.display = 'none';
-        if (liveBadge) liveBadge.style.display = 'none';
-        placeholder.style.display = 'block';
       } else {
         try {
           const constraints = {
@@ -1202,8 +1213,9 @@
           video.srcObject = cameraStream;
           await video.play();
 
-          video.style.display = 'none';
-          canvas.style.display = 'block';
+          // 카메라 비디오 라이브 프리뷰 표시
+          video.style.display = 'block';
+          canvas.style.display = 'none';
           placeholder.style.display = 'none';
           isCameraActive = true;
           isPaused = false;
@@ -1211,19 +1223,15 @@
 
           btn.classList.add('active-camera');
           text.textContent = '카메라 끄기';
-          if (pauseBtn) {
-            pauseBtn.style.display = 'flex';
-            document.getElementById('pauseBtnText').textContent = '화면 멈춤 (캡처)';
-            pauseBtn.style.background = '#FEF3C7';
-            pauseBtn.style.color = '#B45309';
+
+          if (captureBtn) captureBtn.style.display = 'flex';
+          if (retakeBtn) retakeBtn.style.display = 'none';
+          if (statusBadge) {
+            statusBadge.style.display = 'flex';
+            statusText.textContent = '📸 쓰레기를 비추고 [사진 촬영]을 누르세요';
           }
-          if (liveBadge) liveBadge.style.display = 'flex';
 
-          window.showToast("📷 카메라 연결 완료! 1초에 1프레임씩 실시간 다중 분석을 시작합니다.");
-
-          // 첫 프레임 즉시 실행 후 1초 루프 시작
-          runPrediction(true);
-          scheduleNextAutoDetect();
+          window.showToast("📷 카메라 준비 완료! 쓰레기를 비춘 후 [찰칵! 사진 촬영] 버튼을 눌러주세요.");
         } catch(err) {
           console.error("Camera access error:", err);
           alert("카메라에 접근할 수 없습니다. 브라우저 권한을 확인하거나 사진 파일 선택을 이용해주세요.");
@@ -1232,63 +1240,106 @@
     }
 
     function stopCamera() {
-      if (autoDetectTimer) {
-        clearTimeout(autoDetectTimer);
-        autoDetectTimer = null;
-      }
       if (cameraStream) {
         cameraStream.getTracks().forEach(t => t.stop());
         cameraStream = null;
       }
       video.style.display = 'none';
-      canvas.style.display = 'block';
+      canvas.style.display = 'none';
       isCameraActive = false;
       isPaused = false;
       scanLine.style.display = 'none';
-      const liveBadge = document.getElementById('liveDetectionBadge');
-      if (liveBadge) liveBadge.style.display = 'none';
+
+      const btn = document.getElementById('btnToggleCamera');
+      const text = document.getElementById('cameraBtnText');
+      const captureBtn = document.getElementById('btnCapturePhoto');
+      const retakeBtn = document.getElementById('btnRetakePhoto');
+      const placeholder = document.getElementById('viewPlaceholder');
+      const statusBadge = document.getElementById('cameraStatusBadge');
+
+      if (btn) btn.classList.remove('active-camera');
+      if (text) text.textContent = '카메라 켜기';
+      if (captureBtn) captureBtn.style.display = 'none';
+      if (retakeBtn) retakeBtn.style.display = 'none';
+      if (statusBadge) statusBadge.style.display = 'none';
+      if (placeholder) placeholder.style.display = 'block';
     }
 
-    // 화면 멈춤(일시정지) / 실시간 재개 토글
-    function togglePauseCamera() {
-      if (!isCameraActive) return;
-      window.playSound('click');
-      isPaused = !isPaused;
-      const pauseBtn = document.getElementById('btnPauseCamera');
-      const pauseText = document.getElementById('pauseBtnText');
-      const liveBadgeText = document.getElementById('liveBadgeText');
-
-      if (isPaused) {
-        if (autoDetectTimer) {
-          clearTimeout(autoDetectTimer);
-          autoDetectTimer = null;
-        }
-        scanLine.style.display = 'none';
-        pauseText.textContent = '▶️ 실시간 재개';
-        pauseBtn.style.background = '#DCFCE7';
-        pauseBtn.style.color = '#15803D';
-        if (liveBadgeText) liveBadgeText.textContent = '⏸️ 화면 멈춤 (분석 고정됨)';
-        window.showToast("⏸️ 화면이 멈췄습니다. 이 상태로 모둠에 공유하거나 오류박물관으로 보낼 수 있습니다.");
-      } else {
-        pauseText.textContent = '⏸️ 화면 멈춤 (캡처)';
-        pauseBtn.style.background = '#FEF3C7';
-        pauseBtn.style.color = '#B45309';
-        if (liveBadgeText) liveBadgeText.textContent = '실시간 탐지 중 (1초 1프레임)';
-        window.showToast("▶️ 1초 실시간 감지를 재개합니다.");
-        scheduleNextAutoDetect();
+    // 사진 촬영 및 AI 검출 실행
+    async function capturePhotoAndDetect() {
+      if (!isCameraActive || video.readyState < 2) {
+        window.showToast("⚠️ 카메라 준비 중입니다. 잠시 후 다시 시도해주세요.");
+        return;
       }
+
+      window.playSound('shutter');
+
+      // 플래시 효과
+      const flash = document.getElementById('cameraFlashOverlay');
+      if (flash) {
+        flash.style.opacity = '0.85';
+        setTimeout(() => { flash.style.opacity = '0'; }, 200);
+      }
+
+      // 1. 현재 비디오 프레임을 640x640 캔버스에 캡처
+      canvas.width = 640;
+      canvas.height = 640;
+      ctx.drawImage(video, 0, 0, 640, 640);
+
+      // 원본 캡처 이미지 생성 (바운딩 박스 재렌더링 시 보존)
+      const snapImg = new Image();
+      snapImg.src = canvas.toDataURL('image/jpeg', 0.92);
+      await new Promise(res => { snapImg.onload = res; snapImg.onerror = res; });
+      savedCapturedImage = snapImg;
+      currentImageElement = snapImg;
+
+      // 2. 뷰어를 캡처된 정지 캔버스로 전환
+      video.style.display = 'none';
+      canvas.style.display = 'block';
+
+      // 3. 버튼 상태 전환: [촬영] 숨기고 [다시 촬영] 표시
+      const captureBtn = document.getElementById('btnCapturePhoto');
+      const retakeBtn = document.getElementById('btnRetakePhoto');
+      const statusText = document.getElementById('cameraStatusText');
+
+      if (captureBtn) captureBtn.style.display = 'none';
+      if (retakeBtn) retakeBtn.style.display = 'flex';
+      if (statusText) statusText.textContent = '⚡ AI 정밀 분석 중...';
+
+      window.showToast("📸 찰칵! 사진이 촬영되었습니다. AI 쓰레기 검출을 시작합니다...");
+
+      // 4. AI 탐지 실행
+      await runPrediction(false);
+
+      if (statusText) statusText.textContent = '🎯 쓰레기 검출 완료!';
     }
 
-    // 1초(1000ms) 뒤 다음 프레임 예약
-    function scheduleNextAutoDetect() {
-      if (!isCameraActive || isPaused) return;
-      if (autoDetectTimer) clearTimeout(autoDetectTimer);
-      autoDetectTimer = setTimeout(async () => {
-        if (isCameraActive && !isPaused) {
-          await runPrediction(true);
-          scheduleNextAutoDetect();
-        }
-      }, 1000);
+    // 다시 카메라 프리뷰로 돌아가기
+    function retakePhoto() {
+      if (!isCameraActive && !cameraStream) {
+        toggleCamera();
+        return;
+      }
+      window.playSound('click');
+      video.style.display = 'block';
+      canvas.style.display = 'none';
+      currentImageElement = video;
+
+      const captureBtn = document.getElementById('btnCapturePhoto');
+      const retakeBtn = document.getElementById('btnRetakePhoto');
+      const statusText = document.getElementById('cameraStatusText');
+
+      if (captureBtn) captureBtn.style.display = 'flex';
+      if (retakeBtn) retakeBtn.style.display = 'none';
+      if (statusText) statusText.textContent = '📸 쓰레기를 비추고 [사진 촬영]을 누르세요';
+
+      // 결과 리포트 초기화
+      document.getElementById('detectedNameDisplay').textContent = '사진을 보여주세요 🔍';
+      document.getElementById('confScoreVal').textContent = '0.0%';
+      document.getElementById('confMeterBar').style.width = '0%';
+      document.getElementById('confBadgeLabel').textContent = '촬영 대기 중';
+      const multiBox = document.getElementById('multiDetectBox');
+      if (multiBox) multiBox.style.display = 'none';
     }
 
     // 사진 파일 선택 처리
@@ -1297,6 +1348,7 @@
       if (!file) return;
 
       stopCamera();
+      savedCapturedImage = null;
       document.getElementById('viewPlaceholder').style.display = 'none';
 
       const img = new Image();
@@ -1317,6 +1369,7 @@
     function loadSampleImage(src, label) {
       window.playSound('click');
       stopCamera();
+      savedCapturedImage = null;
       document.getElementById('viewPlaceholder').style.display = 'none';
 
       const img = new Image();
@@ -1486,9 +1539,11 @@
 
         lastDetectedObjects = detectedObjects;
 
-        // 3. 캔버스에 비디오 프레임과 다중 바운딩 박스 그리기
-        if (isCameraActive && video.readyState >= 2) {
-          ctx.drawImage(video, 0, 0, 640, 640);
+        // 3. 캔버스에 캡처/선택된 원본 이미지 복원 후 다중 바운딩 박스 그리기
+        if (currentImageElement && currentImageElement !== canvas) {
+          ctx.drawImage(currentImageElement, 0, 0, 640, 640);
+        } else if (savedCapturedImage) {
+          ctx.drawImage(savedCapturedImage, 0, 0, 640, 640);
         }
         drawMultipleBoundingBoxes(detectedObjects);
 
