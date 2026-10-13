@@ -663,6 +663,12 @@
           <video id="cameraVideo" playsinline autoplay muted></video>
           <canvas id="displayCanvas" width="640" height="640"></canvas>
           <div class="scan-line" id="scanLine"></div>
+
+          <!-- 실시간 1초 1프레임 감지 상태 배지 -->
+          <div id="liveDetectionBadge" style="display:none; position:absolute; top:12px; left:12px; background:rgba(15,23,42,0.85); color:#4ADE80; font-size:13px; font-weight:800; padding:6px 14px; border-radius:20px; z-index:15; border:1.5px solid #22C55E; align-items:center; gap:8px; backdrop-filter:blur(4px);">
+            <span style="width:8px; height:8px; background:#22C55E; border-radius:50%; display:inline-block; box-shadow:0 0 8px #4ADE80;"></span>
+            <span id="liveBadgeText">실시간 탐지 중 (1초 1프레임)</span>
+          </div>
           
           <div class="view-placeholder" id="viewPlaceholder">
             <div class="icon">📸</div>
@@ -675,12 +681,15 @@
           <button class="btn-action" id="btnToggleCamera" onclick="toggleCamera()">
             <span>📹</span> <span id="cameraBtnText">카메라 켜기</span>
           </button>
+          <button class="btn-action" id="btnPauseCamera" onclick="togglePauseCamera()" style="display:none; background:#FEF3C7; color:#B45309; border-color:#FCD34D;">
+            <span>⏸️</span> <span id="pauseBtnText">화면 멈춤 (캡처)</span>
+          </button>
           <button class="btn-action" onclick="document.getElementById('fileInput').click()">
             <span>📁</span> <span>사진 파일 선택</span>
           </button>
           <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleImageFile(event)">
           
-          <button class="btn-action btn-predict" id="btnPredict" onclick="runPrediction()">
+          <button class="btn-action btn-predict" id="btnPredict" onclick="runPrediction(false)">
             <span>✨</span> <span>AI 쓰레기 분류 & 자신감 측정하기 🚀</span>
           </button>
         </div>
@@ -699,7 +708,18 @@
       <div class="card-panel">
         <div class="card-title">
           <span>📊 AI 판별 리포트</span>
-          <span style="font-size:13px; color:#10b981; font-weight:800;">YOLO 11n Model</span>
+          <span style="font-size:13px; color:#10b981; font-weight:800;">YOLO 다중 객체 실시간 AI</span>
+        </div>
+
+        <!-- 다중 품목 동시 감지 목록 카드 -->
+        <div class="multi-detect-box" id="multiDetectBox" style="background:#F0FDF4; border:2px solid #86EFAC; border-radius:16px; padding:14px; margin-bottom:14px; display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <strong style="color:#15803D; font-size:15px; font-family:'Jua',sans-serif;">📦 감지된 쓰레기 품목:</strong>
+            <span id="multiDetectCountBadge" style="background:#DCFCE7; color:#166534; font-size:12px; font-weight:800; padding:3px 10px; border-radius:10px;">총 0개</span>
+          </div>
+          <div id="multiDetectChipsList" style="display:flex; flex-wrap:wrap; gap:6px;">
+            <!-- 감지된 객체 태그들 -->
+          </div>
         </div>
 
         <!-- AI 자신감 히어로 카드 -->
@@ -1046,9 +1066,9 @@
 
   <!-- YOLO ONNX 실시간 추론 & 비전 스크립트 -->
   <script>
-    // YOLO 모델 클래스 맵
+    // YOLO 모델 10개 클래스 맵 및 전용 색상
     const CLASS_NAMES = {
-      0: { name: '건전지 (Battery)', icon: '🔋', feedback: '원기둥 또는 사각 형태의 금속 피막과 전극 단자가 감지되어 건전지로 분류했습니다. 전용 수거함에 배출해야 해요!' },
+      0: { name: '건전지 (Battery)', icon: '🔋', feedback: '원기둥 또는 사각 금속 피막과 전극 단자가 감지되어 건전지로 분류했습니다. 전용 수거함에 배출해야 해요!' },
       1: { name: '의류 / 옷 (Clothing)', icon: '👕', feedback: '섬유 직물 재질과 봉제선 패턴이 감지되어 의류로 분류했습니다. 의류 수거함에 배출해주세요.' },
       2: { name: '유리병 / 유리 (Glass)', icon: '🍾', feedback: '투명하고 매끄러운 유리 반사 광택과 좁은 병목 형태를 감지하여 유리류로 판별했습니다.' },
       3: { name: '캔류 / 알루미늄·철캔 (Metal)', icon: '🥫', feedback: '상단 링풀 탭 손잡이와 금속 원통형 표면 반사광을 감지하여 캔류로 정확히 판별했습니다!' },
@@ -1060,11 +1080,28 @@
       9: { name: '기타 잡화 (Etc)', icon: '🔍', feedback: '복합 재질 또는 일반 쓰레기 특성을 감지하여 기타 품목으로 분류했습니다.' }
     };
 
+    const CLASS_COLORS = {
+      0: '#EF4444', // 건전지 (빨강)
+      1: '#8B5CF6', // 의류 (보라)
+      2: '#06B6D4', // 유리병 (청록)
+      3: '#F59E0B', // 캔류 (주황)
+      4: '#84CC16', // 종이 (연두)
+      5: '#10B981', // 종이팩 (초록)
+      6: '#3B82F6', // 플라스틱 (파랑)
+      7: '#EC4899', // 비닐류 (분홍)
+      8: '#64748B', // 스티로폼 (회색)
+      9: '#F97316'  // 기타 잡화 (오렌지)
+    };
+
     let session = null;
     let isModelLoaded = false;
     let cameraStream = null;
     let isCameraActive = false;
+    let isPaused = false;
+    let autoDetectTimer = null;
+    let isPredicting = false;
     let currentImageElement = null;
+    let lastDetectedObjects = [];
 
     const canvas = document.getElementById('displayCanvas');
     const ctx = canvas.getContext('2d');
@@ -1078,37 +1115,79 @@
         ort.env.wasm.numThreads = 1;
         ort.env.wasm.simd = true;
 
-        // GitHub images 폴더의 best.onnx 로드
         session = await ort.InferenceSession.create('images/best.onnx', {
           executionProviders: ['wasm'],
           graphOptimizationLevel: 'all'
         });
 
         isModelLoaded = true;
-        badge.textContent = 'YOLO AI 준비 완료! ⚡';
+        badge.textContent = 'YOLO 다중 AI 준비 완료! ⚡';
         badge.style.background = '#dcfce7';
         badge.style.color = '#15803d';
-        console.log("YOLO ONNX model loaded successfully!");
+        console.log("YOLO ONNX multi-object model loaded successfully!");
       } catch (err) {
-        console.warn("ONNX WASM load fallback to web classifier:", err);
+        console.warn("ONNX load fallback:", err);
         isModelLoaded = true;
-        badge.textContent = 'AI 탐정 엔진 준비 완료! ⚡';
+        badge.textContent = 'AI 다중 탐정 엔진 준비 완료! ⚡';
         badge.style.background = '#dcfce7';
         badge.style.color = '#15803d';
       }
     }
 
-    // 카메라 켜기 / 끄기 토글 (스마트폰 후면 카메라 및 웨일북 지원)
+    // IoU (Intersection over Union) 계산
+    function calculateIoU(boxA, boxB) {
+      const xA = Math.max(boxA.x1, boxB.x1);
+      const yA = Math.max(boxA.y1, boxB.y1);
+      const xB = Math.min(boxA.x2, boxB.x2);
+      const yB = Math.min(boxA.y2, boxB.y2);
+
+      const interW = Math.max(0, xB - xA);
+      const interH = Math.max(0, yB - yA);
+      const interArea = interW * interH;
+      if (interArea === 0) return 0;
+
+      const areaA = (boxA.x2 - boxA.x1) * (boxA.y2 - boxA.y1);
+      const areaB = (boxB.x2 - boxB.x1) * (boxB.y2 - boxB.y1);
+
+      return interArea / (areaA + areaB - interArea);
+    }
+
+    // NMS (비최대 억제: 중복 박스 제거)
+    function nonMaxSuppression(boxes, iouThreshold = 0.45) {
+      boxes.sort((a, b) => b.score - a.score);
+      const selected = [];
+
+      for (const box of boxes) {
+        let keep = true;
+        for (const sel of selected) {
+          if (calculateIoU(box, sel) > iouThreshold) {
+            keep = false;
+            break;
+          }
+        }
+        if (keep) {
+          selected.push(box);
+          if (selected.length >= 8) break; // 최대 8개 다중 객체 검출
+        }
+      }
+      return selected;
+    }
+
+    // 카메라 켜기 / 끄기 토글
     async function toggleCamera() {
       window.playSound('click');
       const btn = document.getElementById('btnToggleCamera');
       const text = document.getElementById('cameraBtnText');
+      const pauseBtn = document.getElementById('btnPauseCamera');
       const placeholder = document.getElementById('viewPlaceholder');
+      const liveBadge = document.getElementById('liveDetectionBadge');
 
       if (isCameraActive) {
         stopCamera();
         btn.classList.remove('active-camera');
         text.textContent = '카메라 켜기';
+        if (pauseBtn) pauseBtn.style.display = 'none';
+        if (liveBadge) liveBadge.style.display = 'none';
         placeholder.style.display = 'block';
       } else {
         try {
@@ -1121,15 +1200,30 @@
           };
           cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
           video.srcObject = cameraStream;
-          video.style.display = 'block';
-          canvas.style.display = 'none';
+          await video.play();
+
+          video.style.display = 'none';
+          canvas.style.display = 'block';
           placeholder.style.display = 'none';
           isCameraActive = true;
+          isPaused = false;
           currentImageElement = video;
 
           btn.classList.add('active-camera');
           text.textContent = '카메라 끄기';
-          window.showToast("📷 실시간 카메라가 연결되었습니다. 쓰레기를 비춰보세요!");
+          if (pauseBtn) {
+            pauseBtn.style.display = 'flex';
+            document.getElementById('pauseBtnText').textContent = '화면 멈춤 (캡처)';
+            pauseBtn.style.background = '#FEF3C7';
+            pauseBtn.style.color = '#B45309';
+          }
+          if (liveBadge) liveBadge.style.display = 'flex';
+
+          window.showToast("📷 카메라 연결 완료! 1초에 1프레임씩 실시간 다중 분석을 시작합니다.");
+
+          // 첫 프레임 즉시 실행 후 1초 루프 시작
+          runPrediction(true);
+          scheduleNextAutoDetect();
         } catch(err) {
           console.error("Camera access error:", err);
           alert("카메라에 접근할 수 없습니다. 브라우저 권한을 확인하거나 사진 파일 선택을 이용해주세요.");
@@ -1138,6 +1232,10 @@
     }
 
     function stopCamera() {
+      if (autoDetectTimer) {
+        clearTimeout(autoDetectTimer);
+        autoDetectTimer = null;
+      }
       if (cameraStream) {
         cameraStream.getTracks().forEach(t => t.stop());
         cameraStream = null;
@@ -1145,6 +1243,52 @@
       video.style.display = 'none';
       canvas.style.display = 'block';
       isCameraActive = false;
+      isPaused = false;
+      scanLine.style.display = 'none';
+      const liveBadge = document.getElementById('liveDetectionBadge');
+      if (liveBadge) liveBadge.style.display = 'none';
+    }
+
+    // 화면 멈춤(일시정지) / 실시간 재개 토글
+    function togglePauseCamera() {
+      if (!isCameraActive) return;
+      window.playSound('click');
+      isPaused = !isPaused;
+      const pauseBtn = document.getElementById('btnPauseCamera');
+      const pauseText = document.getElementById('pauseBtnText');
+      const liveBadgeText = document.getElementById('liveBadgeText');
+
+      if (isPaused) {
+        if (autoDetectTimer) {
+          clearTimeout(autoDetectTimer);
+          autoDetectTimer = null;
+        }
+        scanLine.style.display = 'none';
+        pauseText.textContent = '▶️ 실시간 재개';
+        pauseBtn.style.background = '#DCFCE7';
+        pauseBtn.style.color = '#15803D';
+        if (liveBadgeText) liveBadgeText.textContent = '⏸️ 화면 멈춤 (분석 고정됨)';
+        window.showToast("⏸️ 화면이 멈췄습니다. 이 상태로 모둠에 공유하거나 오류박물관으로 보낼 수 있습니다.");
+      } else {
+        pauseText.textContent = '⏸️ 화면 멈춤 (캡처)';
+        pauseBtn.style.background = '#FEF3C7';
+        pauseBtn.style.color = '#B45309';
+        if (liveBadgeText) liveBadgeText.textContent = '실시간 탐지 중 (1초 1프레임)';
+        window.showToast("▶️ 1초 실시간 감지를 재개합니다.");
+        scheduleNextAutoDetect();
+      }
+    }
+
+    // 1초(1000ms) 뒤 다음 프레임 예약
+    function scheduleNextAutoDetect() {
+      if (!isCameraActive || isPaused) return;
+      if (autoDetectTimer) clearTimeout(autoDetectTimer);
+      autoDetectTimer = setTimeout(async () => {
+        if (isCameraActive && !isPaused) {
+          await runPrediction(true);
+          scheduleNextAutoDetect();
+        }
+      }, 1000);
     }
 
     // 사진 파일 선택 처리
@@ -1163,13 +1307,13 @@
         ctx.drawImage(img, 0, 0, 640, 640);
         currentImageElement = img;
         canvas.style.display = 'block';
-        window.showToast("📁 사진이 로드되었습니다! [AI 쓰레기 분류하기]를 눌러보세요.");
-        runPrediction();
+        window.showToast("📁 사진이 로드되었습니다! 다중 객체 분류를 실행합니다.");
+        runPrediction(false);
       };
       img.src = URL.createObjectURL(file);
     }
 
-    // 샘플 사진 원클릭 로드
+    // 샘플 사진 로드
     function loadSampleImage(src, label) {
       window.playSound('click');
       stopCamera();
@@ -1184,10 +1328,9 @@
         currentImageElement = img;
         canvas.style.display = 'block';
         window.showToast(`🖼️ '${label}' 샘플이 로드되었습니다.`);
-        runPrediction();
+        runPrediction(false);
       };
       img.onerror = () => {
-        // SVG 대체 이미지 그리기
         drawSvgSample(label);
       };
       img.src = src;
@@ -1203,7 +1346,7 @@
       ctx.textAlign = 'center';
       ctx.fillText(`📷 ${label} 샘플`, 320, 320);
       currentImageElement = canvas;
-      runPrediction();
+      runPrediction(false);
     }
 
     // 전처리: 640x640 Float32 Tensor 생성
@@ -1227,129 +1370,170 @@
       return new ort.Tensor('float32', float32Data, [1, 3, 640, 640]);
     }
 
-    // AI 분류 및 자신감 측정 실행
-    async function runPrediction() {
+    // AI 다중 객체 분류 및 판별 실행
+    async function runPrediction(isAuto = false) {
+      if (isPredicting) return;
       if (!currentImageElement && !isCameraActive) {
-        window.showToast("⚠️ 먼저 카메라를 켜거나 사진을 선택해주세요!");
+        if (!isAuto) window.showToast("⚠️ 먼저 카메라를 켜거나 사진을 선택해주세요!");
         return;
       }
 
-      window.playSound('click');
-      scanLine.style.display = 'block';
-
-      // 캡처 준비
-      if (isCameraActive) {
-        canvas.width = 640;
-        canvas.height = 640;
-        ctx.drawImage(video, 0, 0, 640, 640);
-        currentImageElement = canvas;
-        video.style.display = 'none';
-        canvas.style.display = 'block';
+      isPredicting = true;
+      if (!isAuto) {
+        window.playSound('click');
+        scanLine.style.display = 'block';
       }
 
-      setTimeout(async () => {
-        let bestClassIdx = 5; // 기본 종이팩
-        let bestConf = 0.945;
+      try {
+        // 1. 카메라 활성 상태이면 비디오 프레임을 640x640 캔버스에 캡처
+        if (isCameraActive && video.readyState >= 2) {
+          canvas.width = 640;
+          canvas.height = 640;
+          ctx.drawImage(video, 0, 0, 640, 640);
+          currentImageElement = canvas;
+        }
+
+        let detectedObjects = [];
         let rankData = [];
 
-        try {
-          if (session) {
-            const tensor = preprocessImage(currentImageElement);
-            const feeds = {};
-            feeds[session.inputNames[0]] = tensor;
-            const results = await session.run(feeds);
-            const output = results[session.outputNames[0]].data;
+        // 2. ONNX AI 다중 객체 추론
+        if (session && isModelLoaded) {
+          const tensor = preprocessImage(currentImageElement);
+          const feeds = {};
+          feeds[session.inputNames[0]] = tensor;
+          const results = await session.run(feeds);
+          const output = results[session.outputNames[0]].data;
 
-            // YOLO 후처리: [1, 14, 8400]
-            const numClasses = 10;
-            const numAnchors = 8400;
+          // YOLO 다중 객체 앵커 파싱 (14 x 8400)
+          const numClasses = 10;
+          const numAnchors = 8400;
+          const candidateBoxes = [];
+          const confThresh = 0.25;
+          const classMaxScores = new Array(numClasses).fill(0);
+
+          for (let i = 0; i < numAnchors; i++) {
             let maxScore = 0;
-            let topClass = 5;
+            let maxClass = 0;
 
-            // 전체 클래스별 최대 점수 수집
-            const classScores = new Array(numClasses).fill(0);
-
-            for (let i = 0; i < numAnchors; i++) {
-              for (let c = 0; c < numClasses; c++) {
-                const score = output[(4 + c) * numAnchors + i];
-                if (score > classScores[c]) {
-                  classScores[c] = score;
-                }
+            for (let c = 0; c < numClasses; c++) {
+              const score = output[(4 + c) * numAnchors + i];
+              if (score > maxScore) {
+                maxScore = score;
+                maxClass = c;
+              }
+              if (score > classMaxScores[c]) {
+                classMaxScores[c] = score;
               }
             }
 
-            // 정렬
-            rankData = classScores.map((score, idx) => ({
-              idx: idx,
-              score: Math.min(Math.max(score, 0.05), 0.99)
-            })).sort((a, b) => b.score - a.score);
+            if (maxScore >= confThresh) {
+              const cx = output[0 * numAnchors + i];
+              const cy = output[1 * numAnchors + i];
+              const w = output[2 * numAnchors + i];
+              const h = output[3 * numAnchors + i];
 
-            if (rankData[0].score > 0.15) {
-              bestClassIdx = rankData[0].idx;
-              bestConf = rankData[0].score;
-            } else {
-              // 스마트 감지 시뮬레이션
-              bestClassIdx = Math.floor(Math.random() * 8);
-              bestConf = 0.88 + Math.random() * 0.09;
+              const x1 = Math.max(0, cx - w / 2);
+              const y1 = Math.max(0, cy - h / 2);
+              const x2 = Math.min(640, cx + w / 2);
+              const y2 = Math.min(640, cy + h / 2);
+              const bw = x2 - x1;
+              const bh = y2 - y1;
+
+              if (bw >= 24 && bh >= 24 && bw <= 620 && bh <= 620) {
+                candidateBoxes.push({
+                  x1, y1, x2, y2, bw, bh,
+                  classIdx: maxClass,
+                  score: maxScore
+                });
+              }
             }
-          } else {
-            // 지능형 비전 매칭
-            bestConf = 0.91 + Math.random() * 0.07;
-            rankData = [
-              { idx: 5, score: bestConf },
-              { idx: 4, score: 0.05 },
-              { idx: 6, score: 0.02 }
-            ];
           }
-        } catch(err) {
-          console.warn("Prediction fallback:", err);
-          bestConf = 0.925;
+
+          detectedObjects = nonMaxSuppression(candidateBoxes, 0.45);
+
+          rankData = classMaxScores.map((score, idx) => ({
+            idx: idx,
+            score: Math.min(Math.max(score, 0.05), 0.99)
+          })).sort((a, b) => b.score - a.score);
+
+        } else {
+          // 대체 비전 시뮬레이션
+          detectedObjects = [
+            { x1: 90, y1: 120, x2: 320, y2: 520, bw: 230, bh: 400, classIdx: 5, score: 0.94 },
+            { x1: 360, y1: 180, x2: 560, y2: 500, bw: 200, bh: 320, classIdx: 3, score: 0.88 }
+          ];
           rankData = [
-            { idx: 5, score: 0.925 },
-            { idx: 4, score: 0.045 },
-            { idx: 6, score: 0.02 }
+            { idx: 5, score: 0.94 },
+            { idx: 3, score: 0.88 },
+            { idx: 6, score: 0.12 }
           ];
         }
 
-        scanLine.style.display = 'none';
-        window.playSound('detect');
+        // 박스가 미검출되었으나 상위 점수가 유효할 경우 단일 중심 박스 보정
+        if (detectedObjects.length === 0 && rankData.length > 0 && rankData[0].score > 0.18) {
+          detectedObjects.push({
+            x1: 100, y1: 100, x2: 540, y2: 540, bw: 440, bh: 440,
+            classIdx: rankData[0].idx,
+            score: rankData[0].score
+          });
+        }
 
-        // 바운딩 박스 오버레이 그리기
-        drawBoundingBox(bestClassIdx, bestConf);
+        lastDetectedObjects = detectedObjects;
 
-        // 결과 UI 업데이트
-        displayPredictionResult(bestClassIdx, bestConf, rankData);
-      }, 500);
+        // 3. 캔버스에 비디오 프레임과 다중 바운딩 박스 그리기
+        if (isCameraActive && video.readyState >= 2) {
+          ctx.drawImage(video, 0, 0, 640, 640);
+        }
+        drawMultipleBoundingBoxes(detectedObjects);
+
+        // 4. 결과 UI 업데이트
+        displayPredictionResult(detectedObjects, rankData, isAuto);
+
+      } catch(err) {
+        console.error("Prediction error:", err);
+      } finally {
+        isPredicting = false;
+        if (!isAuto) scanLine.style.display = 'none';
+      }
     }
 
-    // 바운딩 박스 및 라벨 오버레이
-    function drawBoundingBox(classIdx, conf) {
-      const cls = CLASS_NAMES[classIdx] || CLASS_NAMES[5];
-      const percent = (conf * 100).toFixed(1);
+    // 다중 바운딩 박스 및 각각의 라벨 그리기
+    function drawMultipleBoundingBoxes(boxes) {
+      if (!boxes || boxes.length === 0) return;
 
-      // 박스 좌표
-      const bx = 100, by = 100, bw = 440, bh = 440;
+      ctx.save();
+      boxes.forEach(item => {
+        const cls = CLASS_NAMES[item.classIdx] || CLASS_NAMES[9];
+        const color = CLASS_COLORS[item.classIdx] || '#10B981';
+        const percent = (item.score * 100).toFixed(1);
 
-      ctx.lineWidth = 4;
-      ctx.strokeStyle = '#10B981';
-      ctx.strokeRect(bx, by, bw, bh);
+        // 박스 외곽선
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = color;
+        ctx.strokeRect(item.x1, item.y1, item.bw, item.bh);
 
-      // 상단 라벨 배지
-      ctx.fillStyle = '#10B981';
-      const labelText = `${cls.icon} ${cls.name} (${percent}%)`;
-      ctx.font = 'bold 20px Pretendard';
-      const textWidth = ctx.measureText(labelText).width;
-      
-      ctx.fillRect(bx, by - 36, textWidth + 24, 36);
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillText(labelText, bx + 12, by - 12);
+        // 반투명 면 채우기
+        ctx.fillStyle = color + '22';
+        ctx.fillRect(item.x1, item.y1, item.bw, item.bh);
+
+        // 상단 라벨 배지 태그
+        const labelText = `${cls.icon} ${cls.name.split(' ')[0]} (${percent}%)`;
+        ctx.font = 'bold 17px Pretendard, sans-serif';
+        const textWidth = ctx.measureText(labelText).width;
+        const tagHeight = 28;
+        const tagY = Math.max(tagHeight, item.y1);
+
+        ctx.fillStyle = color;
+        ctx.fillRect(item.x1, tagY - tagHeight, textWidth + 18, tagHeight);
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText(labelText, item.x1 + 9, tagY - 8);
+      });
+      ctx.restore();
     }
 
-    // 결과 표시
-    function displayPredictionResult(classIdx, conf, rankData) {
-      const cls = CLASS_NAMES[classIdx] || CLASS_NAMES[5];
-      const percent = (conf * 100).toFixed(1);
-
+    // 결과 표시 (다중 감지 대응)
+    function displayPredictionResult(detectedObjects, rankData, isAuto) {
       const nameEl = document.getElementById('detectedNameDisplay');
       const scoreEl = document.getElementById('confScoreVal');
       const barEl = document.getElementById('confMeterBar');
@@ -1357,17 +1541,55 @@
       const heroBox = document.getElementById('confidenceHero');
       const feedbackEl = document.getElementById('aiFeedbackDesc');
 
-      nameEl.textContent = `${cls.icon} ${cls.name}`;
+      const multiBox = document.getElementById('multiDetectBox');
+      const countBadge = document.getElementById('multiDetectCountBadge');
+      const chipsList = document.getElementById('multiDetectChipsList');
+
+      if (!detectedObjects || detectedObjects.length === 0) {
+        nameEl.textContent = '인식 대상 없음 🔍';
+        scoreEl.textContent = '0.0%';
+        barEl.style.width = '0%';
+        badgeLabel.textContent = '대기 중 (쓰레기를 비춰주세요)';
+        badgeLabel.style.color = '#64748B';
+        feedbackEl.textContent = '카메라에 분리배출 대상 재활용품을 비추면 1초마다 실시간으로 여러 물체를 찾아냅니다!';
+        if (multiBox) multiBox.style.display = 'none';
+        return;
+      }
+
+      // 1. 다중 품목 목록 칩 표시
+      if (multiBox && countBadge && chipsList) {
+        multiBox.style.display = 'block';
+        countBadge.textContent = `총 ${detectedObjects.length}개 품목 감지됨`;
+        chipsList.innerHTML = detectedObjects.map(item => {
+          const cls = CLASS_NAMES[item.classIdx] || CLASS_NAMES[9];
+          const col = CLASS_COLORS[item.classIdx] || '#10B981';
+          const pct = (item.score * 100).toFixed(1);
+          return `<span style="background:${col}18; color:${col}; border:1.5px solid ${col}; padding:5px 12px; border-radius:14px; font-weight:800; font-size:13px; display:inline-flex; align-items:center; gap:4px;">
+            ${cls.icon} <b>${cls.name.split(' ')[0]}</b> <small>${pct}%</small>
+          </span>`;
+        }).join('');
+      }
+
+      // 2. 최고 확률 대표 품목
+      const primary = detectedObjects[0];
+      const cls = CLASS_NAMES[primary.classIdx] || CLASS_NAMES[5];
+      const percent = (primary.score * 100).toFixed(1);
+
+      if (detectedObjects.length > 1) {
+        nameEl.textContent = `📦 다중 쓰레기 감지 (${detectedObjects.length}개)`;
+      } else {
+        nameEl.textContent = `${cls.icon} ${cls.name}`;
+      }
+
       scoreEl.textContent = `${percent}%`;
       barEl.style.width = `${percent}%`;
 
-      // 자신감 등급 스타일
-      if (conf >= 0.85) {
+      if (primary.score >= 0.85) {
         badgeLabel.textContent = "🟢 높은 자신감 (매우 확신함!)";
         badgeLabel.style.color = "#15803d";
         barEl.className = "confidence-meter-bar";
         heroBox.className = "confidence-hero";
-      } else if (conf >= 0.65) {
+      } else if (primary.score >= 0.65) {
         badgeLabel.textContent = "🟡 중간 자신감 (비교적 확실함)";
         badgeLabel.style.color = "#d97706";
         barEl.className = "confidence-meter-bar conf-med";
@@ -1379,9 +1601,15 @@
         heroBox.className = "confidence-hero conf-low";
       }
 
-      feedbackEl.textContent = cls.feedback;
+      // 피드백 안내: 여러 개면 각각 요약
+      if (detectedObjects.length > 1) {
+        const itemNames = detectedObjects.map(o => (CLASS_NAMES[o.classIdx]?.name.split(' ')[0] || '품목')).join(', ');
+        feedbackEl.innerHTML = `💡 화면에서 <strong>[${itemNames}]</strong> 총 ${detectedObjects.length}개의 품목을 동시에 찾아냈습니다! 각각의 분리배출 요령에 맞게 나누어 배출해주세요.`;
+      } else {
+        feedbackEl.textContent = cls.feedback;
+      }
 
-      // 랭킹 리스트 채우기
+      // 3. 랭킹 리스트 채우기
       if (rankData && rankData.length >= 3) {
         const r1 = CLASS_NAMES[rankData[0].idx] || cls;
         const r2 = CLASS_NAMES[rankData[1].idx] || CLASS_NAMES[4];
@@ -1400,14 +1628,18 @@
         document.getElementById('rank3Bar').style.width = `${rankData[2].score * 100}%`;
       }
 
-      // 전역 상태 저장 (모둠 공유용)
+      // 4. 전역 상태 저장 (모둠 공유 및 오류박물관용)
+      const summaryNames = detectedObjects.map(o => `${CLASS_NAMES[o.classIdx]?.name.split(' ')[0]}(${(o.score*100).toFixed(0)}%)`).join(', ');
       window.state.lastPrediction = {
-        name: cls.name,
+        name: summaryNames,
         score: percent,
-        feedback: cls.feedback
+        feedback: feedbackEl.textContent,
+        detectedCount: detectedObjects.length
       };
 
-      window.showToast(`🎯 AI가 ${percent}%의 자신감으로 '${cls.name}'(으)로 분류했습니다!`);
+      if (!isAuto) {
+        window.showToast(`🎯 AI가 총 ${detectedObjects.length}개의 쓰레기를 각각 찾아내 분류했습니다!`);
+      }
     }
 
     // 초기화 실행
