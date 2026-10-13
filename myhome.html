@@ -1,1 +1,739 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>우리 모둠 탐정 아지트 (My Home) - AI 자원순환 탐정단</title>
+  <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua 사용 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #2E7D32;
+      --primary-light: #E8F5E9;
+      --accent: #FFB300;
+      --card-bg: #FFFFFF;
+      --text-dark: #263238;
+      --border: #C8E6C9;
+      --muted: #558B2F;
+    }
 
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: #F1F8E9;
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      font-size: 18px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 1080px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    /* 상단 프로필 헤더 */
+    header {
+      background: #FFFFFF;
+      border: 3px solid #A5D6A7;
+      border-radius: 24px;
+      padding: 18px 24px;
+      box-shadow: 0 8px 20px rgba(46, 125, 50, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .avatar-box {
+      font-size: 40px;
+      background: var(--primary-light);
+      padding: 8px 14px;
+      border-radius: 20px;
+    }
+
+    .user-info h2 {
+      font-family: 'Jua', sans-serif;
+      font-size: 26px;
+      color: var(--primary);
+    }
+
+    .user-info p {
+      font-size: 16px;
+      font-weight: 600;
+      color: #558B2F;
+    }
+
+    .status-badges {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .badge-pill {
+      background: #FFF9C4;
+      border: 2px solid #FBC02D;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-family: 'Jua', sans-serif;
+      font-size: 17px;
+      color: #F57F17;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-team {
+      background: #E1F5FE;
+      border: 2px solid #4FC3F7;
+      color: #0277BD;
+    }
+
+    .btn-nav-map {
+      background: linear-gradient(135deg, #10B981, #059669);
+      border: none;
+      color: #FFFFFF;
+      font-family: 'Jua', sans-serif;
+      font-size: 17px;
+      padding: 10px 18px;
+      border-radius: 18px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-nav-map:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-logout {
+      background: #FFEBEE;
+      border: 2px solid #FFCDD2;
+      color: #C62828;
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      padding: 8px 16px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: #FFCDD2;
+    }
+
+    /* 🎮 1. 실시간 모둠 게임 대기방 (LOBBY) */
+    .lobby-card {
+      background: #FFFFFF;
+      border: 3px solid #81C784;
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: 0 10px 28px rgba(46, 125, 50, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .lobby-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .lobby-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lobby-title-wrap h3 {
+      font-family: 'Jua', sans-serif;
+      font-size: 26px;
+      color: var(--primary);
+    }
+
+    .lobby-badge {
+      background: #E8F5E9;
+      color: #2E7D32;
+      border: 2px solid #A5D6A7;
+      padding: 6px 14px;
+      border-radius: 18px;
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pulse-dot {
+      width: 10px;
+      height: 10px;
+      background: #4CAF50;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(76, 175, 80, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+    }
+
+    /* 대기방 플레이어 그리드 */
+    .players-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .player-card {
+      background: #F1F8E9;
+      border: 2px solid #C8E6C9;
+      border-radius: 20px;
+      padding: 16px 12px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .player-card.is-me {
+      background: #E8F5E9;
+      border: 2px solid #4CAF50;
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+    }
+
+    .player-card.empty-slot {
+      background: #FAFAFA;
+      border: 2px dashed #CFD8DC;
+      color: #90A4AE;
+    }
+
+    .player-avatar {
+      font-size: 42px;
+      line-height: 1;
+      background: #FFFFFF;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 2px solid #C8E6C9;
+    }
+
+    .player-name {
+      font-family: 'Jua', sans-serif;
+      font-size: 19px;
+      color: #1B5E20;
+    }
+
+    .player-tag {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: #C8E6C9;
+      color: #2E7D32;
+    }
+
+    .player-tag.me {
+      background: #FFECB3;
+      color: #FF6F00;
+    }
+
+    /* 🤖 우리 모둠 AI 파트너 이름 짓기 박스 */
+    .ai-setup-banner {
+      background: linear-gradient(135deg, #FFFDE7, #F1F8E9);
+      border: 2px solid #DCE775;
+      border-radius: 20px;
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .ai-info-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .ai-icon-large {
+      font-size: 46px;
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .ai-text h4 {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      color: #827717;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ai-text p {
+      font-size: 14px;
+      color: #689F38;
+      font-weight: 600;
+    }
+
+    .ai-edit-form {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex: 1;
+      max-width: 440px;
+      min-width: 260px;
+    }
+
+    .ai-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #DCE775;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      outline: none;
+      color: #1B5E20;
+      background: #FFFFFF;
+    }
+
+    .ai-input:focus {
+      border-color: #827717;
+      box-shadow: 0 0 0 3px rgba(220, 231, 117, 0.4);
+    }
+
+    .btn-ai-save {
+      background: linear-gradient(135deg, #689F38, #33691E);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      padding: 12px 18px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(51, 105, 30, 0.2);
+      transition: all 0.2s;
+    }
+
+    .btn-ai-save:active {
+      transform: scale(0.96);
+    }
+
+    /* 빠른 메뉴 바 (설문조사 & 대시보드) */
+    .quick-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .banner-card {
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: white;
+      padding: 20px 22px;
+      border-radius: 22px;
+      box-shadow: 0 8px 20px rgba(46, 125, 50, 0.18);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .banner-card.alt {
+      background: linear-gradient(135deg, #FFB300, #F57C00);
+    }
+
+    .banner-card:active {
+      transform: scale(0.98);
+    }
+
+    .banner-text h3 {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      margin-bottom: 3px;
+    }
+
+    .banner-text p {
+      font-size: 15px;
+      font-weight: 500;
+      opacity: 0.95;
+    }
+
+    .banner-icon {
+      font-size: 38px;
+    }
+
+    /* 실시간 학급 랭킹 하단 바 */
+    footer {
+      background: #FFFFFF;
+      border: 2px solid #C8E6C9;
+      border-radius: 20px;
+      padding: 18px 22px;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 600;
+      color: #37474F;
+    }
+
+    footer strong {
+      color: var(--primary);
+      font-family: 'Jua', sans-serif;
+      font-size: 20px;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 16px; flex-direction: column; align-items: flex-start; }
+      .user-info h2 { font-size: 24px; }
+      .ai-setup-banner { flex-direction: column; align-items: stretch; }
+      .ai-edit-form { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- 상단 학생 & 모둠 프로필 -->
+  <header>
+    <div class="user-profile">
+      <div class="avatar-box">🏠🕵️‍♂️</div>
+      <div class="user-info">
+        <h2 id="dispStudent">학생 탐정단</h2>
+        <p id="dispAiName">🤖 모둠 AI: 로딩 중...</p>
+      </div>
+    </div>
+
+    <div class="status-badges">
+      <div class="badge-pill badge-team" id="dispTeamBadge">👥 모둠: 로딩 중...</div>
+      <div class="badge-pill" id="dispScore">⭐ 10점</div>
+      <div class="badge-pill" id="dispBadge">🏅 신입 탐정단</div>
+      <a href="main.html" class="btn-nav-map">🗺️ 퀘스트 지도 가기</a>
+      <button class="btn-logout" onclick="logout()">로그아웃</button>
+    </div>
+  </header>
+
+  <!-- 🎮 1. 실시간 모둠 게임 대기방 (LOBBY) -->
+  <section class="lobby-card">
+    <div class="lobby-top">
+      <div class="lobby-title-wrap">
+        <span style="font-size:28px;">🎮</span>
+        <h3>우리 모둠 탐정 대기실 (모둠 아지트)</h3>
+      </div>
+      <div class="lobby-badge">
+        <span class="pulse-dot"></span>
+        <span id="lobbyMemberCount">실시간 접속 1명</span>
+      </div>
+    </div>
+
+    <!-- 대기방 모둠원 아바타 목록 -->
+    <div class="players-grid" id="lobbyPlayersGrid">
+      <div class="player-card">
+        <div class="player-avatar">🕵️‍♂️</div>
+        <div class="player-name">로딩 중...</div>
+        <div class="player-tag">접속 중</div>
+      </div>
+    </div>
+
+    <!-- 🤖 우리 모둠 AI 파트너 이름 짓기/수정 바 -->
+    <div class="ai-setup-banner">
+      <div class="ai-info-left">
+        <div class="ai-icon-large">🤖✨</div>
+        <div class="ai-text">
+          <h4>우리 모둠 AI: <span id="lobbyAiNameDisplay" style="color:#2E7D32;">에코봇</span></h4>
+          <p id="lobbyAiAuthorInfo">✨ 마지막 설정: 로딩 중...</p>
+        </div>
+      </div>
+
+      <div class="ai-edit-form">
+        <input type="text" id="inlineAiInput" class="ai-input" placeholder="우리 모둠 AI 이름 짓기 (예: 에코봇, 초록이)" maxlength="15">
+        <button id="inlineAiSaveBtn" class="btn-ai-save">💾 AI 이름 정하기</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 설문조사 & 대시보드 빠른 이동 바 -->
+  <div class="quick-bar">
+    <a href="survey.html" class="banner-card">
+      <div class="banner-text">
+        <h3>📝 자원순환 탐정단 사전 설문</h3>
+        <p>우리 반 친구들의 분리배출 습관 알아보기</p>
+      </div>
+      <div class="banner-icon">📋</div>
+    </a>
+    <a href="dashboard.html" class="banner-card alt">
+      <div class="banner-text">
+        <h3>📊 우리 반 실시간 탐정 현황판</h3>
+        <p>전체 모둠별 퀘스트 완료 현황 한눈에 보기</p>
+      </div>
+      <div class="banner-icon">🏆</div>
+    </a>
+  </div>
+
+  <!-- 하단 랭킹 현황 -->
+  <footer>
+    <strong>🏆 실시간 탐정단 모둠 랭킹:</strong>
+    <span id="liveRanking">참여 모둠 정보를 불러오는 중...</span>
+  </footer>
+
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, updateDoc, onSnapshot, collection, query, orderBy, limit, arrayUnion, arrayRemove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+    authDomain: "elemeelementary-textbook.firebaseapp.com",
+    projectId: "elemeelementary-textbook",
+    storageBucket: "elemeelementary-textbook.firebasestorage.app",
+    messagingSenderId: "713149004420",
+    appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
+    measurementId: "G-TZT282J9E8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const teamCode = localStorage.getItem("elementary_teamCode");
+  const studentId = localStorage.getItem("elementary_studentId");
+  const studentName = localStorage.getItem("elementary_studentName") || "학생 탐정";
+  let currentAiName = localStorage.getItem("elementary_aiName") || "에코봇";
+
+  if (!studentId || !teamCode) {
+    window.location.href = "index.html";
+  }
+
+  // 상단 헤더 기본 표시
+  document.getElementById("dispStudent").textContent = `${studentName} 탐정`;
+  document.getElementById("dispTeamBadge").textContent = `👥 모둠: ${teamCode}`;
+  document.getElementById("dispAiName").textContent = `🤖 모둠 AI: ${currentAiName}`;
+
+  // 대기방 아바타 목록 배열 (귀여운 캐릭터 아이콘)
+  const AVATARS = ["🕵️‍♂️", "🕵️‍♀️", "🧑‍🔬", "🧑‍💻", "🦊", "⚡", "🌟", "🌱"];
+
+  function getAvatarForName(name) {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash) % AVATARS.length;
+    return AVATARS[index];
+  }
+
+  // 대기방 렌더링 함수
+  function renderLobby(members = [], lastAuthor = "") {
+    const grid = document.getElementById("lobbyPlayersGrid");
+    const countSpan = document.getElementById("lobbyMemberCount");
+
+    // 최소 현재 접속자 포함
+    if (!members.includes(studentName)) {
+      members.push(studentName);
+    }
+
+    countSpan.textContent = `실시간 접속 ${members.length}명`;
+
+    let html = members.map((member) => {
+      const isMe = member === studentName;
+      const avatar = getAvatarForName(member);
+      return `
+        <div class="player-card ${isMe ? 'is-me' : ''}">
+          <div class="player-avatar">${avatar}</div>
+          <div class="player-name">${member}</div>
+          <div class="player-tag ${isMe ? 'me' : ''}">${isMe ? '나 (준비완료 ⭐)' : '대기 완료 🎯'}</div>
+        </div>
+      `;
+    }).join('');
+
+    // 빈 슬롯 카드 (팀원 초대 안내)
+    html += `
+      <div class="player-card empty-slot">
+        <div class="player-avatar" style="border-color:#CFD8DC;color:#90A4AE;">➕</div>
+        <div class="player-name" style="color:#90A4AE;font-size:16px;">모둠원 대기 중</div>
+        <div class="player-tag" style="background:#ECEFF1;color:#78909C;">'${teamCode}' 입력</div>
+      </div>
+    `;
+
+    grid.innerHTML = html;
+
+    // AI 파트너 정보 갱신
+    document.getElementById("lobbyAiNameDisplay").textContent = currentAiName;
+    document.getElementById("lobbyAiAuthorInfo").textContent = lastAuthor 
+      ? `✨ 마지막 설정: [${lastAuthor}] 탐정` 
+      : `✨ 모둠원 누구나 아래에서 이름을 바꿀 수 있어요!`;
+  }
+
+  // 접속 시 내 이름을 대기방 멤버로 재확인 등록
+  if (teamCode && studentName) {
+    updateDoc(doc(db, "teams", teamCode), {
+      members: arrayUnion(studentName),
+      lastActive: serverTimestamp()
+    }).catch(e => console.warn(e));
+  }
+
+  // 1. 실시간 모둠(Team) 데이터 구독
+  if (teamCode) {
+    onSnapshot(doc(db, "teams", teamCode), (docSnap) => {
+      if (docSnap.exists()) {
+        const d = docSnap.data();
+        if (d.aiName) {
+          currentAiName = d.aiName;
+          document.getElementById("dispAiName").textContent = `🤖 모둠 AI: ${d.aiName}`;
+          localStorage.setItem("elementary_aiName", d.aiName);
+        }
+        if (d.score !== undefined) {
+          document.getElementById("dispScore").textContent = `⭐ ${d.score}점`;
+          localStorage.setItem("elementary_score", d.score.toString());
+        }
+        if (d.badge) {
+          document.getElementById("dispBadge").textContent = `🏅 ${d.badge}`;
+        }
+
+        renderLobby(d.members || [], d.lastStudentName || "");
+      } else {
+        renderLobby([studentName], "");
+      }
+    });
+  }
+
+  // 2. 메인화면 AI 파트너 이름 정하기/변경 버튼 이벤트
+  const inlineAiInput = document.getElementById("inlineAiInput");
+  const inlineAiSaveBtn = document.getElementById("inlineAiSaveBtn");
+
+  inlineAiSaveBtn.addEventListener("click", async () => {
+    const newAi = inlineAiInput.value.trim();
+    if (!newAi) {
+      alert("🤖 우리 모둠 AI 파트너 이름을 입력해주세요!");
+      inlineAiInput.focus();
+      return;
+    }
+
+    inlineAiSaveBtn.disabled = true;
+    inlineAiSaveBtn.textContent = "저장 중...";
+
+    try {
+      // 모둠 문서에 새 AI 이름 및 마지막 설정 학생 기록
+      const teamRef = doc(db, "teams", teamCode);
+      await updateDoc(teamRef, {
+        aiName: newAi,
+        lastStudentName: studentName,
+        updatedAt: serverTimestamp()
+      });
+
+      // 내 학생 정보에도 반영
+      const stuRef = doc(db, "students", studentId);
+      await setDoc(stuRef, { aiPartnerName: newAi }, { merge: true });
+
+      localStorage.setItem("elementary_aiName", newAi);
+      currentAiName = newAi;
+      document.getElementById("dispAiName").textContent = `🤖 모둠 AI: ${newAi}`;
+      document.getElementById("lobbyAiNameDisplay").textContent = newAi;
+      document.getElementById("lobbyAiAuthorInfo").textContent = `✨ 마지막 설정: [${studentName}] 탐정`;
+
+      inlineAiInput.value = "";
+      alert(`🎉 우리 모둠의 AI 이름이 '${newAi}'(으)로 설정되었습니다!\n같은 모둠 친구들에게 실시간 반영되었습니다.`);
+    } catch (e) {
+      console.error(e);
+      alert("AI 이름 저장 중 오류가 발생했습니다: " + e.message);
+    } finally {
+      inlineAiSaveBtn.disabled = false;
+      inlineAiSaveBtn.textContent = "💾 AI 이름 정하기";
+    }
+  });
+
+  // 엔터 키 지원
+  inlineAiInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") inlineAiSaveBtn.click();
+  });
+
+  // 3. 창 닫기/새로고침 시 자동 퇴장 처리 (beforeunload / pagehide)
+  const leaveRoom = () => {
+    if (teamCode && studentName) {
+      try {
+        updateDoc(doc(db, "teams", teamCode), {
+          members: arrayRemove(studentName)
+        });
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+  };
+
+  window.addEventListener("beforeunload", leaveRoom);
+  window.addEventListener("pagehide", leaveRoom);
+
+  // 4. 실시간 학급 모둠 랭킹 현황
+  const teamRankQuery = query(collection(db, "teams"), orderBy("score", "desc"), limit(6));
+  onSnapshot(teamRankQuery, (snapshot) => {
+    const list = [];
+    snapshot.forEach(docSnap => {
+      const d = docSnap.data();
+      list.push(`${d.teamCode || docSnap.id}(${d.score || 0}점 - ${d.aiName || '에코봇'})`);
+    });
+    document.getElementById("liveRanking").textContent = list.join("  ｜  ") || "모둠 랭킹 정보를 불러오는 중...";
+  });
+
+  window.logout = async function() {
+    if (teamCode && studentName) {
+      try {
+        await updateDoc(doc(db, "teams", teamCode), {
+          members: arrayRemove(studentName)
+        });
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+    localStorage.removeItem("elementary_studentId");
+    localStorage.removeItem("elementary_teamCode");
+    localStorage.removeItem("elementary_isAdmin");
+    window.location.href = "index.html";
+  };
+</script>
+</body>
+</html>
