@@ -143,14 +143,33 @@
       box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
     }
 
-    /* 메인 컨테이너 */
+    /* 메인 컨테이너 (기존 960px에서 30% 늘린 1248px을 기본값으로, 전체화면 시 화면에 맞춰 확장) */
     .app-container {
       width: 100%;
-      max-width: 960px;
+      max-width: 1248px;
       padding: 24px 16px;
       display: flex;
       flex-direction: column;
       gap: 24px;
+      transition: max-width 0.3s ease;
+    }
+
+    /* 전체화면(:fullscreen) 및 대형 와이드 스크린 대응 */
+    :fullscreen .app-container,
+    :-webkit-full-screen .app-container {
+      max-width: min(95vw, 1600px) !important;
+      width: 95% !important;
+    }
+    @media (display-mode: fullscreen) {
+      .app-container {
+        max-width: min(95vw, 1600px) !important;
+        width: 95% !important;
+      }
+    }
+    @media (min-width: 1400px) {
+      .app-container {
+        max-width: min(94vw, 1550px);
+      }
     }
 
     /* 인트로 안내 배너 */

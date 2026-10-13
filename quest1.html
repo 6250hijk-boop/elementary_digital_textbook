@@ -141,15 +141,34 @@
       cursor: pointer;
     }
 
-    /* 메인 컨테이너 */
+    /* 메인 컨테이너 (기존 900px에서 30% 늘린 1170px을 기본값으로, 전체화면 시 화면에 맞춰 확장) */
     .app-container {
       width: 100%;
-      max-width: 900px;
+      max-width: 1170px;
       padding: 20px 16px 90px;
       display: flex;
       flex-direction: column;
       gap: 20px;
       flex: 1;
+      transition: max-width 0.3s ease;
+    }
+
+    /* 전체화면(:fullscreen) 및 대형 와이드 스크린 대응 */
+    :fullscreen .app-container,
+    :-webkit-full-screen .app-container {
+      max-width: min(95vw, 1600px) !important;
+      width: 95% !important;
+    }
+    @media (display-mode: fullscreen) {
+      .app-container {
+        max-width: min(95vw, 1600px) !important;
+        width: 95% !important;
+      }
+    }
+    @media (min-width: 1400px) {
+      .app-container {
+        max-width: min(94vw, 1550px);
+      }
     }
 
     /* 단계 네비게이터 */

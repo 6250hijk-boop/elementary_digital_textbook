@@ -28,14 +28,32 @@
       min-height: 100vh;
     }
 
-    /* ── 선택 화면 ── */
+    /* ── 선택 화면 (기존 680px에서 30% 늘린 884px 기본값, 전체화면 시 화면에 맞춰 확장) ── */
     .select-wrap {
-      max-width: 680px;
+      max-width: 884px;
       margin: 0 auto;
       padding: 24px 16px;
       display: flex;
       flex-direction: column;
       gap: 16px;
+      transition: max-width 0.3s ease;
+    }
+
+    :fullscreen .select-wrap,
+    :-webkit-full-screen .select-wrap {
+      max-width: min(95vw, 1500px) !important;
+      width: 95% !important;
+    }
+    @media (display-mode: fullscreen) {
+      .select-wrap {
+        max-width: min(95vw, 1500px) !important;
+        width: 95% !important;
+      }
+    }
+    @media (min-width: 1400px) {
+      .select-wrap {
+        max-width: min(92vw, 1400px);
+      }
     }
 
     .select-header {
@@ -137,8 +155,35 @@
     .save-status { font-size: 35px; font-weight: bold; color: #FFF9C4; margin-left: auto; }
     .empty-canvas { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px; color: #90A4AE; font-size: 31px; font-weight: bold; }
 
-    /* ── 튜토리얼 & 연습하기 서브 레이아웃 ── */
-    .tutorial-wrap, .practice-wrap { max-width: 720px; margin: 0 auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 16px; }
+    /* ── 튜토리얼 & 연습하기 서브 레이아웃 (기존 720px에서 30% 늘린 936px 기본값, 전체화면 시 화면에 맞춰 확장) ── */
+    .tutorial-wrap, .practice-wrap {
+      max-width: 936px;
+      margin: 0 auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: max-width 0.3s ease;
+    }
+
+    :fullscreen .tutorial-wrap,
+    :fullscreen .practice-wrap,
+    :-webkit-full-screen .tutorial-wrap,
+    :-webkit-full-screen .practice-wrap {
+      max-width: min(95vw, 1500px) !important;
+      width: 95% !important;
+    }
+    @media (display-mode: fullscreen) {
+      .tutorial-wrap, .practice-wrap {
+        max-width: min(95vw, 1500px) !important;
+        width: 95% !important;
+      }
+    }
+    @media (min-width: 1400px) {
+      .tutorial-wrap, .practice-wrap {
+        max-width: min(92vw, 1400px);
+      }
+    }
     .tutorial-step { background: #FFFFFF; border: 3px solid #C8E6C9; border-radius: 20px; padding: 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.04); }
     .tutorial-step h3 { font-family: 'Jua', sans-serif; font-size: 36px; margin-bottom: 10px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
     .tutorial-step p { font-size: 30px; color: #455A64; line-height: 1.6; font-weight: 600; margin-bottom: 10px; }

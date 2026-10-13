@@ -141,12 +141,32 @@
       border-color: #81C784;
     }
 
+    /* 메인 컨테이너 (기존 960px에서 30% 늘린 1248px을 기본값으로, 전체화면 시 화면에 맞춰 확장) */
     .main-container {
-      max-width: 960px;
+      max-width: 1248px;
       margin: 24px auto;
       padding: 0 16px;
       flex: 1;
       width: 100%;
+      transition: max-width 0.3s ease;
+    }
+
+    /* 전체화면(:fullscreen) 및 대형 와이드 스크린 대응 */
+    :fullscreen .main-container,
+    :-webkit-full-screen .main-container {
+      max-width: min(95vw, 1600px) !important;
+      width: 95% !important;
+    }
+    @media (display-mode: fullscreen) {
+      .main-container {
+        max-width: min(95vw, 1600px) !important;
+        width: 95% !important;
+      }
+    }
+    @media (min-width: 1400px) {
+      .main-container {
+        max-width: min(94vw, 1550px);
+      }
     }
 
     .card {
