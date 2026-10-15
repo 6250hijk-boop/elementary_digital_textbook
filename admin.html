@@ -548,10 +548,21 @@
     .btn-modal-close {
       background: none;
       border: none;
-      font-size: 24px;
+      font-size: 20px;
       cursor: pointer;
       color: #64748B;
       line-height: 1;
+      padding: 4px 10px;
+      border-radius: 8px;
+      transition: all 0.15s;
+    }
+    .btn-modal-close:hover {
+      background: #E2E8F0;
+      color: #0F172A;
+    }
+    .btn-modal-close::before {
+      content: '\2715';
+      font-weight: 800;
     }
 
     .modal-body {
@@ -653,6 +664,240 @@
       border-color: #C4B5FD;
       background: #FAF5FF;
     }
+
+    /* 조 이름 클릭 스타일 */
+    .clickable-team {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-block;
+    }
+    .clickable-team:hover {
+      background: #4CAF50 !important;
+      color: #FFFFFF !important;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.35);
+    }
+
+    .btn-sm-photos {
+      background: #E0F2FE;
+      color: #0369A1;
+      border: 1px solid #BAE6FD;
+      margin-right: 3px;
+    }
+    .btn-sm-photos:hover {
+      background: #0284C7;
+      color: #FFFFFF;
+    }
+
+    /* 조별 사진 및 라벨링 갤러리 모달 & 뷰 스타일 */
+    .gallery-modal-content {
+      max-width: 1100px;
+      max-height: 90vh;
+    }
+
+    .gallery-control-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      background: #F8FAFC;
+      border-bottom: 1.5px solid #E2E8F0;
+    }
+
+    .gallery-filter-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .gallery-tool-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .gallery-pill {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1.5px solid #CBD5E1;
+      background: #FFFFFF;
+      color: #475569;
+      transition: all 0.15s;
+    }
+    .gallery-pill:hover {
+      background: #F1F5F9;
+      border-color: #94A3B8;
+    }
+    .gallery-pill.active {
+      background: #0284C7;
+      color: #FFFFFF;
+      border-color: #0284C7;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .gallery-card {
+      background: #FFFFFF;
+      border: 2px solid #E2E8F0;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .gallery-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+      border-color: #38BDF8;
+    }
+
+    .photo-img-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #0F172A;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .photo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.25s ease;
+    }
+    .photo-img-wrap:hover .photo-img {
+      transform: scale(1.03);
+    }
+
+    .photo-boxes-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .bbox-item {
+      position: absolute;
+      border: 2.5px solid;
+      border-radius: 4px;
+      box-sizing: border-box;
+      pointer-events: auto;
+      transition: all 0.15s;
+    }
+    .bbox-item:hover {
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+      z-index: 10;
+    }
+
+    .bbox-tag {
+      position: absolute;
+      top: -20px;
+      left: -2px;
+      font-size: 10px;
+      font-weight: 800;
+      color: #FFFFFF;
+      padding: 1px 5px;
+      border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .photo-status-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      z-index: 5;
+    }
+    .photo-status-badge.labeled {
+      background: rgba(22, 163, 74, 0.9);
+      color: #FFFFFF;
+      border: 1px solid #86EFAC;
+    }
+    .photo-status-badge.unlabeled {
+      background: rgba(71, 85, 105, 0.85);
+      color: #E2E8F0;
+      border: 1px solid #94A3B8;
+    }
+
+    .gallery-card-body {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .photo-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #64748B;
+    }
+
+    .photo-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #1E293B;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .label-pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 8px;
+      border: 1px solid;
+      margin-right: 3px;
+      margin-top: 3px;
+    }
+
+    .lightbox-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(6px);
+      z-index: 1050;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .lightbox-modal.active { display: flex; }
+
+    .lightbox-box {
+      background: #FFFFFF;
+      border-radius: 24px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    }
   </style>
 </head>
 <body>
@@ -695,6 +940,7 @@
   <!-- 탭 네비게이션 -->
   <div class="admin-tabs">
     <button class="tab-btn active" data-tab="tab-matrix" onclick="switchTab('tab-matrix')">실시간 모둠 8대 퀘스트 진도표</button>
+    <button class="tab-btn" data-tab="tab-photos" onclick="switchTab('tab-photos')">조별 수집 및 라벨링 사진</button>
     <button class="tab-btn" data-tab="tab-team-mgmt" onclick="switchTab('tab-team-mgmt')">모둠 코드 개설 및 관리</button>
     <button class="tab-btn" data-tab="tab-students" onclick="switchTab('tab-students')">학생별 개별 학습 현황</button>
   </div>
@@ -846,6 +1092,47 @@
     </div>
   </div>
 
+  <!-- TAB 4: 조별 수집 및 라벨링 사진 갤러리 -->
+  <div class="tab-content" id="tab-photos">
+    <div class="manage-card">
+      <div class="section-header">
+        <h2>조별 학생 수집 사진 및 라벨링 일괄 갤러리</h2>
+        <div style="font-size:13px; color:#558B2F; font-weight:bold;">
+          모둠 이름을 클릭하면 학생들이 수집한 원본 사진과 라벨링 상자를 일괄로 확인할 수 있습니다.
+        </div>
+      </div>
+
+      <!-- 모둠 선택 탭 바 -->
+      <div style="margin-bottom:16px;">
+        <div style="font-size:13px; font-weight:800; color:#1B5E20; margin-bottom:8px;">조(모둠) 선택:</div>
+        <div id="tabPhotosTeamSelector" style="display:flex; gap:8px; flex-wrap:wrap; padding:12px 14px; background:#F1F8E9; border-radius:16px; border:1.5px solid #C8E6C9;">
+          <!-- Javascript로 동적 모둠 선택 칩 생성 -->
+        </div>
+      </div>
+
+      <!-- 갤러리 컨트롤 바 -->
+      <div class="gallery-control-bar" style="border-radius:14px; border:1.5px solid #E2E8F0; margin-bottom:16px;">
+        <div class="gallery-filter-group">
+          <button class="gallery-pill active" id="tab-pill-all" onclick="filterTabPhotoStatus('all')">전체 사진 (<span id="tab-cnt-all">0</span>)</button>
+          <button class="gallery-pill" id="tab-pill-labeled" onclick="filterTabPhotoStatus('labeled')">라벨링 완료 (<span id="tab-cnt-labeled">0</span>)</button>
+          <button class="gallery-pill" id="tab-pill-unlabeled" onclick="filterTabPhotoStatus('unlabeled')">미라벨링 사진 (<span id="tab-cnt-unlabeled">0</span>)</button>
+        </div>
+
+        <div class="gallery-tool-group">
+          <label class="toggle-switch-wrap" style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:#334155; cursor:pointer;">
+            <input type="checkbox" id="tabChkShowBBoxes" checked onchange="toggleTabBoxesDisplay()">
+            <span>라벨 박스 및 이름표 표시</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 사진 갤러리 그리드 -->
+      <div class="gallery-grid" id="tabPhotoGalleryGrid">
+        <div style="text-align:center; padding:40px; color:#94A3B8; grid-column:1/-1;">모둠을 선택하거나 사진 데이터를 불러오는 중입니다...</div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- 모둠별 제출물 상세 보기 모달 -->
@@ -857,6 +1144,71 @@
     </div>
     <div class="modal-body" id="modalArtifactBody">
       <div style="text-align:center;padding:20px;color:#64748B;">제출물 데이터를 불러오는 중...</div>
+    </div>
+  </div>
+</div>
+
+<!-- 조별 수집 및 라벨링 사진 일괄 보기 전용 대형 팝업 모달 -->
+<div class="modal-overlay" id="teamPhotoModal">
+  <div class="modal-content gallery-modal-content">
+    <div class="modal-header" style="background:#F0FDF4; border-bottom:2px solid #BBF7D0;">
+      <div>
+        <h3 id="photoModalTitle" style="color:#15803D; font-size:22px; font-family:'Jua',sans-serif;">[모둠] 수집 사진 및 라벨링 일괄 보기</h3>
+        <p id="photoModalSub" style="font-size:13px; color:#166534; font-weight:600; margin-top:2px;">모둠 학생들이 퀘스트 3에서 수집하고 퀘스트 4에서 라벨링한 모든 사진 목록입니다.</p>
+      </div>
+      <button class="btn-modal-close" onclick="closeTeamPhotoModal()"></button>
+    </div>
+
+    <!-- 갤러리 컨트롤 바 -->
+    <div class="gallery-control-bar">
+      <div class="gallery-filter-group">
+        <button class="gallery-pill active" id="modal-pill-all" onclick="filterModalPhotoStatus('all')">전체 사진 (<span id="modal-cnt-all">0</span>)</button>
+        <button class="gallery-pill" id="modal-pill-labeled" onclick="filterModalPhotoStatus('labeled')">라벨링 완료 (<span id="modal-cnt-labeled">0</span>)</button>
+        <button class="gallery-pill" id="modal-pill-unlabeled" onclick="filterModalPhotoStatus('unlabeled')">미라벨링 사진 (<span id="modal-cnt-unlabeled">0</span>)</button>
+      </div>
+
+      <div class="gallery-tool-group">
+        <label class="toggle-switch-wrap" style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:#334155; cursor:pointer;">
+          <input type="checkbox" id="modalChkShowBBoxes" checked onchange="toggleModalBoxesDisplay()">
+          <span>라벨 박스 및 이름표 표시</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 갤러리 본문 그리드 -->
+    <div class="modal-body" style="padding:16px 20px; overflow-y:auto; max-height:calc(85vh - 140px);">
+      <div class="gallery-grid" id="modalPhotoGalleryGrid">
+        <div style="text-align:center; padding:40px; color:#94A3B8; grid-column:1/-1;">사진 데이터를 불러오는 중입니다...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 사진 원본 및 라벨 정밀 검사 라이트박스 모달 -->
+<div class="lightbox-modal" id="photoLightboxModal">
+  <div class="lightbox-box">
+    <div class="modal-header" style="background:#F8FAFC; border-bottom:1px solid #E2E8F0; padding:14px 20px;">
+      <h3 id="lightboxTitle" style="font-size:18px; color:#1E293B; font-family:'Jua',sans-serif;">사진 상세 검사</h3>
+      <button class="btn-modal-close" onclick="closePhotoLightbox()"></button>
+    </div>
+    <div style="display:flex; flex-direction:row; flex-wrap:wrap; overflow-y:auto; flex:1;">
+      <!-- 왼쪽: 대형 이미지 및 박스 -->
+      <div style="flex:1.4; min-width:320px; background:#0B0F19; display:flex; align-items:center; justify-content:center; padding:16px; position:relative;">
+        <div style="position:relative; max-width:560px; width:100%; aspect-ratio:1/1; box-shadow:0 8px 30px rgba(0,0,0,0.6); border-radius:12px; overflow:hidden;">
+          <img id="lightboxImg" src="" alt="상세 사진" style="width:100%; height:100%; object-fit:contain; display:block;">
+          <div id="lightboxBoxesLayer" class="photo-boxes-layer"></div>
+        </div>
+      </div>
+      <!-- 오른쪽: 상세 정보 및 라벨 목록 -->
+      <div style="flex:1; min-width:280px; padding:20px; background:#FFFFFF; display:flex; flex-direction:column; gap:14px;">
+        <div id="lightboxMeta"></div>
+        <div style="font-family:'Jua',sans-serif; font-size:16px; color:#0F172A; border-bottom:2px solid #E2E8F0; padding-bottom:6px;">라벨링된 객체 목록</div>
+        <div id="lightboxBoxesList" style="flex:1; overflow-y:auto; max-height:260px; display:flex; flex-direction:column; gap:8px;"></div>
+        <div style="margin-top:auto; padding-top:12px; border-top:1px solid #E2E8F0; display:flex; gap:8px;">
+          <a id="lightboxDownloadBtn" href="#" target="_blank" class="btn-action btn-green" style="font-size:13px; padding:8px 14px; text-decoration:none; text-align:center; flex:1; justify-content:center;">원본 사진 새 탭에서 열기</a>
+          <button onclick="closePhotoLightbox()" class="btn-action btn-ghost" style="font-size:13px; padding:8px 16px; cursor:pointer;">닫기</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -882,6 +1234,8 @@
 
   let teamsCache = [];
   let studentsCache = [];
+  let uploadsCache = [];
+  let labelsCache = [];
   const questSubmittedMap = {}; // { teamCode: { q1: true, q2: true, ... }, studentId: { ... } }
   const questArtifactsMap = {}; // { teamCode: { q1: [...], q2: [...], ... } }
 
@@ -936,6 +1290,35 @@
       console.warn("Collection sub err:", name, e);
     }
   });
+
+  // 사진 업로드(uploads) 실시간 구독
+  onSnapshot(collection(db, "uploads"), (snapshot) => {
+    uploadsCache = [];
+    snapshot.forEach(d => {
+      uploadsCache.push({ id: d.id, ...d.data() });
+    });
+    if (typeof currentModalTeamCode !== 'undefined' && currentModalTeamCode) {
+      renderTeamPhotoGallery(currentModalTeamCode);
+    }
+    if (typeof currentTabPhotosTeamCode !== 'undefined') {
+      renderTabPhotos(currentTabPhotosTeamCode);
+      renderTabPhotosTeamSelector();
+    }
+  }, (err) => console.warn("Uploads listener error:", err));
+
+  // 라벨 데이터(labels) 실시간 구독
+  onSnapshot(collection(db, "labels"), (snapshot) => {
+    labelsCache = [];
+    snapshot.forEach(d => {
+      labelsCache.push({ id: d.id, ...d.data() });
+    });
+    if (typeof currentModalTeamCode !== 'undefined' && currentModalTeamCode) {
+      renderTeamPhotoGallery(currentModalTeamCode);
+    }
+    if (typeof currentTabPhotosTeamCode !== 'undefined') {
+      renderTabPhotos(currentTabPhotosTeamCode);
+    }
+  }, (err) => console.warn("Labels listener error:", err));
 
   // 모둠(Teams) 실시간 구독
   onSnapshot(collection(db, "teams"), (snapshot) => {
@@ -1046,6 +1429,7 @@
     renderTeamsTable(mergedTeams);
     renderTeamMgmtGrid(mergedTeams);
     renderStudentsTable(mergedTeams);
+    renderTabPhotosTeamSelector(mergedTeams);
   }
 
   // 1. 요약 통계 및 퀘스트별 미니 바 렌더링
@@ -1141,7 +1525,7 @@
       return `
         <tr>
           <td class="col-team">
-            <strong class="code-tag">${code}</strong>
+            <strong class="code-tag clickable-team" onclick="openTeamPhotoGallery('${code}')" title="클릭하여 [${code}] 수집 및 라벨링 사진 일괄 보기">${code}</strong>
             <div style="font-size:11px;color:#2E7D32;margin-top:2px;font-weight:700;">${t.aiName || '에코봇'}</div>
           </td>
           <td class="col-members">${membersList}</td>
@@ -1158,6 +1542,7 @@
           </td>
           <td class="col-action">
             <div class="matrix-actions">
+              <button onclick="openTeamPhotoGallery('${code}')" class="btn-sm-action btn-sm-photos" title="모둠 수집 사진 및 라벨링 일괄 보기">사진</button>
               <button onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-view" title="과제 검토 및 승인">검토</button>
               <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit" title="AI 파트너 이름 수정">AI</button>
               <button onclick="deleteTeam('${t.id}')" class="btn-sm-action btn-sm-del" title="모둠 삭제"></button>
@@ -1270,11 +1655,11 @@
           : '<span style="color:#94A3B8;">아직 등록된 분류 기준이 없습니다.</span>';
       } else if (qDef.key === 'q3') {
         contentHtml = list.length 
-          ? `총 <b>${list.length}건</b>의 사진 데이터가 등록되었습니다.<br>` + list.slice(0, 5).map(item => `• <b>${item.originalName || item.fileName || '사진'}:</b> ${item.category || '자원순환'}`).join('<br>') + (list.length > 5 ? `<br><small style="color:#64748B;">외 ${list.length - 5}건 더 있음</small>` : '')
+          ? `총 <b>${list.length}건</b>의 사진 데이터가 등록되었습니다.<br>` + list.slice(0, 5).map(item => `• <b>${item.originalName || item.fileName || '사진'}:</b> ${item.category || '자원순환'}`).join('<br>') + (list.length > 5 ? `<br><small style="color:#64748B;">외 ${list.length - 5}건 더 있음</small>` : '') + `<div style="margin-top:10px;"><button onclick="openTeamPhotoGallery('${teamCode}')" class="btn-action btn-green" style="font-size:13px;padding:6px 12px;cursor:pointer;">[${teamCode}] 수집 및 라벨링 사진 일괄 보기</button></div>`
           : '<span style="color:#94A3B8;">아직 업로드된 사진 데이터가 없습니다.</span>';
       } else if (qDef.key === 'q4') {
         contentHtml = list.length 
-          ? `총 <b>${list.length}개</b>의 라벨링 데이터가 기록되었습니다.`
+          ? `총 <b>${list.length}개</b>의 라벨링 데이터가 기록되었습니다.<div style="margin-top:10px;"><button onclick="openTeamPhotoGallery('${teamCode}')" class="btn-action btn-green" style="font-size:13px;padding:6px 12px;cursor:pointer;">[${teamCode}] 수집 및 라벨링 사진 일괄 보기</button></div>`
           : '<span style="color:#94A3B8;">아직 라벨링 작업 기록이 없습니다.</span>';
       } else if (qDef.key === 'q5') {
         contentHtml = list.length 
@@ -1299,7 +1684,7 @@
         actionBtnHtml = `
           <div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:12px;padding-top:10px;border-top:1px solid #E2E8F0;">
             <span style="color:#16A34A;font-weight:800;font-size:14px;">선생님 승인 완료됨 (학생 화면에 잠금 해제됨)</span>
-            <button class="btn-modal-revoke" onclick="revokeQuestApproval('${teamCode}', '${qDef.key}')">️ 승인 취소/반려</button>
+            <button class="btn-modal-revoke" onclick="revokeQuestApproval('${teamCode}', '${qDef.key}')">승인 취소/반려</button>
           </div>
         `;
       } else {
@@ -1650,11 +2035,14 @@
         <div class="team-mgmt-card" style="${isTest ? 'border-color:#C084FC;background:#FAF5FF;' : ''}">
           <div class="team-mgmt-header">
             <div>
-              <span class="code-tag" style="font-size:14px;padding:3px 8px;${isTest ? 'background:#F3E8FF;color:#7E22CE;border-color:#D8B4FE;' : ''}">${code}</span>
+              <span class="code-tag clickable-team" onclick="openTeamPhotoGallery('${code}')" style="font-size:14px;padding:3px 8px;cursor:pointer;${isTest ? 'background:#F3E8FF;color:#7E22CE;border-color:#D8B4FE;' : ''}" title="클릭하여 [${code}] 수집 및 라벨링 사진 일괄 보기">${code}</span>
               ${isTest ? '<span style="font-size:11px;background:#E9D5FF;color:#6B21A8;padding:2px 6px;border-radius:6px;margin-left:4px;font-weight:bold;">TEST</span>' : ''}
               <div style="font-size:12px;color:#2E7D32;margin-top:4px;font-weight:700;">${t.aiName || '에코봇'}</div>
             </div>
-            <button onclick="copyTeamCode('${code}')" class="btn-sm-action btn-sm-view" style="font-size:11px;padding:4px 8px;" title="모둠코드 복사">코드복사</button>
+            <div style="display:flex;gap:4px;">
+              <button onclick="openTeamPhotoGallery('${code}')" class="btn-sm-action btn-sm-photos" style="font-size:11px;padding:4px 8px;" title="모둠 수집 사진 및 라벨링 일괄 보기">사진</button>
+              <button onclick="copyTeamCode('${code}')" class="btn-sm-action btn-sm-view" style="font-size:11px;padding:4px 8px;" title="모둠코드 복사">코드복사</button>
+            </div>
           </div>
           <div class="team-mgmt-meta">
             <div>접속 학생: <b>${memberCount}명</b></div>
@@ -1686,6 +2074,14 @@
       if (content.id === tabId) content.classList.add('active');
       else content.classList.remove('active');
     });
+    if (tabId === 'tab-photos') {
+      const merged = getAllMergedTeams();
+      renderTabPhotosTeamSelector(merged);
+      if (!currentTabPhotosTeamCode && merged.length > 0) {
+        currentTabPhotosTeamCode = merged[0].teamCode || merged[0].id;
+      }
+      renderTabPhotos(currentTabPhotosTeamCode);
+    }
   };
 
   // 모둠 코드 클립보드 복사
@@ -1825,6 +2221,394 @@
     a.download = `AI자원순환탐정단_모둠별8대퀘스트진도표_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
   };
+
+  // ── 자원순환 품목 클래스 정의 (Quest 4와 통일) ──
+  const DEFAULT_CLASSES = [
+    { name: "종이류/우유팩", color: "#66BB6A" },
+    { name: "플라스틱", color: "#29B6F6" },
+    { name: "캔/고철", color: "#FFA726" },
+    { name: "유리병", color: "#AB47BC" },
+    { name: "비닐류", color: "#FF7043" },
+    { name: "기타", color: "#90A4AE" }
+  ];
+
+  // 갤러리 상태 변수
+  let currentModalTeamCode = null;
+  let modalFilterStatus = 'all';
+  let modalShowBoxes = true;
+
+  let currentTabPhotosTeamCode = null;
+  let tabFilterStatus = 'all';
+  let tabShowBoxes = true;
+
+  // 팀별 수집 및 라벨링 사진 데이터 추출 및 매핑
+  function getTeamPhotos(teamCode) {
+    if (!teamCode) return [];
+    const target = String(teamCode).trim().toLowerCase();
+
+    // 해당 모둠에 속한 학생 식별
+    const teamStudentIds = new Set();
+    studentsCache.forEach(s => {
+      if (s.teamCode && String(s.teamCode).trim().toLowerCase() === target) {
+        if (s.id) teamStudentIds.add(String(s.id).toLowerCase());
+        if (s.studentId) teamStudentIds.add(String(s.studentId).toLowerCase());
+      }
+    });
+
+    // uploads 필터링
+    const teamUploads = uploadsCache.filter(u => {
+      const uTeam = String(u.teamCode || u.teamId || u.team || '').trim().toLowerCase();
+      if (uTeam === target) return true;
+      const uUser = String(u.userId || u.studentId || u.authorId || '').trim().toLowerCase();
+      if (uUser && teamStudentIds.has(uUser)) return true;
+      return false;
+    });
+
+    // labels 맵 생성 (imageId 기준 및 imageUrl 기준)
+    const labelsByImageId = {};
+    const labelsByImageUrl = {};
+    labelsCache.forEach(lbl => {
+      if (lbl.imageId) labelsByImageId[lbl.imageId] = lbl;
+      if (lbl.imageUrl) labelsByImageUrl[lbl.imageUrl] = lbl;
+    });
+
+    return teamUploads.map(u => {
+      const labelDoc = labelsByImageId[u.id] || labelsByImageUrl[u.url] || null;
+      const boxes = (labelDoc && Array.isArray(labelDoc.boxes)) ? labelDoc.boxes : [];
+      const isLabeled = (boxes.length > 0) || (u.labeled === true);
+      return {
+        ...u,
+        labelDoc,
+        boxes,
+        isLabeled
+      };
+    }).sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
+  }
+
+  // 카드 렌더링 공통 헬퍼
+  function buildPhotoCardsHtml(photos, showBoxes) {
+    if (!photos || photos.length === 0) {
+      return '<div style="text-align:center; padding:50px 20px; color:#94A3B8; font-weight:700; grid-column:1/-1;">해당 조건에 해당하는 수집 사진이 없습니다.</div>';
+    }
+
+    return photos.map(p => {
+      const boxesHtml = (p.boxes && p.boxes.length > 0) ? p.boxes.map(b => {
+        const imgW = p.width || 600;
+        const imgH = p.height || 600;
+        const leftPct = (b.x > 1 ? (b.x / imgW) * 100 : b.x * 100);
+        const topPct = (b.y > 1 ? (b.y / imgH) * 100 : b.y * 100);
+        const widthPct = (b.w > 1 ? (b.w / imgW) * 100 : b.w * 100);
+        const heightPct = (b.h > 1 ? (b.h / imgH) * 100 : b.h * 100);
+        const cls = DEFAULT_CLASSES[b.classIdx] || { name: `클래스 ${b.classIdx}`, color: "#3B82F6" };
+        return `
+          <div class="bbox-item" style="left:${leftPct}%; top:${topPct}%; width:${widthPct}%; height:${heightPct}%; border-color:${cls.color}; background:${cls.color}22;" title="${cls.name}">
+            <span class="bbox-tag" style="background:${cls.color};">${cls.name}</span>
+          </div>
+        `;
+      }).join('') : '';
+
+      const statusBadge = p.isLabeled 
+        ? `<span class="photo-status-badge labeled">라벨링 완료 (${p.boxes ? p.boxes.length : 0}개)</span>`
+        : `<span class="photo-status-badge unlabeled">미라벨링 사진</span>`;
+
+      const labelTags = (p.boxes && p.boxes.length > 0) ? Array.from(new Set(p.boxes.map(b => b.classIdx))).map(idx => {
+        const cls = DEFAULT_CLASSES[idx] || { name: `클래스 ${idx}`, color: "#3B82F6" };
+        return `<span class="label-pill" style="color:${cls.color}; border-color:${cls.color}; background:${cls.color}15;">${cls.name}</span>`;
+      }).join('') : '<span style="font-size:12px; color:#94A3B8;">라벨 없음</span>';
+
+      const safeName = (p.originalName || '수집 사진').replace(/"/g, '&quot;');
+
+      return `
+        <div class="gallery-card">
+          <div class="photo-img-wrap" onclick="openPhotoLightbox('${p.id}')" title="클릭하여 상세 검사">
+            <img src="${p.url}" alt="${safeName}" class="photo-img" loading="lazy">
+            <div class="photo-boxes-layer" style="display: ${showBoxes ? 'block' : 'none'};">
+              ${boxesHtml}
+            </div>
+            ${statusBadge}
+          </div>
+          <div class="gallery-card-body">
+            <div class="photo-title" title="${safeName}">${p.originalName || '사진'}</div>
+            <div class="photo-meta-row">
+              <span>수집 학생: <b>${p.userName || p.userId || '학생'}</b></span>
+              <span>${p.teamCode ? `<span class="code-tag" style="font-size:10px; padding:2px 5px;">${p.teamCode}</span>` : ''}</span>
+            </div>
+            <div class="photo-meta-row">
+              <span>등록 시각: ${formatDateTime(p.created_at)}</span>
+            </div>
+            <div style="margin-top:4px;">
+              <div style="font-size:11px; font-weight:700; color:#64748B; margin-bottom:2px;">라벨링 품목:</div>
+              <div style="display:flex; flex-wrap:wrap;">
+                ${labelTags}
+              </div>
+            </div>
+            <div style="margin-top:auto; padding-top:10px; border-top:1px solid #F1F5F9; display:flex; gap:6px;">
+              <button onclick="openPhotoLightbox('${p.id}')" class="btn-sm-action btn-sm-view" style="flex:1; text-align:center;">상세 검사</button>
+              <a href="${p.url}" target="_blank" class="btn-sm-action btn-sm-edit" style="text-align:center; text-decoration:none;" title="새 탭에서 원본 보기">원본 열기</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ── 조별 사진 일괄 팝업 모달 함수 ──
+  window.openTeamPhotoGallery = function(teamCode) {
+    currentModalTeamCode = teamCode;
+    modalFilterStatus = 'all';
+    modalShowBoxes = true;
+
+    const modal = document.getElementById("teamPhotoModal");
+    const titleEl = document.getElementById("photoModalTitle");
+    const subEl = document.getElementById("photoModalSub");
+    const chkEl = document.getElementById("modalChkShowBBoxes");
+
+    if (chkEl) chkEl.checked = true;
+
+    const team = getAllMergedTeams().find(t => (t.teamCode || t.id) === teamCode) || {};
+    if (titleEl) titleEl.textContent = `[${teamCode} • ${team.aiName || '에코봇'}] 수집 사진 및 라벨링 일괄 보기`;
+    if (subEl) subEl.textContent = `[${teamCode}] 모둠 학생들이 퀘스트 3에서 수집하고 퀘스트 4에서 라벨링한 모든 사진 및 객체 상자 목록입니다.`;
+
+    // 팝업 모달 내 필터 버튼 초기화
+    document.querySelectorAll('#teamPhotoModal .gallery-pill').forEach(pill => {
+      if (pill.id === 'modal-pill-all') pill.classList.add('active');
+      else pill.classList.remove('active');
+    });
+
+    renderTeamPhotoGallery(teamCode);
+    if (modal) modal.classList.add("active");
+  };
+
+  window.closeTeamPhotoModal = function() {
+    const modal = document.getElementById("teamPhotoModal");
+    if (modal) modal.classList.remove("active");
+    currentModalTeamCode = null;
+  };
+
+  document.getElementById("teamPhotoModal")?.addEventListener("click", (e) => {
+    if (e.target.id === "teamPhotoModal") closeTeamPhotoModal();
+  });
+
+  window.filterModalPhotoStatus = function(status) {
+    modalFilterStatus = status;
+    document.querySelectorAll('#teamPhotoModal .gallery-pill').forEach(pill => {
+      if (pill.id === `modal-pill-${status}`) pill.classList.add('active');
+      else pill.classList.remove('active');
+    });
+    if (currentModalTeamCode) {
+      renderTeamPhotoGallery(currentModalTeamCode);
+    }
+  };
+
+  window.toggleModalBoxesDisplay = function() {
+    const chk = document.getElementById("modalChkShowBBoxes");
+    modalShowBoxes = chk ? chk.checked : true;
+    const layers = document.querySelectorAll("#modalPhotoGalleryGrid .photo-boxes-layer");
+    layers.forEach(layer => {
+      layer.style.display = modalShowBoxes ? "block" : "none";
+    });
+  };
+
+  function renderTeamPhotoGallery(teamCode) {
+    const grid = document.getElementById("modalPhotoGalleryGrid");
+    if (!grid) return;
+
+    const allPhotos = getTeamPhotos(teamCode);
+    const labeledPhotos = allPhotos.filter(p => p.isLabeled);
+    const unlabeledPhotos = allPhotos.filter(p => !p.isLabeled);
+
+    const cntAll = document.getElementById("modal-cnt-all");
+    const cntLabeled = document.getElementById("modal-cnt-labeled");
+    const cntUnlabeled = document.getElementById("modal-cnt-unlabeled");
+    if (cntAll) cntAll.textContent = allPhotos.length;
+    if (cntLabeled) cntLabeled.textContent = labeledPhotos.length;
+    if (cntUnlabeled) cntUnlabeled.textContent = unlabeledPhotos.length;
+
+    let targetPhotos = allPhotos;
+    if (modalFilterStatus === 'labeled') targetPhotos = labeledPhotos;
+    else if (modalFilterStatus === 'unlabeled') targetPhotos = unlabeledPhotos;
+
+    grid.innerHTML = buildPhotoCardsHtml(targetPhotos, modalShowBoxes);
+  }
+
+  // ── 탭 4: 관리자 페이지 내 조별 사진 탭 함수 ──
+  window.selectTabPhotosTeam = function(teamCode) {
+    currentTabPhotosTeamCode = teamCode;
+    renderTabPhotosTeamSelector();
+    renderTabPhotos(teamCode);
+  };
+
+  function renderTabPhotosTeamSelector(mergedTeams = null) {
+    const selector = document.getElementById("tabPhotosTeamSelector");
+    if (!selector) return;
+
+    const teams = mergedTeams || getAllMergedTeams();
+    if (!teams.length) {
+      selector.innerHTML = '<span style="font-size:12px; color:#94A3B8;">개설된 모둠이 없습니다.</span>';
+      return;
+    }
+
+    if (!currentTabPhotosTeamCode && teams.length > 0) {
+      currentTabPhotosTeamCode = teams[0].teamCode || teams[0].id;
+    }
+
+    selector.innerHTML = teams.map(t => {
+      const code = t.teamCode || t.id;
+      const count = getTeamPhotos(code).length;
+      const isActive = (currentTabPhotosTeamCode === code);
+      return `
+        <button class="gallery-pill ${isActive ? 'active' : ''}" 
+                onclick="selectTabPhotosTeam('${code}')"
+                style="${isActive ? '' : 'background:#FFFFFF;'}">
+          ${code} (${count}장)
+        </button>
+      `;
+    }).join('');
+  }
+
+  window.filterTabPhotoStatus = function(status) {
+    tabFilterStatus = status;
+    document.querySelectorAll('#tab-photos .gallery-pill').forEach(pill => {
+      if (pill.id === `tab-pill-${status}`) pill.classList.add('active');
+      else pill.classList.remove('active');
+    });
+    if (currentTabPhotosTeamCode) {
+      renderTabPhotos(currentTabPhotosTeamCode);
+    }
+  };
+
+  window.toggleTabBoxesDisplay = function() {
+    const chk = document.getElementById("tabChkShowBBoxes");
+    tabShowBoxes = chk ? chk.checked : true;
+    const layers = document.querySelectorAll("#tabPhotoGalleryGrid .photo-boxes-layer");
+    layers.forEach(layer => {
+      layer.style.display = tabShowBoxes ? "block" : "none";
+    });
+  };
+
+  function renderTabPhotos(teamCode) {
+    const grid = document.getElementById("tabPhotoGalleryGrid");
+    if (!grid) return;
+
+    if (!teamCode) {
+      grid.innerHTML = '<div style="text-align:center; padding:40px; color:#94A3B8; grid-column:1/-1;">조(모둠)를 위에서 선택해주세요.</div>';
+      return;
+    }
+
+    const allPhotos = getTeamPhotos(teamCode);
+    const labeledPhotos = allPhotos.filter(p => p.isLabeled);
+    const unlabeledPhotos = allPhotos.filter(p => !p.isLabeled);
+
+    const cntAll = document.getElementById("tab-cnt-all");
+    const cntLabeled = document.getElementById("tab-cnt-labeled");
+    const cntUnlabeled = document.getElementById("tab-cnt-unlabeled");
+    if (cntAll) cntAll.textContent = allPhotos.length;
+    if (cntLabeled) cntLabeled.textContent = labeledPhotos.length;
+    if (cntUnlabeled) cntUnlabeled.textContent = unlabeledPhotos.length;
+
+    let targetPhotos = allPhotos;
+    if (tabFilterStatus === 'labeled') targetPhotos = labeledPhotos;
+    else if (tabFilterStatus === 'unlabeled') targetPhotos = unlabeledPhotos;
+
+    grid.innerHTML = buildPhotoCardsHtml(targetPhotos, tabShowBoxes);
+  }
+
+  // ── 정밀 검사 라이트박스 함수 ──
+  window.openPhotoLightbox = function(photoId) {
+    const photo = uploadsCache.find(u => u.id === photoId);
+    if (!photo) return;
+
+    const modal = document.getElementById("photoLightboxModal");
+    const imgEl = document.getElementById("lightboxImg");
+    const boxesLayer = document.getElementById("lightboxBoxesLayer");
+    const titleEl = document.getElementById("lightboxTitle");
+    const metaEl = document.getElementById("lightboxMeta");
+    const boxesListEl = document.getElementById("lightboxBoxesList");
+    const downloadBtn = document.getElementById("lightboxDownloadBtn");
+
+    if (!modal) return;
+
+    if (titleEl) titleEl.textContent = `[${photo.teamCode || '모둠'}] ${photo.originalName || '사진 상세 검사'}`;
+    if (imgEl) imgEl.src = photo.url;
+    if (downloadBtn) downloadBtn.href = photo.url;
+
+    // 라벨 정보 조회
+    const labelDoc = labelsCache.find(lbl => lbl.imageId === photo.id || lbl.imageUrl === photo.url);
+    const boxes = (labelDoc && Array.isArray(labelDoc.boxes)) ? labelDoc.boxes : [];
+
+    // 바운딩 박스 오버레이 생성
+    const imgW = photo.width || 600;
+    const imgH = photo.height || 600;
+
+    if (boxesLayer) {
+      boxesLayer.innerHTML = boxes.map(b => {
+        const leftPct = (b.x > 1 ? (b.x / imgW) * 100 : b.x * 100);
+        const topPct = (b.y > 1 ? (b.y / imgH) * 100 : b.y * 100);
+        const widthPct = (b.w > 1 ? (b.w / imgW) * 100 : b.w * 100);
+        const heightPct = (b.h > 1 ? (b.h / imgH) * 100 : b.h * 100);
+        const cls = DEFAULT_CLASSES[b.classIdx] || { name: `클래스 ${b.classIdx}`, color: "#3B82F6" };
+        return `
+          <div class="bbox-item" style="left:${leftPct}%; top:${topPct}%; width:${widthPct}%; height:${heightPct}%; border-color:${cls.color}; background:${cls.color}22;">
+            <span class="bbox-tag" style="background:${cls.color};">${cls.name}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 메타 정보 표시
+    if (metaEl) {
+      metaEl.innerHTML = `
+        <div style="font-size:13px; color:#475569; display:flex; flex-direction:column; gap:4px; background:#F8FAFC; padding:12px; border-radius:12px; border:1px solid #E2E8F0;">
+          <div><b>파일명:</b> ${photo.originalName || '-'}</div>
+          <div><b>소속 모둠:</b> <span class="code-tag" style="font-size:11px; padding:2px 6px;">${photo.teamCode || '-'}</span></div>
+          <div><b>수집 학생:</b> ${photo.userName || photo.userId || '-'}</div>
+          <div><b>수집 시각:</b> ${formatDateTime(photo.created_at)}</div>
+          <div><b>해상도:</b> ${imgW} × ${imgH} px</div>
+          <div><b>라벨링 상태:</b> <strong style="color:${boxes.length > 0 ? '#16A34A' : '#64748B'};">${boxes.length > 0 ? `완료 (${boxes.length}개 검출)` : '미라벨링'}</strong></div>
+        </div>
+      `;
+    }
+
+    // 객체 목록 표시
+    if (boxesListEl) {
+      if (boxes.length === 0) {
+        boxesListEl.innerHTML = '<div style="color:#94A3B8; font-size:13px; padding:12px; text-align:center;">라벨링된 객체가 없습니다.</div>';
+      } else {
+        boxesListEl.innerHTML = boxes.map((b, idx) => {
+          const cls = DEFAULT_CLASSES[b.classIdx] || { name: `클래스 ${b.classIdx}`, color: "#3B82F6" };
+          return `
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:#FFFFFF; border:1.5px solid ${cls.color}; border-radius:10px; font-size:13px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="width:12px; height:12px; border-radius:3px; background:${cls.color}; flex-shrink:0;"></span>
+                <strong style="color:${cls.color};">[${idx + 1}] ${cls.name}</strong>
+              </div>
+              <span style="font-size:11px; color:#64748B;">x:${Math.round(b.x)}, y:${Math.round(b.y)}, w:${Math.round(b.w)}, h:${Math.round(b.h)}</span>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    modal.classList.add("active");
+  };
+
+  window.closePhotoLightbox = function() {
+    const modal = document.getElementById("photoLightboxModal");
+    if (modal) modal.classList.remove("active");
+  };
+
+  document.getElementById("photoLightboxModal")?.addEventListener("click", (e) => {
+    if (e.target.id === "photoLightboxModal") closePhotoLightbox();
+  });
+
+  // ESC 키로 열려있는 모든 모달 닫기
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closePhotoLightbox();
+      closeTeamPhotoModal();
+      closeModal();
+    }
+  });
 
   window.logoutAdmin = function() {
     localStorage.removeItem("elementary_isAdmin");
