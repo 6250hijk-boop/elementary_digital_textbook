@@ -69,10 +69,16 @@
     }
 
     .avatar-box {
-      font-size: 40px;
+      font-size: 34px;
+      line-height: 1;
       background: var(--primary-light);
-      padding: 8px 14px;
       border-radius: 20px;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #C8E6C9;
     }
 
     .user-info h2 {
@@ -245,7 +251,7 @@
     }
 
     .player-avatar {
-      font-size: 42px;
+      font-size: 36px;
       line-height: 1;
       background: #FFFFFF;
       width: 60px;
@@ -443,7 +449,7 @@
   <!-- 상단 학생 & 모둠 프로필 -->
   <header>
     <div class="user-profile">
-      <div class="avatar-box" style="font-size:18px; font-weight:800; color:#2E7D32;">아지트</div>
+      <div class="avatar-box" id="dispMyAvatar">🕵️</div>
       <div class="user-info">
         <h2 id="dispStudent">학생 탐정단</h2>
         <p id="dispAiName">모둠 AI: 로딩 중...</p>
@@ -475,7 +481,7 @@
     <!-- 대기방 모둠원 아바타 목록 -->
     <div class="players-grid" id="lobbyPlayersGrid">
       <div class="player-card">
-        <div class="player-avatar" style="font-size:15px; font-weight:bold; color:#475569;">대원</div>
+        <div class="player-avatar">🕵️</div>
         <div class="player-name">로딩 중...</div>
         <div class="player-tag">접속 중</div>
       </div>
@@ -562,16 +568,23 @@
   document.getElementById("dispTeamBadge").textContent = `${teamCode || '모둠'}`;
   document.getElementById("dispAiName").textContent = `모둠 AI: ${currentAiName}`;
 
-  // 대기방 아바타 목록 배열 (귀여운 캐릭터 아이콘)
-  const AVATARS = ["대원1", "대원2", "대원3", "대원4", "대원5", "대원6", "대원7", "대원8"];
+  // 아지트 대원 캐릭터 아바타 (귀여운 탐정 및 동물 대원 이모지)
+  const AVATARS = ["🕵️‍♂️", "🕵️‍♀️", "🧑‍🔬", "🧑‍🌾", "🦊", "🐻", "🐰", "🐼", "🐶", "🐱", "🐨", "🦁"];
 
   function getAvatarForName(name) {
+    if (!name) return AVATARS[0];
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
       hash = name.charCodeAt(i) + ((hash << 5) - hash);
     }
     const index = Math.abs(hash) % AVATARS.length;
     return AVATARS[index];
+  }
+
+  // 상단 프로필 내 캐릭터 아바타 표시
+  const myAvatarEl = document.getElementById("dispMyAvatar");
+  if (myAvatarEl) {
+    myAvatarEl.textContent = getAvatarForName(studentName);
   }
 
   // 대기방 렌더링 함수
