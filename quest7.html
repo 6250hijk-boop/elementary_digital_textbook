@@ -879,12 +879,15 @@
     window.finishQuest7 = async function() {
       window.addScore(100);
       localStorage.setItem("quest7_completed", "true");
+      localStorage.setItem("elementary_q7_done", "true");
 
       if (db && studentId && studentId !== "guest") {
         try {
           await updateDoc(doc(db, "students", studentId), {
             score: increment(100),
-            questsDone: increment(1)
+            questsDone: increment(1),
+            q7Done: true,
+            q7_done: true
           });
         } catch(e) {
           console.warn("Firestore update error:", e);

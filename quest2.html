@@ -771,7 +771,8 @@
             await updateDoc(doc(db, "students", studentId), {
               score: increment(100),
               questsDone: increment(1),
-              q2Done: true
+              q2Done: true,
+              q2_done: true
             }).catch(e => console.warn(e));
 
             await updateDoc(doc(db, "teams", teamCode), {

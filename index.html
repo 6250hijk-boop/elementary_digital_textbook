@@ -329,6 +329,15 @@
       }, { merge: true });
 
       // 3. 로컬 스토리지에 모둠 및 학생 세션 저장
+      const prevStudentId = localStorage.getItem("elementary_studentId");
+      if (prevStudentId && prevStudentId !== studentId) {
+        for (let i = 1; i <= 8; i++) {
+          localStorage.removeItem(`quest${i}_completed`);
+          localStorage.removeItem(`quest${i}_submitted`);
+          localStorage.removeItem(`elementary_q${i}_done`);
+        }
+      }
+
       localStorage.setItem("elementary_teamCode", teamCode);
       localStorage.setItem("elementary_studentId", studentId);
       localStorage.setItem("elementary_studentName", studentName);

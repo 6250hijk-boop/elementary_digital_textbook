@@ -1067,13 +1067,19 @@
 
           await updateDoc(doc(db, "students", studentId), {
             score: increment(30),
-            questsDone: increment(1)
+            questsDone: increment(1),
+            q5Done: true,
+            q5_done: true
           });
+          localStorage.setItem("quest5_completed", "true");
+          localStorage.setItem("elementary_q5_done", "true");
         } catch(e) {
           console.warn("Save record error:", e);
         }
       }
 
+      localStorage.setItem("quest5_completed", "true");
+      localStorage.setItem("elementary_q5_done", "true");
       showToast("탐정 수사 기록이 우리 모둠에 공유되었습니다! (+30 EXP)");
     };
   </script>

@@ -1010,11 +1010,14 @@
       await userRef.set({
         score: currentScore + 20,
         questsDone: Math.max(questsDone, 3),
-        q3_done: true
+        q3_done: true,
+        q3Done: true
       }, { merge: true });
 
       const newScore = currentScore + 20;
       localStorage.setItem("elementary_score", newScore);
+      localStorage.setItem("quest3_completed", "true");
+      localStorage.setItem("elementary_q3_done", "true");
       document.getElementById('dispScore').textContent = `${newScore}점`;
       showAlert('퀘스트 3 사진 수집 완료! +20점 획득!', 'success');
     } catch(e) {

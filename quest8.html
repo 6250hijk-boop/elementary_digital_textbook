@@ -1025,6 +1025,7 @@
     window.ratifyCharter = async function() {
       window.addScore(100);
       localStorage.setItem("quest8_completed", "true");
+      localStorage.setItem("elementary_q8_done", "true");
       localStorage.setItem("elementary_badge", "마스터 탐정");
 
       if (db && studentId && studentId !== "guest") {
@@ -1041,7 +1042,9 @@
           await updateDoc(doc(db, "students", studentId), {
             score: increment(100),
             questsDone: increment(1),
-            badge: "마스터 탐정"
+            badge: "마스터 탐정",
+            q8Done: true,
+            q8_done: true
           });
         } catch(e) {
           console.warn("Firestore error:", e);

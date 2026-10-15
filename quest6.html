@@ -1100,7 +1100,9 @@
 
           await updateDoc(doc(db, "students", studentId), {
             score: increment(30),
-            badge: "오류 큐레이터"
+            badge: "오류 큐레이터",
+            q6Done: true,
+            q6_done: true
           });
         } catch(e) {
           console.warn("Reflection save err:", e);
@@ -1108,6 +1110,7 @@
       }
 
       localStorage.setItem("quest6_completed", "true");
+      localStorage.setItem("elementary_q6_done", "true");
       localStorage.setItem("elementary_badge", "오류 큐레이터");
       showToast("우리 모둠 생각 게시판에 나의 한 문장이 공유되었습니다! (+30 EXP)");
     };

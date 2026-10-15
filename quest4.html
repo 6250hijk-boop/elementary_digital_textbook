@@ -896,9 +896,12 @@
             await userRef.set({
               score: currentScore + 30,
               questsDone: Math.max(questsDone, 4),
-              q4_done: true
+              q4_done: true,
+              q4Done: true
             }, { merge: true });
             localStorage.setItem("elementary_score", currentScore + 30);
+            localStorage.setItem("quest4_completed", "true");
+            localStorage.setItem("elementary_q4_done", "true");
             alert("Quest 4 라벨링 성공! (+30점 획득)");
           }
         }

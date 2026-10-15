@@ -421,8 +421,9 @@
     q8: { name: "Q8. 의회선포", title: "퀘스트 8: 자원 순환 의회" }
   };
 
-  // 특정 퀘스트가 완료되어 unlock 이미지가 표시되는 상태인지 검사
-  function isQuestUnlocked(num) {
+  // 개별 퀘스트 자체의 완료 기록 존재 여부 검사
+  function hasQuestCompletionRecord(num) {
+    if (num < 1 || num > 8) return false;
     const key = `q${num}`;
     return !!approvedQuestsState[key] || 
            !!submittedQuestsState[key] || 
@@ -431,7 +432,19 @@
            (localStorage.getItem(`elementary_q${num}_done`) === "true");
   }
 
-  // 특정 퀘스트가 열려있는지 검사 (1단계는 항상 열림, 2단계부터는 앞단계가 unlock이어야 열림)
+  // 특정 퀘스트가 완료(Unlock) 상태인지 검사 (엄격한 순차 검증: 1번부터 num번까지 차례대로 완료되어야만 함)
+  function isQuestUnlocked(num) {
+    if (num < 1 || num > 8) return false;
+    for (let k = 1; k <= num; k++) {
+      if (!hasQuestCompletionRecord(k)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // 특정 퀘스트가 열려있는지(도전 가능한지) 검사
+  // 1단계는 항상 열림, 2단계부터는 바로 앞단계(num - 1)가 완료(Unlocked)되어야만 열림
   function isQuestOpen(num) {
     if (num === 1) return true;
     return isQuestUnlocked(num - 1);
@@ -508,7 +521,7 @@
     }
   }
 
-  // 모둠(Team) 실시간 구독 (승인 상태 동기화)
+  // 모둠(Team) 실시간 구독 (교사 승인 상태 동기화)
   if (teamCode) {
     onSnapshot(doc(db, "teams", teamCode), (docSnap) => {
       if (docSnap.exists()) {
@@ -526,11 +539,6 @@
             }
           }
         }
-        if (typeof d.questsDone === "number" && d.questsDone > 0) {
-          for (let i = 1; i <= d.questsDone; i++) {
-            submittedQuestsState[`q${i}`] = true;
-          }
-        }
         updateQuestLockImages();
       }
     });
@@ -541,20 +549,15 @@
     onSnapshot(doc(db, "students", studentId), (docSnap) => {
       if (docSnap.exists()) {
         const sd = docSnap.data();
-        if (sd.q1Done) submittedQuestsState.q1 = true;
-        if (sd.q2Done) submittedQuestsState.q2 = true;
+        if (sd.q1Done || sd.q1_done) submittedQuestsState.q1 = true;
+        if (sd.q2Done || sd.q2_done) submittedQuestsState.q2 = true;
         if (sd.q3_done || sd.q3Done) submittedQuestsState.q3 = true;
         if (sd.q4_done || sd.q4Done) submittedQuestsState.q4 = true;
-        if (sd.q5Done) submittedQuestsState.q5 = true;
-        if (sd.q6Done) submittedQuestsState.q6 = true;
-        if (sd.q7Done) submittedQuestsState.q7 = true;
-        if (sd.q8Done) submittedQuestsState.q8 = true;
+        if (sd.q5Done || sd.q5_done) submittedQuestsState.q5 = true;
+        if (sd.q6Done || sd.q6_done) submittedQuestsState.q6 = true;
+        if (sd.q7Done || sd.q7_done) submittedQuestsState.q7 = true;
+        if (sd.q8Done || sd.q8_done) submittedQuestsState.q8 = true;
 
-        if (typeof sd.questsDone === "number" && sd.questsDone > 0) {
-          for (let i = 1; i <= sd.questsDone; i++) {
-            submittedQuestsState[`q${i}`] = true;
-          }
-        }
         updateQuestLockImages();
       }
     });
@@ -563,13 +566,12 @@
   // 초기 로컬 상태 반영
   updateQuestLockImages();
 
-  // Firestore 컬렉션 실시간 구독으로 내 학생/모둠의 퀘스트 과제 제출 여부 감지
-  if (studentId || teamCode) {
+  // Firestore 컬렉션 실시간 구독으로 내 학생의 퀘스트 과제 제출 여부 감지 (학생 본인의 기록만 반영)
+  if (studentId) {
     const questCollections = [
       { col: "quest1_records", key: "q1" },
       { col: "quest2_rules", key: "q2" },
       { col: "quest3_data", key: "q3" },
-      { col: "quest3_ideas", key: "q3" },
       { col: "uploads", key: "q3" },
       { col: "quest4_labeling", key: "q4" },
       { col: "labels", key: "q4" },
@@ -590,11 +592,8 @@
           snapshot.forEach((docSnap) => {
             const data = docSnap.data();
             const sidMatch = studentId && (data.studentId === studentId || data.userId === studentId);
-            const tCodeA = String(data.teamCode || "").trim().toLowerCase();
-            const tCodeB = String(teamCode || "").trim().toLowerCase();
-            const teamMatch = teamCode && tCodeA && (tCodeA === tCodeB);
 
-            if (sidMatch || teamMatch) {
+            if (sidMatch) {
               submittedQuestsState[key] = true;
             }
           });

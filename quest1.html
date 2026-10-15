@@ -1075,6 +1075,7 @@
       window.playSound('fanfare');
       window.addScore(100);
       localStorage.setItem("quest1_completed", "true");
+      localStorage.setItem("elementary_q1_done", "true");
       localStorage.setItem("elementary_badge", "견습 탐정");
 
       const thought = document.getElementById('detectiveThought') ? document.getElementById('detectiveThought').value.trim() : '';
@@ -1095,7 +1096,9 @@
           await updateDoc(doc(db, "students", studentId), {
             score: increment(100),
             questsDone: increment(1),
-            badge: "견습 탐정"
+            badge: "견습 탐정",
+            q1Done: true,
+            q1_done: true
           });
         } catch(e) {
           console.warn("Firestore error:", e);
