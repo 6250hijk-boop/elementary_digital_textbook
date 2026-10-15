@@ -59,7 +59,7 @@
     .header-left a {
       color: white;
       text-decoration: none;
-      font-size: 36px;
+      font-size: 22px;
       background: rgba(255,255,255,0.2);
       padding: 6px 12px;
       border-radius: 12px;
@@ -72,7 +72,7 @@
 
     .header-title {
       font-family: 'Jua', sans-serif;
-      font-size: 36px;
+      font-size: 22px;
       letter-spacing: 0.5px;
     }
 
@@ -87,7 +87,7 @@
       border: 1px solid rgba(255,255,255,0.4);
       color: white;
       font-family: 'Jua', sans-serif;
-      font-size: 30px;
+      font-size: 15px;
       padding: 6px 14px;
       border-radius: 20px;
     }
@@ -96,7 +96,7 @@
       background: #FFF9C4;
       color: #F57F17;
       font-family: 'Jua', sans-serif;
-      font-size: 30px;
+      font-size: 15px;
       padding: 6px 14px;
       border-radius: 20px;
       font-weight: bold;
@@ -118,7 +118,7 @@
       border-radius: 20px;
       border: 2px solid #C8E6C9;
       background: #F1F8E9;
-      font-size: 30px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--primary-dark);
       cursor: pointer;
@@ -141,32 +141,12 @@
       border-color: #81C784;
     }
 
-    /* 메인 컨테이너 (기존 960px에서 30% 늘린 1248px을 기본값으로, 전체화면 시 화면에 맞춰 확장) */
     .main-container {
-      max-width: 1248px;
+      max-width: 960px;
       margin: 24px auto;
       padding: 0 16px;
       flex: 1;
       width: 100%;
-      transition: max-width 0.3s ease;
-    }
-
-    /* 전체화면(:fullscreen) 및 대형 와이드 스크린 대응 */
-    :fullscreen .main-container,
-    :-webkit-full-screen .main-container {
-      max-width: min(95vw, 1600px) !important;
-      width: 95% !important;
-    }
-    @media (display-mode: fullscreen) {
-      .main-container {
-        max-width: min(95vw, 1600px) !important;
-        width: 95% !important;
-      }
-    }
-    @media (min-width: 1400px) {
-      .main-container {
-        max-width: min(94vw, 1550px);
-      }
     }
 
     .card {
@@ -186,7 +166,7 @@
 
     .card-title {
       font-family: 'Jua', sans-serif;
-      font-size: 36px;
+      font-size: 24px;
       color: var(--primary-dark);
       margin-bottom: 10px;
       display: flex;
@@ -196,7 +176,7 @@
 
     .card-desc {
       color: var(--text-muted);
-      font-size: 30px;
+      font-size: 15px;
       line-height: 1.6;
       margin-bottom: 20px;
     }
@@ -215,7 +195,7 @@
       align-items: center;
       gap: 8px;
       font-family: 'Jua', sans-serif;
-      font-size: 32px;
+      font-size: 19px;
       color: #1B5E20;
       margin-bottom: 10px;
     }
@@ -229,7 +209,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 30px;
+      font-size: 15px;
     }
 
     .rule-textarea {
@@ -237,7 +217,7 @@
       padding: 14px 18px;
       border: 2px solid #C8E6C9;
       border-radius: 14px;
-      font-size: 32px;
+      font-size: 16px;
       font-weight: 600;
       color: #1B5E20;
       outline: none;
@@ -276,7 +256,7 @@
       background: #0288D1;
       color: white;
       font-family: 'Jua', sans-serif;
-      font-size: 35px;
+      font-size: 14px;
       padding: 4px 12px;
       border-radius: 12px;
     }
@@ -287,7 +267,7 @@
       border: 1.5px solid #FFCDD2;
       padding: 6px 14px;
       border-radius: 10px;
-      font-size: 32px;
+      font-size: 13px;
       font-weight: 800;
       cursor: pointer;
       display: inline-flex;
@@ -306,7 +286,7 @@
       padding: 16px;
       margin-bottom: 12px;
       border: 1px solid #B3E5FC;
-      font-size: 32px;
+      font-size: 16px;
       line-height: 1.6;
       color: #01579B;
     }
@@ -315,7 +295,7 @@
       background: #F1F8E9;
       border-radius: 12px;
       padding: 14px 16px;
-      font-size: 30px;
+      font-size: 15px;
       color: #2E7D32;
       border: 1px solid #C8E6C9;
       line-height: 1.5;
@@ -360,7 +340,7 @@
     .author-badge-pill {
       background: #E8F5E9;
       color: #2E7D32;
-      font-size: 35px;
+      font-size: 14px;
       font-weight: 800;
       padding: 4px 12px;
       border-radius: 12px;
@@ -371,7 +351,7 @@
     }
 
     .card-time-text {
-      font-size: 30px;
+      font-size: 12px;
       color: #90A4AE;
     }
 
@@ -381,7 +361,7 @@
       padding: 16px;
       border: 1px solid #DCEDC8;
       margin-bottom: 12px;
-      font-size: 32px;
+      font-size: 16px;
       line-height: 1.7;
       color: #1B5E20;
     }
@@ -390,7 +370,7 @@
       background: #FFFDE7;
       border-radius: 12px;
       padding: 12px 16px;
-      font-size: 35px;
+      font-size: 14px;
       color: #5D4037;
       border: 1px solid #FFF59D;
       margin-bottom: 16px;
@@ -407,7 +387,7 @@
 
     .comments-title {
       font-family: 'Jua', sans-serif;
-      font-size: 35px;
+      font-size: 14px;
       color: #546E7A;
       margin-bottom: 8px;
       display: flex;
@@ -426,7 +406,7 @@
       background: white;
       border-radius: 10px;
       padding: 8px 12px;
-      font-size: 32px;
+      font-size: 13px;
       color: #37474F;
       border: 1px solid #E0E0E0;
       line-height: 1.4;
@@ -447,7 +427,7 @@
       padding: 8px 14px;
       border: 1.5px solid #CFD8DC;
       border-radius: 10px;
-      font-size: 32px;
+      font-size: 13px;
       outline: none;
       background: white;
     }
@@ -462,7 +442,7 @@
       color: white;
       border: none;
       border-radius: 10px;
-      font-size: 32px;
+      font-size: 13px;
       font-weight: bold;
       cursor: pointer;
       white-space: nowrap;
@@ -479,7 +459,7 @@
     .btn {
       padding: 14px 28px;
       border-radius: 16px;
-      font-size: 32px;
+      font-size: 16px;
       font-weight: 800;
       cursor: pointer;
       display: inline-flex;
@@ -513,7 +493,7 @@
     .btn-post {
       background: linear-gradient(135deg, #FF9800, #E65100);
       color: white;
-      font-size: 31px;
+      font-size: 18px;
       padding: 16px 32px;
       width: 100%;
       justify-content: center;
@@ -532,51 +512,31 @@
     .step-content.active {
       display: block;
     }
-  
-    /* 🌟 최소 글씨 크기 28px(기존 최소의 2.5배) 가독성 극대화 보장 */
-    html, body {
-      font-size: 28px !important;
-    }
-    .btn-back, a.btn-back {
-      font-family: 'Jua', sans-serif !important;
-      font-size: 28px !important;
-      padding: 10px 22px !important;
-      border-radius: 16px !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 8px !important;
-      text-decoration: none !important;
-      cursor: pointer !important;
-      font-weight: 800 !important;
-    }
-    input, textarea, select, button {
-      font-size: max(28px, 1rem) !important;
-    }
   </style>
 </head>
 <body>
 
   <header>
     <div class="header-left">
-      <a href="main.html" class="btn-back" title="퀘스트지도가기" style="background:#FFF3E0; border:2.5px solid #F59E0B; color:#B45309; font-size: 28px; padding:8px 20px; border-radius:14px; text-decoration:none; font-family:'Jua',sans-serif; font-weight:800;">🗺️ 퀘스트지도가기</a>
+      <a href="main.html" class="btn-back" style="background:#f1f5f9; border:2px solid #cbd5e1; color:#334155; padding:6px 14px; border-radius:10px; text-decoration:none; font-family:'Jua',sans-serif; font-size:14px; font-weight:bold;">퀘스트지도가기</a>
       <span class="header-title">QUEST 7: 우리 모둠 실천 규약 초안 입력하기</span>
     </div>
     <div class="header-right">
-      <div class="team-badge" id="headerTeamBadge">👥 모둠 로딩 중...</div>
-      <div class="score-badge" id="scoreDisplay">⭐ 0 EXP</div>
+      <div class="team-badge" id="headerTeamBadge">모둠 로딩 중...</div>
+      <div class="score-badge" id="scoreDisplay">0 EXP</div>
     </div>
   </header>
 
   <nav class="step-nav">
-    <button class="step-btn active" id="sbtn1" onclick="goToStep(1)"><span>1단계</span> ✍️ 실천 규약 내용 작성하기</button>
-    <button class="step-btn" id="sbtn2" onclick="goToStep(2)"><span>2단계</span> 👥 모둠 실시간 공유 게시판</button>
+    <button class="step-btn active" id="sbtn1" onclick="goToStep(1)"><span>1단계</span> 실천 규약 내용 작성하기</button>
+    <button class="step-btn" id="sbtn2" onclick="goToStep(2)"><span>2단계</span> 모둠 실시간 공유 게시판</button>
   </nav>
 
   <div class="main-container">
 
     <!-- 1단계: 실천 규약 내용 작성하기 (2개 입력칸) -->
     <div class="card step-content active" id="step1">
-      <h2 class="card-title">✍️ 1단계: 실천 규약 내용 작성하기</h2>
+      <h2 class="card-title">1단계: 실천 규약 내용 작성하기</h2>
       <p class="card-desc">우리 학교와 교실에서 꼭 지켜야 할 자원순환 실천 규약과 그 이유를 작성하고 게시해보세요!</p>
 
       <!-- 1. 규약 입력칸 -->
@@ -598,38 +558,38 @@
       </div>
 
       <div style="display:flex;justify-content:space-between;align-items:center;background:#E8F5E9;padding:12px 16px;border-radius:12px;margin-bottom:14px;">
-        <span style="font-size: 35px;color:#2E7D32;font-weight:bold;">작성 탐정: <span id="dispWriterName" style="color:#1B5E20;">-</span></span>
-        <span style="font-size: 35px;color:#558B2F;">소속 모둠: <span id="dispWriterTeam" style="font-weight:bold;">-</span></span>
+        <span style="font-size:14px;color:#2E7D32;font-weight:bold;">작성 탐정: <span id="dispWriterName" style="color:#1B5E20;">-</span></span>
+        <span style="font-size:14px;color:#558B2F;">소속 모둠: <span id="dispWriterTeam" style="font-weight:bold;">-</span></span>
       </div>
 
-      <button class="btn btn-post" id="btnPublishDraft" onclick="publishRuleDraft()">📢 게시하기 (+50 EXP)</button>
+      <button class="btn btn-post" id="btnPublishDraft" onclick="publishRuleDraft()">게시하기 (+50 EXP)</button>
 
       <!-- 내가 작성하여 저장된 글 실시간 표시 영역 (삭제 가능) -->
       <div id="mySavedPostArea" style="display:none;">
         <div class="my-post-preview-card">
           <div class="my-preview-header">
-            <span class="my-preview-tag">📌 내가 방금 게시한 실천 규약</span>
-            <button class="btn-delete-my-post" onclick="deleteMyPost()">🗑️ 내 글 삭제하기</button>
+            <span class="my-preview-tag">내가 방금 게시한 실천 규약</span>
+            <button class="btn-delete-my-post" onclick="deleteMyPost()">내 글 삭제하기</button>
           </div>
 
-          <div style="font-size: 35px;font-weight:bold;color:#0277BD;margin-bottom:6px;">1. 규약 내용:</div>
+          <div style="font-size:14px;font-weight:bold;color:#0277BD;margin-bottom:6px;">1. 규약 내용:</div>
           <div class="my-rule-display-box" id="myRuleDisplay">-</div>
 
-          <div style="font-size: 35px;font-weight:bold;color:#2E7D32;margin-bottom:6px;">2. 제시한 이유:</div>
+          <div style="font-size:14px;font-weight:bold;color:#2E7D32;margin-bottom:6px;">2. 제시한 이유:</div>
           <div class="my-reason-display-box" id="myReasonDisplay">-</div>
         </div>
       </div>
 
       <div class="action-btn-area">
         <div></div>
-        <button class="btn btn-next" onclick="goToStep(2)">2단계: 친구들 규약 보러가기 ➡️</button>
+        <button class="btn btn-next" onclick="goToStep(2)">2단계: 친구들 규약 보러가기️</button>
       </div>
     </div>
 
     <!-- 2단계: 모둠 실시간 공유 게시판 & 댓글 달기 -->
     <div class="card step-content" id="step2">
       <div class="board-header">
-        <h2 class="card-title" style="margin-bottom:0;">👥 2단계: 우리 모둠 실시간 규약 공유 게시판</h2>
+        <h2 class="card-title" style="margin-bottom:0;">2단계: 우리 모둠 실시간 규약 공유 게시판</h2>
         <div class="live-status-pill">
           <div class="pulse-green"></div>
           <span id="liveTeamCount">우리 모둠 실시간 동기화 중</span>
@@ -640,22 +600,22 @@
       <!-- 모둠원들의 규약 목록 피드 -->
       <div class="rules-grid" id="sharedRulesGrid">
         <div style="text-align:center;padding:40px 20px;color:#78909C;">
-          <div style="font-size: 43px;margin-bottom:10px;">⏳</div>
+          <div style="font-size:36px;margin-bottom:10px;"></div>
           <p>모둠원들의 실천 규약을 불러오는 중입니다...</p>
         </div>
       </div>
 
       <!-- 최종 완료 & 메인 이동 배너 -->
       <div style="background:linear-gradient(135deg, #FFF9C4, #FFF59D);border:3px solid #FBC02D;border-radius:18px;padding:24px;text-align:center;margin-top:20px;">
-        <h3 style="font-family:'Jua';color:#E65100;font-size: 36px;margin-bottom:8px;">🎉 모둠 실천 규약 공유 완료!</h3>
-        <p style="color:#5D4037;font-size: 30px;margin-bottom:16px;">모둠원들과 의견을 나눈 후, <strong>메인 화면</strong>으로 이동하여 전체 탐정단 현황을 확인해보세요!</p>
-        <button class="btn" style="background:linear-gradient(135deg,#2E7D32,#1B5E20);color:white;font-size: 31px;padding:16px 32px;" onclick="finishQuest7()">
-          🏠 QUEST 7 완료 & 메인 화면으로 이동하기 (+100 EXP) 🚀
+        <h3 style="font-family:'Jua';color:#E65100;font-size:22px;margin-bottom:8px;">모둠 실천 규약 공유 완료!</h3>
+        <p style="color:#5D4037;font-size:15px;margin-bottom:16px;">모둠원들과 의견을 나눈 후, <strong>메인 화면</strong>으로 이동하여 전체 탐정단 현황을 확인해보세요!</p>
+        <button class="btn" style="background:linear-gradient(135deg,#2E7D32,#1B5E20);color:white;font-size:18px;padding:16px 32px;" onclick="finishQuest7()">
+          QUEST 7 완료 & 퀘스트지도가기 (+100 EXP)
         </button>
       </div>
 
       <div class="action-btn-area">
-        <button class="btn btn-prev" onclick="goToStep(1)">⬅️ 내 규약 수정하러 가기</button>
+        <button class="btn btn-prev" onclick="goToStep(1)">️ 내 규약 수정하러 가기</button>
         <div></div>
       </div>
     </div>
@@ -710,7 +670,7 @@
       window.state.score += exp;
       localStorage.setItem("elementary_score", window.state.score);
       const scoreDisp = document.getElementById('scoreDisplay');
-      if (scoreDisp) scoreDisp.textContent = `⭐ ${window.state.score} EXP`;
+      if (scoreDisp) scoreDisp.textContent = `${window.state.score} EXP`;
     };
 
     // 1단계: 실천 규약 게시 (Firestore 저장 & 즉시 표시)
@@ -727,7 +687,7 @@
 
       const btn = document.getElementById("btnPublishDraft");
       btn.disabled = true;
-      btn.textContent = "⏳ 게시판에 저장 중...";
+      btn.textContent = "게시판에 저장 중...";
 
       try {
         const docRef = await addDoc(collection(db, "quest7_rules"), {
@@ -749,15 +709,15 @@
         window.addScore(50);
         showMyPostPreview(ruleContent, reason);
 
-        alert("🎉 나의 실천 규약이 성공적으로 게시되었습니다! (+50 EXP)");
+        alert("나의 실천 규약이 성공적으로 게시되었습니다! (+50 EXP)");
         btn.disabled = false;
-        btn.textContent = "📢 다시 게시하기";
+        btn.textContent = "다시 게시하기";
 
       } catch (e) {
         console.error(e);
         alert("게시 중 오류가 발생했습니다: " + e.message);
         btn.disabled = false;
-        btn.textContent = "📢 게시하기 (+50 EXP)";
+        btn.textContent = "게시하기 (+50 EXP)";
       }
     };
 
@@ -792,7 +752,7 @@
         document.getElementById("inputRuleContent").value = "";
         document.getElementById("inputRuleReason").value = "";
 
-        alert("✅ 작성한 실천 규약이 삭제되었습니다. 새로운 규약을 다시 작성할 수 있습니다.");
+        alert("작성한 실천 규약이 삭제되었습니다. 새로운 규약을 다시 작성할 수 있습니다.");
 
       } catch(e) {
         console.error(e);
@@ -842,9 +802,9 @@
       if (list.length === 0) {
         grid.innerHTML = `
           <div style="text-align:center;padding:40px 20px;background:#F9FBE7;border-radius:16px;border:2px dashed #C8E6C9;">
-            <div style="font-size: 43px;margin-bottom:8px;">📝</div>
-            <h4 style="font-family:'Jua';color:#2E7D32;font-size: 31px;margin-bottom:6px;">아직 등록된 실천 규약이 없습니다.</h4>
-            <p style="font-size: 35px;color:#558B2F;">1단계에서 우리 모둠의 첫 번째 실천 규약을 작성해보세요!</p>
+            <div style="font-size:36px;margin-bottom:8px;"></div>
+            <h4 style="font-family:'Jua';color:#2E7D32;font-size:18px;margin-bottom:6px;">아직 등록된 실천 규약이 없습니다.</h4>
+            <p style="font-size:14px;color:#558B2F;">1단계에서 우리 모둠의 첫 번째 실천 규약을 작성해보세요!</p>
           </div>
         `;
         return;
@@ -859,29 +819,29 @@
 
         const commentsHtml = (item.comments && item.comments.length) ? item.comments.map(c => `
           <div class="comment-item-pill">
-            <strong>👤 ${c.author}:</strong> ${c.text}
+            <strong>${c.author}:</strong> ${c.text}
           </div>
-        `).join('') : '<div style="font-size: 30px;color:#90A4AE;padding:4px;">아직 댓글이 없습니다. 첫 번째 댓글을 남겨보세요!</div>';
+        `).join('') : '<div style="font-size:12px;color:#90A4AE;padding:4px;">아직 댓글이 없습니다. 첫 번째 댓글을 남겨보세요!</div>';
 
         return `
           <div class="board-feed-card ${isMyPost ? 'my-card' : ''}">
             <div class="card-top-row">
               <div class="author-badge-pill">
-                <span>🕵️ ${item.authorName || '모둠원'}</span>
-                ${isMyPost ? '<span style="font-size: 30px;color:#0288D1;font-weight:900;">(내가 작성)</span>' : ''}
+                <span>${item.authorName || '모둠원'}</span>
+                ${isMyPost ? '<span style="font-size:12px;color:#0288D1;font-weight:900;">(내가 작성)</span>' : ''}
               </div>
-              <span class="card-time-text">🕒 ${timeStr}</span>
+              <span class="card-time-text">${timeStr}</span>
             </div>
 
-            <div style="font-family:'Jua';font-size: 32px;color:#1B5E20;margin-bottom:6px;">📜 1. 규약:</div>
+            <div style="font-family:'Jua';font-size:16px;color:#1B5E20;margin-bottom:6px;">1. 규약:</div>
             <div class="card-rule-content">${ruleText}</div>
 
-            <div style="font-family:'Jua';font-size: 30px;color:#5D4037;margin-bottom:6px;">💡 2. 제시한 이유:</div>
+            <div style="font-family:'Jua';font-size:15px;color:#5D4037;margin-bottom:6px;">2. 제시한 이유:</div>
             <div class="card-reason-content">${reasonText}</div>
 
             <!-- 댓글 영역 -->
             <div class="comments-section">
-              <div class="comments-title">💬 친구들의 댓글 & 의견:</div>
+              <div class="comments-title">친구들의 댓글 & 의견:</div>
               <div class="comments-list" id="commentsList_${item.id}">
                 ${commentsHtml}
               </div>
@@ -931,15 +891,15 @@
         }
       }
 
-      alert(`🎉 축하합니다! QUEST 7 [우리 모둠 실천 규약 초안 입력하기]를 완수했습니다!\n\n총 획득 점수: ${window.state.score} EXP\n메인 화면으로 이동합니다!`);
+      alert(`축하합니다! QUEST 7 [우리 모둠 실천 규약 초안 입력하기]를 완수했습니다!\n\n총 획득 점수: ${window.state.score} EXP\n메인 화면으로 이동합니다!`);
       window.location.href = 'main.html';
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('headerTeamBadge').textContent = `👥 ${teamCode}`;
+      document.getElementById('headerTeamBadge').textContent = `${teamCode}`;
       document.getElementById('dispWriterName').textContent = studentName;
       document.getElementById('dispWriterTeam').textContent = teamCode;
-      document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
+      document.getElementById('scoreDisplay').textContent = `${window.state.score} EXP`;
 
       // 저장된 내 글이 있으면 표시
       const savedRule = localStorage.getItem("quest7_my_rule_content");

@@ -77,7 +77,7 @@
       color: #334155;
       padding: 8px 16px;
       border-radius: 12px;
-      font-size: 35px;
+      font-size: 14px;
       font-weight: 800;
       text-decoration: none;
       display: flex;
@@ -98,7 +98,7 @@
 
     .header-quest-badge {
       font-family: 'Jua', sans-serif;
-      font-size: 30px;
+      font-size: 12px;
       color: #16A34A;
       background: #DCFCE7;
       padding: 2px 8px;
@@ -110,7 +110,7 @@
 
     .header-title {
       font-family: 'Jua', sans-serif;
-      font-size: 34px;
+      font-size: 20px;
       color: #1E293B;
       display: flex;
       align-items: center;
@@ -128,7 +128,7 @@
       border: 1.5px solid #CBD5E1;
       padding: 6px 14px;
       border-radius: 20px;
-      font-size: 35px;
+      font-size: 14px;
       font-weight: 700;
       color: #334155;
     }
@@ -137,39 +137,20 @@
       background: linear-gradient(135deg, #F59E0B, #D97706);
       color: white;
       font-family: 'Jua', sans-serif;
-      font-size: 30px;
+      font-size: 15px;
       padding: 6px 14px;
       border-radius: 20px;
       box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
     }
 
-    /* 메인 컨테이너 (기존 960px에서 30% 늘린 1248px을 기본값으로, 전체화면 시 화면에 맞춰 확장) */
+    /* 메인 컨테이너 */
     .app-container {
       width: 100%;
-      max-width: 1248px;
+      max-width: 960px;
       padding: 24px 16px;
       display: flex;
       flex-direction: column;
       gap: 24px;
-      transition: max-width 0.3s ease;
-    }
-
-    /* 전체화면(:fullscreen) 및 대형 와이드 스크린 대응 */
-    :fullscreen .app-container,
-    :-webkit-full-screen .app-container {
-      max-width: min(95vw, 1600px) !important;
-      width: 95% !important;
-    }
-    @media (display-mode: fullscreen) {
-      .app-container {
-        max-width: min(95vw, 1600px) !important;
-        width: 95% !important;
-      }
-    }
-    @media (min-width: 1400px) {
-      .app-container {
-        max-width: min(94vw, 1550px);
-      }
     }
 
     /* 인트로 안내 배너 */
@@ -185,7 +166,7 @@
     }
 
     .intro-icon {
-      font-size: 46px;
+      font-size: 38px;
       background: #ECFDF5;
       padding: 12px;
       border-radius: 18px;
@@ -194,13 +175,13 @@
 
     .intro-text h2 {
       font-family: 'Jua', sans-serif;
-      font-size: 36px;
+      font-size: 24px;
       color: #15803D;
       margin-bottom: 6px;
     }
 
     .intro-text p {
-      font-size: 30px;
+      font-size: 15px;
       color: #475569;
       line-height: 1.6;
     }
@@ -219,7 +200,7 @@
 
     .form-section-title {
       font-family: 'Jua', sans-serif;
-      font-size: 36px;
+      font-size: 22px;
       color: var(--primary-dark);
       display: flex;
       align-items: center;
@@ -257,7 +238,7 @@
 
     .rule-label {
       font-family: 'Jua', sans-serif;
-      font-size: 31px;
+      font-size: 18px;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -275,7 +256,7 @@
       padding: 12px 14px;
       border: 1.5px solid #CBD5E1;
       border-radius: 12px;
-      font-size: 30px;
+      font-size: 15px;
       font-weight: 500;
       color: #1E293B;
       outline: none;
@@ -296,7 +277,7 @@
       border-radius: 16px;
       padding: 16px 24px;
       font-family: 'Jua', sans-serif;
-      font-size: 34px;
+      font-size: 20px;
       cursor: pointer;
       box-shadow: 0 6px 20px rgba(22, 163, 74, 0.3);
       display: flex;
@@ -340,7 +321,7 @@
 
     .board-title {
       font-family: 'Jua', sans-serif;
-      font-size: 36px;
+      font-size: 22px;
       color: #15803D;
       display: flex;
       align-items: center;
@@ -351,7 +332,7 @@
       background: #DCFCE7;
       color: #15803D;
       font-family: 'Jua', sans-serif;
-      font-size: 35px;
+      font-size: 14px;
       padding: 4px 12px;
       border-radius: 12px;
       border: 1px solid #86EFAC;
@@ -393,7 +374,7 @@
     }
 
     .author-avatar {
-      font-size: 36px;
+      font-size: 24px;
       background: #DCFCE7;
       padding: 6px;
       border-radius: 50%;
@@ -402,12 +383,12 @@
 
     .author-name {
       font-family: 'Jua', sans-serif;
-      font-size: 31px;
+      font-size: 18px;
       color: #1E293B;
     }
 
     .author-tag {
-      font-size: 30px;
+      font-size: 12px;
       font-weight: 800;
       padding: 2px 8px;
       border-radius: 8px;
@@ -422,7 +403,7 @@
     }
 
     .post-date {
-      font-size: 32px;
+      font-size: 13px;
       color: #94A3B8;
     }
 
@@ -444,14 +425,14 @@
 
     .rule-pill-header {
       font-family: 'Jua', sans-serif;
-      font-size: 30px;
+      font-size: 15px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
     .rule-pill-text {
-      font-size: 35px;
+      font-size: 14px;
       color: #334155;
       line-height: 1.5;
       white-space: pre-wrap;
@@ -474,7 +455,7 @@
       padding: 6px 12px;
       border-radius: 8px;
       font-family: 'Jua', sans-serif;
-      font-size: 32px;
+      font-size: 13px;
       cursor: pointer;
       transition: all 0.15s;
     }
@@ -500,13 +481,13 @@
 
     .next-quest-info h3 {
       font-family: 'Jua', sans-serif;
-      font-size: 36px;
+      font-size: 22px;
       color: #FEF08A;
       margin-bottom: 4px;
     }
 
     .next-quest-info p {
-      font-size: 35px;
+      font-size: 14px;
       color: #CBD5E1;
     }
 
@@ -517,7 +498,7 @@
       padding: 14px 24px;
       border-radius: 16px;
       font-family: 'Jua', sans-serif;
-      font-size: 31px;
+      font-size: 18px;
       cursor: pointer;
       text-decoration: none;
       display: inline-flex;
@@ -541,7 +522,7 @@
       color: #FFFFFF;
       padding: 14px 28px;
       border-radius: 40px;
-      font-size: 30px;
+      font-size: 15px;
       font-weight: 800;
       z-index: 1000;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
@@ -554,26 +535,6 @@
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
-  
-    /* 🌟 최소 글씨 크기 28px(기존 최소의 2.5배) 가독성 극대화 보장 */
-    html, body {
-      font-size: 28px !important;
-    }
-    .btn-back, a.btn-back {
-      font-family: 'Jua', sans-serif !important;
-      font-size: 28px !important;
-      padding: 10px 22px !important;
-      border-radius: 16px !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 8px !important;
-      text-decoration: none !important;
-      cursor: pointer !important;
-      font-weight: 800 !important;
-    }
-    input, textarea, select, button {
-      font-size: max(28px, 1rem) !important;
-    }
   </style>
 </head>
 <body>
@@ -581,15 +542,15 @@
   <!-- 상단 헤더 -->
   <header class="app-header">
     <div class="header-left">
-      <a href="main.html" class="btn-back">🗺️ 퀘스트지도가기</a>
+      <a href="main.html" class="btn-back">퀘스트지도가기</a>
       <div class="header-title-group">
         <span class="header-quest-badge">QUEST 2</span>
-        <h1 class="header-title">📋 분류기준 만들기</h1>
+        <h1 class="header-title">분류기준 만들기</h1>
       </div>
     </div>
     <div class="header-right">
-      <div class="student-badge" id="dispStudent">👤 학생 탐정 (1모둠)</div>
-      <div class="score-badge" id="scoreDisplay">⭐ 0 EXP</div>
+      <div class="student-badge" id="dispStudent">학생 탐정 (1모둠)</div>
+      <div class="score-badge" id="scoreDisplay">0 EXP</div>
     </div>
   </header>
 
@@ -598,7 +559,7 @@
 
     <!-- 인트로 안내 카드 -->
     <section class="intro-card">
-      <div class="intro-icon">📋✨</div>
+      <div class="intro-icon"></div>
       <div class="intro-text">
         <h2>5대 쓰레기 품목별 분류 규칙 정립하기</h2>
         <p>
@@ -611,7 +572,7 @@
     <!-- 5대 품목 분류 규칙 작성 폼 -->
     <section class="form-card">
       <h3 class="form-section-title">
-        <span>✍️</span>
+        <span></span>
         <span>우리 모둠 5대 품목 분류 규칙 작성하기</span>
       </h3>
 
@@ -619,7 +580,7 @@
         <!-- 1. 종이 -->
         <div class="rule-item-box">
           <div class="rule-item-header">
-            <span class="rule-label tag-paper">📄 1. 종이류 분류 규칙</span>
+            <span class="rule-label tag-paper">1. 종이류 분류 규칙</span>
           </div>
           <textarea id="rulePaper" class="rule-textarea" placeholder="종이류 판별 및 올바른 분리배출 규칙을 입력하세요."></textarea>
         </div>
@@ -627,7 +588,7 @@
         <!-- 2. 플라스틱 -->
         <div class="rule-item-box">
           <div class="rule-item-header">
-            <span class="rule-label tag-plastic">🧴 2. 플라스틱류 분류 규칙</span>
+            <span class="rule-label tag-plastic">2. 플라스틱류 분류 규칙</span>
           </div>
           <textarea id="rulePlastic" class="rule-textarea" placeholder="플라스틱류 판별 및 올바른 분리배출 규칙을 입력하세요."></textarea>
         </div>
@@ -635,7 +596,7 @@
         <!-- 3. 캔류 -->
         <div class="rule-item-box">
           <div class="rule-item-header">
-            <span class="rule-label tag-can">🥫 3. 캔류(철캔·알루미늄캔) 분류 규칙</span>
+            <span class="rule-label tag-can">3. 캔류(철캔·알루미늄캔) 분류 규칙</span>
           </div>
           <textarea id="ruleCan" class="rule-textarea" placeholder="캔류 판별 및 올바른 분리배출 규칙을 입력하세요."></textarea>
         </div>
@@ -643,7 +604,7 @@
         <!-- 4. 우유팩 -->
         <div class="rule-item-box">
           <div class="rule-item-header">
-            <span class="rule-label tag-milk">🥛 4. 우유팩(살균팩·멸균팩) 분류 규칙</span>
+            <span class="rule-label tag-milk">4. 우유팩(살균팩·멸균팩) 분류 규칙</span>
           </div>
           <textarea id="ruleMilk" class="rule-textarea" placeholder="우유팩(종이팩) 판별 및 일반 종이류와의 구분 분리배출 규칙을 입력하세요."></textarea>
         </div>
@@ -651,14 +612,14 @@
         <!-- 5. 일반쓰레기 -->
         <div class="rule-item-box">
           <div class="rule-item-header">
-            <span class="rule-label tag-general">🗑️ 5. 일반쓰레기(종량제) 분류 규칙</span>
+            <span class="rule-label tag-general">5. 일반쓰레기(종량제) 분류 규칙</span>
           </div>
           <textarea id="ruleGeneral" class="rule-textarea" placeholder="재활용이 불가능하여 일반 종량제 봉투에 버려야 하는 기준을 입력하세요."></textarea>
         </div>
       </div>
 
       <button id="btnSaveRules" class="btn-submit-rules" onclick="submitRules()">
-        <span>💾</span>
+        <span></span>
         <span>우리 모둠 분류 규칙 저장 및 게시판에 등록 (+100 EXP)</span>
       </button>
     </section>
@@ -667,15 +628,15 @@
     <section class="board-card">
       <div class="board-header">
         <div class="board-title">
-          <span>👥</span>
+          <span></span>
           <span>우리 모둠 실시간 분류 규칙 게시판</span>
         </div>
         <span class="board-count-badge" id="boardCountBadge">등록 0건</span>
       </div>
 
       <div class="posts-grid" id="postsContainer">
-        <div style="text-align:center; padding:30px; color:#94A3B8; font-size: 30px;">
-          아직 모둠원들이 등록한 분류 규칙이 없습니다. 위에서 먼저 작성하고 등록해보세요! 🚀
+        <div style="text-align:center; padding:30px; color:#94A3B8; font-size:15px;">
+          아직 모둠원들이 등록한 분류 규칙이 없습니다. 위에서 먼저 작성하고 등록해보세요!
         </div>
       </div>
     </section>
@@ -683,11 +644,11 @@
     <!-- 메인 화면 이동 배너 -->
     <section class="next-quest-banner">
       <div class="next-quest-info">
-        <h3>🎉 분류 기준 등록 완료!</h3>
+        <h3>분류 기준 등록 완료!</h3>
         <p>우리 모둠의 분류 규칙이 게시판에 공유되었습니다. 메인 화면으로 이동하여 전체 진도를 확인해보세요.</p>
       </div>
       <a href="main.html" class="btn-go-next">
-        <span>🗺️ 퀘스트지도가기</span>
+        <span>퀘스트지도가기</span>
       </a>
     </section>
 
@@ -726,8 +687,8 @@
     let currentScore = parseInt(localStorage.getItem("elementary_score") || "0", 10);
 
     // 상단 HUD 표시
-    document.getElementById("dispStudent").textContent = `👤 ${studentName} (${teamCode})`;
-    document.getElementById("scoreDisplay").textContent = `⭐ ${currentScore} EXP`;
+    document.getElementById("dispStudent").textContent = `${studentName} (${teamCode})`;
+    document.getElementById("scoreDisplay").textContent = `${currentScore} EXP`;
 
     // 사운드 시스템
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -765,7 +726,7 @@
 
     function addScore(pts) {
       currentScore += pts;
-      document.getElementById('scoreDisplay').textContent = `⭐ ${currentScore} EXP`;
+      document.getElementById('scoreDisplay').textContent = `${currentScore} EXP`;
       localStorage.setItem("elementary_score", currentScore.toString());
     }
 
@@ -779,14 +740,14 @@
       const general = document.getElementById("ruleGeneral").value.trim();
 
       if (!paper && !plastic && !can && !milk && !general) {
-        alert("⚠️ 최소 하나 이상의 분류 규칙을 작성해주세요!");
+        alert("최소 하나 이상의 분류 규칙을 작성해주세요!");
         document.getElementById("rulePaper").focus();
         return;
       }
 
       const btn = document.getElementById("btnSaveRules");
       btn.disabled = true;
-      btn.textContent = "💾 저장 및 게시판 등록 중...";
+      btn.textContent = "저장 및 게시판 등록 중...";
 
       try {
         const postData = {
@@ -827,7 +788,7 @@
         localStorage.setItem("elementary_q2_done", "true");
 
         playSound('success');
-        showToast("🎉 분류 규칙이 성공적으로 게시판에 등록되었습니다! (+100 EXP)");
+        showToast("분류 규칙이 성공적으로 게시판에 등록되었습니다! (+100 EXP)");
 
         // 폼 초기화
         document.getElementById("rulePaper").value = "";
@@ -841,7 +802,7 @@
         alert("등록 중 오류가 발생했습니다: " + err.message);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = `<span>💾</span><span>우리 모둠 분류 규칙 저장 및 게시판에 등록 (+100 EXP)</span>`;
+        btn.innerHTML = `<span></span><span>우리 모둠 분류 규칙 저장 및 게시판에 등록 (+100 EXP)</span>`;
       }
     };
 
@@ -851,7 +812,7 @@
       try {
         if (db) {
           await deleteDoc(doc(db, "quest2_rules", postId));
-          showToast("🗑️ 게시글이 삭제되었습니다.");
+          showToast("게시글이 삭제되었습니다.");
         }
       } catch (err) {
         alert("삭제 실패: " + err.message);
@@ -867,8 +828,8 @@
 
         if (snapshot.empty) {
           container.innerHTML = `
-            <div style="text-align:center; padding:30px; color:#94A3B8; font-size: 30px;">
-              아직 모둠원들이 등록한 분류 규칙이 없습니다. 위에서 먼저 작성하고 등록해보세요! 🚀
+            <div style="text-align:center; padding:30px; color:#94A3B8; font-size:15px;">
+              아직 모둠원들이 등록한 분류 규칙이 없습니다. 위에서 먼저 작성하고 등록해보세요!
             </div>
           `;
           countBadge.textContent = "등록 0건";
@@ -895,39 +856,39 @@
             <div class="post-card ${isMe ? 'my-post' : ''}">
               <div class="post-top">
                 <div class="post-author-wrap">
-                  <div class="author-avatar">${isMe ? '⭐' : '🕵️'}</div>
+                  <div class="author-avatar" style="font-size:12px; font-weight:bold;">${isMe ? '나' : '학생'}</div>
                   <div class="author-name">${post.studentName || '탐정 모둠원'}</div>
                   <span class="author-tag ${isMe ? 'me' : ''}">${isMe ? '내가 쓴 글' : '모둠원'}</span>
                 </div>
-                <div class="post-date">⏰ ${timeStr}</div>
+                <div class="post-date">${timeStr}</div>
               </div>
 
               <div class="post-rules-content">
                 <div class="rule-pill-box">
-                  <div class="rule-pill-header tag-paper">📄 종이류</div>
+                  <div class="rule-pill-header tag-paper">종이류</div>
                   <div class="rule-pill-text">${post.paperRule || '-'}</div>
                 </div>
                 <div class="rule-pill-box">
-                  <div class="rule-pill-header tag-plastic">🧴 플라스틱류</div>
+                  <div class="rule-pill-header tag-plastic">플라스틱류</div>
                   <div class="rule-pill-text">${post.plasticRule || '-'}</div>
                 </div>
                 <div class="rule-pill-box">
-                  <div class="rule-pill-header tag-can">🥫 캔류</div>
+                  <div class="rule-pill-header tag-can">캔류</div>
                   <div class="rule-pill-text">${post.canRule || '-'}</div>
                 </div>
                 <div class="rule-pill-box">
-                  <div class="rule-pill-header tag-milk">🥛 우유팩(살균/멸균)</div>
+                  <div class="rule-pill-header tag-milk">우유팩(살균/멸균)</div>
                   <div class="rule-pill-text">${post.milkRule || '-'}</div>
                 </div>
                 <div class="rule-pill-box">
-                  <div class="rule-pill-header tag-general">🗑️ 일반쓰레기</div>
+                  <div class="rule-pill-header tag-general">일반쓰레기</div>
                   <div class="rule-pill-text">${post.generalRule || '-'}</div>
                 </div>
               </div>
 
               ${isMe ? `
                 <div class="post-actions">
-                  <button class="btn-post-del" onclick="deleteRulePost('${post.id}')">🗑️ 내 글 삭제</button>
+                  <button class="btn-post-del" onclick="deleteRulePost('${post.id}')">내 글 삭제</button>
                 </div>
               ` : ''}
             </div>

@@ -180,12 +180,12 @@
 <body>
 
 <div class="login-card">
-  <div class="badge-icon">🌱🕵️‍♂️</div>
+  <div class="badge-icon" style="font-size:14px; font-weight:800; color:#3B82F6;">STUDENT</div>
   <h1>AI 자원순환 탐정단</h1>
   <p class="sub">초등 5학년 실시간 모둠 협동 교과서</p>
 
   <div class="info-banner">
-    <div class="icon">💡</div>
+    <div class="icon" style="font-size:13px; font-weight:700;">안내</div>
     <div>
       <strong>아이디와 비밀번호 없이 모둠 코드로 입장!</strong><br>
       선생님이 알려주신 모둠 코드를 입력하면 친구들과 같은 대기방으로 입장합니다.
@@ -195,7 +195,7 @@
   <!-- 모둠 코드 & 학생 이름 입력 -->
   <div class="form-group">
     <label for="teamCodeInput">
-      🏷️ 모둠 코드 (팀 코드)
+      모둠 코드 (팀 코드)
       <span class="label-hint">선생님이 알려주신 코드</span>
     </label>
     <input type="text" id="teamCodeInput" placeholder="예: 1모둠, GREEN, DREAM 등" autocomplete="off" autofocus>
@@ -203,13 +203,13 @@
 
   <div class="form-group">
     <label for="studentNameInput">
-      👤 내 이름 (학생 닉네임)
+      내 이름 (학생 닉네임)
       <span class="label-hint">대기방 출석 닉네임</span>
     </label>
     <input type="text" id="studentNameInput" placeholder="예: 김민수, 이지은" autocomplete="off">
   </div>
 
-  <button class="btn-start" id="loginBtn">🚀 모둠 대기방 입장하기</button>
+  <button class="btn-start" id="loginBtn">모둠 대기방 입장하기</button>
 </div>
 
 <script type="module">
@@ -253,26 +253,26 @@
     const studentName = studentInput.value.trim();
 
     if (!rawTeamCode) {
-      return alert("🏷️ 모둠 코드를 입력해주세요!");
+      return alert("모둠 코드를 입력해주세요.");
     }
 
-    // 👑 관리자 모드 접속 분기 (admin)
+    // 관리자 모드 접속 분기 (admin)
     if (rawTeamCode.toLowerCase() === "admin") {
       localStorage.setItem("elementary_isAdmin", "true");
       localStorage.setItem("elementary_studentId", "admin");
       localStorage.setItem("elementary_studentName", "선생님(관리자)");
       localStorage.setItem("elementary_teamCode", "admin");
-      alert("👑 관리자 모드로 접속합니다!\n관리자 페이지로 이동합니다.");
+      alert("관리자 모드로 접속합니다.\n관리자 페이지로 이동합니다.");
       window.location.href = "admin.html";
       return;
     }
 
     if (!studentName) {
-      return alert("👤 내 이름(학생 닉네임)을 입력해주세요!");
+      return alert("내 이름을 입력해주세요.");
     }
 
     loginBtn.disabled = true;
-    loginBtn.textContent = "🔍 모둠 코드 확인 중...";
+    loginBtn.textContent = "모둠 코드 확인 중...";
 
     try {
       const teamCode = rawTeamCode;
@@ -284,9 +284,9 @@
       const teamSnap = await getDoc(teamRef);
 
       if (!teamSnap.exists() && !isTestCode) {
-        alert(`⚠️ '${teamCode}'(은)는 선생님이 개설하지 않은 모둠 코드입니다!\n선생님이 만드신 올바른 모둠 코드를 입력해주세요. (테스트용: test)`);
+        alert(`'${teamCode}'(은)는 선생님이 개설하지 않은 모둠 코드입니다!\n선생님이 만드신 올바른 모둠 코드를 입력해주세요. (테스트용: test)`);
         loginBtn.disabled = false;
-        loginBtn.textContent = "🚀 모둠 대기방 입장하기";
+        loginBtn.textContent = "모둠 대기방 입장하기";
         return;
       }
 
@@ -342,7 +342,7 @@
       console.error(e);
       alert("대기방 입장 중 오류가 발생했습니다: " + e.message);
       loginBtn.disabled = false;
-      loginBtn.textContent = "🚀 모둠 대기방 입장하기";
+      loginBtn.textContent = "모둠 대기방 입장하기";
     }
   });
 </script>

@@ -662,13 +662,13 @@
   <!-- 헤더 -->
   <header>
     <div class="admin-title-area">
-      <h1>👑 선생님 관리자 모드 (실시간 모둠 8대 퀘스트 진도판)</h1>
+      <h1>선생님 관리자 모드 (실시간 모둠 8대 퀘스트 진도판)</h1>
       <p>AI 자원순환 탐정단 • 실시간 학급 전체 모둠 진도 및 제출물 모니터링</p>
     </div>
 
     <div class="header-btns">
-      <a href="dashboard.html" class="btn-action btn-ghost" style="border-color:#38BDF8; color:#0284C7;">📊 학급 공개 현황판</a>
-      <button onclick="logoutAdmin()" class="btn-action btn-ghost" style="color:#C62828;border-color:#FFCDD2;">🚪 로그아웃</button>
+      <a href="dashboard.html" class="btn-action btn-ghost" style="border-color:#38BDF8; color:#0284C7;">학급 공개 현황판</a>
+      <button onclick="logoutAdmin()" class="btn-action btn-ghost" style="color:#C62828;border-color:#FFCDD2;">로그아웃</button>
     </div>
   </header>
 
@@ -676,27 +676,27 @@
   <div class="stat-cards">
     <div class="stat-card">
       <div class="stat-num" id="statTotalTeams">0개</div>
-      <div class="stat-label">👥 개설된 모둠(팀) 수</div>
+      <div class="stat-label">개설된 모둠(팀) 수</div>
     </div>
     <div class="stat-card blue">
       <div class="stat-num" id="statTotalStudents">0명</div>
-      <div class="stat-label">👤 총 접속 학생 수</div>
+      <div class="stat-label">총 접속 학생 수</div>
     </div>
     <div class="stat-card accent">
       <div class="stat-num" id="statAvgProgress">0%</div>
-      <div class="stat-label">📈 학급 전체 평균 진도율</div>
+      <div class="stat-label">학급 전체 평균 진도율</div>
     </div>
     <div class="stat-card purple">
       <div class="stat-num" id="statMasterTeams">0개</div>
-      <div class="stat-label">🏆 8대 퀘스트 마스터 모둠</div>
+      <div class="stat-label">8대 퀘스트 마스터 모둠</div>
     </div>
   </div>
 
   <!-- 탭 네비게이션 -->
   <div class="admin-tabs">
-    <button class="tab-btn active" data-tab="tab-matrix" onclick="switchTab('tab-matrix')">📊 실시간 모둠 8대 퀘스트 진도표</button>
-    <button class="tab-btn" data-tab="tab-team-mgmt" onclick="switchTab('tab-team-mgmt')">🏷️ 모둠 코드 개설 및 관리</button>
-    <button class="tab-btn" data-tab="tab-students" onclick="switchTab('tab-students')">📋 학생별 개별 학습 현황</button>
+    <button class="tab-btn active" data-tab="tab-matrix" onclick="switchTab('tab-matrix')">실시간 모둠 8대 퀘스트 진도표</button>
+    <button class="tab-btn" data-tab="tab-team-mgmt" onclick="switchTab('tab-team-mgmt')">모둠 코드 개설 및 관리</button>
+    <button class="tab-btn" data-tab="tab-students" onclick="switchTab('tab-students')">학생별 개별 학습 현황</button>
   </div>
 
   <!-- TAB 1: 실시간 모둠 8대 퀘스트 진도표 -->
@@ -704,40 +704,40 @@
     <!-- 8대 퀘스트별 학급 완수 현황 미니 바 -->
     <div class="quest-overview-card">
       <div class="quest-overview-title">
-        <span>🗺️</span>
+        <span></span>
         <span>8대 퀘스트별 학급 완수 모둠 현황 (실시간 집계)</span>
       </div>
       <div class="quest-mini-grid" id="questMiniGrid">
         <div class="quest-mini-box" id="qBox-1">
-          <div class="quest-mini-name">Q1. AI의 눈 👁️</div>
+          <div class="quest-mini-name">Q1. AI의 눈</div>
           <div class="quest-mini-count" id="qCount-1">0팀</div>
         </div>
         <div class="quest-mini-box" id="qBox-2">
-          <div class="quest-mini-name">Q2. 분류기준 📋</div>
+          <div class="quest-mini-name">Q2. 분류기준</div>
           <div class="quest-mini-count" id="qCount-2">0팀</div>
         </div>
         <div class="quest-mini-box" id="qBox-3">
-          <div class="quest-mini-name">Q3. 사진수집 📷</div>
+          <div class="quest-mini-name">Q3. 사진수집</div>
           <div class="quest-mini-count" id="qCount-3">0팀</div>
         </div>
         <div class="quest-mini-box" id="qBox-4">
-          <div class="quest-mini-name">Q4. 이름표 🏷️</div>
+          <div class="quest-mini-name">Q4. 이름표</div>
           <div class="quest-mini-count" id="qCount-4">0팀</div>
         </div>
         <div class="quest-mini-box" id="qBox-5">
-          <div class="quest-mini-name">Q5. AI탐정 🤖</div>
+          <div class="quest-mini-name">Q5. AI탐정</div>
           <div class="quest-mini-count" id="qCount-5">0팀</div>
         </div>
         <div class="quest-mini-box" id="qBox-6">
-          <div class="quest-mini-name">Q6. 오류관 🏛️</div>
+          <div class="quest-mini-name">Q6. 오류관</div>
           <div class="quest-mini-count" id="qCount-6">0팀</div>
         </div>
         <div class="quest-mini-box" id="qBox-7">
-          <div class="quest-mini-name">Q7. 실천규약 ✍️</div>
+          <div class="quest-mini-name">Q7. 실천규약</div>
           <div class="quest-mini-count" id="qCount-7">0팀</div>
         </div>
         <div class="quest-mini-box" id="qBox-8">
-          <div class="quest-mini-name">Q8. 의회선포 ⚖️</div>
+          <div class="quest-mini-name">Q8. 의회선포</div>
           <div class="quest-mini-count" id="qCount-8">0팀</div>
         </div>
       </div>
@@ -746,10 +746,10 @@
     <!-- 모둠별 8대 퀘스트 실시간 진도 매트릭스 -->
     <div class="manage-card">
       <div class="section-header">
-        <h2>📊 모둠별 8대 퀘스트 실시간 진도 매트릭스</h2>
+        <h2>모둠별 8대 퀘스트 실시간 진도 매트릭스</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button onclick="downloadAdminCSV()" class="btn-action btn-green" style="font-size:14px;padding:8px 14px;">📥 모둠 진도표 CSV 다운로드</button>
-          <button onclick="quickBatchCreateTeams()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;background:#E8F5E9;">✨ 1모둠~6모둠 일괄 생성</button>
+          <button onclick="downloadAdminCSV()" class="btn-action btn-green" style="font-size:14px;padding:8px 14px;">모둠 진도표 CSV 다운로드</button>
+          <button onclick="quickBatchCreateTeams()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;background:#E8F5E9;">1모둠~6모둠 일괄 생성</button>
         </div>
       </div>
 
@@ -760,14 +760,14 @@
             <tr>
               <th class="col-team">모둠 (AI 파트너)</th>
               <th class="col-members">참여 학생</th>
-              <th class="col-quest" title="Q1. AI의 눈 👁️">Q1<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">눈</span></th>
-              <th class="col-quest" title="Q2. 분류기준 만들기 📋">Q2<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">기준</span></th>
-              <th class="col-quest" title="Q3. 사진 데이터 수집 📷">Q3<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">사진</span></th>
-              <th class="col-quest" title="Q4. 이름표 붙이기 🏷️">Q4<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">라벨</span></th>
-              <th class="col-quest" title="Q5. 교실쓰레기 AI탐정단 🤖">Q5<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">탐정</span></th>
-              <th class="col-quest" title="Q6. 오류박물관 🏛️">Q6<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">오류</span></th>
-              <th class="col-quest" title="Q7. 실천 규약 초안 ✍️">Q7<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">규약</span></th>
-              <th class="col-quest" title="Q8. 자원 순환 의회 ⚖️">Q8<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">의회</span></th>
+              <th class="col-quest" title="Q1. AI의 눈">Q1<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">눈</span></th>
+              <th class="col-quest" title="Q2. 분류기준 만들기">Q2<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">기준</span></th>
+              <th class="col-quest" title="Q3. 사진 데이터 수집">Q3<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">사진</span></th>
+              <th class="col-quest" title="Q4. 이름표 붙이기">Q4<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">라벨</span></th>
+              <th class="col-quest" title="Q5. 교실쓰레기 AI탐정단">Q5<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">탐정</span></th>
+              <th class="col-quest" title="Q6. 오류박물관">Q6<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">오류</span></th>
+              <th class="col-quest" title="Q7. 실천 규약 초안">Q7<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">규약</span></th>
+              <th class="col-quest" title="Q8. 자원 순환 의회">Q8<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">의회</span></th>
               <th class="col-progress">진도율</th>
               <th class="col-score">점수/배지</th>
               <th class="col-action">과제 검토 및 관리</th>
@@ -785,28 +785,28 @@
   <div class="tab-content" id="tab-team-mgmt">
     <div class="manage-card">
       <div class="section-header">
-        <h2>🏷️ 학급 모둠 코드 개설 및 학생 입장 관리</h2>
+        <h2>학급 모둠 코드 개설 및 학생 입장 관리</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button onclick="quickBatchCreateTeams()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;background:#E8F5E9;">✨ 1모둠~6모둠 일괄 생성</button>
-          <button onclick="quickCreateTestTeam()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;background:#F3E8FF;color:#6D28D9;border-color:#DDD6FE;">🧪 test 모둠 생성</button>
+          <button onclick="quickBatchCreateTeams()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;background:#E8F5E9;">1모둠~6모둠 일괄 생성</button>
+          <button onclick="quickCreateTestTeam()" class="btn-action btn-ghost" style="font-size:14px;padding:8px 14px;background:#F3E8FF;color:#6D28D9;border-color:#DDD6FE;">test 모둠 생성</button>
         </div>
       </div>
 
       <div style="background:#ECFDF5;border:1.5px solid #A7F3D0;border-radius:14px;padding:12px 16px;margin-bottom:18px;font-size:13px;color:#065F46;line-height:1.5;">
-        📢 <strong>학생 로그인 보안 안내</strong>: 학생들은 <strong>선생님이 개설한 모둠 코드(또는 test)로만 로그인</strong>할 수 있습니다. 새 수업을 진행할 모둠 코드를 개설한 후 학생들에게 알려주세요!
+        <strong>학생 로그인 보안 안내</strong>: 학생들은 <strong>선생님이 개설한 모둠 코드(또는 test)로만 로그인</strong>할 수 있습니다. 새 수업을 진행할 모둠 코드를 개설한 후 학생들에게 알려주세요!
       </div>
 
       <!-- 새 모둠 코드 추가 폼 -->
       <div class="add-team-box">
-        <strong style="color:#2E7D32;font-family:'Jua',sans-serif;font-size:16px;">➕ 새 모둠 코드 개설:</strong>
+        <strong style="color:#2E7D32;font-family:'Jua',sans-serif;font-size:16px;">새 모둠 코드 개설:</strong>
         <input type="text" id="newTeamCode" placeholder="모둠 코드 (예: 1모둠, GREEN, 탐정단)" style="flex:1;min-width:140px;">
         <input type="text" id="newTeamAiName" placeholder="기본 AI 이름 (예: 에코봇)" style="flex:1;min-width:140px;">
-        <button onclick="addNewTeamCode()" class="btn-action btn-green" style="padding:9px 16px;font-size:14px;">➕ 모둠 생성</button>
+        <button onclick="addNewTeamCode()" class="btn-action btn-green" style="padding:9px 16px;font-size:14px;">모둠 생성</button>
       </div>
 
       <!-- 개설된 모둠 카드 목록 -->
       <div style="margin-top:20px;">
-        <h3 style="font-family:'Jua',sans-serif;font-size:18px;color:#1B5E20;margin-bottom:12px;">📋 현재 개설된 모둠 목록</h3>
+        <h3 style="font-family:'Jua',sans-serif;font-size:18px;color:#1B5E20;margin-bottom:12px;">현재 개설된 모둠 목록</h3>
         <div class="team-mgmt-grid" id="teamMgmtGrid">
           <div style="text-align:center;padding:30px;color:#78909C;grid-column:1/-1;">모둠 목록을 불러오는 중입니다...</div>
         </div>
@@ -818,10 +818,10 @@
   <div class="tab-content" id="tab-students">
     <div class="manage-card" style="border-color:#A5D6A7;">
       <div class="section-header">
-        <h2>📋 학생별 개별 학습 및 진도 현황</h2>
+        <h2>학생별 개별 학습 및 진도 현황</h2>
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
           <span style="font-size:13px;color:#558B2F;font-weight:bold;">총 <span id="studentTableCount">0</span>명 참여 중</span>
-          <button onclick="deleteAllStudents()" class="btn-action btn-ghost" style="font-size:13px;padding:6px 12px;color:#C62828;border-color:#FFCDD2;background:#FFEBEE;">🗑️ 전체 학생 데이터 초기화</button>
+          <button onclick="deleteAllStudents()" class="btn-action btn-ghost" style="font-size:13px;padding:6px 12px;color:#C62828;border-color:#FFCDD2;background:#FFEBEE;">전체 학생 데이터 초기화</button>
         </div>
       </div>
 
@@ -852,8 +852,8 @@
 <div class="modal-overlay" id="artifactModal">
   <div class="modal-content">
     <div class="modal-header">
-      <h3 id="modalTeamTitle">🔍 [1모둠] 실시간 탐정 제출물 상세 보기</h3>
-      <button class="btn-modal-close" onclick="closeModal()">✕</button>
+      <h3 id="modalTeamTitle">[1모둠] 실시간 탐정 제출물 상세 보기</h3>
+      <button class="btn-modal-close" onclick="closeModal()"></button>
     </div>
     <div class="modal-body" id="modalArtifactBody">
       <div style="text-align:center;padding:20px;color:#64748B;">제출물 데이터를 불러오는 중...</div>
@@ -887,20 +887,20 @@
 
   // 8대 퀘스트 컬렉션 실시간 구독
   const questCollections = [
-    { name: "quest1_records", key: "q1", title: "Q1. AI의 눈 👁️" },
-    { name: "quest2_rules", key: "q2", title: "Q2. 분류기준 만들기 📋" },
-    { name: "quest3_data", key: "q3", title: "Q3. 사진 데이터 수집 📷" },
-    { name: "uploads", key: "q3", title: "Q3. 사진 업로드 📷" },
-    { name: "quest4_labeling", key: "q4", title: "Q4. 이름표 붙이기 🏷️" },
-    { name: "labels", key: "q4", title: "Q4. 라벨 데이터 🏷️" },
-    { name: "quest5_logs", key: "q5", title: "Q5. 교실쓰레기 AI탐정단 🤖" },
-    { name: "quest5_records", key: "q5", title: "Q5. AI 탐정 기록 🤖" },
-    { name: "quest6_logs", key: "q6", title: "Q6. 오류박물관 🏛️" },
-    { name: "quest6_errors", key: "q6", title: "Q6. 오류 태그 🏛️" },
-    { name: "quest6_museum", key: "q6", title: "Q6. 오류 큐레이션 🏛️" },
-    { name: "quest7_rules", key: "q7", title: "Q7. 실천 규약 초안 ✍️" },
-    { name: "quest7_logs", key: "q7", title: "Q7. 실천 규약 ✍️" },
-    { name: "quest8_logs", key: "q8", title: "Q8. 자원 순환 의회 ⚖️" }
+    { name: "quest1_records", key: "q1", title: "Q1. AI의 눈" },
+    { name: "quest2_rules", key: "q2", title: "Q2. 분류기준 만들기" },
+    { name: "quest3_data", key: "q3", title: "Q3. 사진 데이터 수집" },
+    { name: "uploads", key: "q3", title: "Q3. 사진 업로드" },
+    { name: "quest4_labeling", key: "q4", title: "Q4. 이름표 붙이기" },
+    { name: "labels", key: "q4", title: "Q4. 라벨 데이터" },
+    { name: "quest5_logs", key: "q5", title: "Q5. 교실쓰레기 AI탐정단" },
+    { name: "quest5_records", key: "q5", title: "Q5. AI 탐정 기록" },
+    { name: "quest6_logs", key: "q6", title: "Q6. 오류박물관" },
+    { name: "quest6_errors", key: "q6", title: "Q6. 오류 태그" },
+    { name: "quest6_museum", key: "q6", title: "Q6. 오류 큐레이션" },
+    { name: "quest7_rules", key: "q7", title: "Q7. 실천 규약 초안" },
+    { name: "quest7_logs", key: "q7", title: "Q7. 실천 규약" },
+    { name: "quest8_logs", key: "q8", title: "Q8. 자원 순환 의회" }
   ];
 
   questCollections.forEach(({ name, key }) => {
@@ -1122,11 +1122,11 @@
 
         if (isApproved) {
           completedCount++;
-          return `<td class="col-quest"><span class="quest-cell-badge done" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] ✅ 승인 완료됨 (클릭하여 확인/반려)">🟢</span></td>`;
+          return `<td class="col-quest"><span class="quest-cell-badge done" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 승인 완료됨 (클릭하여 확인/반려)"></span></td>`;
         } else if (isSubmitted) {
-          return `<td class="col-quest"><span class="quest-cell-badge pending" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 📝 과제 제출됨! 클릭하여 확인 및 승인하기">🟡</span></td>`;
+          return `<td class="col-quest"><span class="quest-cell-badge pending" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 과제 제출됨! 클릭하여 확인 및 승인하기"></span></td>`;
         } else {
-          return `<td class="col-quest"><span class="quest-cell-badge yet" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] ⚪ 아직 미제출 (클릭하여 직접 승인 가능)">⚪</span></td>`;
+          return `<td class="col-quest"><span class="quest-cell-badge yet" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 아직 미제출 (클릭하여 직접 승인 가능)"></span></td>`;
         }
       };
 
@@ -1135,14 +1135,14 @@
       const pct = Math.round((completedCount / 8) * 100);
 
       const membersList = (t.members && t.members.length) 
-        ? t.members.map(m => `<span class="member-pill">👤${m}</span>`).join(' ')
+        ? t.members.map(m => `<span class="member-pill">${m}</span>`).join(' ')
         : '<span style="color:#B0BEC5;font-size:11px;">접속 대기</span>';
 
       return `
         <tr>
           <td class="col-team">
             <strong class="code-tag">${code}</strong>
-            <div style="font-size:11px;color:#2E7D32;margin-top:2px;font-weight:700;">🤖 ${t.aiName || '에코봇'}</div>
+            <div style="font-size:11px;color:#2E7D32;margin-top:2px;font-weight:700;">${t.aiName || '에코봇'}</div>
           </td>
           <td class="col-members">${membersList}</td>
           ${qTds}
@@ -1153,14 +1153,14 @@
             <div style="font-size:11px;font-weight:800;color:${pct === 100 ? '#16A34A' : '#334155'};">${completedCount}/8 (${pct}%)</div>
           </td>
           <td class="col-score">
-            <strong style="color:#F59E0B;font-size:13px;">⭐ ${t.score || 10}</strong><br>
+            <strong style="color:#F59E0B;font-size:13px;">${t.score || 10}</strong><br>
             <span class="badge-tag" style="font-size:10px;padding:2px 5px;margin-top:2px;">${t.badge || '신입 탐정단'}</span>
           </td>
           <td class="col-action">
             <div class="matrix-actions">
-              <button onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-view" title="과제 검토 및 승인">🔍 검토</button>
-              <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit" title="AI 파트너 이름 수정">✏️ AI</button>
-              <button onclick="deleteTeam('${t.id}')" class="btn-sm-action btn-sm-del" title="모둠 삭제">🗑️</button>
+              <button onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-view" title="과제 검토 및 승인">검토</button>
+              <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit" title="AI 파트너 이름 수정">AI</button>
+              <button onclick="deleteTeam('${t.id}')" class="btn-sm-action btn-sm-del" title="모둠 삭제"></button>
             </div>
           </td>
         </tr>
@@ -1191,14 +1191,14 @@
 
       return `
         <tr>
-          <td><strong>👤 ${sName}</strong></td>
+          <td><strong>${sName}</strong></td>
           <td><span class="code-tag" style="font-size:12px;padding:2px 6px;">${s.teamCode || '미지정'}</span></td>
-          <td>🤖 ${s.aiPartnerName || team?.aiName || '에코봇'}</td>
-          <td><strong style="color:#2E7D32;">⭐ ${s.score || 0} EXP</strong></td>
+          <td>${s.aiPartnerName || team?.aiName || '에코봇'}</td>
+          <td><strong style="color:#2E7D32;">${s.score || 0} EXP</strong></td>
           <td><strong style="color:#16A34A;">${completedCount}/8 승인됨</strong></td>
           <td style="font-size:12px;color:#64748B;">${formatDateTime(s.lastActive || s.joinedAt || s.createdAt)}</td>
           <td>
-            <button onclick="deleteStudent('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-del" style="padding:4px 8px;font-size:12px;">🗑️ 삭제</button>
+            <button onclick="deleteStudent('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-del" style="padding:4px 8px;font-size:12px;">삭제</button>
           </td>
         </tr>
       `;
@@ -1219,20 +1219,20 @@
 
     titleEl.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;width:100%;flex-wrap:wrap;gap:10px;">
-        <span>🔍 [${teamCode} • ${aiName || team.aiName || '에코봇'}] 과제 검토 & 승인 센터</span>
-        <button onclick="approveAllQuestsForTeam('${teamCode}')" class="btn-batch-approve">✨ 전체 8개 퀘스트 일괄 승인</button>
+        <span>[${teamCode} • ${aiName || team.aiName || '에코봇'}] 과제 검토 & 승인 센터</span>
+        <button onclick="approveAllQuestsForTeam('${teamCode}')" class="btn-batch-approve">전체 8개 퀘스트 일괄 승인</button>
       </div>
     `;
 
     const questDefs = [
-      { key: "q1", title: "QUEST 1: AI의 눈 👁️", desc: "사람의 눈과 AI의 차이점 탐구 생각" },
-      { key: "q2", title: "QUEST 2: 분류기준 만들기 📋", desc: "5대 품목(종이, 플라스틱, 캔, 우유팩, 일반쓰레기) 분류 규칙" },
-      { key: "q3", title: "QUEST 3: 사진 데이터 수집 📷", desc: "AI 학습용 깨끗한 사진 데이터 등록" },
-      { key: "q4", title: "QUEST 4: 이름표 붙이기 🏷️", desc: "바운딩 박스 라벨링 데이터" },
-      { key: "q5", title: "QUEST 5: 교실쓰레기 AI탐정단 🤖", desc: "실시간 AI 객체 감지 및 탐정 수사 기록" },
-      { key: "q6", title: "QUEST 6: 오류박물관 🏛️", desc: "AI 오인식 원인 분석 및 태그" },
-      { key: "q7", title: "QUEST 7: 실천 규약 초안 ✍️", desc: "우리 모둠 실천 규약 및 제시 이유" },
-      { key: "q8", title: "QUEST 8: 자원 순환 의회 ⚖️", desc: "최종 헌장 비준 및 전자 서명" }
+      { key: "q1", title: "QUEST 1: AI의 눈", desc: "사람의 눈과 AI의 차이점 탐구 생각" },
+      { key: "q2", title: "QUEST 2: 분류기준 만들기", desc: "5대 품목(종이, 플라스틱, 캔, 우유팩, 일반쓰레기) 분류 규칙" },
+      { key: "q3", title: "QUEST 3: 사진 데이터 수집", desc: "AI 학습용 깨끗한 사진 데이터 등록" },
+      { key: "q4", title: "QUEST 4: 이름표 붙이기", desc: "바운딩 박스 라벨링 데이터" },
+      { key: "q5", title: "QUEST 5: 교실쓰레기 AI탐정단", desc: "실시간 AI 객체 감지 및 탐정 수사 기록" },
+      { key: "q6", title: "QUEST 6: 오류박물관", desc: "AI 오인식 원인 분석 및 태그" },
+      { key: "q7", title: "QUEST 7: 실천 규약 초안", desc: "우리 모둠 실천 규약 및 제시 이유" },
+      { key: "q8", title: "QUEST 8: 자원 순환 의회", desc: "최종 헌장 비준 및 전자 서명" }
     ];
 
     let html = '';
@@ -1243,11 +1243,11 @@
       const isSubmitted = !!submitted[qDef.key];
       const list = artifacts[qDef.key] || [];
 
-      let statusBadge = '<span class="status-pill none">⚪ 미제출</span>';
+      let statusBadge = '<span class="status-pill none">미제출</span>';
       if (isApproved) {
-        statusBadge = '<span class="status-pill approved">🟢 승인 완료</span>';
+        statusBadge = '<span class="status-pill approved">승인 완료</span>';
       } else if (isSubmitted) {
-        statusBadge = '<span class="status-pill pending">🟡 과제 제출됨 (선생님 확인 대기)</span>';
+        statusBadge = '<span class="status-pill pending">과제 제출됨 (선생님 확인 대기)</span>';
       }
 
       let contentHtml = '';
@@ -1259,12 +1259,12 @@
         contentHtml = list.length 
           ? list.map(item => `
               <div style="background:#F1F8E9;border:1px solid #C8E6C9;border-radius:10px;padding:10px;margin-bottom:6px;">
-                <b>👤 ${item.studentName || '모둠원'}:</b><br>
-                📄 종이: ${item.paperRule || '-'}<br>
-                🧴 플라스틱: ${item.plasticRule || '-'}<br>
-                🥫 캔: ${item.canRule || '-'}<br>
-                🥛 우유팩: ${item.milkRule || '-'}<br>
-                🗑️ 일반: ${item.generalRule || '-'}
+                <b>${item.studentName || '모둠원'}:</b><br>
+                종이: ${item.paperRule || '-'}<br>
+                플라스틱: ${item.plasticRule || '-'}<br>
+                캔: ${item.canRule || '-'}<br>
+                우유팩: ${item.milkRule || '-'}<br>
+                일반: ${item.generalRule || '-'}
               </div>
             `).join('')
           : '<span style="color:#94A3B8;">아직 등록된 분류 기준이 없습니다.</span>';
@@ -1290,7 +1290,7 @@
           : '<span style="color:#94A3B8;">아직 발의된 실천 규약이 없습니다.</span>';
       } else if (qDef.key === 'q8') {
         contentHtml = list.length 
-          ? list.map(item => `• <b>${item.studentName || '대표 의원'}:</b> 헌장 전자 서명 및 의회 의결 완료 ✅`).join('<br>')
+          ? list.map(item => `• <b>${item.studentName || '대표 의원'}:</b> 헌장 전자 서명 및 의회 의결 완료`).join('<br>')
           : '<span style="color:#94A3B8;">아직 비준 서명 기록이 없습니다.</span>';
       }
 
@@ -1298,15 +1298,15 @@
       if (isApproved) {
         actionBtnHtml = `
           <div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:12px;padding-top:10px;border-top:1px solid #E2E8F0;">
-            <span style="color:#16A34A;font-weight:800;font-size:14px;">✅ 선생님 승인 완료됨 (학생 화면에 잠금 해제됨)</span>
-            <button class="btn-modal-revoke" onclick="revokeQuestApproval('${teamCode}', '${qDef.key}')">↩️ 승인 취소/반려</button>
+            <span style="color:#16A34A;font-weight:800;font-size:14px;">선생님 승인 완료됨 (학생 화면에 잠금 해제됨)</span>
+            <button class="btn-modal-revoke" onclick="revokeQuestApproval('${teamCode}', '${qDef.key}')">️ 승인 취소/반려</button>
           </div>
         `;
       } else {
         actionBtnHtml = `
           <div style="display:flex;justify-content:flex-end;width:100%;margin-top:12px;padding-top:10px;border-top:1px solid #E2E8F0;">
             <button class="btn-modal-approve" onclick="approveQuest('${teamCode}', '${qDef.key}')">
-              ✅ [Q${qNum}] 과제 확인 및 승인하기 (+50 EXP)
+              [Q${qNum}] 과제 확인 및 승인하기 (+50 EXP)
             </button>
           </div>
         `;
@@ -1363,7 +1363,7 @@
       }
       renderAll();
       viewTeamArtifacts(teamCode, team?.aiName || '에코봇', qKey);
-      alert(`🎉 [${teamCode}]의 ${qKey.toUpperCase()} 퀘스트가 승인되었습니다!\n학생 화면에서 즉시 잠금 해제(Unlock)됩니다.`);
+      alert(`[${teamCode}]의 ${qKey.toUpperCase()} 퀘스트가 승인되었습니다!\n학생 화면에서 즉시 잠금 해제(Unlock)됩니다.`);
     } catch (err) {
       console.error(err);
       alert("승인 처리 실패: " + err.message);
@@ -1402,7 +1402,7 @@
         approvedQuests: {
           q1: true, q2: true, q3: true, q4: true, q5: true, q6: true, q7: true, q8: true
         },
-        badge: "마스터 탐정 🏆",
+        badge: "마스터 탐정",
         updatedAt: serverTimestamp()
       };
       await setDoc(teamRef, updates, { merge: true });
@@ -1410,11 +1410,11 @@
       const team = teamsCache.find(t => (t.teamCode || t.id) === teamCode);
       if (team) {
         team.approvedQuests = { q1:true, q2:true, q3:true, q4:true, q5:true, q6:true, q7:true, q8:true };
-        team.badge = "마스터 탐정 🏆";
+        team.badge = "마스터 탐정";
       }
       renderAll();
       viewTeamArtifacts(teamCode, team?.aiName || '에코봇');
-      alert(`🎉 [${teamCode}]의 전체 8대 퀘스트가 일괄 승인 완료되었습니다!`);
+      alert(`[${teamCode}]의 전체 8대 퀘스트가 일괄 승인 완료되었습니다!`);
     } catch (err) {
       console.error(err);
       alert("일괄 승인 실패: " + err.message);
@@ -1455,7 +1455,7 @@
 
       if (codeInput) codeInput.value = "";
       if (aiInput) aiInput.value = "";
-      alert(`🎉 새로운 모둠 [${code}]이(가) 등록되었습니다!`);
+      alert(`새로운 모둠 [${code}]이(가) 등록되었습니다!`);
       renderAll();
     } catch (err) {
       console.error(err);
@@ -1478,7 +1478,7 @@
           createdAt: serverTimestamp()
         }, { merge: true });
       }
-      alert("✅ 1모둠~6모둠이 성공적으로 생성되었습니다!");
+      alert("1모둠~6모둠이 성공적으로 생성되었습니다!");
       renderAll();
     } catch (err) {
       console.error(err);
@@ -1506,7 +1506,7 @@
 
   // 모둠 완전 삭제 (모둠 + 소속 학생 + 8대 퀘스트 제출물/산출물 전체 cascade delete)
   window.deleteTeam = async function(teamId) {
-    if (!confirm(`정말로 [${teamId}] 모둠을 삭제하시겠습니까?\n\n⚠️ 주의: 해당 모둠의 정보뿐만 아니라 소속 학생 데이터 및 제출된 모든 8대 퀘스트(Q1~Q8) 산출물이 함께 영구 삭제됩니다.`)) return;
+    if (!confirm(`정말로 [${teamId}] 모둠을 삭제하시겠습니까?\n\n주의: 해당 모둠의 정보뿐만 아니라 소속 학생 데이터 및 제출된 모든 8대 퀘스트(Q1~Q8) 산출물이 함께 영구 삭제됩니다.`)) return;
 
     try {
       const matchTeam = (code) => {
@@ -1615,7 +1615,7 @@
         }
       });
 
-      alert(`✅ [${teamId}] 모둠과 소속 학생 및 모든 퀘스트 데이터가 완전히 삭제되었습니다.`);
+      alert(`[${teamId}] 모둠과 소속 학생 및 모든 퀘스트 데이터가 완전히 삭제되었습니다.`);
       renderAll();
     } catch (err) {
       console.error("모둠 삭제 처리 중 오류:", err);
@@ -1643,7 +1643,7 @@
       const isTest = (code.toLowerCase() === 'test');
 
       const membersListHtml = memberCount > 0
-        ? members.map(m => `<span class="member-pill">👤${m}</span>`).join(' ')
+        ? members.map(m => `<span class="member-pill">${m}</span>`).join(' ')
         : '<span style="color:#94A3B8;font-size:12px;">아직 입장한 학생 없음</span>';
 
       return `
@@ -1652,14 +1652,14 @@
             <div>
               <span class="code-tag" style="font-size:14px;padding:3px 8px;${isTest ? 'background:#F3E8FF;color:#7E22CE;border-color:#D8B4FE;' : ''}">${code}</span>
               ${isTest ? '<span style="font-size:11px;background:#E9D5FF;color:#6B21A8;padding:2px 6px;border-radius:6px;margin-left:4px;font-weight:bold;">TEST</span>' : ''}
-              <div style="font-size:12px;color:#2E7D32;margin-top:4px;font-weight:700;">🤖 ${t.aiName || '에코봇'}</div>
+              <div style="font-size:12px;color:#2E7D32;margin-top:4px;font-weight:700;">${t.aiName || '에코봇'}</div>
             </div>
-            <button onclick="copyTeamCode('${code}')" class="btn-sm-action btn-sm-view" style="font-size:11px;padding:4px 8px;" title="모둠코드 복사">📋 코드복사</button>
+            <button onclick="copyTeamCode('${code}')" class="btn-sm-action btn-sm-view" style="font-size:11px;padding:4px 8px;" title="모둠코드 복사">코드복사</button>
           </div>
           <div class="team-mgmt-meta">
-            <div>👥 접속 학생: <b>${memberCount}명</b></div>
-            <div>🏆 퀘스트 승인: <b>${completedCount}/8</b></div>
-            <div>⭐ 모둠 점수: <b>${t.score || 10} EXP</b></div>
+            <div>접속 학생: <b>${memberCount}명</b></div>
+            <div>퀘스트 승인: <b>${completedCount}/8</b></div>
+            <div>모둠 점수: <b>${t.score || 10} EXP</b></div>
           </div>
           <div style="margin-bottom:12px;">
             <div style="font-size:11px;color:#64748B;font-weight:bold;margin-bottom:4px;">참여 학생 명단:</div>
@@ -1668,8 +1668,8 @@
             </div>
           </div>
           <div class="team-mgmt-actions">
-            <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit" style="flex:1;">✏️ AI 이름 수정</button>
-            <button onclick="deleteTeam('${t.id}')" class="btn-sm-action btn-sm-del" style="flex:0.8;">🗑️ 모둠 삭제</button>
+            <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit" style="flex:1;">AI 이름 수정</button>
+            <button onclick="deleteTeam('${t.id}')" class="btn-sm-action btn-sm-del" style="flex:0.8;">모둠 삭제</button>
           </div>
         </div>
       `;
@@ -1692,7 +1692,7 @@
   window.copyTeamCode = function(code) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(code).then(() => {
-        alert(`📋 모둠 코드 [${code}]이(가) 클립보드에 복사되었습니다!`);
+        alert(`모둠 코드 [${code}]이(가) 클립보드에 복사되었습니다!`);
       }).catch(() => {
         prompt("모둠 코드를 복사하세요:", code);
       });
@@ -1712,7 +1712,7 @@
         approvedQuests: {},
         createdAt: serverTimestamp()
       }, { merge: true });
-      alert("🧪 test 모둠이 성공적으로 생성/동기화되었습니다!");
+      alert("test 모둠이 성공적으로 생성/동기화되었습니다!");
       renderAll();
     } catch(err) {
       console.error(err);
@@ -1755,7 +1755,7 @@
       return alert("삭제할 학생 데이터가 없습니다.");
     }
 
-    if (!confirm(`⚠️ 경고: 현재 등록된 모든 학생(${studentsCache.length}명) 데이터를 일괄 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+    if (!confirm(`경고: 현재 등록된 모든 학생(${studentsCache.length}명) 데이터를 일괄 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
 
     try {
       for (const s of studentsCache) {

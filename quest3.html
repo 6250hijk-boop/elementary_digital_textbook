@@ -38,36 +38,16 @@
       flex-direction: column;
       align-items: center;
       padding: 16px;
-      font-size: 30px;
+      font-size: 17px;
     }
 
-    /* 메인 래퍼 (기존 860px에서 30% 늘린 1118px을 기본값으로, 전체화면 시 화면에 맞춰 확장) */
     .page-wrap {
       width: 100%;
-      max-width: 1118px;
+      max-width: 860px;
       display: flex;
       flex-direction: column;
       gap: 18px;
       padding-bottom: 60px;
-      transition: max-width 0.3s ease;
-    }
-
-    /* 전체화면(:fullscreen) 및 대형 와이드 스크린 대응 */
-    :fullscreen .page-wrap,
-    :-webkit-full-screen .page-wrap {
-      max-width: min(95vw, 1600px) !important;
-      width: 95% !important;
-    }
-    @media (display-mode: fullscreen) {
-      .page-wrap {
-        max-width: min(95vw, 1600px) !important;
-        width: 95% !important;
-      }
-    }
-    @media (min-width: 1400px) {
-      .page-wrap {
-        max-width: min(94vw, 1550px);
-      }
     }
 
     header {
@@ -89,7 +69,7 @@
       border-radius: 14px;
       text-decoration: none;
       font-family: 'Jua', sans-serif;
-      font-size: 31px;
+      font-size: 18px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -107,7 +87,7 @@
       padding: 8px 14px;
       border-radius: 14px;
       font-weight: 700;
-      font-size: 30px;
+      font-size: 15px;
       color: #2E7D32;
     }
 
@@ -117,19 +97,19 @@
       padding: 8px 18px;
       border-radius: 16px;
       font-family: 'Jua', sans-serif;
-      font-size: 32px;
+      font-size: 19px;
       color: #F57F17;
     }
 
     .page-title {
       font-family: 'Jua', sans-serif;
-      font-size: 42px;
+      font-size: 28px;
       color: var(--primary);
       margin-top: 4px;
     }
 
     .page-desc {
-      font-size: 32px;
+      font-size: 16px;
       color: #455A64;
       font-weight: 600;
       line-height: 1.5;
@@ -146,7 +126,7 @@
 
     .card h3 {
       font-family: 'Jua', sans-serif;
-      font-size: 36px;
+      font-size: 22px;
       color: var(--primary);
       margin-bottom: 12px;
       display: flex;
@@ -171,7 +151,7 @@
       gap: 8px;
       margin-bottom: 14px;
       font-family: 'Jua', sans-serif;
-      font-size: 36px;
+      font-size: 22px;
       color: #E65100;
     }
 
@@ -183,7 +163,7 @@
       border-radius: 12px;
       padding: 8px 16px;
       font-family: 'Pretendard', sans-serif;
-      font-size: 30px;
+      font-size: 17px;
       font-weight: 800;
       color: #1E293B;
       outline: none;
@@ -201,7 +181,7 @@
       border: 2px solid #FCD34D;
       border-radius: 12px;
       padding: 12px 16px;
-      font-size: 30px;
+      font-size: 15px;
       font-family: 'Pretendard', sans-serif;
       color: #334155;
       line-height: 1.6;
@@ -229,7 +209,7 @@
       border: 1.5px solid #FCD34D;
       padding: 5px 12px;
       border-radius: 20px;
-      font-size: 32px;
+      font-size: 13px;
       font-weight: 700;
       color: #78350F;
       cursor: pointer;
@@ -276,7 +256,7 @@
 
     .idea-author {
       font-family: 'Jua', sans-serif;
-      font-size: 32px;
+      font-size: 16px;
       color: #15803D;
       display: flex;
       align-items: center;
@@ -293,13 +273,13 @@
 
     .idea-def {
       font-family: 'Jua', sans-serif;
-      font-size: 30px;
+      font-size: 17px;
       color: #92400E;
       margin-bottom: 4px;
     }
 
     .idea-reason {
-      font-size: 35px;
+      font-size: 14px;
       color: #475569;
       line-height: 1.5;
     }
@@ -308,7 +288,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 32px;
+      font-size: 13px;
       color: #94A3B8;
     }
 
@@ -322,7 +302,7 @@
       border: 1px solid #CBD5E1;
       border-radius: 12px;
       padding: 4px 10px;
-      font-size: 30px;
+      font-size: 12px;
       font-weight: 700;
       color: #334155;
       cursor: pointer;
@@ -354,9 +334,9 @@
       transform: scale(1.01);
     }
 
-    .upload-zone .icon { font-size: 55px; margin-bottom: 8px; }
-    .upload-zone h4 { font-family: 'Jua', sans-serif; font-size: 36px; color: var(--primary); margin-bottom: 6px; }
-    .upload-zone p { font-size: 30px; font-weight: 600; color: #558B2F; }
+    .upload-zone .icon { font-size: 46px; margin-bottom: 8px; }
+    .upload-zone h4 { font-family: 'Jua', sans-serif; font-size: 22px; color: var(--primary); margin-bottom: 6px; }
+    .upload-zone p { font-size: 15px; font-weight: 600; color: #558B2F; }
 
     #file-input { display: none; }
 
@@ -369,7 +349,7 @@
       border: none;
       border-radius: 16px;
       font-family: 'Jua', sans-serif;
-      font-size: 30px;
+      font-size: 17px;
       cursor: pointer;
       transition: all .2s;
       text-decoration: none;
@@ -402,7 +382,7 @@
       padding: 8px 16px;
       border-radius: 12px;
       font-family: 'Jua', sans-serif;
-      font-size: 30px;
+      font-size: 15px;
       cursor: pointer;
     }
 
@@ -445,7 +425,7 @@
       width: 26px;
       height: 26px;
       color: white;
-      font-size: 35px;
+      font-size: 14px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -456,7 +436,7 @@
       position: absolute;
       bottom: 0; left: 0; right: 0;
       padding: 3px;
-      font-size: 28px;
+      font-size: 11px;
       font-weight: bold;
       text-align: center;
     }
@@ -481,7 +461,7 @@
     }
 
     .progress-text {
-      font-size: 30px;
+      font-size: 15px;
       font-weight: 600;
       color: #2E7D32;
       margin-bottom: 10px;
@@ -520,7 +500,7 @@
       border-radius: 10px;
       padding: 6px 12px;
       color: #C62828;
-      font-size: 35px;
+      font-size: 14px;
       font-weight: bold;
       cursor: pointer;
     }
@@ -528,32 +508,12 @@
     .alert {
       padding: 14px 18px;
       border-radius: 16px;
-      font-size: 30px;
+      font-size: 15px;
       font-weight: 600;
       margin-bottom: 12px;
     }
     .alert-success { background: #E8F5E9; border: 2px solid #81C784; color: #2E7D32; }
     .alert-error { background: #FFEBEE; border: 2px solid #E57373; color: #C62828; }
-  
-    /* 🌟 최소 글씨 크기 28px(기존 최소의 2.5배) 가독성 극대화 보장 */
-    html, body {
-      font-size: 28px !important;
-    }
-    .btn-back, a.btn-back {
-      font-family: 'Jua', sans-serif !important;
-      font-size: 28px !important;
-      padding: 10px 22px !important;
-      border-radius: 16px !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 8px !important;
-      text-decoration: none !important;
-      cursor: pointer !important;
-      font-weight: 800 !important;
-    }
-    input, textarea, select, button {
-      font-size: max(28px, 1rem) !important;
-    }
   </style>
 </head>
 <body>
@@ -561,15 +521,15 @@
 <div class="page-wrap">
   <!-- 상단 헤더 -->
   <header>
-    <a href="main.html" class="btn-back">🗺️ 퀘스트지도가기</a>
+    <a href="main.html" class="btn-back">퀘스트지도가기</a>
     <div class="header-info-group">
-      <div class="header-team" id="dispTeam">👥 1모둠</div>
-      <div class="header-score" id="dispScore">⭐ 0점</div>
+      <div class="header-team" id="dispTeam">1모둠</div>
+      <div class="header-score" id="dispScore">0점</div>
     </div>
   </header>
 
   <div>
-    <div class="page-title">📷 QUEST 3: AI가 잘 배우는 사진은 무엇일까?</div>
+    <div class="page-title">QUEST 3: AI가 잘 배우는 사진은 무엇일까?</div>
     <div class="page-desc">
       우리가 만든 분류 기준을 바탕으로 좋은 데이터의 정의를 모둠원과 토론하고, AI 학습용 사진 데이터를 직접 수집해봅시다!
     </div>
@@ -580,11 +540,11 @@
   <!-- ==================== [핵심 기능] 좋은 데이터란 _____이다. 생각 나누기 ==================== -->
   <div class="card" style="border-color:#FBC02D; box-shadow:0 8px 24px rgba(245,158,11,0.08);">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <h3 style="color:#D97706; margin:0;">💡 [탐정 생각 나눔] "좋은 데이터란 _________이다"</h3>
-      <span style="font-size: 32px; font-weight:800; color:#B45309; background:#FEF3C7; padding:4px 10px; border-radius:12px;">실시간 모둠 공유</span>
+      <h3 style="color:#D97706; margin:0;">[탐정 생각 나눔] "좋은 데이터란 _________이다"</h3>
+      <span style="font-size:13px; font-weight:800; color:#B45309; background:#FEF3C7; padding:4px 10px; border-radius:12px;">실시간 모둠 공유</span>
     </div>
 
-    <p style="font-size: 28px; color:#64748B; margin-bottom:16px;">
+    <p style="font-size:14.5px; color:#64748B; margin-bottom:16px;">
       AI가 사물을 헷갈리지 않고 정확하게 학습하기 위해서 어떤 사진 데이터가 필요한지 우리 모둠의 생각을 문장으로 완성하고 공유해보세요.
     </p>
 
@@ -603,8 +563,8 @@
       </div>
 
       <!-- 그렇게 생각한 까닭 / 이유 -->
-      <div style="font-size: 35px; font-weight:800; color:#78350F; margin-bottom:6px;">
-        📝 그렇게 생각한 까닭 / 이유:
+      <div style="font-size:14px; font-weight:800; color:#78350F; margin-bottom:6px;">
+        그렇게 생각한 까닭 / 이유:
       </div>
       <textarea 
         id="goodDataReason" 
@@ -615,7 +575,7 @@
       <!-- 공유 버튼 -->
       <div style="display:flex; justify-content:flex-end; gap:10px;">
         <button class="btn btn-gold" onclick="submitGoodDataIdea()">
-          💾 우리 모둠에 나의 생각 공유하기 (+20 EXP) 🚀
+          우리 모둠에 나의 생각 공유하기 (+20 EXP)
         </button>
       </div>
     </div>
@@ -623,14 +583,14 @@
     <!-- 우리 모둠 공유 게시판 -->
     <div style="margin-top:20px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h4 style="font-family:'Jua'; color:#1E293B; font-size: 31px; display:flex; align-items:center; gap:6px;">
-          <span>👥</span> <span id="teamIdeasTitle">우리 모둠 친구들의 '좋은 데이터 정의' 모음판</span>
+        <h4 style="font-family:'Jua'; color:#1E293B; font-size:18px; display:flex; align-items:center; gap:6px;">
+          <span></span> <span id="teamIdeasTitle">우리 모둠 친구들의 '좋은 데이터 정의' 모음판</span>
         </h4>
-        <span style="font-size: 32px; font-weight:800; color:#D97706; background:#FEF3C7; padding:4px 10px; border-radius:12px;" id="teamIdeaCount">동기화 중...</span>
+        <span style="font-size:13px; font-weight:800; color:#D97706; background:#FEF3C7; padding:4px 10px; border-radius:12px;" id="teamIdeaCount">동기화 중...</span>
       </div>
 
       <div class="team-ideas-feed" id="teamIdeasFeed">
-        <div style="text-align:center; padding:18px; color:#94A3B8; font-size: 35px;">
+        <div style="text-align:center; padding:18px; color:#94A3B8; font-size:14px;">
           모둠원들의 생각을 불러오는 중입니다...
         </div>
       </div>
@@ -639,11 +599,11 @@
 
   <!-- ==================== 사진 업로드 및 데이터 수집 존 ==================== -->
   <div class="card">
-    <h3>📸 사진 데이터 직접 수집 & 업로드</h3>
+    <h3>사진 데이터 직접 수집 & 업로드</h3>
     <div class="upload-zone" id="upload-zone"
       onclick="document.getElementById('file-input').click()"
       ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFiles(event)">
-      <div class="icon">📸</div>
+      <div class="icon"></div>
       <h4>사진을 여기에 끌어다 놓거나 클릭하여 선택하세요!</h4>
       <p>JPG, PNG, WEBP 지원 · 600×600 자동 변환 · 최대 20장</p>
     </div>
@@ -651,9 +611,9 @@
 
     <div id="pending-card" style="display:none; margin-top:16px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
-        <span style="font-size: 32px; font-weight:bold; color:#2E7D32;">대기 중인 사진: <strong id="pending-count">0</strong>장</span>
+        <span style="font-size:16px; font-weight:bold; color:#2E7D32;">대기 중인 사진: <strong id="pending-count">0</strong>장</span>
         <div style="display:flex; gap:8px;">
-          <button class="btn btn-primary" id="upload-btn" onclick="uploadAll()">☁️ 업로드 시작</button>
+          <button class="btn btn-primary" id="upload-btn" onclick="uploadAll()">업로드 시작</button>
           <button class="btn btn-ghost" onclick="clearPending()">초기화</button>
         </div>
       </div>
@@ -670,14 +630,14 @@
   <!-- 올린 사진 목록 및 팀 활동 내역 -->
   <div class="card">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
-      <h3 style="margin:0;">☁️ 사진 데이터 목록 (<span id="my-count">0</span>장)</h3>
-      <a href="main.html" class="btn btn-primary" style="font-size: 28px; padding:14px 28px; text-decoration:none;">🗺️ 퀘스트지도가기</a>
+      <h3 style="margin:0;">사진 데이터 목록 (<span id="my-count">0</span>장)</h3>
+      <a href="main.html" class="btn btn-primary" style="font-size:16px;">퀘스트지도가기</a>
     </div>
 
     <!-- 탭 전환 바 (내 사진 / 팀 모둠 사진) -->
     <div class="filter-bar">
-      <button class="btn btn-tab active" id="tab-my" onclick="switchView('my')">👤 내가 올린 사진</button>
-      <button class="btn btn-tab" id="tab-team" onclick="switchView('team')">👥 팀 활동 내역 보기</button>
+      <button class="btn btn-tab active" id="tab-my" onclick="switchView('my')">내가 올린 사진</button>
+      <button class="btn btn-tab" id="tab-team" onclick="switchView('team')">팀 활동 내역 보기</button>
     </div>
 
     <div id="my-uploads">
@@ -724,17 +684,17 @@
 
   // 초기 유저 정보 로드
   async function initUser() {
-    document.getElementById('dispTeam').textContent = `👥 ${teamCode}`;
+    document.getElementById('dispTeam').textContent = `${teamCode}`;
     document.getElementById('teamIdeasTitle').textContent = `우리 모둠('${teamCode}') 친구들의 '좋은 데이터 정의' 모음판`;
 
     try {
       const docSnap = await db.collection('students').doc(studentId).get();
       if (docSnap.exists) {
         const d = docSnap.data();
-        document.getElementById('dispScore').textContent = `⭐ ${d.score || 0}점`;
+        document.getElementById('dispScore').textContent = `${d.score || 0}점`;
       } else {
         const score = localStorage.getItem("elementary_score") || "0";
-        document.getElementById('dispScore').textContent = `⭐ ${score}점`;
+        document.getElementById('dispScore').textContent = `${score}점`;
       }
     } catch(e) {
       console.error(e);
@@ -748,7 +708,7 @@
   // 키워드 추천 채우기
   function applyKeywordDef(kwText) {
     document.getElementById('goodDataDef').value = kwText;
-    showAlert(`💡 '${kwText}' 키워드가 적용되었습니다.`, 'success');
+    showAlert(`'${kwText}' 키워드가 적용되었습니다.`, 'success');
   }
 
   // 좋은 데이터 생각 제출 및 모둠 공유
@@ -780,9 +740,9 @@
 
       const newScore = currentScore + 20;
       localStorage.setItem("elementary_score", newScore);
-      document.getElementById('dispScore').textContent = `⭐ ${newScore}점`;
+      document.getElementById('dispScore').textContent = `${newScore}점`;
 
-      showAlert("🎉 우리 모둠에 나의 '좋은 데이터 정의'가 공유되었습니다! (+20 EXP)", 'success');
+      showAlert("우리 모둠에 나의 '좋은 데이터 정의'가 공유되었습니다! (+20 EXP)", 'success');
     } catch(e) {
       console.error("Idea submit error:", e);
       showAlert("저장 실패: " + e.message, 'error');
@@ -801,7 +761,7 @@
         if (!feedEl) return;
 
         if (snapshot.empty) {
-          feedEl.innerHTML = `<div style="text-align:center; padding:18px; color:#94A3B8; font-size: 35px;">아직 모둠원들이 작성한 정의가 없습니다. 상단에서 첫 번째 생각을 등록해보세요! 🚀</div>`;
+          feedEl.innerHTML = `<div style="text-align:center; padding:18px; color:#94A3B8; font-size:14px;">아직 모둠원들이 작성한 정의가 없습니다. 상단에서 첫 번째 생각을 등록해보세요!</div>`;
           if (countEl) countEl.textContent = `참여 0명`;
           return;
         }
@@ -823,9 +783,9 @@
             <div class="idea-card ${isMe ? 'is-me' : ''}">
               <div class="idea-card-header">
                 <div class="idea-author">
-                  <span>${isMe ? '⭐ 나 (' + item.studentName + ')' : '👤 ' + item.studentName}</span>
+                  <span>${isMe ? '나 (' + item.studentName + ')' : '' + item.studentName}</span>
                 </div>
-                ${isMe ? `<button class="del-btn" style="padding:4px 8px; font-size: 30px;" onclick="deleteIdea('${item.id}')">🗑️ 삭제</button>` : ''}
+                ${isMe ? `<button class="del-btn" style="padding:4px 8px; font-size:12px;" onclick="deleteIdea('${item.id}')">삭제</button>` : ''}
               </div>
 
               <div class="idea-text-box">
@@ -833,15 +793,15 @@
                   " 좋은 데이터란 <span style="text-decoration:underline; text-underline-offset:3px; color:#B45309;">${item.definition}</span> (이)다. "
                 </div>
                 <div class="idea-reason">
-                  <strong>💡 까닭:</strong> ${item.reason}
+                  <strong>까닭:</strong> ${item.reason}
                 </div>
               </div>
 
               <div class="idea-footer">
                 <div class="reaction-btns">
-                  <button class="btn-react" onclick="reactIdea('${item.id}', 'like')">👍 공감 ${rx.like || 0}</button>
-                  <button class="btn-react" onclick="reactIdea('${item.id}', 'creative')">💡 멋져요 ${rx.creative || 0}</button>
-                  <button class="btn-react" onclick="reactIdea('${item.id}', 'cheer')">❤️ 응원 ${rx.cheer || 0}</button>
+                  <button class="btn-react" onclick="reactIdea('${item.id}', 'like')">공감 ${rx.like || 0}</button>
+                  <button class="btn-react" onclick="reactIdea('${item.id}', 'creative')">멋져요 ${rx.creative || 0}</button>
+                  <button class="btn-react" onclick="reactIdea('${item.id}', 'cheer')">️ 응원 ${rx.cheer || 0}</button>
                 </div>
                 <div>${item.created_at ? item.created_at.slice(5, 16).replace('T', ' ') : ''}</div>
               </div>
@@ -959,10 +919,10 @@
     document.getElementById('preview-grid').innerHTML = pendingFiles.map(pf => {
       const url = URL.createObjectURL(pf.file);
       const sc = pf.status === 'done' ? 'status-done' : pf.status === 'error' ? 'status-error' : 'status-pending';
-      const st = pf.status === 'done' ? '✅ 완료' : pf.status === 'error' ? '❌ 오류' : '⏳ 대기';
+      const st = pf.status === 'done' ? '완료' : pf.status === 'error' ? '오류' : '대기';
       return `<div class="preview-item">
         <img src="${url}">
-        ${pf.status === 'pending' ? `<button class="remove-btn" onclick="removeFile('${pf.id}')">✕</button>` : ''}
+        ${pf.status === 'pending' ? `<button class="remove-btn" onclick="removeFile('${pf.id}')"></button>` : ''}
         <div class="status-badge ${sc}" id="badge-${pf.id}">${st}</div>
       </div>`;
     }).join('');
@@ -992,7 +952,7 @@
     const updateStatus = () => {
       document.getElementById('progress-bar').style.width = (done / total * 100) + '%';
       document.getElementById('upload-status').textContent =
-        `☁️ 사진 변환 및 업로드 중... ${done}/${total}장 (${Math.round(done/total*100)}%)`;
+        `사진 변환 및 업로드 중... ${done}/${total}장 (${Math.round(done/total*100)}%)`;
     };
     updateStatus();
 
@@ -1001,10 +961,10 @@
       await Promise.all(chunk.map(async pf => {
         try {
           const badge = document.getElementById('badge-' + pf.id);
-          if (badge) { badge.className = 'status-badge status-pending'; badge.textContent = '⚙️ 변환중'; }
+          if (badge) { badge.className = 'status-badge status-pending'; badge.textContent = '변환중'; }
           const blob = pf.blob || await resizeToBlob(pf.file);
           if (!blob) throw new Error('변환 실패');
-          if (badge) { badge.textContent = '☁️ 업로드'; }
+          if (badge) { badge.textContent = '업로드'; }
           const fileName = `${Date.now()}_${pf.file.name.replace(/\s/g, '_')}`;
           const result = await uploadToCloudinary(blob, fileName);
 
@@ -1023,11 +983,11 @@
           });
 
           pf.status = 'done';
-          if (badge) { badge.className = 'status-badge status-done'; badge.textContent = '✅ 완료'; }
+          if (badge) { badge.className = 'status-badge status-done'; badge.textContent = '완료'; }
         } catch (e) {
           pf.status = 'error';
           const badge = document.getElementById('badge-' + pf.id);
-          if (badge) { badge.className = 'status-badge status-error'; badge.textContent = '❌ 오류'; }
+          if (badge) { badge.className = 'status-badge status-error'; badge.textContent = '오류'; }
           console.error(e);
         }
         done++;
@@ -1035,7 +995,7 @@
       }));
     }
 
-    document.getElementById('upload-status').textContent = `✅ ${done}장 업로드 완료!`;
+    document.getElementById('upload-status').textContent = `${done}장 업로드 완료!`;
     document.getElementById('progress-bar').style.width = '100%';
     btn.disabled = false;
     loadCurrentView();
@@ -1055,8 +1015,8 @@
 
       const newScore = currentScore + 20;
       localStorage.setItem("elementary_score", newScore);
-      document.getElementById('dispScore').textContent = `⭐ ${newScore}점`;
-      showAlert('🎉 퀘스트 3 사진 수집 완료! +20점 획득!', 'success');
+      document.getElementById('dispScore').textContent = `${newScore}점`;
+      showAlert('퀘스트 3 사진 수집 완료! +20점 획득!', 'success');
     } catch(e) {
       console.error(e);
     }
@@ -1072,7 +1032,7 @@
       document.getElementById('my-count').textContent = snap.size;
       if (snap.empty) {
         document.getElementById('my-uploads').innerHTML =
-          `<div style="text-align:center; padding:24px; color:#78909C; font-weight:600;">아직 수집한 사진이 없습니다. 상단에서 사진을 올려보세요! 📸</div>`;
+          `<div style="text-align:center; padding:24px; color:#78909C; font-weight:600;">아직 수집한 사진이 없습니다. 상단에서 사진을 올려보세요!</div>`;
         return;
       }
 
@@ -1088,15 +1048,15 @@
         return `<div class="uploaded-item">
           <img class="uploaded-thumb" src="${d.url}" onerror="this.style.opacity='0.3'">
           <div style="flex:1; min-width:80px; overflow:hidden;">
-            <div style="font-size: 32px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${d.originalName || '사진 데이터'}</div>
-            <div style="font-size: 32px; color:#666;">규격: ${d.width || 600}×${d.height || 600}px</div>
+            <div style="font-size:16px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${d.originalName || '사진 데이터'}</div>
+            <div style="font-size:13px; color:#666;">규격: ${d.width || 600}×${d.height || 600}px</div>
           </div>
-          <div style="font-size: 35px; font-weight:bold; padding:6px 12px; border-radius:10px; flex-shrink:0;
+          <div style="font-size:14px; font-weight:bold; padding:6px 12px; border-radius:10px; flex-shrink:0;
             ${d.labeled ? 'background:#E8F5E9; color:#2E7D32;' : 'background:#FFF8E1; color:#F57F17;'}">
-            ${d.labeled ? '✅ 라벨링 완료' : '⏳ 미완료'}
+            ${d.labeled ? '라벨링 완료' : '미완료'}
           </div>
-          <div style="font-size: 32px; color:#999; flex-shrink:0;">${date}</div>
-          <button class="del-btn" onclick="deleteUpload('${doc.id}')">🗑️ 삭제</button>
+          <div style="font-size:13px; color:#999; flex-shrink:0;">${date}</div>
+          <button class="del-btn" onclick="deleteUpload('${doc.id}')">삭제</button>
         </div>`;
       }).join('');
 
@@ -1111,7 +1071,7 @@
     if (!teamCode) {
       document.getElementById('my-uploads').innerHTML =
         `<div style="text-align:center; padding:24px; color:#E65100; font-weight:bold;">
-          ⚠️ 아직 팀 코드가 등록되지 않았습니다.<br>
+          아직 팀 코드가 등록되지 않았습니다.<br>
           <a href="main.html" style="color:#0277BD; text-decoration:underline;">메인 화면으로 가서 팀 코드를 입력</a>해주세요!
         </div>`;
       document.getElementById('my-count').textContent = '0';
@@ -1127,7 +1087,7 @@
       if (snap.empty) {
         document.getElementById('my-uploads').innerHTML =
           `<div style="text-align:center; padding:24px; color:#78909C; font-weight:600;">
-            👥 우리 모둠('${teamCode}') 친구들이 아직 등록한 사진이 없습니다.<br>친구들과 함께 사진을 올려보세요!
+            우리 모둠('${teamCode}') 친구들이 아직 등록한 사진이 없습니다.<br>친구들과 함께 사진을 올려보세요!
           </div>`;
         return;
       }
@@ -1146,19 +1106,19 @@
         return `<div class="uploaded-item" style="${isMine ? 'border-color:#81C784;' : 'border-color:#90CAF9; background:#F0F8FF;'}">
           <img class="uploaded-thumb" src="${d.url}" onerror="this.style.opacity='0.3'">
           <div style="flex:1; min-width:80px; overflow:hidden;">
-            <div style="font-size: 32px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+            <div style="font-size:16px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
               ${d.originalName || '사진 데이터'}
             </div>
-            <div style="font-size: 32px; color:#546E7A; font-weight:600;">
-              👤 올린이: <strong style="color:${isMine ? '#2E7D32' : '#0277BD'}">${uploaderLabel}</strong> (${d.width || 600}×${d.height || 600}px)
+            <div style="font-size:13px; color:#546E7A; font-weight:600;">
+              올린이: <strong style="color:${isMine ? '#2E7D32' : '#0277BD'}">${uploaderLabel}</strong> (${d.width || 600}×${d.height || 600}px)
             </div>
           </div>
-          <div style="font-size: 35px; font-weight:bold; padding:6px 12px; border-radius:10px; flex-shrink:0;
+          <div style="font-size:14px; font-weight:bold; padding:6px 12px; border-radius:10px; flex-shrink:0;
             ${d.labeled ? 'background:#E8F5E9; color:#2E7D32;' : 'background:#FFF8E1; color:#F57F17;'}">
-            ${d.labeled ? '✅ 라벨링 완료' : '⏳ 미완료'}
+            ${d.labeled ? '라벨링 완료' : '미완료'}
           </div>
-          <div style="font-size: 32px; color:#999; flex-shrink:0;">${date}</div>
-          ${isMine ? `<button class="del-btn" onclick="deleteUpload('${doc.id}')">🗑️ 삭제</button>` : ''}
+          <div style="font-size:13px; color:#999; flex-shrink:0;">${date}</div>
+          ${isMine ? `<button class="del-btn" onclick="deleteUpload('${doc.id}')">삭제</button>` : ''}
         </div>`;
       }).join('');
 

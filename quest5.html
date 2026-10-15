@@ -84,7 +84,7 @@
       color: #334155;
       padding: 8px 16px;
       border-radius: 12px;
-      font-size: 30px;
+      font-size: 15px;
       font-weight: 800;
       text-decoration: none;
       display: flex;
@@ -105,7 +105,7 @@
 
     .badge-chasi {
       font-family: 'Jua', sans-serif;
-      font-size: 30px;
+      font-size: 12px;
       color: #2563eb;
       background: #eff6ff;
       padding: 2px 8px;
@@ -117,7 +117,7 @@
 
     .header-title {
       font-family: 'Jua', sans-serif;
-      font-size: 34px;
+      font-size: 20px;
       color: #1e293b;
       display: flex;
       align-items: center;
@@ -135,7 +135,7 @@
       border: 1.5px solid #cbd5e1;
       padding: 6px 14px;
       border-radius: 20px;
-      font-size: 35px;
+      font-size: 14px;
       font-weight: 700;
       color: #334155;
       display: flex;
@@ -147,7 +147,7 @@
       background: linear-gradient(135deg, #f59e0b, #d97706);
       color: white;
       font-family: 'Jua', sans-serif;
-      font-size: 30px;
+      font-size: 15px;
       padding: 6px 14px;
       border-radius: 20px;
       box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
@@ -166,36 +166,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 31px;
+      font-size: 18px;
     }
 
-    /* 메인 컨테이너 (기존 960px에서 30% 늘린 1248px을 기본값으로, 전체화면 시 화면에 맞춰 확장) */
+    /* 메인 컨테이너 */
     .app-container {
       width: 100%;
-      max-width: 1248px;
+      max-width: 960px;
       padding: 20px 16px 80px;
       display: flex;
       flex-direction: column;
       gap: 20px;
-      transition: max-width 0.3s ease;
-    }
-
-    /* 전체화면(:fullscreen) 및 대형 와이드 스크린 대응 */
-    :fullscreen .app-container,
-    :-webkit-full-screen .app-container {
-      max-width: min(95vw, 1600px) !important;
-      width: 95% !important;
-    }
-    @media (display-mode: fullscreen) {
-      .app-container {
-        max-width: min(95vw, 1600px) !important;
-        width: 95% !important;
-      }
-    }
-    @media (min-width: 1400px) {
-      .app-container {
-        max-width: min(94vw, 1550px);
-      }
     }
 
     /* 메인 안내 카드 */
@@ -211,7 +192,7 @@
     }
 
     .intro-icon {
-      font-size: 58px;
+      font-size: 48px;
       flex-shrink: 0;
       background: white;
       width: 72px;
@@ -225,13 +206,13 @@
 
     .intro-text h2 {
       font-family: 'Jua', sans-serif;
-      font-size: 36px;
+      font-size: 22px;
       color: #1e3a8a;
       margin-bottom: 4px;
     }
 
     .intro-text p {
-      font-size: 28px;
+      font-size: 14.5px;
       color: #334155;
       line-height: 1.5;
       font-weight: 500;
@@ -262,7 +243,7 @@
 
     .card-title {
       font-family: 'Jua', sans-serif;
-      font-size: 32px;
+      font-size: 19px;
       color: #1e293b;
       margin-bottom: 14px;
       display: flex;
@@ -320,8 +301,8 @@
       padding: 20px;
     }
 
-    .view-placeholder .icon { font-size: 55px; margin-bottom: 8px; }
-    .view-placeholder p { font-size: 30px; font-weight: 600; }
+    .view-placeholder .icon { font-size: 46px; margin-bottom: 8px; }
+    .view-placeholder p { font-size: 15px; font-weight: 600; }
 
     /* 입력 컨트롤 버튼 바 */
     .control-actions {
@@ -337,7 +318,7 @@
       border-radius: 14px;
       padding: 12px 14px;
       font-family: 'Jua', sans-serif;
-      font-size: 30px;
+      font-size: 15px;
       color: #334155;
       cursor: pointer;
       display: flex;
@@ -365,7 +346,7 @@
       background: linear-gradient(135deg, #2563eb, #1d4ed8);
       border: none;
       color: white;
-      font-size: 30px;
+      font-size: 17px;
       padding: 14px;
       box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
     }
@@ -377,7 +358,7 @@
 
     /* 샘플 사진 원클릭 테스트 칩 */
     .sample-chips-title {
-      font-size: 32px;
+      font-size: 13px;
       font-weight: 800;
       color: #64748b;
       margin-top: 14px;
@@ -395,7 +376,7 @@
       border: 1px solid #cbd5e1;
       padding: 6px 12px;
       border-radius: 20px;
-      font-size: 32px;
+      font-size: 13px;
       font-weight: 700;
       color: #334155;
       cursor: pointer;
@@ -425,7 +406,7 @@
     }
 
     .confidence-label {
-      font-size: 32px;
+      font-size: 13px;
       font-weight: 800;
       color: #15803d;
       letter-spacing: 0.5px;
@@ -435,7 +416,7 @@
 
     .detected-name {
       font-family: 'Jua', sans-serif;
-      font-size: 42px;
+      font-size: 28px;
       color: #14532d;
       margin-bottom: 8px;
     }
@@ -468,7 +449,7 @@
 
     .confidence-score-text {
       font-family: 'Jua', sans-serif;
-      font-size: 36px;
+      font-size: 22px;
       color: #15803d;
       display: flex;
       align-items: center;
@@ -492,7 +473,7 @@
       background: #f8fafc;
       border: 1.5px solid #e2e8f0;
       border-radius: 12px;
-      font-size: 35px;
+      font-size: 14px;
     }
 
     .rank-item.rank-1 {
@@ -539,7 +520,7 @@
 
     .ai-feedback-header {
       font-family: 'Jua', sans-serif;
-      font-size: 30px;
+      font-size: 15px;
       color: #1e40af;
       margin-bottom: 6px;
       display: flex;
@@ -548,7 +529,7 @@
     }
 
     .ai-feedback-desc {
-      font-size: 28px;
+      font-size: 13.5px;
       color: #475569;
       line-height: 1.6;
       font-weight: 500;
@@ -562,7 +543,7 @@
       padding: 14px;
       border-radius: 14px;
       font-family: 'Jua', sans-serif;
-      font-size: 32px;
+      font-size: 16px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -618,7 +599,7 @@
       color: white;
       padding: 12px 24px;
       border-radius: 30px;
-      font-size: 30px;
+      font-size: 15px;
       font-weight: 700;
       z-index: 1000;
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -631,26 +612,6 @@
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
-  
-    /* 🌟 최소 글씨 크기 28px(기존 최소의 2.5배) 가독성 극대화 보장 */
-    html, body {
-      font-size: 28px !important;
-    }
-    .btn-back, a.btn-back {
-      font-family: 'Jua', sans-serif !important;
-      font-size: 28px !important;
-      padding: 10px 22px !important;
-      border-radius: 16px !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 8px !important;
-      text-decoration: none !important;
-      cursor: pointer !important;
-      font-weight: 800 !important;
-    }
-    input, textarea, select, button {
-      font-size: max(28px, 1rem) !important;
-    }
   </style>
 </head>
 <body>
@@ -658,16 +619,16 @@
   <!-- 상단 앱 HUD 네비게이션 -->
   <header class="app-header">
     <div class="header-left">
-      <a href="main.html" class="btn-back">🗺️ 퀘스트지도가기</a>
+      <a href="main.html" class="btn-back">퀘스트지도가기</a>
       <div class="header-title-group">
         <span class="badge-chasi">QUEST 5 • YOLO AI 실시간 분류</span>
-        <h1 class="header-title">🔍 교실쓰레기 AI 탐정단</h1>
+        <h1 class="header-title">교실쓰레기 AI 탐정단</h1>
       </div>
     </div>
     <div class="header-right">
-      <div class="student-badge" id="studentDisplay">👤 탐정 학생 (1모둠)</div>
-      <div class="score-badge" id="scoreDisplay">⭐ 0 EXP</div>
-      <button class="btn-sound" id="soundToggle" onclick="toggleSound()">🔊</button>
+      <div class="student-badge" id="studentDisplay">탐정 학생 (1모둠)</div>
+      <div class="score-badge" id="scoreDisplay">0 EXP</div>
+      <button class="btn-sound" id="soundToggle" onclick="toggleSound()" style="font-size:13px; font-weight:bold; padding:6px 10px; border-radius:10px; cursor:pointer;">소리</button>
     </div>
   </header>
 
@@ -676,11 +637,11 @@
 
     <!-- 배너 설명 -->
     <div class="intro-banner">
-      <div class="intro-icon">📸</div>
+      <div class="intro-icon"></div>
       <div class="intro-text">
         <h2>교실 쓰레기를 카메라로 비추고 찰칵! 사진을 촬영해보세요!</h2>
         <p>
-          쓰레기를 카메라 화면 가운데에 맞춘 뒤 <strong>[📸 사진 촬영 및 검출]</strong> 버튼을 누르면 AI가 촬영된 사진을 정밀 분석하여 어떤 품목인지 <strong>AI 자신감(확률 %)</strong>과 함께 찾아냅니다.
+          쓰레기를 카메라 화면 가운데에 맞춘 뒤 <strong>[사진 촬영 및 검출]</strong> 버튼을 누르면 AI가 촬영된 사진을 정밀 분석하여 어떤 품목인지 <strong>AI 자신감(확률 %)</strong>과 함께 찾아냅니다.
         </p>
       </div>
     </div>
@@ -691,9 +652,9 @@
       <!-- 1열: 카메라 / 사진 뷰어 -->
       <div class="card-panel">
         <div class="card-title">
-          <span>📷 카메라 촬영 & AI 탐지기</span>
-          <span id="modelStatusBadge" style="font-size: 30px; font-weight:800; background:#dbeafe; color:#1e40af; padding:3px 10px; border-radius:10px;">
-            AI 모델 로딩 중... ⏳
+          <span>카메라 촬영 & AI 탐지기</span>
+          <span id="modelStatusBadge" style="font-size:12px; font-weight:800; background:#dbeafe; color:#1e40af; padding:3px 10px; border-radius:10px;">
+            AI 모델 로딩 중...
           </span>
         </div>
 
@@ -707,13 +668,13 @@
           <div id="cameraFlashOverlay" style="position:absolute; inset:0; background:white; opacity:0; pointer-events:none; transition:opacity 0.2s ease; z-index:20;"></div>
 
           <!-- 카메라 안내 배지 -->
-          <div id="cameraStatusBadge" style="display:none; position:absolute; top:12px; left:12px; background:rgba(15,23,42,0.85); color:#38BDF8; font-size: 32px; font-weight:800; padding:6px 14px; border-radius:20px; z-index:15; border:1.5px solid #0284C7; align-items:center; gap:8px; backdrop-filter:blur(4px);">
+          <div id="cameraStatusBadge" style="display:none; position:absolute; top:12px; left:12px; background:rgba(15,23,42,0.85); color:#38BDF8; font-size:13px; font-weight:800; padding:6px 14px; border-radius:20px; z-index:15; border:1.5px solid #0284C7; align-items:center; gap:8px; backdrop-filter:blur(4px);">
             <span style="width:8px; height:8px; background:#38BDF8; border-radius:50%; display:inline-block; box-shadow:0 0 8px #38BDF8;"></span>
             <span id="cameraStatusText">카메라 촬영 준비 완료</span>
           </div>
           
           <div class="view-placeholder" id="viewPlaceholder">
-            <div class="icon">📸</div>
+            <div class="icon"></div>
             <p>카메라를 켜거나 사진을 불러와주세요!</p>
           </div>
         </div>
@@ -721,47 +682,47 @@
         <!-- 입력 액션 버튼 -->
         <div class="control-actions" id="controlActions">
           <!-- 1) 찰칵 사진 촬영 버튼 (카메라 켜졌을 때 최우선 표시) -->
-          <button class="btn-action" id="btnCapturePhoto" onclick="capturePhotoAndDetect()" style="display:none; grid-column:span 2; background:linear-gradient(135deg, #10B981, #059669); color:white; font-size: 30px; padding:15px; box-shadow:0 6px 18px rgba(16,185,129,0.35);">
-            <span>📸</span> <span>찰칵! 사진 촬영 및 AI 검출하기 🔍</span>
+          <button class="btn-action" id="btnCapturePhoto" onclick="capturePhotoAndDetect()" style="display:none; grid-column:span 2; background:linear-gradient(135deg, #10B981, #059669); color:white; font-size:17px; padding:15px; box-shadow:0 6px 18px rgba(16,185,129,0.35);">
+            <span></span> <span>사진 촬영 및 AI 검출하기</span>
           </button>
 
           <!-- 2) 다시 촬영하기 버튼 (촬영 후 결과 확인 후 재촬영) -->
-          <button class="btn-action" id="btnRetakePhoto" onclick="retakePhoto()" style="display:none; grid-column:span 2; background:#FEF3C7; color:#B45309; border-color:#FCD34D; font-size: 32px; padding:13px;">
-            <span>🔄</span> <span>다시 카메라로 사진 촬영하기</span>
+          <button class="btn-action" id="btnRetakePhoto" onclick="retakePhoto()" style="display:none; grid-column:span 2; background:#FEF3C7; color:#B45309; border-color:#FCD34D; font-size:16px; padding:13px;">
+            <span>다시 카메라로 사진 촬영하기</span>
           </button>
 
           <button class="btn-action" id="btnToggleCamera" onclick="toggleCamera()">
-            <span>📹</span> <span id="cameraBtnText">카메라 켜기</span>
+            <span></span> <span id="cameraBtnText">카메라 켜기</span>
           </button>
           
           <button class="btn-action" onclick="document.getElementById('fileInput').click()">
-            <span>📁</span> <span>사진 파일 선택</span>
+            <span></span> <span>사진 파일 선택</span>
           </button>
           <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleImageFile(event)">
         </div>
 
         <!-- 샘플 사진 원클릭 테스트 칩 -->
-        <div class="sample-chips-title">💡 샘플 사진으로 즉시 테스트하기:</div>
+        <div class="sample-chips-title">샘플 사진으로 즉시 테스트하기:</div>
         <div class="sample-chips">
-          <span class="sample-chip" onclick="loadSampleImage('images/quest1-q3.png', '종이팩 / 우유갑')">🥛 우유갑 샘플</span>
-          <span class="sample-chip" onclick="loadSampleImage('images/quest1-q2.png', '음료수 캔')">🥫 캔류 샘플</span>
-          <span class="sample-chip" onclick="loadSampleImage('images/quest1-q1.png', '플라스틱 페트병')">🍶 페트병 샘플</span>
-          <span class="sample-chip" onclick="loadSampleImage('images/q1-image.jpg', '유리병/복합 쓰레기')">🍾 유리병/잡화</span>
+          <span class="sample-chip" onclick="loadSampleImage('images/quest1-q3.png', '종이팩 / 우유갑')">우유갑 샘플</span>
+          <span class="sample-chip" onclick="loadSampleImage('images/quest1-q2.png', '음료수 캔')">캔류 샘플</span>
+          <span class="sample-chip" onclick="loadSampleImage('images/quest1-q1.png', '플라스틱 페트병')">페트병 샘플</span>
+          <span class="sample-chip" onclick="loadSampleImage('images/q1-image.jpg', '유리병/복합 쓰레기')">유리병/잡화</span>
         </div>
       </div>
 
       <!-- 2열: AI 판별 결과 & AI 자신감 분석 -->
       <div class="card-panel">
         <div class="card-title">
-          <span>📊 AI 판별 리포트</span>
-          <span style="font-size: 32px; color:#10b981; font-weight:800;">YOLO 다중 객체 실시간 AI</span>
+          <span>AI 판별 리포트</span>
+          <span style="font-size:13px; color:#10b981; font-weight:800;">YOLO 다중 객체 실시간 AI</span>
         </div>
 
         <!-- 다중 품목 동시 감지 목록 카드 -->
         <div class="multi-detect-box" id="multiDetectBox" style="background:#F0FDF4; border:2px solid #86EFAC; border-radius:16px; padding:14px; margin-bottom:14px; display:none;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <strong style="color:#15803D; font-size: 30px; font-family:'Jua',sans-serif;">📦 감지된 쓰레기 품목:</strong>
-            <span id="multiDetectCountBadge" style="background:#DCFCE7; color:#166534; font-size: 30px; font-weight:800; padding:3px 10px; border-radius:10px;">총 0개</span>
+            <strong style="color:#15803D; font-size:15px; font-family:'Jua',sans-serif;">감지된 쓰레기 품목:</strong>
+            <span id="multiDetectCountBadge" style="background:#DCFCE7; color:#166534; font-size:12px; font-weight:800; padding:3px 10px; border-radius:10px;">총 0개</span>
           </div>
           <div id="multiDetectChipsList" style="display:flex; flex-wrap:wrap; gap:6px;">
             <!-- 감지된 객체 태그들 -->
@@ -771,7 +732,7 @@
         <!-- AI 자신감 히어로 카드 -->
         <div class="confidence-hero" id="confidenceHero">
           <div class="confidence-label" id="confBadgeLabel">인식 대기 중</div>
-          <div class="detected-name" id="detectedNameDisplay">사진을 보여주세요 🔍</div>
+          <div class="detected-name" id="detectedNameDisplay">사진을 보여주세요</div>
           
           <div class="confidence-meter-wrap">
             <div class="confidence-meter-bar" id="confMeterBar"></div>
@@ -811,7 +772,7 @@
         <!-- AI 생각 해설 -->
         <div class="ai-feedback-card">
           <div class="ai-feedback-header">
-            <span>🤖 AI 탐정의 분석 한마디:</span>
+            <span>AI 탐정의 분석 한마디:</span>
           </div>
           <p class="ai-feedback-desc" id="aiFeedbackDesc">
             카메라로 쓰레기를 비추거나 사진을 올린 후 [AI 쓰레기 분류하기] 버튼을 누르면 AI가 왜 그렇게 판단했는지 시각 단서와 함께 설명해드립니다!
@@ -821,11 +782,11 @@
         <!-- 버튼 그룹: 모둠 공유 & 오류박물관 전송 -->
         <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
           <button class="btn-share-team" style="background:linear-gradient(135deg,#DC2626,#991B1B); box-shadow:0 4px 14px rgba(220,38,38,0.25);" id="btnSendMuseum" onclick="captureAndSendToMuseum()">
-            <span>🚨</span> <span>오류 캡쳐해서 오류박물관으로 전송하기 (+20 EXP) 🏛️</span>
+            <span></span> <span>오류 캡쳐해서 오류박물관으로 전송하기 (+20 EXP)</span>
           </button>
           
           <button class="btn-share-team" id="btnShareRecord" onclick="shareDetectionToTeam()">
-            <span>👥</span> <span>우리 모둠에 탐정 수사 기록 공유하기 (+30 EXP)</span>
+            <span></span> <span>우리 모둠에 탐정 수사 기록 공유하기 (+30 EXP)</span>
           </button>
         </div>
       </div>
@@ -835,17 +796,17 @@
     <!-- 하단: 우리 모둠 실시간 수사 피드 -->
     <div class="team-feed-section">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="font-family:'Jua'; color:#1e293b; font-size: 34px; display:flex; align-items:center; gap:8px;">
-          <span>👥</span> <span id="teamFeedTitle">우리 모둠 실시간 AI 탐정 수사 피드</span>
+        <h3 style="font-family:'Jua'; color:#1e293b; font-size:20px; display:flex; align-items:center; gap:8px;">
+          <span></span> <span id="teamFeedTitle">우리 모둠 실시간 AI 탐정 수사 피드</span>
         </h3>
-        <span style="font-size: 32px; font-weight:800; color:#2563eb; background:#eff6ff; padding:4px 12px; border-radius:12px;" id="teamRecordCount">동기화 중...</span>
+        <span style="font-size:13px; font-weight:800; color:#2563eb; background:#eff6ff; padding:4px 12px; border-radius:12px;" id="teamRecordCount">동기화 중...</span>
       </div>
-      <p style="font-size: 35px; color:#64748b; margin-top:4px;">
+      <p style="font-size:14px; color:#64748b; margin-top:4px;">
         우리 모둠 친구들이 직접 촬영하고 AI로 판별한 교실 쓰레기 결과와 자신감 수치를 실시간으로 확인해보세요.
       </p>
 
       <div class="feed-grid" id="teamFeedGrid">
-        <div style="text-align:center; padding:24px; color:#94a3b8; font-size: 35px; grid-column:1/-1;">
+        <div style="text-align:center; padding:24px; color:#94a3b8; font-size:14px; grid-column:1/-1;">
           모둠원들의 탐정 수사 기록을 불러오는 중입니다...
         </div>
       </div>
@@ -885,7 +846,7 @@
     // 학생 정보 표시
     const studentDisplay = document.getElementById('studentDisplay');
     if (studentDisplay) {
-      studentDisplay.textContent = `👤 ${studentName} (${teamCode})`;
+      studentDisplay.textContent = `${studentName} (${teamCode})`;
     }
     const teamFeedTitle = document.getElementById('teamFeedTitle');
     if (teamFeedTitle) {
@@ -899,7 +860,7 @@
       lastPrediction: null
     };
 
-    document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
+    document.getElementById('scoreDisplay').textContent = `${window.state.score} EXP`;
 
     // 사운드
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -948,7 +909,7 @@
 
     window.toggleSound = function() {
       window.state.soundEnabled = !window.state.soundEnabled;
-      document.getElementById('soundToggle').textContent = window.state.soundEnabled ? '🔊' : '🔇';
+      document.getElementById('soundToggle').textContent = window.state.soundEnabled ? '소리 ON' : '소리 OFF';
     };
 
     window.showToast = function(msg) {
@@ -960,7 +921,7 @@
 
     window.addScore = function(pts) {
       window.state.score += pts;
-      document.getElementById('scoreDisplay').textContent = `⭐ ${window.state.score} EXP`;
+      document.getElementById('scoreDisplay').textContent = `${window.state.score} EXP`;
       localStorage.setItem("elementary_score", window.state.score);
     };
 
@@ -973,7 +934,7 @@
         if (!feedGrid) return;
 
         if (snapshot.empty) {
-          feedGrid.innerHTML = `<div style="text-align:center; padding:24px; color:#94a3b8; font-size: 35px; grid-column:1/-1;">아직 모둠원들의 탐정 수사 기록이 없습니다. 사진을 찍고 첫 번째로 공유해보세요! 🚀</div>`;
+          feedGrid.innerHTML = `<div style="text-align:center; padding:24px; color:#94a3b8; font-size:14px; grid-column:1/-1;">아직 모둠원들의 탐정 수사 기록이 없습니다. 사진을 찍고 첫 번째로 공유해보세요!</div>`;
           if (countEl) countEl.textContent = `참여 0건`;
           return;
         }
@@ -990,17 +951,17 @@
           return `
             <div class="feed-card ${isMe ? 'is-me' : ''}">
               <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-family:'Jua'; font-size: 30px; color:${isMe ? '#2563eb' : '#1e293b'};">
-                  ${isMe ? '⭐ 나 (' + item.studentName + ')' : '👤 ' + item.studentName}
+                <span style="font-family:'Jua'; font-size:15px; color:${isMe ? '#2563eb' : '#1e293b'};">
+                  ${isMe ? '나 (' + item.studentName + ')' : '' + item.studentName}
                 </span>
-                <span style="font-size: 30px; font-weight:800; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:8px;">
+                <span style="font-size:12px; font-weight:800; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:8px;">
                   자신감 ${conf}%
                 </span>
               </div>
-              <div style="font-family:'Jua'; font-size: 31px; color:#1e3a8a; margin:4px 0;">
-                🎯 ${item.className}
+              <div style="font-family:'Jua'; font-size:18px; color:#1e3a8a; margin:4px 0;">
+                ${item.className}
               </div>
-              <div style="font-size: 32px; color:#64748b; line-height:1.4;">
+              <div style="font-size:13px; color:#64748b; line-height:1.4;">
                 ${item.feedback ? item.feedback.slice(0, 50) + '...' : '분류 완료'}
               </div>
             </div>
@@ -1013,7 +974,7 @@
     window.captureAndSendToMuseum = async function() {
       const canvasEl = document.getElementById('displayCanvas');
       if (!canvasEl) {
-        showToast("⚠️ 캡처할 화면이 없습니다!");
+        showToast("캡처할 화면이 없습니다!");
         return;
       }
 
@@ -1071,11 +1032,11 @@
         }
       }
 
-      showToast("🏛️ 오류 화면이 캡처되어 [오류박물관]으로 전송되었습니다! (+20 EXP)");
+      showToast("오류 화면이 캡처되어 [오류박물관]으로 전송되었습니다! (+20 EXP)");
       
       // 모달/알림으로 메인 이동 유도
       setTimeout(() => {
-        if (confirm("🏛️ 오류가 [오류박물관]으로 성공적으로 전송되었습니다!\n\n메인 화면으로 이동할까요?")) {
+        if (confirm("오류가 [오류박물관]으로 성공적으로 전송되었습니다!\n\n메인 화면으로 이동할까요?")) {
           window.location.href = 'main.html';
         }
       }, 700);
@@ -1084,7 +1045,7 @@
     // 모둠 공유 함수
     window.shareDetectionToTeam = async function() {
       if (!window.state.lastPrediction) {
-        showToast("⚠️ 먼저 사진을 분류한 후 공유해주세요!");
+        showToast("먼저 사진을 분류한 후 공유해주세요!");
         return;
       }
 
@@ -1113,7 +1074,7 @@
         }
       }
 
-      showToast("🎉 탐정 수사 기록이 우리 모둠에 공유되었습니다! (+30 EXP)");
+      showToast("탐정 수사 기록이 우리 모둠에 공유되었습니다! (+30 EXP)");
     };
   </script>
 
@@ -1121,16 +1082,16 @@
   <script>
     // YOLO 모델 10개 클래스 맵 및 전용 색상
     const CLASS_NAMES = {
-      0: { name: '건전지 (Battery)', icon: '🔋', feedback: '원기둥 또는 사각 금속 피막과 전극 단자가 감지되어 건전지로 분류했습니다. 전용 수거함에 배출해야 해요!' },
-      1: { name: '의류 / 옷 (Clothing)', icon: '👕', feedback: '섬유 직물 재질과 봉제선 패턴이 감지되어 의류로 분류했습니다. 의류 수거함에 배출해주세요.' },
-      2: { name: '유리병 / 유리 (Glass)', icon: '🍾', feedback: '투명하고 매끄러운 유리 반사 광택과 좁은 병목 형태를 감지하여 유리류로 판별했습니다.' },
-      3: { name: '캔류 / 알루미늄·철캔 (Metal)', icon: '🥫', feedback: '상단 링풀 탭 손잡이와 금속 원통형 표면 반사광을 감지하여 캔류로 정확히 판별했습니다!' },
-      4: { name: '일반 종이 / 종이박스 (Paper)', icon: '📦', feedback: '두꺼운 골판지 질감과 갈색 섬유 표면을 감지하여 일반 종이류로 분류했습니다.' },
-      5: { name: '종이팩 / 우유갑 (Paper pack)', icon: '🥛', feedback: '상단 삼각 지붕 형태의 접힌 날개와 백색 방수 코팅 단면을 감지하여 종이팩으로 분류했습니다!' },
-      6: { name: '플라스틱 / 페트병 (Plastic)', icon: '🍶', feedback: '스크류 나사선 입구와 투명한 PET 원통 형태를 감지하여 플라스틱 페트병으로 분류했습니다.' },
-      7: { name: '비닐봉지 / 비닐류 (Plastic bag)', icon: '🛍️', feedback: '부드러운 주름과 얇은 필름 형태의 재질을 감지하여 비닐류로 분류했습니다.' },
-      8: { name: '스티로폼 (Styrofoam)', icon: '📦', feedback: '하얀색 압축 발포 스펀지 입자 구조를 감지하여 스티로폼으로 분류했습니다.' },
-      9: { name: '기타 잡화 (Etc)', icon: '🔍', feedback: '복합 재질 또는 일반 쓰레기 특성을 감지하여 기타 품목으로 분류했습니다.' }
+      0: { name: '건전지 (Battery)', icon: '', feedback: '원기둥 또는 사각 금속 피막과 전극 단자가 감지되어 건전지로 분류했습니다. 전용 수거함에 배출해야 해요!' },
+      1: { name: '의류 / 옷 (Clothing)', icon: '', feedback: '섬유 직물 재질과 봉제선 패턴이 감지되어 의류로 분류했습니다. 의류 수거함에 배출해주세요.' },
+      2: { name: '유리병 / 유리 (Glass)', icon: '', feedback: '투명하고 매끄러운 유리 반사 광택과 좁은 병목 형태를 감지하여 유리류로 판별했습니다.' },
+      3: { name: '캔류 / 알루미늄·철캔 (Metal)', icon: '', feedback: '상단 링풀 탭 손잡이와 금속 원통형 표면 반사광을 감지하여 캔류로 정확히 판별했습니다!' },
+      4: { name: '일반 종이 / 종이박스 (Paper)', icon: '', feedback: '두꺼운 골판지 질감과 갈색 섬유 표면을 감지하여 일반 종이류로 분류했습니다.' },
+      5: { name: '종이팩 / 우유갑 (Paper pack)', icon: '', feedback: '상단 삼각 지붕 형태의 접힌 날개와 백색 방수 코팅 단면을 감지하여 종이팩으로 분류했습니다!' },
+      6: { name: '플라스틱 / 페트병 (Plastic)', icon: '', feedback: '스크류 나사선 입구와 투명한 PET 원통 형태를 감지하여 플라스틱 페트병으로 분류했습니다.' },
+      7: { name: '비닐봉지 / 비닐류 (Plastic bag)', icon: '', feedback: '부드러운 주름과 얇은 필름 형태의 재질을 감지하여 비닐류로 분류했습니다.' },
+      8: { name: '스티로폼 (Styrofoam)', icon: '', feedback: '하얀색 압축 발포 스펀지 입자 구조를 감지하여 스티로폼으로 분류했습니다.' },
+      9: { name: '기타 잡화 (Etc)', icon: '', feedback: '복합 재질 또는 일반 쓰레기 특성을 감지하여 기타 품목으로 분류했습니다.' }
     };
 
     const CLASS_COLORS = {
@@ -1174,14 +1135,14 @@
         });
 
         isModelLoaded = true;
-        badge.textContent = 'YOLO 다중 AI 준비 완료! ⚡';
+        badge.textContent = 'YOLO 다중 AI 준비 완료!';
         badge.style.background = '#dcfce7';
         badge.style.color = '#15803d';
         console.log("YOLO ONNX multi-object model loaded successfully!");
       } catch (err) {
         console.warn("ONNX load fallback:", err);
         isModelLoaded = true;
-        badge.textContent = 'AI 다중 탐정 엔진 준비 완료! ⚡';
+        badge.textContent = 'AI 다중 탐정 엔진 준비 완료!';
         badge.style.background = '#dcfce7';
         badge.style.color = '#15803d';
       }
@@ -1267,10 +1228,10 @@
           if (retakeBtn) retakeBtn.style.display = 'none';
           if (statusBadge) {
             statusBadge.style.display = 'flex';
-            statusText.textContent = '📸 쓰레기를 비추고 [사진 촬영]을 누르세요';
+            statusText.textContent = '쓰레기를 비추고 [사진 촬영]을 누르세요';
           }
 
-          window.showToast("📷 카메라 준비 완료! 쓰레기를 비춘 후 [찰칵! 사진 촬영] 버튼을 눌러주세요.");
+          window.showToast("카메라 준비 완료! 쓰레기를 비춘 후 [찰칵! 사진 촬영] 버튼을 눌러주세요.");
         } catch(err) {
           console.error("Camera access error:", err);
           alert("카메라에 접근할 수 없습니다. 브라우저 권한을 확인하거나 사진 파일 선택을 이용해주세요.");
@@ -1307,7 +1268,7 @@
     // 사진 촬영 및 AI 검출 실행
     async function capturePhotoAndDetect() {
       if (!isCameraActive || video.readyState < 2) {
-        window.showToast("⚠️ 카메라 준비 중입니다. 잠시 후 다시 시도해주세요.");
+        window.showToast("카메라 준비 중입니다. 잠시 후 다시 시도해주세요.");
         return;
       }
 
@@ -1343,14 +1304,14 @@
 
       if (captureBtn) captureBtn.style.display = 'none';
       if (retakeBtn) retakeBtn.style.display = 'flex';
-      if (statusText) statusText.textContent = '⚡ AI 정밀 분석 중...';
+      if (statusText) statusText.textContent = 'AI 정밀 분석 중...';
 
-      window.showToast("📸 찰칵! 사진이 촬영되었습니다. AI 쓰레기 검출을 시작합니다...");
+      window.showToast("찰칵! 사진이 촬영되었습니다. AI 쓰레기 검출을 시작합니다...");
 
       // 4. AI 탐지 실행
       await runPrediction(false);
 
-      if (statusText) statusText.textContent = '🎯 쓰레기 검출 완료!';
+      if (statusText) statusText.textContent = '쓰레기 검출 완료!';
     }
 
     // 다시 카메라 프리뷰로 돌아가기
@@ -1370,10 +1331,10 @@
 
       if (captureBtn) captureBtn.style.display = 'flex';
       if (retakeBtn) retakeBtn.style.display = 'none';
-      if (statusText) statusText.textContent = '📸 쓰레기를 비추고 [사진 촬영]을 누르세요';
+      if (statusText) statusText.textContent = '쓰레기를 비추고 [사진 촬영]을 누르세요';
 
       // 결과 리포트 초기화
-      document.getElementById('detectedNameDisplay').textContent = '사진을 보여주세요 🔍';
+      document.getElementById('detectedNameDisplay').textContent = '사진을 보여주세요';
       document.getElementById('confScoreVal').textContent = '0.0%';
       document.getElementById('confMeterBar').style.width = '0%';
       document.getElementById('confBadgeLabel').textContent = '촬영 대기 중';
@@ -1398,7 +1359,7 @@
         ctx.drawImage(img, 0, 0, 640, 640);
         currentImageElement = img;
         canvas.style.display = 'block';
-        window.showToast("📁 사진이 로드되었습니다! 다중 객체 분류를 실행합니다.");
+        window.showToast("사진이 로드되었습니다! 다중 객체 분류를 실행합니다.");
         runPrediction(false);
       };
       img.src = URL.createObjectURL(file);
@@ -1419,7 +1380,7 @@
         ctx.drawImage(img, 0, 0, 640, 640);
         currentImageElement = img;
         canvas.style.display = 'block';
-        window.showToast(`🖼️ '${label}' 샘플이 로드되었습니다.`);
+        window.showToast(`'${label}' 샘플이 로드되었습니다.`);
         runPrediction(false);
       };
       img.onerror = () => {
@@ -1436,7 +1397,7 @@
       ctx.fillStyle = '#1e3a8a';
       ctx.font = 'bold 28px Pretendard';
       ctx.textAlign = 'center';
-      ctx.fillText(`📷 ${label} 샘플`, 320, 320);
+      ctx.fillText(`${label} 샘플`, 320, 320);
       currentImageElement = canvas;
       runPrediction(false);
     }
@@ -1466,7 +1427,7 @@
     async function runPrediction(isAuto = false) {
       if (isPredicting) return;
       if (!currentImageElement && !isCameraActive) {
-        if (!isAuto) window.showToast("⚠️ 먼저 카메라를 켜거나 사진을 선택해주세요!");
+        if (!isAuto) window.showToast("먼저 카메라를 켜거나 사진을 선택해주세요!");
         return;
       }
 
@@ -1646,7 +1607,7 @@
       const chipsList = document.getElementById('multiDetectChipsList');
 
       if (!detectedObjects || detectedObjects.length === 0) {
-        nameEl.textContent = '인식 대상 없음 🔍';
+        nameEl.textContent = '인식 대상 없음';
         scoreEl.textContent = '0.0%';
         barEl.style.width = '0%';
         badgeLabel.textContent = '대기 중 (쓰레기를 비춰주세요)';
@@ -1664,7 +1625,7 @@
           const cls = CLASS_NAMES[item.classIdx] || CLASS_NAMES[9];
           const col = CLASS_COLORS[item.classIdx] || '#10B981';
           const pct = (item.score * 100).toFixed(1);
-          return `<span style="background:${col}18; color:${col}; border:1.5px solid ${col}; padding:5px 12px; border-radius:14px; font-weight:800; font-size: 32px; display:inline-flex; align-items:center; gap:4px;">
+          return `<span style="background:${col}18; color:${col}; border:1.5px solid ${col}; padding:5px 12px; border-radius:14px; font-weight:800; font-size:13px; display:inline-flex; align-items:center; gap:4px;">
             ${cls.icon} <b>${cls.name.split(' ')[0]}</b> <small>${pct}%</small>
           </span>`;
         }).join('');
@@ -1676,7 +1637,7 @@
       const percent = (primary.score * 100).toFixed(1);
 
       if (detectedObjects.length > 1) {
-        nameEl.textContent = `📦 다중 쓰레기 감지 (${detectedObjects.length}개)`;
+        nameEl.textContent = `다중 쓰레기 감지 (${detectedObjects.length}개)`;
       } else {
         nameEl.textContent = `${cls.icon} ${cls.name}`;
       }
@@ -1685,17 +1646,17 @@
       barEl.style.width = `${percent}%`;
 
       if (primary.score >= 0.85) {
-        badgeLabel.textContent = "🟢 높은 자신감 (매우 확신함!)";
+        badgeLabel.textContent = "높은 자신감 (매우 확신함!)";
         badgeLabel.style.color = "#15803d";
         barEl.className = "confidence-meter-bar";
         heroBox.className = "confidence-hero";
       } else if (primary.score >= 0.65) {
-        badgeLabel.textContent = "🟡 중간 자신감 (비교적 확실함)";
+        badgeLabel.textContent = "중간 자신감 (비교적 확실함)";
         badgeLabel.style.color = "#d97706";
         barEl.className = "confidence-meter-bar conf-med";
         heroBox.className = "confidence-hero conf-low";
       } else {
-        badgeLabel.textContent = "🟠 낮은 자신감 (조금 헷갈려함)";
+        badgeLabel.textContent = "낮은 자신감 (조금 헷갈려함)";
         badgeLabel.style.color = "#dc2626";
         barEl.className = "confidence-meter-bar conf-low";
         heroBox.className = "confidence-hero conf-low";
@@ -1704,7 +1665,7 @@
       // 피드백 안내: 여러 개면 각각 요약
       if (detectedObjects.length > 1) {
         const itemNames = detectedObjects.map(o => (CLASS_NAMES[o.classIdx]?.name.split(' ')[0] || '품목')).join(', ');
-        feedbackEl.innerHTML = `💡 화면에서 <strong>[${itemNames}]</strong> 총 ${detectedObjects.length}개의 품목을 동시에 찾아냈습니다! 각각의 분리배출 요령에 맞게 나누어 배출해주세요.`;
+        feedbackEl.innerHTML = `화면에서 <strong>[${itemNames}]</strong> 총 ${detectedObjects.length}개의 품목을 동시에 찾아냈습니다! 각각의 분리배출 요령에 맞게 나누어 배출해주세요.`;
       } else {
         feedbackEl.textContent = cls.feedback;
       }
@@ -1738,7 +1699,7 @@
       };
 
       if (!isAuto) {
-        window.showToast(`🎯 AI가 총 ${detectedObjects.length}개의 쓰레기를 각각 찾아내 분류했습니다!`);
+        window.showToast(`AI가 총 ${detectedObjects.length}개의 쓰레기를 각각 찾아내 분류했습니다!`);
       }
     }
 

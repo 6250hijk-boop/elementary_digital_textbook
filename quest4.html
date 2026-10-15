@@ -28,32 +28,14 @@
       min-height: 100vh;
     }
 
-    /* ── 선택 화면 (기존 680px에서 30% 늘린 884px 기본값, 전체화면 시 화면에 맞춰 확장) ── */
+    /* ── 선택 화면 ── */
     .select-wrap {
-      max-width: 884px;
+      max-width: 680px;
       margin: 0 auto;
       padding: 24px 16px;
       display: flex;
       flex-direction: column;
       gap: 16px;
-      transition: max-width 0.3s ease;
-    }
-
-    :fullscreen .select-wrap,
-    :-webkit-full-screen .select-wrap {
-      max-width: min(95vw, 1500px) !important;
-      width: 95% !important;
-    }
-    @media (display-mode: fullscreen) {
-      .select-wrap {
-        max-width: min(95vw, 1500px) !important;
-        width: 95% !important;
-      }
-    }
-    @media (min-width: 1400px) {
-      .select-wrap {
-        max-width: min(92vw, 1400px);
-      }
     }
 
     .select-header {
@@ -75,7 +57,7 @@
       border-radius: 14px;
       text-decoration: none;
       font-family: 'Jua', sans-serif;
-      font-size: 32px;
+      font-size: 16px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -83,12 +65,12 @@
 
     .select-title {
       font-family: 'Jua', sans-serif;
-      font-size: 42px;
+      font-size: 28px;
       color: var(--primary);
     }
 
     .select-desc {
-      font-size: 32px;
+      font-size: 16px;
       color: #455A64;
       font-weight: 600;
       line-height: 1.5;
@@ -114,23 +96,23 @@
       transform: translateY(-2px);
     }
 
-    .menu-icon { font-size: 53px; flex-shrink: 0; }
-    .menu-num { font-family: 'Jua', sans-serif; font-size: 35px; color: #388E3C; margin-bottom: 2px; }
-    .menu-name { font-family: 'Jua', sans-serif; font-size: 36px; color: var(--primary); margin-bottom: 4px; }
-    .menu-desc { font-size: 35px; font-weight: 600; color: #666; }
-    .menu-arrow { margin-left: auto; font-size: 36px; color: var(--primary); font-weight: bold; }
+    .menu-icon { font-size: 44px; flex-shrink: 0; }
+    .menu-num { font-family: 'Jua', sans-serif; font-size: 14px; color: #388E3C; margin-bottom: 2px; }
+    .menu-name { font-family: 'Jua', sans-serif; font-size: 22px; color: var(--primary); margin-bottom: 4px; }
+    .menu-desc { font-size: 14px; font-weight: 600; color: #666; }
+    .menu-arrow { margin-left: auto; font-size: 24px; color: var(--primary); font-weight: bold; }
 
     /* ── 라벨링 도구 전체 레이아웃 ── */
     .labeler-layout { display: flex; height: 100vh; flex-direction: column; background: #263238; color: white; }
     .top-bar { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: #1B5E20; flex-shrink: 0; flex-wrap: wrap; }
-    .top-bar .title { font-family: 'Jua', sans-serif; font-size: 34px; color: #FFF9C4; }
+    .top-bar .title { font-family: 'Jua', sans-serif; font-size: 20px; color: #FFF9C4; }
     .content-area { display: flex; flex: 1; overflow: hidden; }
     .img-sidebar { width: 140px; background: #37474F; border-right: 2px solid #455A64; overflow-y: auto; flex-shrink: 0; }
     .img-thumb { cursor: pointer; border-bottom: 1px solid #455A64; position: relative; }
     .img-thumb img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
     .img-thumb.active { outline: 4px solid #81C784; }
     .img-thumb .labeled-dot { position: absolute; top: 6px; right: 6px; width: 12px; height: 12px; border-radius: 50%; background: #66BB6A; border: 2px solid white; }
-    .img-thumb .num { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; font-size: 28px; padding: 2px 4px; text-align: center; }
+    .img-thumb .num { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; font-size: 11px; padding: 2px 4px; text-align: center; }
 
     .canvas-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; background: #121212; }
     .canvas-wrap { flex: 1; position: relative; overflow: hidden; background: #000; cursor: crosshair; }
@@ -139,84 +121,37 @@
 
     .right-panel { width: 220px; background: #263238; border-left: 2px solid #37474F; display: flex; flex-direction: column; overflow: hidden; }
     .panel-section { padding: 12px; border-bottom: 1px solid #37474F; }
-    .panel-title { font-family: 'Jua', sans-serif; font-size: 32px; color: #A5D6A7; margin-bottom: 8px; }
-    .class-btn { width: 100%; padding: 10px 12px; margin-bottom: 6px; border: 2px solid transparent; border-radius: 12px; color: white; font-size: 35px; font-weight: bold; cursor: pointer; text-align: left; transition: all .2s; display: flex; align-items: center; gap: 8px; }
+    .panel-title { font-family: 'Jua', sans-serif; font-size: 16px; color: #A5D6A7; margin-bottom: 8px; }
+    .class-btn { width: 100%; padding: 10px 12px; margin-bottom: 6px; border: 2px solid transparent; border-radius: 12px; color: white; font-size: 14px; font-weight: bold; cursor: pointer; text-align: left; transition: all .2s; display: flex; align-items: center; gap: 8px; }
     .class-btn.active { border-color: white; font-weight: 700; transform: scale(1.02); }
     .class-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
     .boxes-list { flex: 1; overflow-y: auto; padding: 10px; }
-    .box-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; margin-bottom: 6px; cursor: pointer; font-size: 32px; font-weight: 600; background: rgba(255,255,255,0.08); }
+    .box-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; margin-bottom: 6px; cursor: pointer; font-size: 13px; font-weight: 600; background: rgba(255,255,255,0.08); }
     .box-item.selected { background: rgba(129,199,132,0.25); border: 1px solid #81C784; }
-    .box-del { margin-left: auto; background: #EF5350; border: none; border-radius: 6px; padding: 4px 8px; color: white; font-size: 30px; cursor: pointer; }
+    .box-del { margin-left: auto; background: #EF5350; border: none; border-radius: 6px; padding: 4px 8px; color: white; font-size: 12px; cursor: pointer; }
 
     .bottom-bar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #1B5E20; flex-shrink: 0; flex-wrap: wrap; }
-    .tool-btn { padding: 8px 14px; border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; background: rgba(255,255,255,0.15); color: white; font-family: 'Jua', sans-serif; font-size: 30px; cursor: pointer; transition: all .2s; }
+    .tool-btn { padding: 8px 14px; border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; background: rgba(255,255,255,0.15); color: white; font-family: 'Jua', sans-serif; font-size: 15px; cursor: pointer; transition: all .2s; }
     .tool-btn:hover { background: rgba(255,255,255,0.25); }
     .tool-btn.active { background: #81C784; color: #1B5E20; font-weight: bold; }
-    .save-status { font-size: 35px; font-weight: bold; color: #FFF9C4; margin-left: auto; }
-    .empty-canvas { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px; color: #90A4AE; font-size: 31px; font-weight: bold; }
+    .save-status { font-size: 14px; font-weight: bold; color: #FFF9C4; margin-left: auto; }
+    .empty-canvas { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px; color: #90A4AE; font-size: 18px; font-weight: bold; }
 
-    /* ── 튜토리얼 & 연습하기 서브 레이아웃 (기존 720px에서 30% 늘린 936px 기본값, 전체화면 시 화면에 맞춰 확장) ── */
-    .tutorial-wrap, .practice-wrap {
-      max-width: 936px;
-      margin: 0 auto;
-      padding: 20px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      transition: max-width 0.3s ease;
-    }
-
-    :fullscreen .tutorial-wrap,
-    :fullscreen .practice-wrap,
-    :-webkit-full-screen .tutorial-wrap,
-    :-webkit-full-screen .practice-wrap {
-      max-width: min(95vw, 1500px) !important;
-      width: 95% !important;
-    }
-    @media (display-mode: fullscreen) {
-      .tutorial-wrap, .practice-wrap {
-        max-width: min(95vw, 1500px) !important;
-        width: 95% !important;
-      }
-    }
-    @media (min-width: 1400px) {
-      .tutorial-wrap, .practice-wrap {
-        max-width: min(92vw, 1400px);
-      }
-    }
+    /* ── 튜토리얼 & 연습하기 서브 레이아웃 ── */
+    .tutorial-wrap, .practice-wrap { max-width: 720px; margin: 0 auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 16px; }
     .tutorial-step { background: #FFFFFF; border: 3px solid #C8E6C9; border-radius: 20px; padding: 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.04); }
-    .tutorial-step h3 { font-family: 'Jua', sans-serif; font-size: 36px; margin-bottom: 10px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
-    .tutorial-step p { font-size: 30px; color: #455A64; line-height: 1.6; font-weight: 600; margin-bottom: 10px; }
-    .tip-box { background: #E8F5E9; border-left: 5px solid #2E7D32; border-radius: 10px; padding: 12px 14px; font-size: 35px; color: #1B5E20; font-weight: 600; margin-top: 8px; }
+    .tutorial-step h3 { font-family: 'Jua', sans-serif; font-size: 22px; margin-bottom: 10px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    .tutorial-step p { font-size: 15px; color: #455A64; line-height: 1.6; font-weight: 600; margin-bottom: 10px; }
+    .tip-box { background: #E8F5E9; border-left: 5px solid #2E7D32; border-radius: 10px; padding: 12px 14px; font-size: 14px; color: #1B5E20; font-weight: 600; margin-top: 8px; }
 
     .practice-canvas-wrap { position: relative; width: 100%; border-radius: 16px; overflow: hidden; background: #000; margin-bottom: 14px; border: 3px solid #37474F; }
     .practice-canvas-wrap canvas { width: 100%; display: block; }
-    .practice-guide { background: #E8F5E9; border: 2px solid #A5D6A7; border-radius: 14px; padding: 14px; font-size: 30px; font-weight: bold; color: #1B5E20; margin-bottom: 12px; line-height: 1.5; }
+    .practice-guide { background: #E8F5E9; border: 2px solid #A5D6A7; border-radius: 14px; padding: 14px; font-size: 15px; font-weight: bold; color: #1B5E20; margin-bottom: 12px; line-height: 1.5; }
 
     @media (max-width: 600px) {
       .right-panel { width: 160px; }
       .img-sidebar { width: 90px; }
-      .select-title { font-size: 36px; }
-    }
-  
-    /* 🌟 최소 글씨 크기 28px(기존 최소의 2.5배) 가독성 극대화 보장 */
-    html, body {
-      font-size: 28px !important;
-    }
-    .btn-back, a.btn-back {
-      font-family: 'Jua', sans-serif !important;
-      font-size: 28px !important;
-      padding: 10px 22px !important;
-      border-radius: 16px !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 8px !important;
-      text-decoration: none !important;
-      cursor: pointer !important;
-      font-weight: 800 !important;
-    }
-    input, textarea, select, button {
-      font-size: max(28px, 1rem) !important;
+      .select-title { font-size: 24px; }
     }
   </style>
 </head>
@@ -228,17 +163,17 @@
 <div id="screen-select">
   <div class="select-wrap">
     <div class="select-header">
-      <a href="main.html" class="btn-back">🗺️ 퀘스트지도가기</a>
-      <div style="font-family:'Jua',sans-serif; font-size: 31px; color:#2E7D32;" id="dispScore">⭐ 0점</div>
+      <a href="main.html" class="btn-back">퀘스트지도가기</a>
+      <div style="font-family:'Jua',sans-serif; font-size:18px; color:#2E7D32;" id="dispScore">0점</div>
     </div>
 
     <div>
-      <div class="select-title">🏷️ QUEST 4: AI공부자료에 이름표 붙이기</div>
+      <div class="select-title">QUEST 4: AI공부자료에 이름표 붙이기</div>
       <div class="select-desc">AI가 물체를 제대로 알아볼 수 있도록 사진 속 재활용품에 네모 상자 이름표를 붙여줘요!</div>
     </div>
 
     <div class="menu-card" onclick="showScreen('tutorial')">
-      <div class="menu-icon">📖</div>
+      <div class="menu-icon"></div>
       <div>
         <div class="menu-num">1단계</div>
         <div class="menu-name">라벨링 튜토리얼 (방법 배우기)</div>
@@ -248,7 +183,7 @@
     </div>
 
     <div class="menu-card" onclick="showScreen('practice')">
-      <div class="menu-icon">✏️</div>
+      <div class="menu-icon" style="font-size:24px; font-weight:bold; color:#2E7D32;">도구</div>
       <div>
         <div class="menu-num">2단계</div>
         <div class="menu-name">라벨링 연습하기 (도구 익히기)</div>
@@ -258,7 +193,7 @@
     </div>
 
     <div class="menu-card" onclick="showScreen('labeler')">
-      <div class="menu-icon">🎯</div>
+      <div class="menu-icon"></div>
       <div>
         <div class="menu-num">3단계</div>
         <div class="menu-name">실전 라벨링하기 (나의 수집 데이터)</div>
@@ -275,54 +210,54 @@
 <div id="screen-tutorial" style="display:none;">
   <div class="tutorial-wrap">
     <div style="display:flex; align-items:center; gap:10px;">
-      <button onclick="showScreen('select')" class="btn-back" style="padding:6px 12px; font-size: 35px;">← 뒤로</button>
-      <h2 style="font-family:'Jua',sans-serif; font-size: 36px; color:#2E7D32;">📖 라벨링 튜토리얼</h2>
+      <button onclick="showScreen('select')" class="btn-back" style="padding:6px 12px; font-size:14px;">뒤로</button>
+      <h2 style="font-family:'Jua',sans-serif; font-size:24px; color:#2E7D32;">라벨링 튜토리얼</h2>
     </div>
 
     <div class="tutorial-step">
-      <h3>🎯 1. 데이터 라벨링(Labeling)이란?</h3>
+      <h3>1. 데이터 라벨링(Labeling)이란?</h3>
       <p>사진 속 물체에 이름표(라벨)를 달아 <strong>AI에게 정답을 가르쳐주는 작업</strong>이에요.<br>
       AI는 정답 라벨이 표시된 데이터를 수천 장 배움으로써 사진 속 자원순환 품목을 올바르게 구별하게 됩니다!</p>
-      <div class="tip-box">💡 AI는 혼자서 물체를 인식하지 못해요. 사람이 먼저 위치와 종류를 명확히 지정해줘야 해요!</div>
+      <div class="tip-box">AI는 혼자서 물체를 인식하지 못해요. 사람이 먼저 위치와 종류를 명확히 지정해줘야 해요!</div>
     </div>
 
     <div class="tutorial-step">
-      <h3>📦 2. 바운딩 박스 (Bounding Box)</h3>
+      <h3>2. 바운딩 박스 (Bounding Box)</h3>
       <p>사진 속 물체를 꽉 감싸는 <strong>직사각형 사각형 박스</strong>를 바운딩 박스라고 해요.<br>
       마우스나 손가락으로 드래그해서 물체 크기에 맞게 그립니다.</p>
 
       <div style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
         <div style="background:#E8F5E9; border:2px solid #81C784; border-radius:12px; padding:12px 14px;">
-          <div style="font-weight:bold; font-size: 32px; color:#2E7D32; margin-bottom:4px;">📄 종이류 / 우유팩</div>
-          <div style="font-size: 35px; color:#37474F;">펼쳐진 종이 상자나 우유팩 전체를 바운딩 박스로 감싸요.</div>
+          <div style="font-weight:bold; font-size:16px; color:#2E7D32; margin-bottom:4px;">종이류 / 우유팩</div>
+          <div style="font-size:14px; color:#37474F;">펼쳐진 종이 상자나 우유팩 전체를 바운딩 박스로 감싸요.</div>
         </div>
         <div style="background:#E1F5FE; border:2px solid #4FC3F7; border-radius:12px; padding:12px 14px;">
-          <div style="font-weight:bold; font-size: 32px; color:#0288D1; margin-bottom:4px;">🥤 플라스틱</div>
-          <div style="font-size: 35px; color:#37474F;">투명 페트병, 음료 용기의 뚜껑부터 바닥까지 전체가 들어가게 그립니다.</div>
+          <div style="font-weight:bold; font-size:16px; color:#0288D1; margin-bottom:4px;"> 플라스틱</div>
+          <div style="font-size:14px; color:#37474F;">투명 페트병, 음료 용기의 뚜껑부터 바닥까지 전체가 들어가게 그립니다.</div>
         </div>
         <div style="background:#FFF3E0; border:2px solid #FFB74D; border-radius:12px; padding:12px 14px;">
-          <div style="font-weight:bold; font-size: 32px; color:#E65100; margin-bottom:4px;">🥫 캔 / 고철</div>
-          <div style="font-size: 35px; color:#37474F;">음료수 캔, 통조림 캔 등 금속 용기 전체를 감싸요.</div>
+          <div style="font-weight:bold; font-size:16px; color:#E65100; margin-bottom:4px;">캔 / 고철</div>
+          <div style="font-size:14px; color:#37474F;">음료수 캔, 통조림 캔 등 금속 용기 전체를 감싸요.</div>
         </div>
       </div>
     </div>
 
     <div class="tutorial-step">
-      <h3>⚠️ 3. 올바른 라벨링 규칙</h3>
+      <h3>3. 올바른 라벨링 규칙</h3>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;">
         <div style="background:#E8F5E9; border:2px solid #66BB6A; border-radius:14px; padding:14px; text-align:center;">
-          <div style="font-size: 32px; font-weight:bold; color:#2E7D32; margin-bottom:6px;">✅ 좋은 예시</div>
-          <div style="font-size: 32px; color:#555; line-height:1.5;">물체의 가장자리에딱 맞게 그리기<br>여백이 최소화되도록 감싸기</div>
+          <div style="font-size:16px; font-weight:bold; color:#2E7D32; margin-bottom:6px;">좋은 예시</div>
+          <div style="font-size:13px; color:#555; line-height:1.5;">물체의 가장자리에딱 맞게 그리기<br>여백이 최소화되도록 감싸기</div>
         </div>
         <div style="background:#FFEBEE; border:2px solid #EF5350; border-radius:14px; padding:14px; text-align:center;">
-          <div style="font-size: 32px; font-weight:bold; color:#C62828; margin-bottom:6px;">❌ 나쁜 예시</div>
-          <div style="font-size: 32px; color:#555; line-height:1.5;">너무 크게 그려 여백 남기기<br>물체 일부가 잘리게 그리기</div>
+          <div style="font-size:16px; font-weight:bold; color:#C62828; margin-bottom:6px;">나쁜 예시</div>
+          <div style="font-size:13px; color:#555; line-height:1.5;">너무 크게 그려 여백 남기기<br>물체 일부가 잘리게 그리기</div>
         </div>
       </div>
     </div>
 
-    <button onclick="showScreen('practice')" class="btn-back" style="width:100%; justify-content:center; padding:14px; background:linear-gradient(135deg,#4CAF50,#2E7D32); color:white; font-size: 31px;">
-      연습하러 가기 ✏️
+    <button onclick="showScreen('practice')" class="btn-back" style="width:100%; justify-content:center; padding:14px; background:linear-gradient(135deg,#4CAF50,#2E7D32); color:white; font-size:18px;">
+      연습하러 가기
     </button>
   </div>
 </div>
@@ -333,20 +268,20 @@
 <div id="screen-practice" style="display:none;">
   <div class="practice-wrap">
     <div style="display:flex; align-items:center; gap:10px;">
-      <button onclick="showScreen('select')" class="btn-back" style="padding:6px 12px; font-size: 35px;">← 뒤로</button>
-      <h2 style="font-family:'Jua',sans-serif; font-size: 36px; color:#2E7D32;">✏️ 라벨링 연습하기</h2>
+      <button onclick="showScreen('select')" class="btn-back" style="padding:6px 12px; font-size:14px;">뒤로</button>
+      <h2 style="font-family:'Jua',sans-serif; font-size:24px; color:#2E7D32;">라벨링 연습하기</h2>
     </div>
 
     <div class="practice-guide" id="practice-guide">
-      📌 아래 품목 중 <strong>클래스를 선택</strong>하고 마우스나 손가락으로 사진 위를 드래그해서 네모 박스를 그려보세요!
+      아래 품목 중 <strong>클래스를 선택</strong>하고 마우스나 손가락으로 사진 위를 드래그해서 네모 박스를 그려보세요!
     </div>
 
     <div style="margin-bottom:10px;">
-      <div style="font-size: 35px; font-weight:bold; color:#2E7D32; margin-bottom:6px;">① 클래스(종류) 선택:</div>
+      <div style="font-size:14px; font-weight:bold; color:#2E7D32; margin-bottom:6px;">① 클래스(종류) 선택:</div>
       <div style="display:flex; gap:8px; flex-wrap:wrap;" id="practice-class-btns"></div>
     </div>
 
-    <div style="font-size: 35px; font-weight:bold; color:#2E7D32; margin-bottom:6px;">② 드래그하여 박스 그리기:</div>
+    <div style="font-size:14px; font-weight:bold; color:#2E7D32; margin-bottom:6px;">② 드래그하여 박스 그리기:</div>
     <div class="practice-canvas-wrap">
       <canvas id="practice-img-canvas"></canvas>
       <canvas id="practice-draw-canvas" style="position:absolute; top:0; left:0;"
@@ -356,19 +291,19 @@
     </div>
 
     <div style="display:flex; gap:10px; align-items:center;">
-      <button onclick="practiceUndo()" class="tool-btn" style="background:#37474F; border:none;">↩️ 되돌리기</button>
-      <button onclick="practiceClear()" class="tool-btn" style="background:#C62828; border:none;">🗑️ 전체삭제</button>
-      <div id="practice-box-count" style="font-size: 30px; font-weight:bold; color:#2E7D32; margin-left:auto;">박스: 0개</div>
+      <button onclick="practiceUndo()" class="tool-btn" style="background:#37474F; border:none;">️ 되돌리기</button>
+      <button onclick="practiceClear()" class="tool-btn" style="background:#C62828; border:none;">전체삭제</button>
+      <div id="practice-box-count" style="font-size:15px; font-weight:bold; color:#2E7D32; margin-left:auto;">박스: 0개</div>
     </div>
 
     <div id="practice-box-list" style="display:flex; flex-direction:column; gap:6px; margin-top:8px;"></div>
 
-    <div id="practice-complete-msg" style="display:none; background:#E8F5E9; border:2px solid #81C784; border-radius:14px; padding:14px; font-size: 32px; font-weight:bold; color:#2E7D32; text-align:center;">
-      🎉 참 잘했어요! 이제 나의 실전 수집 사진으로 라벨링을 시작해봅시다!
+    <div id="practice-complete-msg" style="display:none; background:#E8F5E9; border:2px solid #81C784; border-radius:14px; padding:14px; font-size:16px; font-weight:bold; color:#2E7D32; text-align:center;">
+      참 잘했어요! 이제 나의 실전 수집 사진으로 라벨링을 시작해봅시다!
     </div>
 
-    <button onclick="showScreen('labeler')" class="btn-back" style="width:100%; justify-content:center; padding:14px; background:linear-gradient(135deg,#4CAF50,#2E7D32); color:white; font-size: 31px; margin-top:10px;">
-      실전 라벨링하러 가기 🎯
+    <button onclick="showScreen('labeler')" class="btn-back" style="width:100%; justify-content:center; padding:14px; background:linear-gradient(135deg,#4CAF50,#2E7D32); color:white; font-size:18px; margin-top:10px;">
+      실전 라벨링하러 가기
     </button>
   </div>
 </div>
@@ -378,21 +313,21 @@
 <!-- ════════════════════════════════════════ -->
 <div id="screen-labeler" style="display:none;" class="labeler-layout">
   <div class="top-bar">
-    <button onclick="showScreen('select')" class="tool-btn" style="padding:6px 12px; font-size: 32px;">← 뒤로</button>
-    <a href="main.html" class="tool-btn" style="padding:10px 20px; font-size: 28px; text-decoration:none;">🗺️ 퀘스트지도가기</a>
-    <div class="title">🎯 라벨링 체육관 (실전)</div>
+    <button onclick="showScreen('select')" class="tool-btn" style="padding:6px 12px; font-size:13px;">뒤로</button>
+    <a href="main.html" class="tool-btn" style="padding:6px 12px; font-size:13px; text-decoration:none;">퀘스트지도가기</a>
+    <div class="title">라벨링 체육관 (실전)</div>
 
     <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
-      <span id="progress-label" style="font-size: 35px; font-weight:bold; color:#FFF9C4;"></span>
-      <button onclick="downloadAllLabels()" class="tool-btn" style="font-size: 32px;">⬇️ txt만</button>
-      <button onclick="downloadZip()" class="tool-btn" style="font-size: 32px; background:#FFB300; color:#000;">📦 ZIP 다운로드</button>
+      <span id="progress-label" style="font-size:14px; font-weight:bold; color:#FFF9C4;"></span>
+      <button onclick="downloadAllLabels()" class="tool-btn" style="font-size:13px;">⬇️ txt만</button>
+      <button onclick="downloadZip()" class="tool-btn" style="font-size:13px; background:#FFB300; color:#000;">ZIP 다운로드</button>
     </div>
   </div>
 
   <div class="content-area">
     <!-- 왼쪽 수집 사진 사이드바 -->
     <div class="img-sidebar" id="img-sidebar">
-      <div style="padding:10px; font-family:'Jua',sans-serif; font-size: 35px; color:#A5D6A7; border-bottom:1px solid #455A64;">🖼️ 내 사진 목록</div>
+      <div style="padding:10px; font-family:'Jua',sans-serif; font-size:14px; color:#A5D6A7; border-bottom:1px solid #455A64;">내 사진 목록</div>
       <div id="thumb-list"></div>
     </div>
 
@@ -406,16 +341,16 @@
           ontouchstart="touchStartDraw(event)" ontouchmove="touchMoveDraw(event)" ontouchend="touchEndDraw(event)">
         </canvas>
         <div class="empty-canvas" id="empty-msg">
-          <div style="font-size: 60px;">👈</div>
+          <div style="font-size:50px;"></div>
           <div>왼쪽에서 사진을 클릭하세요</div>
         </div>
       </div>
 
       <div class="bottom-bar">
-        <button class="tool-btn active" id="tool-draw" onclick="setTool('draw')">✏️ 그리기</button>
-        <button class="tool-btn" id="tool-select" onclick="setTool('select')">↖️ 선택</button>
-        <button class="tool-btn" onclick="undoLast()">↩️ 되돌리기</button>
-        <button class="tool-btn" onclick="clearBoxes()" style="background:#EF5350;">🗑️ 전체삭제</button>
+        <button class="tool-btn active" id="tool-draw" onclick="setTool('draw')">그리기</button>
+        <button class="tool-btn" id="tool-select" onclick="setTool('select')">️ 선택</button>
+        <button class="tool-btn" onclick="undoLast()">️ 되돌리기</button>
+        <button class="tool-btn" onclick="clearBoxes()" style="background:#EF5350;">전체삭제</button>
         <div class="save-status" id="save-status"></div>
       </div>
     </div>
@@ -488,10 +423,10 @@
     try {
       const docSnap = await db.collection("students").doc(studentId).get();
       if (docSnap.exists) {
-        document.getElementById('dispScore').textContent = `⭐ ${docSnap.data().score || 0}점`;
+        document.getElementById('dispScore').textContent = `${docSnap.data().score || 0}점`;
       } else {
         const score = localStorage.getItem("elementary_score") || "0";
-        document.getElementById('dispScore').textContent = `⭐ ${score}점`;
+        document.getElementById('dispScore').textContent = `${score}점`;
       }
     } catch(e) { console.error(e); }
   }
@@ -514,7 +449,7 @@
         style="padding:8px 14px; border:2px solid ${i === practiceSelectedClass ? c.color : '#CCCCCC'};
                border-radius:20px; background:${i === practiceSelectedClass ? c.color + '22' : 'white'};
                color:${i === practiceSelectedClass ? c.color : '#555'};
-               font-size: 35px; font-weight:bold; cursor:pointer; display:flex; align-items:center; gap:6px;">
+               font-size:14px; font-weight:bold; cursor:pointer; display:flex; align-items:center; gap:6px;">
         <span style="width:12px; height:12px; border-radius:3px; background:${c.color};"></span>
         [${i}] ${c.name}
       </button>`).join('');
@@ -536,7 +471,7 @@
     const ctx = ic.getContext('2d');
     ctx.fillStyle = '#263238'; ctx.fillRect(0, 0, ic.width, ic.height);
     ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 20px Pretendard'; ctx.textAlign = 'center';
-    ctx.fillText('📦 예시: q4-1 수집 사진 불러오는 중...', 300, 180);
+    ctx.fillText('예시: q4-1 수집 사진 불러오는 중...', 300, 180);
 
     const candidateSources = [
       'images/q4-1.png',
@@ -593,7 +528,7 @@
         ctx.fillText('알루미늄 캔', 460, 190);
 
         ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 18px Pretendard';
-        ctx.fillText('📷 예시 사진 (q4-1)', 300, 45);
+        ctx.fillText('예시 사진 (q4-1)', 300, 45);
         ctx.fillStyle = '#94a3b8'; ctx.font = '14px Pretendard';
         ctx.fillText('마우스/손가락으로 드래그해서 상자를 그려보세요!', 300, 315);
         redrawPractice();
@@ -679,7 +614,7 @@
       return `<div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:white; border-radius:10px; border:2px solid ${cls.color}; font-weight:bold;">
         <span style="width:12px; height:12px; border-radius:3px; background:${cls.color};"></span>
         <span>[${b.classIdx}] ${cls.name}</span>
-        <button onclick="practiceDeleteBox(${i})" style="margin-left:auto; background:#FFEBEE; border:none; border-radius:6px; padding:4px 8px; color:#C62828; font-weight:bold; cursor:pointer;">✕ 삭제</button>
+        <button onclick="practiceDeleteBox(${i})" style="margin-left:auto; background:#FFEBEE; border:none; border-radius:6px; padding:4px 8px; color:#C62828; font-weight:bold; cursor:pointer;">삭제</button>
       </div>`;
     }).join('');
   }
@@ -921,10 +856,10 @@
           return `<div class="box-item ${i === selectedBoxIdx ? 'selected' : ''}" onclick="selectBox(${i})">
             <span class="box-dot" style="background:${cls.color}; width:10px; height:10px; border-radius:3px;"></span>
             <span>[${b.classIdx}] ${cls.name}</span>
-            <button class="box-del" onclick="event.stopPropagation();deleteBox(${i})">✕</button>
+            <button class="box-del" onclick="event.stopPropagation();deleteBox(${i})"></button>
           </div>`;
         }).join('')
-      : `<div style="font-size: 32px; color:#90A4AE; padding:8px;">상자를 그려주세요</div>`;
+      : `<div style="font-size:13px; color:#90A4AE; padding:8px;">상자를 그려주세요</div>`;
   }
 
   function selectBox(i) {
@@ -946,7 +881,7 @@
       }
 
       await db.collection('uploads').doc(currentImg.id).update({ labeled: boxes.length > 0 });
-      document.getElementById('save-status').textContent = '✅ 저장됨';
+      document.getElementById('save-status').textContent = '저장됨';
       setTimeout(() => document.getElementById('save-status').textContent = '', 2000);
 
       // 점수 보상 (+30점)
@@ -964,13 +899,13 @@
               q4_done: true
             }, { merge: true });
             localStorage.setItem("elementary_score", currentScore + 30);
-            alert("🎉 Quest 4 라벨링 성공! (+30점 획득)");
+            alert("Quest 4 라벨링 성공! (+30점 획득)");
           }
         }
       }
     } catch(e) {
       console.error(e);
-      document.getElementById('save-status').textContent = '❌ 저장 실패';
+      document.getElementById('save-status').textContent = '저장 실패';
     }
   }
 
@@ -1007,14 +942,14 @@
       const fname = rawName.replace(/\.[^.]+$/, '') + '.txt';
       downloadText(fname, content);
     });
-    alert(`✅ ${labeled.length}개 텍스트 파일과 classes.txt 다운로드 완료!`);
+    alert(`${labeled.length}개 텍스트 파일과 classes.txt 다운로드 완료!`);
   }
 
   async function downloadZip() {
     const labeled = Object.entries(allBoxes).filter(([id, boxes]) => boxes.length > 0);
     if (!labeled.length) { alert('라벨링된 사진이 없습니다!'); return; }
     const btn = document.querySelector('[onclick="downloadZip()"]');
-    if (btn) { btn.textContent = '⏳ 준비 중...'; btn.disabled = true; }
+    if (btn) { btn.textContent = '준비 중...'; btn.disabled = true; }
 
     try {
       const zip = new JSZip();
@@ -1043,7 +978,7 @@
           imgFolder.file(`${baseName}.${imgExt}`, blob);
         } catch(e) {}
         done++;
-        if (btn) btn.textContent = `⏳ ${done}/${total}장...`;
+        if (btn) btn.textContent = `${done}/${total}장...`;
       }
 
       const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
@@ -1051,11 +986,11 @@
       a.href = URL.createObjectURL(zipBlob);
       a.download = `elementary-labels-${Date.now()}.zip`;
       a.click();
-      alert(`✅ ZIP 압축다운로드 완료!\n사진: ${done}장\n라벨: ${done}개`);
+      alert(`ZIP 압축다운로드 완료!\n사진: ${done}장\n라벨: ${done}개`);
     } catch(e) {
       alert('ZIP 생성 실패: ' + e.message);
     } finally {
-      if (btn) { btn.textContent = '📦 ZIP 다운로드'; btn.disabled = false; }
+      if (btn) { btn.textContent = 'ZIP 다운로드'; btn.disabled = false; }
     }
   }
 

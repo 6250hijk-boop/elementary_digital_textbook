@@ -129,7 +129,7 @@
 
 <div class="container">
   <header>
-    <h1>📋 사전 검사 설문조사</h1>
+    <h1>사전 검사 설문조사</h1>
     <p class="guide">AI 자원순환 탐정단 활동을 시작하기 전 여러분의 생각을 솔직하게 답변해주세요.</p>
     <div class="student-badge" id="dispStudent">학생 정보 로딩 중...</div>
   </header>
@@ -138,7 +138,7 @@
     <!-- 10개 문항 -->
     <div id="questionsContainer"></div>
 
-    <button type="submit" class="btn-submit" id="submitBtn">설문 제출하고 탐정 마을 입장하기 🚀</button>
+    <button type="submit" class="btn-submit" id="submitBtn">설문 제출하고 탐정 마을 입장하기</button>
   </form>
 </div>
 
@@ -166,7 +166,7 @@
     window.location.href = "index.html";
   }
 
-  document.getElementById("dispStudent").textContent = `🕵️‍♂️ ${studentName} (${studentId}) 학생`;
+  document.getElementById("dispStudent").textContent = `${studentName} (${studentId}) 학생`;
 
   // 연구계획서 역량 기반 10개 설문 문항
   const questions = [
@@ -236,7 +236,7 @@
       console.error(err);
       alert("설문 저장 중 오류가 발생했습니다: " + err.message);
       submitBtn.disabled = false;
-      submitBtn.textContent = "설문 제출하고 메인화면 입장하기 🚀";
+      submitBtn.textContent = "설문 제출하고 메인화면 입장하기";
     }
   });
 </script>

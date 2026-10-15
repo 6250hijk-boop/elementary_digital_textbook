@@ -151,7 +151,7 @@
       background: #FFCDD2;
     }
 
-    /* 🎮 1. 실시간 모둠 게임 대기방 (LOBBY) */
+    /* 1. 실시간 모둠 대기방 (LOBBY) */
     .lobby-card {
       background: #FFFFFF;
       border: 3px solid #81C784;
@@ -277,7 +277,7 @@
       color: #FF6F00;
     }
 
-    /* 🤖 우리 모둠 AI 파트너 이름 짓기 박스 */
+    /* 우리 모둠 AI 파트너 이름 짓기 박스 */
     .ai-setup-banner {
       background: linear-gradient(135deg, #FFFDE7, #F1F8E9);
       border: 2px solid #DCE775;
@@ -443,27 +443,27 @@
   <!-- 상단 학생 & 모둠 프로필 -->
   <header>
     <div class="user-profile">
-      <div class="avatar-box">🏠🕵️‍♂️</div>
+      <div class="avatar-box" style="font-size:18px; font-weight:800; color:#2E7D32;">아지트</div>
       <div class="user-info">
         <h2 id="dispStudent">학생 탐정단</h2>
-        <p id="dispAiName">🤖 모둠 AI: 로딩 중...</p>
+        <p id="dispAiName">모둠 AI: 로딩 중...</p>
       </div>
     </div>
 
     <div class="status-badges">
-      <div class="badge-pill badge-team" id="dispTeamBadge">👥 모둠: 로딩 중...</div>
-      <div class="badge-pill" id="dispScore">⭐ 10점</div>
-      <div class="badge-pill" id="dispBadge">🏅 신입 탐정단</div>
-      <a href="main.html" class="btn-nav-map">🗺️ 퀘스트 지도 가기</a>
+      <div class="badge-pill badge-team" id="dispTeamBadge">모둠: 로딩 중...</div>
+      <div class="badge-pill" id="dispScore">10점</div>
+      <div class="badge-pill" id="dispBadge">신입 탐정단</div>
+      <a href="main.html" class="btn-nav-map">퀘스트지도가기</a>
       <button class="btn-logout" onclick="logout()">로그아웃</button>
     </div>
   </header>
 
-  <!-- 🎮 1. 실시간 모둠 게임 대기방 (LOBBY) -->
+  <!-- 1. 실시간 모둠 대기방 (LOBBY) -->
   <section class="lobby-card">
     <div class="lobby-top">
       <div class="lobby-title-wrap">
-        <span style="font-size:28px;">🎮</span>
+        <span style="font-size:18px; font-weight:bold; color:#2E7D32;">대기실</span>
         <h3 id="lobbyMainTitle">우리 모둠 아지트</h3>
       </div>
       <div class="lobby-badge">
@@ -475,25 +475,25 @@
     <!-- 대기방 모둠원 아바타 목록 -->
     <div class="players-grid" id="lobbyPlayersGrid">
       <div class="player-card">
-        <div class="player-avatar">🕵️‍♂️</div>
+        <div class="player-avatar" style="font-size:15px; font-weight:bold; color:#475569;">대원</div>
         <div class="player-name">로딩 중...</div>
         <div class="player-tag">접속 중</div>
       </div>
     </div>
 
-    <!-- 🤖 우리 모둠 AI 파트너 이름 짓기/수정 바 -->
+    <!-- 우리 모둠 AI 파트너 이름 짓기/수정 바 -->
     <div class="ai-setup-banner">
       <div class="ai-info-left">
-        <div class="ai-icon-large">🤖✨</div>
+        <div class="ai-icon-large" style="font-size:20px; font-weight:bold; color:#2563EB;">AI</div>
         <div class="ai-text">
           <h4>우리 모둠 AI: <span id="lobbyAiNameDisplay" style="color:#2E7D32;">에코봇</span></h4>
-          <p id="lobbyAiAuthorInfo">✨ 마지막 설정: 로딩 중...</p>
+          <p id="lobbyAiAuthorInfo">마지막 설정: 로딩 중...</p>
         </div>
       </div>
 
       <div class="ai-edit-form">
         <input type="text" id="inlineAiInput" class="ai-input" placeholder="우리 모둠 AI 이름 짓기 (예: 에코봇, 초록이)" maxlength="15">
-        <button id="inlineAiSaveBtn" class="btn-ai-save">💾 AI 이름 정하기</button>
+        <button id="inlineAiSaveBtn" class="btn-ai-save">AI 이름 정하기</button>
       </div>
     </div>
   </section>
@@ -502,23 +502,23 @@
   <div class="quick-bar">
     <a href="survey.html" class="banner-card">
       <div class="banner-text">
-        <h3>📝 자원순환 탐정단 사전 설문</h3>
+        <h3>자원순환 탐정단 사전 설문</h3>
         <p>우리 반 친구들의 분리배출 습관 알아보기</p>
       </div>
-      <div class="banner-icon">📋</div>
+      <div class="banner-icon" style="font-size:18px; font-weight:bold; color:#0284C7;">설문</div>
     </a>
     <a href="dashboard.html" class="banner-card alt">
       <div class="banner-text">
-        <h3>📊 우리 반 실시간 탐정 현황판</h3>
+        <h3>우리 반 실시간 탐정 현황판</h3>
         <p>전체 모둠별 퀘스트 완료 현황 한눈에 보기</p>
       </div>
-      <div class="banner-icon">🏆</div>
+      <div class="banner-icon" style="font-size:18px; font-weight:bold; color:#D97706;">랭킹</div>
     </a>
   </div>
 
   <!-- 하단 랭킹 현황 -->
   <footer>
-    <strong>🏆 실시간 탐정단 모둠 랭킹:</strong>
+    <strong>실시간 모둠 랭킹:</strong>
     <span id="liveRanking">참여 모둠 정보를 불러오는 중...</span>
   </footer>
 
@@ -555,15 +555,15 @@
   document.title = `${teamHomeName} - AI 자원순환 탐정단`;
   const lobbyTitleEl = document.getElementById("lobbyMainTitle");
   if (lobbyTitleEl) {
-    lobbyTitleEl.textContent = `🏠 ${teamHomeName}`;
+    lobbyTitleEl.textContent = `${teamHomeName}`;
   }
 
   document.getElementById("dispStudent").textContent = `${studentName} 탐정`;
-  document.getElementById("dispTeamBadge").textContent = `👥 ${teamCode || '모둠'}`;
-  document.getElementById("dispAiName").textContent = `🤖 모둠 AI: ${currentAiName}`;
+  document.getElementById("dispTeamBadge").textContent = `${teamCode || '모둠'}`;
+  document.getElementById("dispAiName").textContent = `모둠 AI: ${currentAiName}`;
 
   // 대기방 아바타 목록 배열 (귀여운 캐릭터 아이콘)
-  const AVATARS = ["🕵️‍♂️", "🕵️‍♀️", "🧑‍🔬", "🧑‍💻", "🦊", "⚡", "🌟", "🌱"];
+  const AVATARS = ["대원1", "대원2", "대원3", "대원4", "대원5", "대원6", "대원7", "대원8"];
 
   function getAvatarForName(name) {
     let hash = 0;
@@ -593,7 +593,7 @@
         <div class="player-card ${isMe ? 'is-me' : ''}">
           <div class="player-avatar">${avatar}</div>
           <div class="player-name">${member}</div>
-          <div class="player-tag ${isMe ? 'me' : ''}">${isMe ? '나 (준비완료 ⭐)' : '대기 완료 🎯'}</div>
+          <div class="player-tag ${isMe ? 'me' : ''}">${isMe ? '나 (준비완료)' : '대기 완료'}</div>
         </div>
       `;
     }).join('');
@@ -601,7 +601,7 @@
     // 빈 슬롯 카드 (팀원 초대 안내)
     html += `
       <div class="player-card empty-slot">
-        <div class="player-avatar" style="border-color:#CFD8DC;color:#90A4AE;">➕</div>
+        <div class="player-avatar" style="border-color:#CFD8DC;color:#90A4AE;font-size:16px;">+</div>
         <div class="player-name" style="color:#90A4AE;font-size:16px;">모둠원 대기 중</div>
         <div class="player-tag" style="background:#ECEFF1;color:#78909C;">'${teamCode}' 입력</div>
       </div>
@@ -612,8 +612,8 @@
     // AI 파트너 정보 갱신
     document.getElementById("lobbyAiNameDisplay").textContent = currentAiName;
     document.getElementById("lobbyAiAuthorInfo").textContent = lastAuthor 
-      ? `✨ 마지막 설정: [${lastAuthor}] 탐정` 
-      : `✨ 모둠원 누구나 아래에서 이름을 바꿀 수 있어요!`;
+      ? `마지막 설정: [${lastAuthor}] 탐정` 
+      : `모둠원 누구나 아래에서 이름을 바꿀 수 있어요!`;
   }
 
   // 접속 시 내 이름을 대기방 멤버로 재확인 등록
@@ -631,15 +631,15 @@
         const d = docSnap.data();
         if (d.aiName) {
           currentAiName = d.aiName;
-          document.getElementById("dispAiName").textContent = `🤖 모둠 AI: ${d.aiName}`;
+          document.getElementById("dispAiName").textContent = `모둠 AI: ${d.aiName}`;
           localStorage.setItem("elementary_aiName", d.aiName);
         }
         if (d.score !== undefined) {
-          document.getElementById("dispScore").textContent = `⭐ ${d.score}점`;
+          document.getElementById("dispScore").textContent = `${d.score}점`;
           localStorage.setItem("elementary_score", d.score.toString());
         }
         if (d.badge) {
-          document.getElementById("dispBadge").textContent = `🏅 ${d.badge}`;
+          document.getElementById("dispBadge").textContent = `${d.badge}`;
         }
 
         renderLobby(d.members || [], d.lastStudentName || "");
@@ -656,7 +656,7 @@
   inlineAiSaveBtn.addEventListener("click", async () => {
     const newAi = inlineAiInput.value.trim();
     if (!newAi) {
-      alert("🤖 우리 모둠 AI 파트너 이름을 입력해주세요!");
+      alert("우리 모둠 AI 파트너 이름을 입력해주세요.");
       inlineAiInput.focus();
       return;
     }
@@ -679,18 +679,18 @@
 
       localStorage.setItem("elementary_aiName", newAi);
       currentAiName = newAi;
-      document.getElementById("dispAiName").textContent = `🤖 모둠 AI: ${newAi}`;
+      document.getElementById("dispAiName").textContent = `모둠 AI: ${newAi}`;
       document.getElementById("lobbyAiNameDisplay").textContent = newAi;
-      document.getElementById("lobbyAiAuthorInfo").textContent = `✨ 마지막 설정: [${studentName}] 탐정`;
+      document.getElementById("lobbyAiAuthorInfo").textContent = `마지막 설정: [${studentName}] 탐정`;
 
       inlineAiInput.value = "";
-      alert(`🎉 우리 모둠의 AI 이름이 '${newAi}'(으)로 설정되었습니다!\n같은 모둠 친구들에게 실시간 반영되었습니다.`);
+      alert(`우리 모둠의 AI 이름이 '${newAi}'(으)로 설정되었습니다.\n같은 모둠 친구들에게 실시간 반영되었습니다.`);
     } catch (e) {
       console.error(e);
       alert("AI 이름 저장 중 오류가 발생했습니다: " + e.message);
     } finally {
       inlineAiSaveBtn.disabled = false;
-      inlineAiSaveBtn.textContent = "💾 AI 이름 정하기";
+      inlineAiSaveBtn.textContent = "AI 이름 정하기";
     }
   });
 
