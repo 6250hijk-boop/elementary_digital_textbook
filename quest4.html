@@ -291,7 +291,7 @@
     </div>
 
     <div style="display:flex; gap:10px; align-items:center;">
-      <button onclick="practiceUndo()" class="tool-btn" style="background:#37474F; border:none;">️ 되돌리기</button>
+      <button onclick="practiceUndo()" class="tool-btn" style="background:#37474F; border:none;">되돌리기</button>
       <button onclick="practiceClear()" class="tool-btn" style="background:#C62828; border:none;">전체삭제</button>
       <div id="practice-box-count" style="font-size:15px; font-weight:bold; color:#2E7D32; margin-left:auto;">박스: 0개</div>
     </div>
@@ -319,8 +319,6 @@
 
     <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
       <span id="progress-label" style="font-size:14px; font-weight:bold; color:#FFF9C4;"></span>
-      <button onclick="downloadAllLabels()" class="tool-btn" style="font-size:13px;">⬇️ txt만</button>
-      <button onclick="downloadZip()" class="tool-btn" style="font-size:13px; background:#FFB300; color:#000;">ZIP 다운로드</button>
     </div>
   </div>
 
@@ -348,8 +346,8 @@
 
       <div class="bottom-bar">
         <button class="tool-btn active" id="tool-draw" onclick="setTool('draw')">그리기</button>
-        <button class="tool-btn" id="tool-select" onclick="setTool('select')">️ 선택</button>
-        <button class="tool-btn" onclick="undoLast()">️ 되돌리기</button>
+        <button class="tool-btn" id="tool-select" onclick="setTool('select')">선택</button>
+        <button class="tool-btn" onclick="undoLast()">되돌리기</button>
         <button class="tool-btn" onclick="clearBoxes()" style="background:#EF5350;">전체삭제</button>
         <div class="save-status" id="save-status"></div>
       </div>
@@ -367,8 +365,7 @@
   </div>
 </div>
 
-<!-- JSZip & Firebase compat SDK -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<!-- Firebase compat SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
@@ -925,84 +922,6 @@
     } else {
       dot?.remove();
     }
-  }
-
-  function downloadAllLabels() {
-    const labeled = Object.entries(allBoxes).filter(([id, boxes]) => boxes.length > 0);
-    if (!labeled.length) { alert('라벨링된 사진이 없습니다!'); return; }
-    const classesContent = DEFAULT_CLASSES.map(c => c.name).join('\n');
-    downloadText('classes.txt', classesContent);
-
-    labeled.forEach(([imgId, boxes]) => {
-      const img = myImages.find(i => i.id === imgId);
-      if (!img) return;
-      const iw = img.width || 600, ih = img.height || 600;
-      const content = boxes.map(b => {
-        const cx = (b.x + b.w / 2) / iw, cy = (b.y + b.h / 2) / ih, bw = b.w / iw, bh = b.h / ih;
-        return `${b.classIdx} ${cx.toFixed(6)} ${cy.toFixed(6)} ${bw.toFixed(6)} ${bh.toFixed(6)}`;
-      }).join('\n');
-      const rawName = img.originalName || img.fileName || imgId;
-      const fname = rawName.replace(/\.[^.]+$/, '') + '.txt';
-      downloadText(fname, content);
-    });
-    alert(`${labeled.length}개 텍스트 파일과 classes.txt 다운로드 완료!`);
-  }
-
-  async function downloadZip() {
-    const labeled = Object.entries(allBoxes).filter(([id, boxes]) => boxes.length > 0);
-    if (!labeled.length) { alert('라벨링된 사진이 없습니다!'); return; }
-    const btn = document.querySelector('[onclick="downloadZip()"]');
-    if (btn) { btn.textContent = '준비 중...'; btn.disabled = true; }
-
-    try {
-      const zip = new JSZip();
-      const imgFolder = zip.folder('images');
-      const lblFolder = zip.folder('labels');
-      zip.file('classes.txt', DEFAULT_CLASSES.map(c => c.name).join('\n'));
-
-      let done = 0; const total = labeled.length;
-      for (const [imgId, boxes] of labeled) {
-        const img = myImages.find(i => i.id === imgId);
-        if (!img) continue;
-        const iw = img.width || 600, ih = img.height || 600;
-        const rawName = img.originalName || img.fileName || imgId;
-        const baseName = rawName.replace(/\.[^.]+$/, '');
-        const imgExt = rawName.split('.').pop() || 'jpg';
-
-        const txtContent = boxes.map(b => {
-          const cx = (b.x + b.w / 2) / iw, cy = (b.y + b.h / 2) / ih, bw = b.w / iw, bh = b.h / ih;
-          return `${b.classIdx} ${cx.toFixed(6)} ${cy.toFixed(6)} ${bw.toFixed(6)} ${bh.toFixed(6)}`;
-        }).join('\n');
-        lblFolder.file(`${baseName}.txt`, txtContent);
-
-        try {
-          const r = await fetch(img.url);
-          const blob = await r.blob();
-          imgFolder.file(`${baseName}.${imgExt}`, blob);
-        } catch(e) {}
-        done++;
-        if (btn) btn.textContent = `${done}/${total}장...`;
-      }
-
-      const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(zipBlob);
-      a.download = `elementary-labels-${Date.now()}.zip`;
-      a.click();
-      alert(`ZIP 압축다운로드 완료!\n사진: ${done}장\n라벨: ${done}개`);
-    } catch(e) {
-      alert('ZIP 생성 실패: ' + e.message);
-    } finally {
-      if (btn) { btn.textContent = 'ZIP 다운로드'; btn.disabled = false; }
-    }
-  }
-
-  function downloadText(filename, content) {
-    const blob = new Blob([content], { type: 'text/plain' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = filename;
-    a.click();
   }
 
   function setupResize() {
