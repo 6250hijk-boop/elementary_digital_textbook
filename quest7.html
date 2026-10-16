@@ -373,8 +373,87 @@
       font-size: 14px;
       color: #5D4037;
       border: 1px solid #FFF59D;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       line-height: 1.5;
+    }
+
+    /* 좋아요 액션 바 및 버튼 */
+    .card-action-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 10px;
+    }
+
+    .btn-like-post {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      border-radius: 12px;
+      border: 1.5px solid #C8E6C9;
+      background: #F1F8E9;
+      color: #2E7D32;
+      font-family: 'Jua', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .btn-like-post:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.15);
+      border-color: #2E7D32;
+    }
+
+    .btn-like-post.liked {
+      background: linear-gradient(135deg, #2E7D32, #1B5E20);
+      color: #FFFFFF;
+      border-color: #1B5E20;
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+    }
+
+    .like-count-badge {
+      background: rgba(255, 255, 255, 0.3);
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .btn-like-post:not(.liked) .like-count-badge {
+      background: #E8F5E9;
+      color: #1B5E20;
+      border: 1px solid #C8E6C9;
+    }
+
+    .rank-badge {
+      font-family: 'Jua', sans-serif;
+      font-size: 12px;
+      padding: 3px 9px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      font-weight: 800;
+    }
+
+    .rank-badge.rank-1 {
+      background: #FFF9C4;
+      color: #B45309;
+      border: 1.5px solid #FDE047;
+    }
+
+    .rank-badge.rank-2 {
+      background: #F1F5F9;
+      color: #475569;
+      border: 1.5px solid #CBD5E1;
+    }
+
+    .rank-badge.rank-3 {
+      background: #FFEDD5;
+      color: #C2410C;
+      border: 1.5px solid #FDBA74;
     }
 
     /* 댓글 영역 */
@@ -595,7 +674,7 @@
           <span id="liveTeamCount">우리 모둠 실시간 동기화 중</span>
         </div>
       </div>
-      <p class="card-desc">친구들이 올린 실천 규약과 제시한 이유를 확인하고, 자유롭게 응원 및 보완 댓글을 남겨보세요!</p>
+      <p class="card-desc">친구들의 실천 규약을 확인하고 마음에 드는 규약에 <strong>좋아요</strong>를 눌러보세요! 모둠원들의 많은 지지를 받은 규약이 <strong>좋아요 순</strong>으로 상단에 정렬됩니다.</p>
 
       <!-- 모둠원들의 규약 목록 피드 -->
       <div class="rules-grid" id="sharedRulesGrid">
@@ -624,7 +703,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, increment, onSnapshot, query, where, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, increment, onSnapshot, query, where, serverTimestamp, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
@@ -697,6 +776,7 @@
           ruleContent: ruleContent,
           reason: reason,
           likes: 0,
+          likedBy: [],
           comments: [],
           createdAt: serverTimestamp()
         });
@@ -760,6 +840,27 @@
       }
     };
 
+    // 현재 모둠 실천 규약 목록 캐시
+    let currentRulesList = [];
+
+    // 간단한 오디오 톤 피드백 함수
+    function playLikeTone(isLiked) {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+        osc.frequency.setValueAtTime(isLiked ? 720 : 480, now);
+        osc.frequency.exponentialRampToValueAtTime(isLiked ? 1080 : 360, now + 0.12);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      } catch (e) {}
+    }
+
     // 2단계: 실시간 모둠 규약 피드 구독
     function subscribeTeamRules() {
       const q = query(
@@ -773,13 +874,19 @@
           list.push({ id: docSnap.id, ...docSnap.data() });
         });
 
-        // 최신순 정렬
+        // 1순위: 좋아요 수 내림차순(많은 순), 2순위: 최신 작성순 내림차순 정렬
         list.sort((a, b) => {
+          const likesA = (typeof a.likes === 'number') ? a.likes : (Array.isArray(a.likedBy) ? a.likedBy.length : 0);
+          const likesB = (typeof b.likes === 'number') ? b.likes : (Array.isArray(b.likedBy) ? b.likedBy.length : 0);
+          if (likesB !== likesA) {
+            return likesB - likesA;
+          }
           const tA = a.createdAt ? a.createdAt.seconds : 0;
           const tB = b.createdAt ? b.createdAt.seconds : 0;
           return tB - tA;
         });
 
+        currentRulesList = list;
         renderSharedRules(list);
 
         // 내가 쓴 글이 목록에 있으면 1단계 미리보기도 갱신
@@ -810,12 +917,25 @@
         return;
       }
 
-      grid.innerHTML = list.map(item => {
+      grid.innerHTML = list.map((item, idx) => {
         const isMyPost = item.studentId === studentId;
         const timeStr = item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '방금 전';
 
         const ruleText = item.ruleContent || (item.articles ? item.articles.join(', ') : item.title || '실천 규약');
         const reasonText = item.reason || '자원순환 실천을 위해 작성되었습니다.';
+
+        // 좋아요 상태 및 수량 계산
+        const likedBy = Array.isArray(item.likedBy) ? item.likedBy : [];
+        const isLiked = likedBy.includes(studentId);
+        const likesCount = (typeof item.likes === 'number') ? Math.max(0, item.likes) : likedBy.length;
+
+        // 순위 배지 (좋아요가 1개 이상일 때 1~3위 강조)
+        let rankBadgeHtml = '';
+        if (likesCount > 0) {
+          if (idx === 0) rankBadgeHtml = '<span class="rank-badge rank-1">1위 인기 규약</span>';
+          else if (idx === 1) rankBadgeHtml = '<span class="rank-badge rank-2">2위</span>';
+          else if (idx === 2) rankBadgeHtml = '<span class="rank-badge rank-3">3위</span>';
+        }
 
         const commentsHtml = (item.comments && item.comments.length) ? item.comments.map(c => `
           <div class="comment-item-pill">
@@ -826,9 +946,12 @@
         return `
           <div class="board-feed-card ${isMyPost ? 'my-card' : ''}">
             <div class="card-top-row">
-              <div class="author-badge-pill">
-                <span>${item.authorName || '모둠원'}</span>
-                ${isMyPost ? '<span style="font-size:12px;color:#0288D1;font-weight:900;">(내가 작성)</span>' : ''}
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div class="author-badge-pill">
+                  <span>${item.authorName || '모둠원'}</span>
+                  ${isMyPost ? '<span style="font-size:12px;color:#0288D1;font-weight:900;">(내가 작성)</span>' : ''}
+                </div>
+                ${rankBadgeHtml}
               </div>
               <span class="card-time-text">${timeStr}</span>
             </div>
@@ -838,6 +961,14 @@
 
             <div style="font-family:'Jua';font-size:15px;color:#5D4037;margin-bottom:6px;">2. 제시한 이유:</div>
             <div class="card-reason-content">${reasonText}</div>
+
+            <!-- 좋아요 버튼 액션 바 -->
+            <div class="card-action-bar">
+              <button class="btn-like-post ${isLiked ? 'liked' : ''}" onclick="toggleLikePost('${item.id}')" title="이 실천 규약에 공감하고 좋아요를 누릅니다">
+                <span>${isLiked ? '좋아요 완료' : '좋아요'}</span>
+                <span class="like-count-badge">${likesCount}</span>
+              </button>
+            </div>
 
             <!-- 댓글 영역 -->
             <div class="comments-section">
@@ -854,6 +985,32 @@
         `;
       }).join('');
     }
+
+    // 좋아요 토글 (누를 때마다 좋아요 등록 / 취소)
+    window.toggleLikePost = async function(postId) {
+      if (!postId) return;
+      const cachedItem = currentRulesList.find(it => it.id === postId);
+      const isAlreadyLiked = cachedItem && Array.isArray(cachedItem.likedBy) && cachedItem.likedBy.includes(studentId);
+
+      playLikeTone(!isAlreadyLiked);
+
+      try {
+        if (isAlreadyLiked) {
+          await updateDoc(doc(db, "quest7_rules", postId), {
+            likes: increment(-1),
+            likedBy: arrayRemove(studentId)
+          });
+        } else {
+          await updateDoc(doc(db, "quest7_rules", postId), {
+            likes: increment(1),
+            likedBy: arrayUnion(studentId)
+          });
+          window.addScore(5);
+        }
+      } catch (e) {
+        console.warn("Like update error:", e);
+      }
+    };
 
     // 댓글 등록
     window.addCommentToPost = async function(postId) {
