@@ -1098,7 +1098,7 @@
       <div class="section-header">
         <h2>조별 학생 수집 사진 및 라벨링 일괄 갤러리</h2>
         <div style="font-size:13px; color:#558B2F; font-weight:bold;">
-          모둠 이름을 클릭하면 학생들이 수집한 원본 사진과 라벨링 상자를 일괄로 확인할 수 있습니다.
+          모둠 이름을 클릭하면 학생들이 수집한 원본 사진과 라벨링 상자를 학생별로 분류하여 확인할 수 있습니다.
         </div>
       </div>
 
@@ -1126,9 +1126,12 @@
         </div>
       </div>
 
-      <!-- 사진 갤러리 그리드 -->
-      <div class="gallery-grid" id="tabPhotoGalleryGrid">
-        <div style="text-align:center; padding:40px; color:#94A3B8; grid-column:1/-1;">모둠을 선택하거나 사진 데이터를 불러오는 중입니다...</div>
+      <!-- 사진 갤러리 컨테이너 (학생별 분류 카드 렌더링) -->
+      <div id="tabPhotoGalleryGrid" style="display:flex; flex-direction:column; gap:20px; width:100%;">
+        <div style="text-align:center; padding:50px 20px; color:#94A3B8; background:#F8FAFC; border-radius:18px; border:2px dashed #CBD5E1;">
+          <div style="font-size:20px; font-family:'Jua',sans-serif; color:#1B5E20; margin-bottom:8px;">조(모둠) 이름을 클릭해주세요</div>
+          <div style="font-size:14px; color:#64748B;">상단의 조 이름을 클릭하시면 해당 조의 수집 및 라벨링 사진이 <strong>학생별로 분류</strong>되어 표시됩니다.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -1153,8 +1156,8 @@
   <div class="modal-content gallery-modal-content">
     <div class="modal-header" style="background:#F0FDF4; border-bottom:2px solid #BBF7D0;">
       <div>
-        <h3 id="photoModalTitle" style="color:#15803D; font-size:22px; font-family:'Jua',sans-serif;">[모둠] 수집 사진 및 라벨링 일괄 보기</h3>
-        <p id="photoModalSub" style="font-size:13px; color:#166534; font-weight:600; margin-top:2px;">모둠 학생들이 퀘스트 3에서 수집하고 퀘스트 4에서 라벨링한 모든 사진 목록입니다.</p>
+        <h3 id="photoModalTitle" style="color:#15803D; font-size:22px; font-family:'Jua',sans-serif;">[모둠] 수집 사진 및 라벨링 (학생별 분류)</h3>
+        <p id="photoModalSub" style="font-size:13px; color:#166534; font-weight:600; margin-top:2px;">모둠 학생들이 수집하고 라벨링한 사진 데이터를 학생별로 분류하여 표시합니다.</p>
       </div>
       <button class="btn-modal-close" onclick="closeTeamPhotoModal()"></button>
     </div>
@@ -1175,10 +1178,10 @@
       </div>
     </div>
 
-    <!-- 갤러리 본문 그리드 -->
+    <!-- 갤러리 본문 (학생별 분류 컨테이너) -->
     <div class="modal-body" style="padding:16px 20px; overflow-y:auto; max-height:calc(85vh - 140px);">
-      <div class="gallery-grid" id="modalPhotoGalleryGrid">
-        <div style="text-align:center; padding:40px; color:#94A3B8; grid-column:1/-1;">사진 데이터를 불러오는 중입니다...</div>
+      <div id="modalPhotoGalleryGrid" style="display:flex; flex-direction:column; gap:20px; width:100%;">
+        <div style="text-align:center; padding:40px; color:#94A3B8;">사진 데이터를 불러오는 중입니다...</div>
       </div>
     </div>
   </div>
@@ -1446,7 +1449,9 @@
       let teamApprovedCount = 0;
 
       for (let i = 1; i <= 8; i++) {
-        const isDone = !!approved[`q${i}`];
+        const isApproved = !!approved[`q${i}`];
+        const isSubmitted = !!(questSubmittedMap[t.teamCode || t.id] && questSubmittedMap[t.teamCode || t.id][`q${i}`]);
+        const isDone = isApproved || isSubmitted;
         if (isDone) {
           teamApprovedCount++;
           questCompletedCount[`q${i}`]++;
@@ -1474,7 +1479,7 @@
       const countEl = document.getElementById(`qCount-${i}`);
       const boxEl = document.getElementById(`qBox-${i}`);
       const cnt = questCompletedCount[`q${i}`];
-      if (countEl) countEl.textContent = `${cnt}팀 승인 완료`;
+      if (countEl) countEl.textContent = `${cnt}팀 완료`;
       if (boxEl) {
         if (cnt > 0) boxEl.classList.add("active");
         else boxEl.classList.remove("active");
@@ -1503,14 +1508,13 @@
         const key = `q${num}`;
         const isApproved = !!approved[key];
         const isSubmitted = !!submitted[key];
+        const isDone = isApproved || isSubmitted;
 
-        if (isApproved) {
+        if (isDone) {
           completedCount++;
-          return `<td class="col-quest"><span class="quest-cell-badge done" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 승인 완료됨 (클릭하여 확인/반려)"></span></td>`;
-        } else if (isSubmitted) {
-          return `<td class="col-quest"><span class="quest-cell-badge pending" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 과제 제출됨! 클릭하여 확인 및 승인하기"></span></td>`;
+          return `<td class="col-quest"><span class="quest-cell-badge done" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 퀘스트 완료됨 (클릭하여 제출물 확인)"></span></td>`;
         } else {
-          return `<td class="col-quest"><span class="quest-cell-badge yet" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 아직 미제출 (클릭하여 직접 승인 가능)"></span></td>`;
+          return `<td class="col-quest"><span class="quest-cell-badge yet" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 아직 미제출"></span></td>`;
         }
       };
 
@@ -1571,7 +1575,9 @@
       const tCode = s.teamCode || '';
       const team = mergedTeams.find(t => (t.teamCode || t.id) === tCode);
       const approved = team?.approvedQuests || {};
-      const completedCount = ['q1','q2','q3','q4','q5','q6','q7','q8'].filter(k => approved[k]).length;
+      const submitted = questSubmittedMap[tCode] || {};
+      const studentSub = questSubmittedMap[sId] || {};
+      const completedCount = ['q1','q2','q3','q4','q5','q6','q7','q8'].filter(k => approved[k] || submitted[k] || studentSub[k]).length;
       const cleanName = (sName || '').replace(/'/g, "\\'");
 
       return `
@@ -1580,7 +1586,7 @@
           <td><span class="code-tag" style="font-size:12px;padding:2px 6px;">${s.teamCode || '미지정'}</span></td>
           <td>${s.aiPartnerName || team?.aiName || '에코봇'}</td>
           <td><strong style="color:#2E7D32;">${s.score || 0} EXP</strong></td>
-          <td><strong style="color:#16A34A;">${completedCount}/8 승인됨</strong></td>
+          <td><strong style="color:#16A34A;">${completedCount}/8 완료됨</strong></td>
           <td style="font-size:12px;color:#64748B;">${formatDateTime(s.lastActive || s.joinedAt || s.createdAt)}</td>
           <td>
             <button onclick="deleteStudent('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-del" style="padding:4px 8px;font-size:12px;">삭제</button>
@@ -1604,8 +1610,7 @@
 
     titleEl.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;width:100%;flex-wrap:wrap;gap:10px;">
-        <span>[${teamCode} • ${aiName || team.aiName || '에코봇'}] 과제 검토 & 승인 센터</span>
-        <button onclick="approveAllQuestsForTeam('${teamCode}')" class="btn-batch-approve">전체 8개 퀘스트 일괄 승인</button>
+        <span>[${teamCode} • ${aiName || team.aiName || '에코봇'}] 과제 제출물 검토 센터</span>
       </div>
     `;
 
@@ -1626,13 +1631,12 @@
       const qNum = idx + 1;
       const isApproved = !!approved[qDef.key];
       const isSubmitted = !!submitted[qDef.key];
+      const isDone = isApproved || isSubmitted;
       const list = artifacts[qDef.key] || [];
 
       let statusBadge = '<span class="status-pill none">미제출</span>';
-      if (isApproved) {
-        statusBadge = '<span class="status-pill approved">승인 완료</span>';
-      } else if (isSubmitted) {
-        statusBadge = '<span class="status-pill pending">과제 제출됨 (선생님 확인 대기)</span>';
+      if (isDone) {
+        statusBadge = '<span class="status-pill approved">완료됨</span>';
       }
 
       let contentHtml = '';
@@ -1655,11 +1659,11 @@
           : '<span style="color:#94A3B8;">아직 등록된 분류 기준이 없습니다.</span>';
       } else if (qDef.key === 'q3') {
         contentHtml = list.length 
-          ? `총 <b>${list.length}건</b>의 사진 데이터가 등록되었습니다.<br>` + list.slice(0, 5).map(item => `• <b>${item.originalName || item.fileName || '사진'}:</b> ${item.category || '자원순환'}`).join('<br>') + (list.length > 5 ? `<br><small style="color:#64748B;">외 ${list.length - 5}건 더 있음</small>` : '') + `<div style="margin-top:10px;"><button onclick="openTeamPhotoGallery('${teamCode}')" class="btn-action btn-green" style="font-size:13px;padding:6px 12px;cursor:pointer;">[${teamCode}] 수집 및 라벨링 사진 일괄 보기</button></div>`
+          ? `총 <b>${list.length}건</b>의 사진 데이터가 등록되었습니다.<br>` + list.slice(0, 5).map(item => `• <b>${item.originalName || item.fileName || '사진'}:</b> ${item.category || '자원순환'}`).join('<br>') + (list.length > 5 ? `<br><small style="color:#64748B;">외 ${list.length - 5}건 더 있음</small>` : '') + `<div style="margin-top:10px;"><button onclick="openTeamPhotoGallery('${teamCode}')" class="btn-action btn-green" style="font-size:13px;padding:6px 12px;cursor:pointer;">[${teamCode}] 수집 및 라벨링 사진 보기 (학생별 분류)</button></div>`
           : '<span style="color:#94A3B8;">아직 업로드된 사진 데이터가 없습니다.</span>';
       } else if (qDef.key === 'q4') {
         contentHtml = list.length 
-          ? `총 <b>${list.length}개</b>의 라벨링 데이터가 기록되었습니다.<div style="margin-top:10px;"><button onclick="openTeamPhotoGallery('${teamCode}')" class="btn-action btn-green" style="font-size:13px;padding:6px 12px;cursor:pointer;">[${teamCode}] 수집 및 라벨링 사진 일괄 보기</button></div>`
+          ? `총 <b>${list.length}개</b>의 라벨링 데이터가 기록되었습니다.<div style="margin-top:10px;"><button onclick="openTeamPhotoGallery('${teamCode}')" class="btn-action btn-green" style="font-size:13px;padding:6px 12px;cursor:pointer;">[${teamCode}] 수집 및 라벨링 사진 보기 (학생별 분류)</button></div>`
           : '<span style="color:#94A3B8;">아직 라벨링 작업 기록이 없습니다.</span>';
       } else if (qDef.key === 'q5') {
         contentHtml = list.length 
@@ -1680,18 +1684,18 @@
       }
 
       let actionBtnHtml = '';
-      if (isApproved) {
+      if (isDone) {
         actionBtnHtml = `
           <div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:12px;padding-top:10px;border-top:1px solid #E2E8F0;">
-            <span style="color:#16A34A;font-weight:800;font-size:14px;">선생님 승인 완료됨 (학생 화면에 잠금 해제됨)</span>
-            <button class="btn-modal-revoke" onclick="revokeQuestApproval('${teamCode}', '${qDef.key}')">승인 취소/반려</button>
+            <span style="color:#16A34A;font-weight:800;font-size:14px;">과제 제출 완료됨 (학생 화면 자동 잠금 해제됨)</span>
+            <button class="btn-modal-revoke" onclick="revokeQuestApproval('${teamCode}', '${qDef.key}')">반려 처리</button>
           </div>
         `;
       } else {
         actionBtnHtml = `
           <div style="display:flex;justify-content:flex-end;width:100%;margin-top:12px;padding-top:10px;border-top:1px solid #E2E8F0;">
             <button class="btn-modal-approve" onclick="approveQuest('${teamCode}', '${qDef.key}')">
-              [Q${qNum}] 과제 확인 및 승인하기 (+50 EXP)
+              [Q${qNum}] 과제 확인 및 수동 완료 처리 (+50 EXP)
             </button>
           </div>
         `;
@@ -2077,9 +2081,6 @@
     if (tabId === 'tab-photos') {
       const merged = getAllMergedTeams();
       renderTabPhotosTeamSelector(merged);
-      if (!currentTabPhotosTeamCode && merged.length > 0) {
-        currentTabPhotosTeamCode = merged[0].teamCode || merged[0].id;
-      }
       renderTabPhotos(currentTabPhotosTeamCode);
     }
   };
@@ -2409,6 +2410,183 @@
     });
   };
 
+  // ── 학생별로 분류된 사진 데이터 렌더링 헬퍼 ──
+  function buildStudentGroupedPhotosHtml(teamCode, filterStatus = 'all', showBoxes = true) {
+    if (!teamCode) {
+      return `
+        <div style="text-align:center; padding:60px 20px; background:#F8FAFC; border:2px dashed #CBD5E1; border-radius:18px;">
+          <div style="font-size:20px; font-family:'Jua',sans-serif; color:#1B5E20; margin-bottom:8px;">조(모둠) 이름을 클릭해주세요</div>
+          <div style="font-size:14px; color:#64748B;">상단의 조 이름을 클릭하시면 해당 조의 수집 및 라벨링 사진이 <strong>학생별로 분류</strong>되어 나타납니다.</div>
+        </div>
+      `;
+    }
+
+    const allTeamPhotos = getTeamPhotos(teamCode);
+    const team = getAllMergedTeams().find(t => (t.teamCode || t.id) === teamCode) || {};
+
+    // 모둠에 속한 학생 명단 추출 (team.members 및 studentsCache 병합)
+    const memberNames = new Set(team.members || []);
+    studentsCache.forEach(s => {
+      if (s.teamCode && String(s.teamCode).trim().toLowerCase() === String(teamCode).trim().toLowerCase()) {
+        if (s.studentName) memberNames.add(s.studentName);
+        else if (s.name) memberNames.add(s.name);
+      }
+    });
+
+    // 사진에서 추가로 식별되는 학생명 수집
+    allTeamPhotos.forEach(p => {
+      if (p.userName && p.userName !== '학생' && p.userName !== '모둠원') {
+        memberNames.add(p.userName);
+      }
+    });
+
+    const studentList = Array.from(memberNames);
+
+    if (studentList.length === 0 && allTeamPhotos.length === 0) {
+      return `
+        <div style="text-align:center; padding:50px 20px; color:#94A3B8; font-weight:700; background:#F8FAFC; border-radius:18px;">
+          [${teamCode}] 모둠에 아직 등록된 학생이나 수집된 사진 데이터가 없습니다.
+        </div>
+      `;
+    }
+
+    // 각 학생별로 사진 매핑
+    const assignedPhotoIds = new Set();
+    const studentSections = studentList.map(name => {
+      const studentObj = studentsCache.find(s => 
+        (s.teamCode && String(s.teamCode).trim().toLowerCase() === String(teamCode).trim().toLowerCase()) &&
+        (s.studentName === name || s.name === name)
+      );
+
+      const studentAllPhotos = allTeamPhotos.filter(p => {
+        const matchName = (p.userName && p.userName.trim().toLowerCase() === name.trim().toLowerCase());
+        const matchUid = (p.userId && (
+          p.userId === `${teamCode}_${name}` || 
+          p.userId.endsWith('_' + name) || 
+          p.userId === name
+        ));
+        if (matchName || matchUid) {
+          assignedPhotoIds.add(p.id);
+          return true;
+        }
+        return false;
+      });
+
+      let filteredPhotos = studentAllPhotos;
+      if (filterStatus === 'labeled') filteredPhotos = studentAllPhotos.filter(p => p.isLabeled);
+      else if (filterStatus === 'unlabeled') filteredPhotos = studentAllPhotos.filter(p => !p.isLabeled);
+
+      const totalCnt = studentAllPhotos.length;
+      const labeledCnt = studentAllPhotos.filter(p => p.isLabeled).length;
+
+      return `
+        <div class="student-photo-card" style="background:#FFFFFF; border:2px solid #E2E8F0; border-radius:18px; padding:18px 20px; margin-bottom:20px; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #F1F5F9; padding-bottom:12px; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="background:#E8F5E9; color:#1B5E20; font-size:12px; font-weight:800; padding:3px 8px; border-radius:8px;">학생 대원</span>
+              <strong style="font-size:18px; font-family:'Jua',sans-serif; color:#1E293B;">${name}</strong>
+              ${studentObj?.badge ? `<span style="font-size:11px; background:#FFF9C4; color:#B45309; padding:2px 7px; border-radius:8px; font-weight:bold;">${studentObj.badge}</span>` : ''}
+            </div>
+            <div style="display:flex; gap:8px; align-items:center; font-size:13px; font-weight:700;">
+              <span style="background:#F1F8E9; color:#2E7D32; padding:4px 10px; border-radius:10px; border:1px solid #C8E6C9;">수집 사진: <b>${totalCnt}장</b></span>
+              <span style="background:#E0F2FE; color:#0284C7; padding:4px 10px; border-radius:10px; border:1px solid #BAE6FD;">라벨링 완료: <b>${labeledCnt}장</b></span>
+            </div>
+          </div>
+          ${filteredPhotos.length > 0 
+            ? `<div class="gallery-grid">${buildPhotoCardsHtml(filteredPhotos, showBoxes)}</div>`
+            : `<div style="text-align:center; padding:24px; color:#94A3B8; font-size:13.5px; font-weight:600; background:#F8FAFC; border-radius:12px;">${totalCnt > 0 ? '선택한 조건에 해당하는 사진이 없습니다.' : '아직 수집한 사진이 없습니다.'}</div>`
+          }
+        </div>
+      `;
+    });
+
+    // 혹시 학생 명단과 매칭되지 않은 기타 업로드 사진이 있는 경우
+    const unassignedPhotos = allTeamPhotos.filter(p => !assignedPhotoIds.has(p.id));
+    let unassignedHtml = '';
+    if (unassignedPhotos.length > 0) {
+      let filteredUnassigned = unassignedPhotos;
+      if (filterStatus === 'labeled') filteredUnassigned = unassignedPhotos.filter(p => p.isLabeled);
+      else if (filterStatus === 'unlabeled') filteredUnassigned = unassignedPhotos.filter(p => !p.isLabeled);
+
+      unassignedHtml = `
+        <div class="student-photo-card" style="background:#FFFFFF; border:2px dashed #CBD5E1; border-radius:18px; padding:18px 20px; margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #F1F5F9; padding-bottom:12px; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="background:#F1F5F9; color:#475569; font-size:12px; font-weight:800; padding:3px 8px; border-radius:8px;">기타</span>
+              <strong style="font-size:18px; font-family:'Jua',sans-serif; color:#475569;">기타/미분류 수집 사진</strong>
+            </div>
+            <div style="font-size:13px; font-weight:700; color:#475569;">
+              사진: ${unassignedPhotos.length}장
+            </div>
+          </div>
+          ${filteredUnassigned.length > 0 
+            ? `<div class="gallery-grid">${buildPhotoCardsHtml(filteredUnassigned, showBoxes)}</div>`
+            : `<div style="text-align:center; padding:20px; color:#94A3B8; font-size:13px;">선택한 조건의 사진이 없습니다.</div>`
+          }
+        </div>
+      `;
+    }
+
+    return studentSections.join('') + unassignedHtml;
+  }
+
+  // ── 조별 사진 일괄 팝업 모달 함수 ──
+  window.openTeamPhotoGallery = function(teamCode) {
+    currentModalTeamCode = teamCode;
+    modalFilterStatus = 'all';
+    modalShowBoxes = true;
+
+    const modal = document.getElementById("teamPhotoModal");
+    const titleEl = document.getElementById("photoModalTitle");
+    const subEl = document.getElementById("photoModalSub");
+    const chkEl = document.getElementById("modalChkShowBBoxes");
+
+    if (chkEl) chkEl.checked = true;
+
+    const team = getAllMergedTeams().find(t => (t.teamCode || t.id) === teamCode) || {};
+    if (titleEl) titleEl.textContent = `[${teamCode} • ${team.aiName || '에코봇'}] 수집 사진 및 라벨링 (학생별 분류)`;
+    if (subEl) subEl.textContent = `[${teamCode}] 모둠 학생들이 수집하고 라벨링한 사진 데이터를 학생별로 분류하여 표시합니다.`;
+
+    // 팝업 모달 내 필터 버튼 초기화
+    document.querySelectorAll('#teamPhotoModal .gallery-pill').forEach(pill => {
+      if (pill.id === 'modal-pill-all') pill.classList.add('active');
+      else pill.classList.remove('active');
+    });
+
+    renderTeamPhotoGallery(teamCode);
+    if (modal) modal.classList.add("active");
+  };
+
+  window.closeTeamPhotoModal = function() {
+    const modal = document.getElementById("teamPhotoModal");
+    if (modal) modal.classList.remove("active");
+    currentModalTeamCode = null;
+  };
+
+  document.getElementById("teamPhotoModal")?.addEventListener("click", (e) => {
+    if (e.target.id === "teamPhotoModal") closeTeamPhotoModal();
+  });
+
+  window.filterModalPhotoStatus = function(status) {
+    modalFilterStatus = status;
+    document.querySelectorAll('#teamPhotoModal .gallery-pill').forEach(pill => {
+      if (pill.id === `modal-pill-${status}`) pill.classList.add('active');
+      else pill.classList.remove('active');
+    });
+    if (currentModalTeamCode) {
+      renderTeamPhotoGallery(currentModalTeamCode);
+    }
+  };
+
+  window.toggleModalBoxesDisplay = function() {
+    const chk = document.getElementById("modalChkShowBBoxes");
+    modalShowBoxes = chk ? chk.checked : true;
+    const layers = document.querySelectorAll("#modalPhotoGalleryGrid .photo-boxes-layer");
+    layers.forEach(layer => {
+      layer.style.display = modalShowBoxes ? "block" : "none";
+    });
+  };
+
   function renderTeamPhotoGallery(teamCode) {
     const grid = document.getElementById("modalPhotoGalleryGrid");
     if (!grid) return;
@@ -2424,11 +2602,7 @@
     if (cntLabeled) cntLabeled.textContent = labeledPhotos.length;
     if (cntUnlabeled) cntUnlabeled.textContent = unlabeledPhotos.length;
 
-    let targetPhotos = allPhotos;
-    if (modalFilterStatus === 'labeled') targetPhotos = labeledPhotos;
-    else if (modalFilterStatus === 'unlabeled') targetPhotos = unlabeledPhotos;
-
-    grid.innerHTML = buildPhotoCardsHtml(targetPhotos, modalShowBoxes);
+    grid.innerHTML = buildStudentGroupedPhotosHtml(teamCode, modalFilterStatus, modalShowBoxes);
   }
 
   // ── 탭 4: 관리자 페이지 내 조별 사진 탭 함수 ──
@@ -2446,10 +2620,6 @@
     if (!teams.length) {
       selector.innerHTML = '<span style="font-size:12px; color:#94A3B8;">개설된 모둠이 없습니다.</span>';
       return;
-    }
-
-    if (!currentTabPhotosTeamCode && teams.length > 0) {
-      currentTabPhotosTeamCode = teams[0].teamCode || teams[0].id;
     }
 
     selector.innerHTML = teams.map(t => {
@@ -2491,7 +2661,14 @@
     if (!grid) return;
 
     if (!teamCode) {
-      grid.innerHTML = '<div style="text-align:center; padding:40px; color:#94A3B8; grid-column:1/-1;">조(모둠)를 위에서 선택해주세요.</div>';
+      const cntAll = document.getElementById("tab-cnt-all");
+      const cntLabeled = document.getElementById("tab-cnt-labeled");
+      const cntUnlabeled = document.getElementById("tab-cnt-unlabeled");
+      if (cntAll) cntAll.textContent = '0';
+      if (cntLabeled) cntLabeled.textContent = '0';
+      if (cntUnlabeled) cntUnlabeled.textContent = '0';
+
+      grid.innerHTML = buildStudentGroupedPhotosHtml(null);
       return;
     }
 
@@ -2506,11 +2683,7 @@
     if (cntLabeled) cntLabeled.textContent = labeledPhotos.length;
     if (cntUnlabeled) cntUnlabeled.textContent = unlabeledPhotos.length;
 
-    let targetPhotos = allPhotos;
-    if (tabFilterStatus === 'labeled') targetPhotos = labeledPhotos;
-    else if (tabFilterStatus === 'unlabeled') targetPhotos = unlabeledPhotos;
-
-    grid.innerHTML = buildPhotoCardsHtml(targetPhotos, tabShowBoxes);
+    grid.innerHTML = buildStudentGroupedPhotosHtml(teamCode, tabFilterStatus, tabShowBoxes);
   }
 
   // ── 정밀 검사 라이트박스 함수 ──

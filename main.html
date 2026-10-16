@@ -476,24 +476,14 @@
         };
 
         if (isUnlocked) {
-          // 완료 또는 승인된 퀘스트는 unlock.png 이미지로 확실하게 변경
+          // 완료된 퀘스트는 unlock.png 이미지로 즉시 변경 및 잠금 해제
           iconEl.src = "images/unlock.png";
-          iconEl.alt = isApproved ? "퀘스트 승인 완료됨" : "퀘스트 완료됨";
+          iconEl.alt = "퀘스트 완료됨";
           hotspotEl.classList.add("is-completed");
-          hotspotEl.classList.remove("is-locked");
-
-          if (isApproved) {
-            hotspotEl.classList.remove("is-pending");
-            hotspotEl.title = `[${qMeta.title}] 승인 완료`;
-            if (overlayEl) {
-              overlayEl.innerHTML = `${qMeta.name} [승인완료]`;
-            }
-          } else {
-            hotspotEl.classList.add("is-pending");
-            hotspotEl.title = `[${qMeta.title}] 과제 완료 (선생님 확인 대기)`;
-            if (overlayEl) {
-              overlayEl.innerHTML = `${qMeta.name} [완료]`;
-            }
+          hotspotEl.classList.remove("is-locked", "is-pending");
+          hotspotEl.title = `[${qMeta.title}] 완료`;
+          if (overlayEl) {
+            overlayEl.innerHTML = `${qMeta.name} [완료]`;
           }
         } else {
           // 아직 미완료된 퀘스트는 lock.png 이미지
@@ -566,8 +556,8 @@
   // 초기 로컬 상태 반영
   updateQuestLockImages();
 
-  // Firestore 컬렉션 실시간 구독으로 내 학생의 퀘스트 과제 제출 여부 감지 (학생 본인의 기록만 반영)
-  if (studentId) {
+  // Firestore 컬렉션 실시간 구독으로 퀘스트 과제 제출 여부 감지 (본인 또는 모둠원 제출 시 즉시 다음 퀘스트 자동 해금)
+  if (studentId || teamCode) {
     const questCollections = [
       { col: "quest1_records", key: "q1" },
       { col: "quest2_rules", key: "q2" },
@@ -592,8 +582,9 @@
           snapshot.forEach((docSnap) => {
             const data = docSnap.data();
             const sidMatch = studentId && (data.studentId === studentId || data.userId === studentId);
+            const teamMatch = teamCode && (data.teamCode === teamCode);
 
-            if (sidMatch) {
+            if (sidMatch || teamMatch) {
               submittedQuestsState[key] = true;
             }
           });
