@@ -423,6 +423,149 @@
       color: #6d28d9;
     }
 
+    /* ==================== 1전시관 태그 통계 그래프 (2전시관 상단 배치) ==================== */
+    .tag-stats-chart-card {
+      background: #ffffff;
+      border: 2px solid #ddd6fe;
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.08);
+    }
+
+    .tag-stats-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid #f1f5f9;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag-stats-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 19px;
+      color: #5b21b6;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tag-stats-badge {
+      font-size: 12px;
+      font-weight: 800;
+      background: #ede9fe;
+      color: #6d28d9;
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid #c4b5fd;
+    }
+
+    .tag-chart-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tag-chart-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tag-chart-label-group {
+      width: 170px;
+      min-width: 170px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tag-rank-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 8px;
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    .tag-rank-badge.top-rank {
+      background: #ede9fe;
+      color: #7c3aed;
+      border: 1px solid #c4b5fd;
+    }
+
+    .tag-chart-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1e293b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tag-chart-bar-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tag-chart-bar-track {
+      flex: 1;
+      height: 16px;
+      background: #f1f5f9;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .tag-chart-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #a78bfa, #8b5cf6);
+      border-radius: 10px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tag-chart-bar-fill.top-bar {
+      background: linear-gradient(90deg, #7c3aed, #6d28d9);
+    }
+
+    .tag-chart-value-group {
+      min-width: 80px;
+      text-align: right;
+      display: flex;
+      align-items: baseline;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+
+    .tag-count-text {
+      font-size: 14px;
+      font-weight: 800;
+      color: #6d28d9;
+    }
+
+    .tag-pct-text {
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    @media (max-width: 640px) {
+      .tag-chart-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+      }
+      .tag-chart-label-group {
+        width: 100%;
+      }
+    }
+
     /* ==================== 2단계: AI 한계와 사람의 역할 한문장 작성 ==================== */
     .reflection-builder-card {
       background: linear-gradient(135deg, #fefce8, #fef9c3);
@@ -713,6 +856,24 @@
 
     <!-- ==================== [2전시관] AI 한계와 사람의 역할 한문장 게시판 ==================== -->
     <section class="museum-section" id="ethicsSection" style="display:none;">
+      <!-- 1전시관 오류 원인 태그 분석 실시간 그래프 (전시관 2 맨 위) -->
+      <div class="tag-stats-chart-card">
+        <div class="tag-stats-header">
+          <div class="tag-stats-title">
+            <span>1전시관 오류 원인 태그 분석 그래프</span>
+          </div>
+          <span class="tag-stats-badge" id="totalTagsCountBadge">총 0개 태그 수집</span>
+        </div>
+        <p style="font-size:13.5px; color:#64748b; margin-bottom:16px;">
+          모둠원들이 1전시관에서 오류 사진들을 관찰하며 등록한 <strong>오류 원인 태그</strong>들의 선택 숫자를 집계한 실시간 분포 그래프입니다.
+        </p>
+        <div class="tag-chart-list" id="tagStatsChartContainer">
+          <div style="text-align:center; padding:24px; color:#94a3b8; font-size:14px; background:#f8fafc; border-radius:12px; border:1px dashed #cbd5e1;">
+            1전시관에서 오류 사진들을 확인하고 원인 태그를 추가해보세요! 태그 집계 결과가 그래프로 나타납니다.
+          </div>
+        </div>
+      </div>
+
       <div class="section-header-wrap">
         <div class="section-title">
           <span></span> <span>AI의 한계와 사람의 역할: 한 문장 발표 게시판</span>
@@ -735,8 +896,8 @@
               type="text" 
               id="aiLimitInput" 
               class="template-input" 
-              value="사진 속 겉모습(픽셀)만 보고 판단하여 가려지거나 구겨진 상황에서 쉽게 착각" 
-              placeholder="예: 사진 속 겉모습만 보고 판단하여 가려지거나 구겨진 상황에서 쉽게 착각"
+              value="" 
+              placeholder="인공지능(AI)이 가진 한계점을 빈칸에 직접 작성해보세요"
               oninput="updateSentencePreview()"
             >
           </div>
@@ -747,8 +908,8 @@
               type="text" 
               id="humanRoleInput" 
               class="template-input" 
-              value="맥락과 실제 용도를 종합적으로 파악해 최종 검증하고 올바른 학습 데이터를 제공" 
-              placeholder="예: 맥락과 실제 용도를 종합적으로 파악해 최종 검증하고 올바른 학습 데이터를 제공"
+              value="" 
+              placeholder="우리 사람(인간)이 해야 할 책임과 역할을 빈칸에 직접 작성해보세요"
               oninput="updateSentencePreview()"
             >
           </div>
@@ -756,7 +917,7 @@
 
         <!-- 실시간 완성 프리뷰 -->
         <div class="final-sentence-preview" id="sentencePreview">
-          "AI는 <span class="hl">사진 속 겉모습(픽셀)만 보고 판단하여 가려지거나 구겨진 상황에서 쉽게 착각</span>하지만, 사람은 <span class="hl">맥락과 실제 용도를 종합적으로 파악해 최종 검증하고 올바른 학습 데이터를 제공</span>해야 한다."
+          "AI는 <span class="hl">____________________</span>하지만, 사람은 <span class="hl">____________________</span>해야 한다."
         </div>
 
         <div style="display:flex; justify-content:flex-end;">
@@ -895,6 +1056,80 @@
       localStorage.setItem("elementary_score", window.state.score);
     };
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // 1전시관 수집 아이템 보관 (2전시관 태그 통계 그래프 연동)
+    let currentMuseumItems = [];
+
+    // 2전시관 상단: 1전시관 오류 원인 태그 통계 그래프 렌더링
+    function renderTagStatsChart() {
+      const chartContainer = document.getElementById("tagStatsChartContainer");
+      const totalTagsBadge = document.getElementById("totalTagsCountBadge");
+      if (!chartContainer) return;
+
+      const items = (currentMuseumItems && currentMuseumItems.length) ? currentMuseumItems : SAMPLE_ERRORS;
+
+      // 태그별 선택 횟수 집계
+      const tagCounts = {};
+      let totalCount = 0;
+
+      items.forEach(item => {
+        if (item.tags && Array.isArray(item.tags)) {
+          item.tags.forEach(tag => {
+            const cleanTag = String(tag).trim();
+            if (!cleanTag) return;
+            tagCounts[cleanTag] = (tagCounts[cleanTag] || 0) + 1;
+            totalCount++;
+          });
+        }
+      });
+
+      if (totalTagsBadge) {
+        totalTagsBadge.textContent = `총 ${totalCount}개 태그 수집`;
+      }
+
+      const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+
+      if (sortedTags.length === 0) {
+        chartContainer.innerHTML = `
+          <div style="text-align:center; padding:24px; color:#94a3b8; font-size:14px; background:#f8fafc; border-radius:12px; border:1px dashed #cbd5e1;">
+            아직 등록된 오류 원인 태그가 없습니다.<br>
+            1전시관에서 오류 사진들을 확인하고 원인 태그를 추가해보세요!
+          </div>
+        `;
+        return;
+      }
+
+      const maxCount = sortedTags[0][1];
+
+      chartContainer.innerHTML = sortedTags.map(([tag, count], idx) => {
+        const pct = totalCount > 0 ? Math.round((count / totalCount) * 100) : 0;
+        const barWidth = maxCount > 0 ? Math.max(10, Math.round((count / maxCount) * 100)) : 10;
+        const isTop = (idx === 0);
+
+        return `
+          <div class="tag-chart-row">
+            <div class="tag-chart-label-group" title="${escapeHtml(tag)}">
+              <span class="tag-rank-badge ${isTop ? 'top-rank' : ''}">${idx + 1}위</span>
+              <span class="tag-chart-name">${escapeHtml(tag)}</span>
+            </div>
+            <div class="tag-chart-bar-area">
+              <div class="tag-chart-bar-track">
+                <div class="tag-chart-bar-fill ${isTop ? 'top-bar' : ''}" style="width: ${barWidth}%;"></div>
+              </div>
+              <div class="tag-chart-value-group">
+                <strong class="tag-count-text">${count}회</strong>
+                <span class="tag-pct-text">(${pct}%)</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
     // 탭 전환
     window.switchTab = function(tabName) {
       window.playSound('click');
@@ -903,6 +1138,10 @@
       document.getElementById('tabEthicsBtn').classList.toggle('active', tabName === 'ethics');
       document.getElementById('gallerySection').style.display = tabName === 'gallery' ? 'block' : 'none';
       document.getElementById('ethicsSection').style.display = tabName === 'ethics' ? 'block' : 'none';
+
+      if (tabName === 'ethics') {
+        renderTagStatsChart();
+      }
     };
 
     // 기본 샘플 오류 데이터 (전송된 데이터가 없을 경우 기본 전시)
@@ -962,15 +1201,22 @@
             displayList = SAMPLE_ERRORS;
           }
 
+          currentMuseumItems = displayList;
+
           if (countEl) countEl.textContent = displayList.length;
 
           renderMuseumGrid(displayList);
+          renderTagStatsChart();
         }, (err) => {
           console.warn("Museum onSnapshot error:", err);
+          currentMuseumItems = SAMPLE_ERRORS;
           renderMuseumGrid(SAMPLE_ERRORS);
+          renderTagStatsChart();
         });
       } else {
+        currentMuseumItems = SAMPLE_ERRORS;
         renderMuseumGrid(SAMPLE_ERRORS);
+        renderTagStatsChart();
       }
     }
 
@@ -1037,6 +1283,14 @@
         container.appendChild(newTag);
       }
 
+      // 로컬 currentMuseumItems에도 추가하여 2전시관 그래프 실시간 갱신
+      const targetItem = currentMuseumItems.find(it => it.id === docId);
+      if (targetItem) {
+        if (!targetItem.tags) targetItem.tags = [];
+        targetItem.tags.push(tagText);
+      }
+      renderTagStatsChart();
+
       if (db && !docId.startsWith('sample_') && !docId.startsWith('local_')) {
         try {
           await updateDoc(doc(db, "quest6_museum", docId), {
@@ -1061,13 +1315,20 @@
       input.value = '';
     };
 
-    // 문장 실시간 프리뷰 갱신
+    // 문장 실시간 프리뷰 갱신 (빈칸 유지)
     window.updateSentencePreview = function() {
-      const limit = document.getElementById('aiLimitInput').value.trim() || "겉모습만 보고 판단";
-      const role = document.getElementById('humanRoleInput').value.trim() || "맥락을 파악해 최종 검증";
-
+      const limitInput = document.getElementById('aiLimitInput');
+      const roleInput = document.getElementById('humanRoleInput');
       const preview = document.getElementById('sentencePreview');
-      preview.innerHTML = `"AI는 <span class="hl">${limit}</span>하지만, 사람은 <span class="hl">${role}</span>해야 한다."`;
+      if (!preview) return;
+
+      const limit = limitInput ? limitInput.value.trim() : "";
+      const role = roleInput ? roleInput.value.trim() : "";
+
+      const limitDisplay = limit ? escapeHtml(limit) : "____________________";
+      const roleDisplay = role ? escapeHtml(role) : "____________________";
+
+      preview.innerHTML = `"AI는 <span class="hl">${limitDisplay}</span>하지만, 사람은 <span class="hl">${roleDisplay}</span>해야 한다."`;
     };
 
     // 한 문장 게시글 제출
@@ -1197,6 +1458,8 @@
     document.addEventListener('DOMContentLoaded', () => {
       subscribeMuseumItems();
       subscribeReflections();
+      updateSentencePreview();
+      renderTagStatsChart();
     });
   </script>
 </body>
