@@ -449,7 +449,12 @@
   <!-- 상단 학생 & 모둠 프로필 -->
   <header>
     <div class="user-profile">
-      <div class="avatar-box" id="dispMyAvatar">🕵️</div>
+      <div class="avatar-box" id="dispMyAvatar" style="overflow:hidden; padding:0;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </div>
       <div class="user-info">
         <h2 id="dispStudent">학생 탐정단</h2>
         <p id="dispAiName">모둠 AI: 로딩 중...</p>
@@ -481,7 +486,7 @@
     <!-- 대기방 모둠원 아바타 목록 -->
     <div class="players-grid" id="lobbyPlayersGrid">
       <div class="player-card">
-        <div class="player-avatar">🕵️</div>
+        <div class="player-avatar" style="font-family:'Jua',sans-serif; font-size:20px; color:#2E7D32;">탐</div>
         <div class="player-name">로딩 중...</div>
         <div class="player-tag">접속 중</div>
       </div>
@@ -504,21 +509,21 @@
     </div>
   </section>
 
-  <!-- 설문조사 & 대시보드 빠른 이동 바 -->
+  <!-- 설문조사 빠른 이동 바 (사전 설문 & 사후 설문) -->
   <div class="quick-bar">
     <a href="survey.html" class="banner-card">
       <div class="banner-text">
         <h3>자원순환 탐정단 사전 설문</h3>
-        <p>우리 반 친구들의 분리배출 습관 알아보기</p>
+        <p>탐정단 활동 시작 전 나의 생각 알아보기</p>
       </div>
-      <div class="banner-icon" style="font-size:18px; font-weight:bold; color:#0284C7;">설문</div>
+      <div class="banner-icon" style="font-size:16px; font-weight:bold; background:rgba(255,255,255,0.25); padding:6px 12px; border-radius:12px;">사전설문</div>
     </a>
-    <a href="dashboard.html" class="banner-card alt">
+    <a href="post_survey.html" class="banner-card alt">
       <div class="banner-text">
-        <h3>우리 반 실시간 탐정 현황판</h3>
-        <p>전체 모둠별 퀘스트 완료 현황 한눈에 보기</p>
+        <h3>자원순환 탐정단 사후 설문</h3>
+        <p>8대 퀘스트 완료 후 나의 성장과 생각 돌아보기</p>
       </div>
-      <div class="banner-icon" style="font-size:18px; font-weight:bold; color:#D97706;">랭킹</div>
+      <div class="banner-icon" style="font-size:16px; font-weight:bold; background:rgba(255,255,255,0.25); padding:6px 12px; border-radius:12px;">사후설문</div>
     </a>
   </div>
 
@@ -568,23 +573,30 @@
   document.getElementById("dispTeamBadge").textContent = `${teamCode || '모둠'}`;
   document.getElementById("dispAiName").textContent = `모둠 AI: ${currentAiName}`;
 
-  // 아지트 대원 캐릭터 아바타 (귀여운 탐정 및 동물 대원 이모지)
-  const AVATARS = ["🕵️‍♂️", "🕵️‍♀️", "🧑‍🔬", "🧑‍🌾", "🦊", "🐻", "🐰", "🐼", "🐶", "🐱", "🐨", "🦁"];
+  // 아지트 대원 캐릭터 아바타 (이모지 배제 규칙 준수: 세련된 이니셜 배지 스타일)
+  const AVATAR_PALETTES = [
+    { bg: "#E0F2FE", color: "#0369A1", border: "#7DD3FC" },
+    { bg: "#DCFCE7", color: "#15803D", border: "#86EFAC" },
+    { bg: "#FEF3C7", color: "#B45309", border: "#FCD34D" },
+    { bg: "#F3E8FF", color: "#7E22CE", border: "#D8B4FE" },
+    { bg: "#FFE4E6", color: "#BE123C", border: "#FDA4AF" },
+    { bg: "#E0E7FF", color: "#4338CA", border: "#A5B4FC" }
+  ];
 
   function getAvatarForName(name) {
-    if (!name) return AVATARS[0];
+    const initial = (name && name.length > 0) ? name.charAt(0) : "탐";
     let hash = 0;
-    for (let i = 0; i < name.length; i++) {
+    for (let i = 0; i < (name || "").length; i++) {
       hash = name.charCodeAt(i) + ((hash << 5) - hash);
     }
-    const index = Math.abs(hash) % AVATARS.length;
-    return AVATARS[index];
+    const pal = AVATAR_PALETTES[Math.abs(hash) % AVATAR_PALETTES.length];
+    return `<div style="width:100%; height:100%; border-radius:50%; background:${pal.bg}; color:${pal.color}; border:2px solid ${pal.border}; display:flex; align-items:center; justify-content:center; font-family:'Jua',sans-serif; font-size:22px; font-weight:bold;">${initial}</div>`;
   }
 
   // 상단 프로필 내 캐릭터 아바타 표시
   const myAvatarEl = document.getElementById("dispMyAvatar");
   if (myAvatarEl) {
-    myAvatarEl.textContent = getAvatarForName(studentName);
+    myAvatarEl.innerHTML = getAvatarForName(studentName);
   }
 
   // 대기방 렌더링 함수

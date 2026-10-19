@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+  <!-- Chart.js 4.4.1 (사전/사후 설문 분석 그래프 시각화용) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <style>
     :root {
@@ -943,6 +945,7 @@
     <button class="tab-btn" data-tab="tab-photos" onclick="switchTab('tab-photos')">조별 수집 및 라벨링 사진</button>
     <button class="tab-btn" data-tab="tab-team-mgmt" onclick="switchTab('tab-team-mgmt')">모둠 코드 개설 및 관리</button>
     <button class="tab-btn" data-tab="tab-students" onclick="switchTab('tab-students')">학생별 개별 학습 현황</button>
+    <button class="tab-btn" data-tab="tab-surveys" onclick="switchTab('tab-surveys')">사전·사후 설문 분석 그래프</button>
   </div>
 
   <!-- TAB 1: 실시간 모둠 8대 퀘스트 진도표 -->
@@ -1132,6 +1135,98 @@
           <div style="font-size:20px; font-family:'Jua',sans-serif; color:#1B5E20; margin-bottom:8px;">조(모둠) 이름을 클릭해주세요</div>
           <div style="font-size:14px; color:#64748B;">상단의 조 이름을 클릭하시면 해당 조의 수집 및 라벨링 사진이 <strong>학생별로 분류</strong>되어 표시됩니다.</div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 5: 사전·사후 설문 분석 그래프 -->
+  <div class="tab-content" id="tab-surveys">
+    <!-- 상단 핵심 요약 지표 카드 4개 -->
+    <div class="stat-grid" style="margin-bottom:20px;">
+      <div class="stat-card">
+        <div class="stat-num" id="statPreSurveyCount" style="color:#0284C7;">0명</div>
+        <div class="stat-label">사전 설문 참여 학생</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statPostSurveyCount" style="color:#10B981;">0명</div>
+        <div class="stat-label">사후 설문 참여 학생</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statPreAvgScore" style="color:#64748B;">0.0점</div>
+        <div class="stat-label">학급 사전 평균 점수 (5점 만점)</div>
+      </div>
+      <div class="stat-card accent">
+        <div style="display:flex; align-items:baseline; justify-content:center; gap:8px;">
+          <div class="stat-num" id="statPostAvgScore" style="color:#059669;">0.0점</div>
+          <span id="statScoreDiffBadge" style="font-size:13px; font-weight:800; background:#DCFCE7; color:#15803D; padding:2px 8px; border-radius:12px; border:1px solid #86EFAC;">+0.00</span>
+        </div>
+        <div class="stat-label">학급 사후 평균 점수 및 향상치</div>
+      </div>
+    </div>
+
+    <!-- 그래프 그리드 2컬럼: 문항별 비교 막대 그래프 & 5대 역량 레이더 차트 -->
+    <div style="display:grid; grid-template-columns: 1.35fr 0.95fr; gap:20px; margin-bottom:24px;">
+      <!-- 그래프 1: 10개 문항별 사전 vs 사후 평균 점수 비교 차트 -->
+      <div class="manage-card" style="margin-bottom:0;">
+        <div class="section-header">
+          <div>
+            <h2>10대 핵심 역량 문항별 사전 vs 사후 평균 점수 비교</h2>
+            <p style="font-size:13px; color:#64748B; margin-top:3px;">사전(파랑) 대비 사후(초록)의 문항별 학생 인식 및 역량 성장을 비교합니다.</p>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <span style="display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:700; color:#0284C7;"><span style="width:10px; height:10px; background:#38BDF8; border-radius:2px; display:inline-block;"></span>사전 검사</span>
+            <span style="display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:700; color:#059669;"><span style="width:10px; height:10px; background:#10B981; border-radius:2px; display:inline-block;"></span>사후 검사</span>
+          </div>
+        </div>
+        <div style="position:relative; width:100%; height:340px;">
+          <canvas id="surveyBarChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 그래프 2: 5대 핵심 영역 방사형 레이더 차트 -->
+      <div class="manage-card" style="margin-bottom:0;">
+        <div class="section-header">
+          <div>
+            <h2>5대 탐정 핵심 영역 성장 레이더</h2>
+            <p style="font-size:13px; color:#64748B; margin-top:3px;">AI원리, 데이터품질, 분리배출, 비판적사고, 환경협업 5개 영역</p>
+          </div>
+        </div>
+        <div style="position:relative; width:100%; height:340px; display:flex; align-items:center; justify-content:center;">
+          <canvas id="surveyRadarChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 하단: 학생별 사전·사후 응답 상세 비교 표 및 사후 소감 피드 -->
+    <div class="manage-card">
+      <div class="section-header">
+        <div>
+          <h2>학생별 사전·사후 응답 및 성장 상세 목록</h2>
+          <span style="font-size:13px; color:#558B2F; font-weight:bold;">총 <span id="surveyMatchedCount">0</span>명 분석 완료</span>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button onclick="downloadSurveyCSV()" class="btn-action btn-green" style="font-size:13px; padding:7px 14px;">설문 데이터 CSV 다운로드</button>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>학생 닉네임</th>
+              <th>소속 모둠</th>
+              <th>사전 총점 (50점)</th>
+              <th>사후 총점 (50점)</th>
+              <th>점수 변화</th>
+              <th>성장률</th>
+              <th>사후 활동 소감 (11번)</th>
+              <th>사후 제출 일시</th>
+            </tr>
+          </thead>
+          <tbody id="surveyTableBody">
+            <tr><td colspan="8" style="text-align:center; padding:30px; color:#94A3B8;">설문 데이터를 수집하고 있습니다...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -1349,6 +1444,26 @@
     renderAll();
   });
 
+  // 사전 설문(pre_surveys) 실시간 구독
+  let preSurveysCache = [];
+  onSnapshot(collection(db, "pre_surveys"), (snapshot) => {
+    preSurveysCache = [];
+    snapshot.forEach(d => {
+      preSurveysCache.push({ id: d.id, ...d.data() });
+    });
+    renderSurveyAnalytics();
+  }, (err) => console.warn("pre_surveys listener error:", err));
+
+  // 사후 설문(post_surveys) 실시간 구독
+  let postSurveysCache = [];
+  onSnapshot(collection(db, "post_surveys"), (snapshot) => {
+    postSurveysCache = [];
+    snapshot.forEach(d => {
+      postSurveysCache.push({ id: d.id, ...d.data() });
+    });
+    renderSurveyAnalytics();
+  }, (err) => console.warn("post_surveys listener error:", err));
+
   function formatDateTime(val) {
     if (!val) return "-";
     try {
@@ -1433,6 +1548,7 @@
     renderTeamMgmtGrid(mergedTeams);
     renderStudentsTable(mergedTeams);
     renderTabPhotosTeamSelector(mergedTeams);
+    renderSurveyAnalytics();
   }
 
   // 1. 요약 통계 및 퀘스트별 미니 바 렌더링
@@ -2083,6 +2199,482 @@
       renderTabPhotosTeamSelector(merged);
       renderTabPhotos(currentTabPhotosTeamCode);
     }
+    if (tabId === 'tab-surveys') {
+      renderSurveyAnalytics();
+    }
+  };
+
+  // ── 사전·사후 설문 분석 그래프 및 통계 함수 ──
+  const SURVEY_QUESTIONS = [
+    { key: "q1", title: "Q1. AI 원리", area: "AI 원리 이해" },
+    { key: "q2", title: "Q2. 라벨링 중요성", area: "데이터 품질 & 라벨링" },
+    { key: "q3", title: "Q3. 데이터 품질", area: "데이터 품질 & 라벨링" },
+    { key: "q4", title: "Q4. 분리배출 기준", area: "자원순환 지식 & 탐색" },
+    { key: "q5", title: "Q5. 환경 문제 발견", area: "자원순환 지식 & 탐색" },
+    { key: "q6", title: "Q6. AI 오인식 분석", area: "AI 원리 이해" },
+    { key: "q7", title: "Q7. 비판적 검증", area: "비판적 검증 사고" },
+    { key: "q8", title: "Q8. 개선 데이터 수집", area: "데이터 품질 & 라벨링" },
+    { key: "q9", title: "Q9. 실천 규약 약속", area: "환경문제 해결 & 협업" },
+    { key: "q10", title: "Q10. AI 환경 효능감", area: "환경문제 해결 & 협업" }
+  ];
+
+  const SURVEY_AREAS = [
+    { name: "AI 원리 이해", keys: ["q1", "q6"] },
+    { name: "데이터 품질 & 라벨링", keys: ["q2", "q3", "q8"] },
+    { name: "자원순환 지식 & 탐색", keys: ["q4", "q5"] },
+    { name: "비판적 검증 사고", keys: ["q7"] },
+    { name: "환경문제 해결 & 협업", keys: ["q9", "q10"] }
+  ];
+
+  let surveyBarChartInstance = null;
+  let surveyRadarChartInstance = null;
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function renderSurveyAnalytics() {
+    const preCountEl = document.getElementById("statPreSurveyCount");
+    const postCountEl = document.getElementById("statPostSurveyCount");
+    const preAvgScoreEl = document.getElementById("statPreAvgScore");
+    const postAvgScoreEl = document.getElementById("statPostAvgScore");
+    const scoreDiffBadgeEl = document.getElementById("statScoreDiffBadge");
+    const matchedCountEl = document.getElementById("surveyMatchedCount");
+    const tableBody = document.getElementById("surveyTableBody");
+
+    const preCount = preSurveysCache.length;
+    const postCount = postSurveysCache.length;
+
+    if (preCountEl) preCountEl.textContent = `${preCount}명`;
+    if (postCountEl) postCountEl.textContent = `${postCount}명`;
+
+    // 매핑 테이블 생성
+    const preMap = {};
+    preSurveysCache.forEach(d => {
+      const sid = d.studentId || d.id;
+      if (sid) preMap[sid] = d;
+    });
+
+    const postMap = {};
+    postSurveysCache.forEach(d => {
+      const sid = d.studentId || d.id;
+      if (sid) postMap[sid] = d;
+    });
+
+    // 사전 평균 점수 계산 (5점 만점 환산)
+    let preTotalSum = 0;
+    let preValidCount = 0;
+    preSurveysCache.forEach(d => {
+      const avg = d.avgScore || (d.totalScore ? d.totalScore / 10 : 0);
+      if (avg > 0) {
+        preTotalSum += avg;
+        preValidCount++;
+      }
+    });
+    const overallPreAvg = preValidCount > 0 ? (preTotalSum / preValidCount) : 0;
+
+    // 사후 평균 점수 계산 (5점 만점 환산)
+    let postTotalSum = 0;
+    let postValidCount = 0;
+    postSurveysCache.forEach(d => {
+      const avg = d.avgScore || (d.totalScore ? d.totalScore / 10 : 0);
+      if (avg > 0) {
+        postTotalSum += avg;
+        postValidCount++;
+      }
+    });
+    const overallPostAvg = postValidCount > 0 ? (postTotalSum / postValidCount) : 0;
+
+    if (preAvgScoreEl) preAvgScoreEl.textContent = `${overallPreAvg.toFixed(2)}점`;
+    if (postAvgScoreEl) postAvgScoreEl.textContent = `${overallPostAvg.toFixed(2)}점`;
+
+    if (scoreDiffBadgeEl) {
+      const diff = overallPostAvg - overallPreAvg;
+      const diffFormatted = (diff >= 0 ? `+${diff.toFixed(2)}` : diff.toFixed(2));
+      scoreDiffBadgeEl.textContent = `${diffFormatted}점`;
+      if (diff > 0) {
+        scoreDiffBadgeEl.style.background = "#DCFCE7";
+        scoreDiffBadgeEl.style.color = "#15803D";
+        scoreDiffBadgeEl.style.borderColor = "#86EFAC";
+      } else if (diff < 0) {
+        scoreDiffBadgeEl.style.background = "#FEF3C7";
+        scoreDiffBadgeEl.style.color = "#B45309";
+        scoreDiffBadgeEl.style.borderColor = "#FCD34D";
+      } else {
+        scoreDiffBadgeEl.style.background = "#F1F5F9";
+        scoreDiffBadgeEl.style.color = "#64748B";
+        scoreDiffBadgeEl.style.borderColor = "#CBD5E1";
+      }
+    }
+
+    // 10개 문항별 사전 vs 사후 평균 점수 계산
+    const preQAvgs = SURVEY_QUESTIONS.map(q => {
+      let sum = 0, count = 0;
+      preSurveysCache.forEach(d => {
+        const val = d.answers ? d.answers[q.key] : 0;
+        if (val) { sum += val; count++; }
+      });
+      return count > 0 ? Number((sum / count).toFixed(2)) : 0;
+    });
+
+    const postQAvgs = SURVEY_QUESTIONS.map(q => {
+      let sum = 0, count = 0;
+      postSurveysCache.forEach(d => {
+        const val = d.answers ? d.answers[q.key] : 0;
+        if (val) { sum += val; count++; }
+      });
+      return count > 0 ? Number((sum / count).toFixed(2)) : 0;
+    });
+
+    // 5대 핵심 영역별 사전 vs 사후 평균 점수 계산
+    const preAreaAvgs = SURVEY_AREAS.map(area => {
+      const areaVals = [];
+      preSurveysCache.forEach(d => {
+        if (!d.answers) return;
+        let qSum = 0, qCnt = 0;
+        area.keys.forEach(k => {
+          if (d.answers[k]) { qSum += d.answers[k]; qCnt++; }
+        });
+        if (qCnt > 0) areaVals.push(qSum / qCnt);
+      });
+      if (!areaVals.length) return 0;
+      return Number((areaVals.reduce((a, b) => a + b, 0) / areaVals.length).toFixed(2));
+    });
+
+    const postAreaAvgs = SURVEY_AREAS.map(area => {
+      const areaVals = [];
+      postSurveysCache.forEach(d => {
+        if (!d.answers) return;
+        let qSum = 0, qCnt = 0;
+        area.keys.forEach(k => {
+          if (d.answers[k]) { qSum += d.answers[k]; qCnt++; }
+        });
+        if (qCnt > 0) areaVals.push(qSum / qCnt);
+      });
+      if (!areaVals.length) return 0;
+      return Number((areaVals.reduce((a, b) => a + b, 0) / areaVals.length).toFixed(2));
+    });
+
+    // Chart.js 그래프 렌더링
+    if (typeof window.Chart !== "undefined") {
+      // 1. Bar Chart (10개 문항별 비교)
+      const barCanvas = document.getElementById("surveyBarChart");
+      if (barCanvas) {
+        if (surveyBarChartInstance) {
+          surveyBarChartInstance.destroy();
+        }
+        surveyBarChartInstance = new window.Chart(barCanvas, {
+          type: 'bar',
+          data: {
+            labels: SURVEY_QUESTIONS.map(q => q.title),
+            datasets: [
+              {
+                label: '사전 검사',
+                data: preQAvgs,
+                backgroundColor: 'rgba(56, 189, 248, 0.8)',
+                borderColor: '#0284C7',
+                borderWidth: 1.5,
+                borderRadius: 6
+              },
+              {
+                label: '사후 검사',
+                data: postQAvgs,
+                backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                borderColor: '#059669',
+                borderWidth: 1.5,
+                borderRadius: 6
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top',
+                labels: {
+                  font: { family: 'Pretendard', size: 12, weight: 'bold' },
+                  boxWidth: 14,
+                  boxHeight: 14
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `${context.dataset.label}: ${context.parsed.y}점 / 5.0점`;
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                min: 0,
+                max: 5,
+                ticks: { stepSize: 1, font: { family: 'Pretendard', size: 11 } },
+                grid: { color: '#E2E8F0' }
+              },
+              x: {
+                ticks: { font: { family: 'Pretendard', size: 11, weight: '600' } },
+                grid: { display: false }
+              }
+            }
+          }
+        });
+      }
+
+      // 2. Radar Chart (5대 역량 영역 비교)
+      const radarCanvas = document.getElementById("surveyRadarChart");
+      if (radarCanvas) {
+        if (surveyRadarChartInstance) {
+          surveyRadarChartInstance.destroy();
+        }
+        surveyRadarChartInstance = new window.Chart(radarCanvas, {
+          type: 'radar',
+          data: {
+            labels: SURVEY_AREAS.map(a => a.name),
+            datasets: [
+              {
+                label: '사전 검사',
+                data: preAreaAvgs,
+                backgroundColor: 'rgba(56, 189, 248, 0.25)',
+                borderColor: '#0284C7',
+                pointBackgroundColor: '#0284C7',
+                pointBorderColor: '#FFFFFF',
+                pointRadius: 4,
+                borderWidth: 2
+              },
+              {
+                label: '사후 검사',
+                data: postAreaAvgs,
+                backgroundColor: 'rgba(16, 185, 129, 0.25)',
+                borderColor: '#059669',
+                pointBackgroundColor: '#059669',
+                pointBorderColor: '#FFFFFF',
+                pointRadius: 4,
+                borderWidth: 2
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top',
+                labels: {
+                  font: { family: 'Pretendard', size: 12, weight: 'bold' },
+                  boxWidth: 14,
+                  boxHeight: 14
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `${context.dataset.label}: ${context.parsed.r}점 / 5.0점`;
+                  }
+                }
+              }
+            },
+            scales: {
+              r: {
+                min: 0,
+                max: 5,
+                ticks: { stepSize: 1, display: false },
+                pointLabels: {
+                  font: { family: 'Pretendard', size: 12, weight: '700' },
+                  color: '#334155'
+                },
+                grid: { color: '#E2E8F0' },
+                angleLines: { color: '#E2E8F0' }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // 3. 학생별 매칭 상세 테이블 렌더링
+    if (tableBody) {
+      const allStudentIds = new Set();
+      studentsCache.forEach(s => allStudentIds.add(s.id || s.studentId));
+      preSurveysCache.forEach(s => allStudentIds.add(s.studentId || s.id));
+      postSurveysCache.forEach(s => allStudentIds.add(s.studentId || s.id));
+
+      const rows = [];
+      allStudentIds.forEach(sid => {
+        if (!sid || sid === "admin") return;
+        const sDoc = studentsCache.find(s => (s.id || s.studentId) === sid);
+        const pre = preMap[sid];
+        const post = postMap[sid];
+
+        if (!pre && !post) return;
+
+        const name = sDoc?.studentName || sDoc?.name || pre?.studentName || post?.studentName || sid;
+        const team = sDoc?.teamCode || pre?.teamCode || post?.teamCode || "-";
+
+        const preTotal = pre ? (pre.totalScore !== undefined ? pre.totalScore : (pre.avgScore ? Math.round(pre.avgScore * 10) : 0)) : null;
+        const postTotal = post ? (post.totalScore !== undefined ? post.totalScore : (post.avgScore ? Math.round(post.avgScore * 10) : 0)) : null;
+
+        let diffHtml = '<span style="color:#94A3B8;">-</span>';
+        let rateHtml = '<span style="color:#94A3B8;">-</span>';
+
+        if (preTotal !== null && postTotal !== null) {
+          const diff = postTotal - preTotal;
+          if (diff > 0) {
+            diffHtml = `<span style="font-weight:700; color:#15803D; background:#DCFCE7; padding:2px 8px; border-radius:10px; border:1px solid #86EFAC;">+${diff}점</span>`;
+          } else if (diff < 0) {
+            diffHtml = `<span style="font-weight:700; color:#B45309; background:#FEF3C7; padding:2px 8px; border-radius:10px; border:1px solid #FCD34D;">${diff}점</span>`;
+          } else {
+            diffHtml = `<span style="font-weight:700; color:#64748B; background:#F1F5F9; padding:2px 8px; border-radius:10px;">0점</span>`;
+          }
+
+          if (preTotal > 0) {
+            const rate = Math.round((diff / preTotal) * 100);
+            rateHtml = `<strong style="color:${rate >= 0 ? '#15803D' : '#B45309'};">${rate >= 0 ? '+' : ''}${rate}%</strong>`;
+          }
+        } else if (preTotal !== null && postTotal === null) {
+          diffHtml = '<span style="font-size:12px; color:#D97706; font-weight:600;">사후 미응답</span>';
+        } else if (preTotal === null && postTotal !== null) {
+          diffHtml = '<span style="font-size:12px; color:#0284C7; font-weight:600;">사전 미응답</span>';
+        }
+
+        const reflectionText = post?.reflection ? escapeHtml(post.reflection) : '<span style="color:#94A3B8;">(소감 미작성)</span>';
+        const submittedDate = formatDateTime(post?.submittedAt || pre?.submittedAt);
+
+        rows.push({
+          sid,
+          name,
+          team,
+          preTotal,
+          postTotal,
+          diffHtml,
+          rateHtml,
+          reflectionText,
+          submittedDate
+        });
+      });
+
+      if (matchedCountEl) matchedCountEl.textContent = rows.length;
+
+      if (rows.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:#94A3B8;">제출된 설문 응답 데이터가 아직 없습니다.</td></tr>';
+      } else {
+        tableBody.innerHTML = rows.map(r => `
+          <tr>
+            <td><strong>${r.name}</strong> <span style="font-size:11px; color:#94A3B8;">(${r.sid})</span></td>
+            <td><span class="code-tag" style="font-size:11px; padding:2px 8px;">${r.team}</span></td>
+            <td><b>${r.preTotal !== null ? `${r.preTotal}점` : '<span style="color:#94A3B8;">-</span>'}</b></td>
+            <td><b>${r.postTotal !== null ? `${r.postTotal}점` : '<span style="color:#94A3B8;">-</span>'}</b></td>
+            <td>${r.diffHtml}</td>
+            <td>${r.rateHtml}</td>
+            <td style="max-width:320px; white-space:normal; line-height:1.5; font-size:12.5px; color:#334155;">${r.reflectionText}</td>
+            <td style="font-size:11.5px; color:#64748B;">${r.submittedDate}</td>
+          </tr>
+        `).join('');
+      }
+    }
+  }
+
+  // ── 설문 데이터 CSV 일괄 다운로드 함수 ──
+  window.downloadSurveyCSV = function() {
+    const allStudentIds = new Set();
+    studentsCache.forEach(s => allStudentIds.add(s.id || s.studentId));
+    preSurveysCache.forEach(s => allStudentIds.add(s.studentId || s.id));
+    postSurveysCache.forEach(s => allStudentIds.add(s.studentId || s.id));
+
+    const preMap = {};
+    preSurveysCache.forEach(d => { preMap[d.studentId || d.id] = d; });
+    const postMap = {};
+    postSurveysCache.forEach(d => { postMap[d.studentId || d.id] = d; });
+
+    const headers = [
+      "학번/아이디", "이름", "소속모둠",
+      "사전총점(50점)", "사후총점(50점)", "점수변화", "성장률(%)",
+      "사전평균(5점)", "사후평균(5점)",
+      "Q1_사전", "Q1_사후",
+      "Q2_사전", "Q2_사후",
+      "Q3_사전", "Q3_사후",
+      "Q4_사전", "Q4_사후",
+      "Q5_사전", "Q5_사후",
+      "Q6_사전", "Q6_사후",
+      "Q7_사전", "Q7_사후",
+      "Q8_사전", "Q8_사후",
+      "Q9_사전", "Q9_사후",
+      "Q10_사전", "Q10_사후",
+      "11번_사후소감", "사후제출일시"
+    ];
+
+    const escapeCSV = (val) => {
+      if (val === null || val === undefined) return '""';
+      const s = String(val).replace(/"/g, '""').replace(/\r?\n/g, ' ');
+      return `"${s}"`;
+    };
+
+    const csvRows = [headers.join(",")];
+
+    allStudentIds.forEach(sid => {
+      if (!sid || sid === "admin") return;
+      const sDoc = studentsCache.find(s => (s.id || s.studentId) === sid);
+      const pre = preMap[sid];
+      const post = postMap[sid];
+
+      if (!pre && !post) return;
+
+      const name = sDoc?.studentName || sDoc?.name || pre?.studentName || post?.studentName || sid;
+      const team = sDoc?.teamCode || pre?.teamCode || post?.teamCode || "-";
+
+      const preTotal = pre ? (pre.totalScore !== undefined ? pre.totalScore : "") : "";
+      const postTotal = post ? (post.totalScore !== undefined ? post.totalScore : "") : "";
+      let diff = "";
+      let rate = "";
+      if (preTotal !== "" && postTotal !== "") {
+        diff = postTotal - preTotal;
+        if (preTotal > 0) rate = Math.round((diff / preTotal) * 100);
+      }
+      const preAvg = pre ? (pre.avgScore || (preTotal !== "" ? (preTotal / 10).toFixed(1) : "")) : "";
+      const postAvg = post ? (post.avgScore || (postTotal !== "" ? (postTotal / 10).toFixed(1) : "")) : "";
+
+      const row = [
+        escapeCSV(sid),
+        escapeCSV(name),
+        escapeCSV(team),
+        escapeCSV(preTotal),
+        escapeCSV(postTotal),
+        escapeCSV(diff),
+        escapeCSV(rate),
+        escapeCSV(preAvg),
+        escapeCSV(postAvg)
+      ];
+
+      for (let i = 1; i <= 10; i++) {
+        const qk = `q${i}`;
+        row.push(escapeCSV(pre?.answers?.[qk] ?? ""));
+        row.push(escapeCSV(post?.answers?.[qk] ?? ""));
+      }
+
+      row.push(escapeCSV(post?.reflection ?? ""));
+      row.push(escapeCSV(formatDateTime(post?.submittedAt || pre?.submittedAt)));
+
+      csvRows.push(row.join(","));
+    });
+
+    const bom = "\uFEFF";
+    const blob = new Blob([bom + csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    a.href = url;
+    a.download = `자원순환_탐정단_사전사후_설문분석_${today}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   // 모둠 코드 클립보드 복사

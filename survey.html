@@ -214,19 +214,33 @@
     submitBtn.textContent = "설문 제출 중...";
 
     const answers = {};
+    let totalScore = 0;
     for (let i = 1; i <= 10; i++) {
       const checked = document.querySelector(`input[name="q${i}"]:checked`);
-      answers[`q${i}`] = checked ? parseInt(checked.value, 10) : 0;
+      const val = checked ? parseInt(checked.value, 10) : 0;
+      answers[`q${i}`] = val;
+      totalScore += val;
     }
+
+    const teamCode = localStorage.getItem("elementary_teamCode") || localStorage.getItem("teamCode") || "1모둠";
 
     try {
       // Firebase Firestore의 pre_surveys 컬렉션에 학번을 문서 ID로 저장
       await setDoc(doc(db, "pre_surveys", studentId), {
         studentId: studentId,
         studentName: studentName,
+        teamCode: teamCode,
         answers: answers,
+        totalScore: totalScore,
+        avgScore: Math.round((totalScore / 10) * 10) / 10,
         submittedAt: serverTimestamp()
       });
+
+      // 학생 문서에도 사전설문 완료 기록
+      await setDoc(doc(db, "students", studentId), {
+        preSurveyDone: true,
+        lastActive: serverTimestamp()
+      }, { merge: true });
 
       // 설문 완료 플래그 로컬 저장
       localStorage.setItem("elementary_surveyDone", "true");

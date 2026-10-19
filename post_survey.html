@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI 자원순환 탐정단 - 사후 설문조사</title>
+  <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-dark: #047857;
+      --primary-light: #ECFDF5;
+      --secondary: #0284C7;
+      --border: #CBD5E1;
+      --text: #1E293B;
+      --bg: #F8FAFC;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; }
+    
+    body {
+      background-color: #F1F5F9;
+      color: var(--text);
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background: #FFFFFF;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      overflow: hidden;
+      padding: 28px 22px;
+      border: 2px solid #E2E8F0;
+    }
+
+    header {
+      text-align: center;
+      padding-bottom: 18px;
+      border-bottom: 2px solid var(--primary-light);
+      margin-bottom: 22px;
+    }
+
+    .header-badge {
+      display: inline-block;
+      background: #E0F2FE;
+      color: #0369A1;
+      font-family: 'Jua', sans-serif;
+      font-size: 13px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+      border: 1px solid #BAE6FD;
+    }
+
+    h1 {
+      font-family: 'Jua', sans-serif;
+      font-size: 24px;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+
+    p.guide {
+      font-size: 14px;
+      color: #64748B;
+      line-height: 1.6;
+    }
+
+    .student-badge {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border: 1.5px solid #A7F3D0;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13.5px;
+      margin-top: 12px;
+    }
+
+    .question-card {
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 18px 16px;
+      margin-bottom: 18px;
+      transition: all 0.2s ease;
+    }
+
+    .question-card:hover {
+      border-color: #94A3B8;
+      background: #FFFFFF;
+    }
+
+    .question-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      line-height: 1.5;
+      color: #0F172A;
+    }
+
+    /* 5점 척도 선택 버튼 */
+    .scale-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .scale-item {
+      flex: 1;
+      text-align: center;
+    }
+
+    .scale-item input[type="radio"] {
+      display: none;
+    }
+
+    .scale-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 4px;
+      border: 2px solid #E2E8F0;
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 13px;
+      font-weight: 800;
+      color: #475569;
+    }
+
+    .scale-label:hover {
+      border-color: #CBD5E1;
+      background: #F8FAFC;
+    }
+
+    .scale-item input[type="radio"]:checked + .scale-label {
+      border-color: var(--primary);
+      background-color: var(--primary-light);
+      color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.2);
+    }
+
+    .scale-text {
+      font-size: 10.5px;
+      color: #64748B;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .scale-item input[type="radio"]:checked + .scale-label .scale-text {
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    /* 주관식 소감 서술 상자 */
+    .reflection-card {
+      background: #F0FDF4;
+      border: 2px solid #86EFAC;
+      border-radius: 16px;
+      padding: 18px 16px;
+      margin-bottom: 20px;
+    }
+
+    .reflection-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      color: #166534;
+      margin-bottom: 8px;
+    }
+
+    .reflection-textarea {
+      width: 100%;
+      height: 100px;
+      border: 2px solid #BBF7D0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14.5px;
+      font-family: 'Pretendard', sans-serif;
+      resize: vertical;
+      outline: none;
+      background: #FFFFFF;
+      color: #1E293B;
+      line-height: 1.6;
+    }
+
+    .reflection-textarea:focus {
+      border-color: #16A34A;
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #059669, #047857);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-family: 'Jua', sans-serif;
+      font-size: 19px;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(5, 150, 105, 0.35);
+      transition: all 0.2s;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(5, 150, 105, 0.45);
+    }
+
+    .btn-submit:disabled {
+      background: #94A3B8;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .top-nav {
+      margin-bottom: 14px;
+    }
+
+    .btn-back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #64748B;
+      text-decoration: none;
+      background: #F1F5F9;
+      padding: 6px 12px;
+      border-radius: 10px;
+      border: 1px solid #E2E8F0;
+      transition: all 0.2s;
+    }
+
+    .btn-back-home:hover {
+      background: #E2E8F0;
+      color: #0F172A;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="top-nav">
+    <a href="myhome.html" class="btn-back-home">&larr; 우리 모둠 아지트로 돌아가기</a>
+  </div>
+
+  <header>
+    <div class="header-badge">사후 성찰 및 역량 평가</div>
+    <h1>AI 자원순환 탐정단 사후 설문조사</h1>
+    <p class="guide">
+      AI 자원순환 탐정단 활동을 모두 마쳤습니다!<br>
+      활동을 통해 여러분의 생각과 능력이 어떻게 성장했는지 솔직하게 답변해주세요.
+    </p>
+    <div class="student-badge" id="dispStudent">학생 정보 확인 중...</div>
+  </header>
+
+  <form id="surveyForm">
+    <!-- 10개 핵심 역량 5점 척도 문항 -->
+    <div id="questionsContainer"></div>
+
+    <!-- 11번 주관식 활동 소감 문항 -->
+    <div class="reflection-card">
+      <div class="reflection-title">11. [활동 소감] 탐정단 활동을 마치며 느낀 점이나 가장 기억에 남는 점을 자유롭게 적어주세요.</div>
+      <textarea id="reflectionInput" class="reflection-textarea" placeholder="예: AI가 사진 속 쓰레기를 20프레임마다 알아맞히는 모습이 신기했고, 우유갑과 일반 종이를 분리해야 한다는 것을 새롭게 배웠습니다." required></textarea>
+    </div>
+
+    <button type="submit" class="btn-submit" id="submitBtn">사후 설문 제출하고 탐정 수료하기</button>
+  </form>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+    authDomain: "elemeelementary-textbook.firebaseapp.com",
+    projectId: "elemeelementary-textbook",
+    storageBucket: "elemeelementary-textbook.firebasestorage.app",
+    messagingSenderId: "713149004420",
+    appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
+    measurementId: "G-TZT282J9E8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const teamCode = localStorage.getItem("elementary_teamCode") || localStorage.getItem("teamCode") || "1모둠";
+  const studentId = localStorage.getItem("elementary_studentId") || `${teamCode}_탐정`;
+  const studentName = localStorage.getItem("elementary_studentName") || localStorage.getItem("studentName") || "탐정";
+
+  if (!studentId) {
+    window.location.href = "index.html";
+  }
+
+  document.getElementById("dispStudent").textContent = `${studentName} (${teamCode}) 탐정단원`;
+
+  // 사전 설문과 1:1 비교를 위한 동일 10개 문항
+  const questions = [
+    "1. 인공지능(AI)이 사진이나 그림을 보고 사물을 알아맞히는 원리를 알고 있다.",
+    "2. AI가 올바르게 학습하려면 사람이 정확한 '이름표(라벨)'를 붙여주어야 한다는 것을 안다.",
+    "3. AI 학습에 알맞은 '좋은 사진 데이터'의 조건을 설명할 수 있다.",
+    "4. 종이류, 플라스틱, 우유팩, 캔 등을 올바르게 나누어 버리는 기준을 잘 알고 있다.",
+    "5. 우리 학교 쓰레기 분리배출에서 자주 발생하는 문제점을 찾아낼 수 있다.",
+    "6. AI가 물건을 잘못 알아맞혔을 때, 왜 틀렸는지(각도, 빛, 오염 등) 원인을 찾을 수 있다.",
+    "7. AI가 내놓은 결과를 무조건 믿지 않고, 사람이 직접 확인하고 검토해야 한다고 생각한다.",
+    "8. AI 성능을 높이기 위해 어떤 사진 데이터를 더 모아야 할지 생각할 수 있다.",
+    "9. 우리 반 친구들과 함께 지킬 학교 자원순환 실천 약속(규약)을 만들 수 있다.",
+    "10. AI와 데이터를 활용하면 학교나 우리 마을의 환경 문제를 해결하는 데 도움이 된다고 생각한다."
+  ];
+
+  const scaleTexts = ["전혀 아니다", "아니다", "보통이다", "그렇다", "매우 그렇다"];
+  const container = document.getElementById("questionsContainer");
+
+  questions.forEach((q, idx) => {
+    const qNum = idx + 1;
+    const card = document.createElement("div");
+    card.className = "question-card";
+
+    let scaleHtml = `<div class="question-title">${q}</div><div class="scale-group">`;
+    for (let score = 1; score <= 5; score++) {
+      scaleHtml += `
+        <div class="scale-item">
+          <input type="radio" id="post_q${qNum}_s${score}" name="q${qNum}" value="${score}" required>
+          <label class="scale-label" for="post_q${qNum}_s${score}">
+            <div>${score}점</div>
+            <div class="scale-text">${scaleTexts[score - 1]}</div>
+          </label>
+        </div>
+      `;
+    }
+    scaleHtml += `</div>`;
+    card.innerHTML = scaleHtml;
+    container.appendChild(card);
+  });
+
+  document.getElementById("surveyForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "사후 설문 제출 중...";
+
+    const answers = {};
+    let totalScore = 0;
+    for (let i = 1; i <= 10; i++) {
+      const checked = document.querySelector(`input[name="q${i}"]:checked`);
+      const val = checked ? parseInt(checked.value, 10) : 0;
+      answers[`q${i}`] = val;
+      totalScore += val;
+    }
+
+    const reflection = document.getElementById("reflectionInput").value.trim();
+
+    try {
+      // 1. Firebase Firestore post_surveys 컬렉션에 저장
+      await setDoc(doc(db, "post_surveys", studentId), {
+        studentId: studentId,
+        studentName: studentName,
+        teamCode: teamCode,
+        answers: answers,
+        totalScore: totalScore,
+        avgScore: Math.round((totalScore / 10) * 10) / 10,
+        reflection: reflection,
+        submittedAt: serverTimestamp()
+      });
+
+      // 2. 학생 문서에 사후 설문 완료 플래그 기록
+      await setDoc(doc(db, "students", studentId), {
+        postSurveyDone: true,
+        lastActive: serverTimestamp()
+      }, { merge: true });
+
+      // 3. 로컬 스토리지에 완료 상태 저장
+      localStorage.setItem("elementary_postSurveyDone", "true");
+
+      alert("사후 설문조사가 성공적으로 제출되었습니다!\n선생님 관리자 대시보드에서 여러분의 성장 분석 그래프를 확인할 수 있습니다.");
+      window.location.href = "myhome.html";
+    } catch (err) {
+      console.error(err);
+      alert("설문 저장 중 오류가 발생했습니다: " + err.message);
+      submitBtn.disabled = false;
+      submitBtn.textContent = "사후 설문 제출하고 탐정 수료하기";
+    }
+  });
+</script>
+</body>
+</html>
