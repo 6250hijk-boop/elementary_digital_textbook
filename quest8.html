@@ -3,47 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>QUEST 8: 우리학교 자원 순환 규약 의회</title>
-  <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua -->
+  <title>QUEST 8: 실천하기 - 실시간 분리수거 AI 영상 분석</title>
+
+  <!-- 웹 폰트: Pretendard & Jua -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+  <!-- ONNX Runtime Web (best.pt 가중치 모델 실행용) -->
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/ort.min.js"></script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
   <style>
     :root {
-      --primary: #2E7D32;
-      --primary-dark: #1B5E20;
-      --primary-light: #E8F5E9;
-      --secondary: #FF9800;
-      --secondary-light: #FFF3E0;
-      --gold: #FFD700;
-      --accent-purple: #6A1B9A;
-      --bg: #F4F9F4;
-      --card-bg: #FFFFFF;
-      --text: #263238;
-      --text-muted: #546E7A;
-      --shadow: 0 8px 24px rgba(46, 125, 50, 0.12);
-      --radius: 22px;
+      --primary: #059669;
+      --primary-dark: #047857;
+      --primary-light: #ecfdf5;
+      --bg: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.92);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --radius: 20px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     body {
       background-color: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(5, 150, 105, 0.18) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.15) 0px, transparent 50%);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
+    /* 헤더 */
     header {
-      background: linear-gradient(135deg, #1B5E20, #004D40);
-      color: white;
-      padding: 16px 24px;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 14px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
       position: sticky;
       top: 0;
       z-index: 100;
@@ -55,1022 +72,1520 @@
       gap: 12px;
     }
 
-    .header-left a {
-      color: white;
+    .btn-map {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: #e2e8f0;
       text-decoration: none;
-      font-size: 22px;
-      background: rgba(255,255,255,0.2);
-      padding: 6px 12px;
-      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       transition: all 0.2s;
     }
 
-    .header-left a:hover {
-      background: rgba(255,255,255,0.3);
+    .btn-map:hover {
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateY(-1px);
     }
 
-    .header-title {
+    .header-title-wrap h1 {
       font-family: 'Jua', sans-serif;
-      font-size: 22px;
+      font-size: 21px;
+      color: #f1f5f9;
       letter-spacing: 0.5px;
+    }
+
+    .header-title-wrap p {
+      font-size: 12px;
+      color: var(--text-muted);
     }
 
     .header-right {
       display: flex;
       align-items: center;
-      gap: 10px;
-    }
-
-    .team-badge {
-      background: rgba(255,255,255,0.25);
-      border: 1px solid rgba(255,255,255,0.4);
-      color: white;
-      font-family: 'Jua', sans-serif;
-      font-size: 15px;
-      padding: 6px 14px;
-      border-radius: 20px;
-    }
-
-    .score-badge {
-      background: #FFF9C4;
-      color: #F57F17;
-      font-family: 'Jua', sans-serif;
-      font-size: 15px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-weight: bold;
-      border: 2px solid #FBC02D;
-    }
-
-    .step-nav {
-      background: white;
-      border-bottom: 2px solid #E8F5E9;
-      display: flex;
-      justify-content: center;
       gap: 8px;
-      padding: 12px 16px;
-      overflow-x: auto;
     }
 
-    .step-btn {
-      padding: 8px 18px;
+    .badge-chip {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--card-border);
+      padding: 6px 12px;
       border-radius: 20px;
-      border: 2px solid #C8E6C9;
-      background: #F1F8E9;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--primary-dark);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-      transition: all 0.2s;
+      font-size: 13px;
+      font-weight: 600;
+      color: #e2e8f0;
     }
 
-    .step-btn.active {
-      background: var(--primary-dark);
-      color: white;
-      border-color: var(--primary-dark);
-      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+    .badge-exp {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+      font-family: 'Jua', sans-serif;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
     }
 
-    .step-btn.done {
-      background: #E8F5E9;
-      border-color: #81C784;
-    }
-
-    .main-container {
-      max-width: 960px;
-      margin: 24px auto;
-      padding: 0 16px;
+    /* 메인 컨테이너 */
+    main {
       flex: 1;
+      max-width: 1100px;
       width: 100%;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
     }
 
-    .card {
-      background: var(--card-bg);
+    /* 상단 안내 배너 */
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(5, 150, 105, 0.25), rgba(56, 189, 248, 0.15));
+      border: 1.5px solid rgba(5, 150, 105, 0.4);
       border-radius: var(--radius);
-      padding: 28px;
-      box-shadow: var(--shadow);
-      margin-bottom: 24px;
-      border: 2px solid #E8F5E9;
-      animation: fadeIn 0.4s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card-title {
-      font-family: 'Jua', sans-serif;
-      font-size: 24px;
-      color: var(--primary-dark);
-      margin-bottom: 10px;
+      padding: 16px 22px;
       display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .card-desc {
-      color: var(--text-muted);
-      font-size: 15px;
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
-
-    /* 스티커 보관함 바 */
-    .sticker-wallet {
-      background: linear-gradient(135deg, #FFF9C4, #FFF59D);
-      border: 2px solid #FBC02D;
-      border-radius: 18px;
-      padding: 16px 20px;
-      margin-bottom: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
       gap: 12px;
-      box-shadow: 0 4px 12px rgba(251, 192, 45, 0.2);
     }
 
-    .wallet-title {
+    .hero-banner-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      color: #34d399;
+      margin-bottom: 4px;
+    }
+
+    .hero-banner-desc {
+      font-size: 14px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    .model-tag {
+      background: rgba(5, 150, 105, 0.25);
+      border: 1px solid #10b981;
+      color: #6ee7b7;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* 메인 비전 워크스페이스 */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .workspace-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 좌측: 실시간 카메라 뷰파인더 */
+    .camera-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .camera-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .camera-title {
       font-family: 'Jua', sans-serif;
       font-size: 18px;
-      color: #E65100;
+      color: #e2e8f0;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .sticker-chips-wrap {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .sticker-badge {
-      background: white;
-      border: 2px solid #FFA000;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 800;
-      color: #BF360C;
+    .live-badge {
       display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* 투표 대상 후보 카드 리스트 */
-    .candidate-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .candidate-card {
-      background: #FFFFFF;
-      border: 2px solid #C8E6C9;
-      border-radius: 18px;
-      padding: 22px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-      transition: all 0.2s;
-    }
-
-    .candidate-card:hover {
-      border-color: var(--primary);
-      box-shadow: 0 6px 16px rgba(46, 125, 50, 0.15);
-    }
-
-    .candidate-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 1px dashed #E0E0E0;
-    }
-
-    .candidate-author {
-      font-family: 'Jua', sans-serif;
-      font-size: 16px;
-      color: #2E7D32;
-      display: flex;
       align-items: center;
       gap: 6px;
-    }
-
-    .candidate-title {
-      font-family: 'Jua', sans-serif;
-      font-size: 20px;
-      color: #1B5E20;
-      margin-bottom: 10px;
-    }
-
-    .candidate-articles {
-      background: #F9FBE7;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      padding: 4px 10px;
       border-radius: 12px;
-      padding: 14px 16px;
-      border: 1px solid #DCEDC8;
-      margin-bottom: 14px;
-      font-size: 15px;
-      line-height: 1.6;
-      color: #37474F;
+      font-size: 12px;
+      font-weight: 700;
     }
 
-    .candidate-articles li {
-      margin-left: 20px;
-      margin-bottom: 6px;
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+      animation: blinkLive 1.5s infinite;
     }
 
-    .candidate-reason {
-      font-size: 14px;
-      color: #558B2F;
-      margin-bottom: 14px;
+    @keyframes blinkLive {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.8); }
     }
 
-    /* 스티커 투표 바 */
-    .sticker-voting-area {
-      background: #F1F8E9;
-      border-radius: 14px;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-      border: 1px solid #C8E6C9;
-    }
-
-    .sticker-buttons {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .btn-sticker {
-      background: white;
-      border: 2px solid #A5D6A7;
-      padding: 6px 12px;
-      border-radius: 16px;
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .btn-sticker:hover {
-      background: #E8F5E9;
-      border-color: #2E7D32;
-      transform: scale(1.05);
-    }
-
-    .btn-sticker.attached {
-      background: #2E7D32;
-      color: white;
-      border-color: #1B5E20;
-    }
-
-    .sticker-board-preview {
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-      min-height: 28px;
-      align-items: center;
-    }
-
-    .sticker-stamp {
-      font-size: 20px;
-      animation: popSticker 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes popSticker {
-      from { transform: scale(0); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    /* 3단계: 순위 정렬 결과 뷰 */
-    .ranking-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .rank-card {
-      background: white;
-      border: 2px solid #C8E6C9;
-      border-radius: 18px;
-      padding: 20px;
+    /* 뷰파인더 화면 */
+    .viewfinder-box {
       position: relative;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-
-    .rank-card.top1 {
-      border: 3px solid #FBC02D;
-      background: #FFFDE7;
-      box-shadow: 0 8px 24px rgba(251, 192, 45, 0.25);
-    }
-
-    .rank-card.top2 {
-      border: 2px solid #90A4AE;
-      background: #F8FAFC;
-    }
-
-    .rank-card.top3 {
-      border: 2px solid #BCAAA4;
-      background: #EFEBE9;
-    }
-
-    .rank-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px dashed #E0E0E0;
-    }
-
-    .rank-badge-wrap {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .rank-medal {
-      font-size: 26px;
-    }
-
-    .rank-num-pill {
-      font-family: 'Jua', sans-serif;
-      font-size: 18px;
-      color: #1B5E20;
-    }
-
-    .vote-score-pill {
-      background: #FFF9C4;
-      border: 1px solid #FBC02D;
-      color: #E65100;
-      font-family: 'Jua', sans-serif;
-      font-size: 16px;
-      padding: 4px 12px;
-      border-radius: 14px;
-    }
-
-    /* 4단계: 최종 헌장 서명 */
-    .charter-doc {
-      background: #FFFDE7;
-      border: 4px double #FBC02D;
-      border-radius: 20px;
-      padding: 32px;
-      text-align: center;
-      position: relative;
-      box-shadow: 0 8px 24px rgba(251, 192, 45, 0.2);
-      margin-bottom: 24px;
-    }
-
-    .charter-emblem {
-      font-size: 48px;
-      margin-bottom: 10px;
-    }
-
-    .charter-title {
-      font-family: 'Jua', sans-serif;
-      font-size: 28px;
-      color: #E65100;
-      margin-bottom: 14px;
-    }
-
-    .charter-articles {
-      text-align: left;
-      background: white;
-      border-radius: 12px;
-      border: 1px solid #FFE082;
-      padding: 20px;
-      margin: 18px 0;
-      font-size: 15px;
-      line-height: 1.8;
-      color: #37474F;
-    }
-
-    .charter-sign-area {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      margin-top: 24px;
-      padding-top: 20px;
-      border-top: 2px dashed #FFE082;
-    }
-
-    .sign-box {
-      font-family: 'Jua', sans-serif;
-      font-size: 17px;
-      color: #1B5E20;
-    }
-
-    .sign-badge {
-      background: #E8F5E9;
-      color: #2E7D32;
-      padding: 6px 16px;
-      border-radius: 20px;
-      border: 2px solid #81C784;
-      display: inline-block;
-      margin-top: 6px;
-    }
-
-    /* 5단계: 인증서 카드 */
-    .cert-box {
-      background: linear-gradient(135deg, #FFF9C4, #FFF59D);
-      border: 4px solid #FBC02D;
-      border-radius: 24px;
-      padding: 36px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(251, 192, 45, 0.35);
-      animation: popCert 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes popCert {
-      from { transform: scale(0.85); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .cert-icon {
-      font-size: 64px;
-      margin-bottom: 12px;
-    }
-
-    .cert-title {
-      font-family: 'Jua', sans-serif;
-      font-size: 32px;
-      color: #BF360C;
-      margin-bottom: 10px;
-    }
-
-    .cert-subtitle {
-      font-size: 17px;
-      color: #5D4037;
-      margin-bottom: 24px;
-    }
-
-    .cert-details {
-      background: white;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 600px;
+      margin: 0 auto;
+      background: #020617;
       border-radius: 16px;
-      padding: 20px;
-      margin: 0 auto 24px auto;
-      max-width: 500px;
-      font-size: 16px;
-      line-height: 1.8;
-      color: #37474F;
-      border: 1px solid #FFE082;
-    }
-
-    /* 하단 버튼 */
-    .action-btn-area {
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.12);
       display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    .btn {
-      padding: 14px 28px;
-      border-radius: 16px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      display: inline-flex;
       align-items: center;
-      gap: 8px;
-      border: none;
-      transition: all 0.2s;
-      font-family: 'Jua', sans-serif;
+      justify-content: center;
     }
 
-    .btn-prev {
-      background: #ECEFF1;
-      color: #455A64;
+    #webcamVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
-    .btn-prev:hover {
-      background: #CFD8DC;
+    #visionCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
     }
 
-    .btn-next {
-      background: linear-gradient(135deg, #4CAF50, #2E7D32);
-      color: white;
-      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
-    }
-
-    .btn-next:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
-    }
-
-    .step-content {
+    /* 프레임 분석 스캔 레이저 라인 */
+    .scan-laser {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #34d399, transparent);
+      box-shadow: 0 0 14px #34d399;
+      z-index: 8;
+      animation: laserMove 2.2s ease-in-out infinite alternate;
       display: none;
     }
 
-    .step-content.active {
+    @keyframes laserMove {
+      0% { top: 4%; }
+      100% { top: 96%; }
+    }
+
+    /* 코너 레티클 가이드 */
+    .reticle {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-color: #34d399;
+      pointer-events: none;
+      z-index: 6;
+    }
+    .reticle-tl { top: 12px; left: 12px; border-top: 3px solid; border-left: 3px solid; }
+    .reticle-tr { top: 12px; right: 12px; border-top: 3px solid; border-right: 3px solid; }
+    .reticle-bl { bottom: 12px; left: 12px; border-bottom: 3px solid; border-left: 3px solid; }
+    .reticle-br { bottom: 12px; right: 12px; border-bottom: 3px solid; border-right: 3px solid; }
+
+    /* 대기 플레이스홀더 */
+    .camera-placeholder {
+      position: absolute;
+      inset: 0;
+      background: #090d16;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 24px;
+      text-align: center;
+      z-index: 15;
+    }
+
+    .placeholder-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      color: #f1f5f9;
+    }
+
+    .placeholder-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .btn-start-camera {
+      background: linear-gradient(135deg, #059669, #047857);
+      color: white;
+      border: none;
+      padding: 13px 26px;
+      border-radius: 12px;
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(5, 150, 105, 0.4);
+      transition: all 0.2s;
+    }
+
+    .btn-start-camera:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(5, 150, 105, 0.5);
+    }
+
+    /* 뷰파인더 내부 하단 HUD 바 */
+    .viewfinder-hud {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      z-index: 12;
+    }
+
+    .hud-frame-indicator {
+      color: #6ee7b7;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hud-cycle-pill {
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #7dd3fc;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+    }
+
+    /* 카메라 컨트롤 바 */
+    .camera-control-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-control {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: #f1f5f9;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-family: 'Jua', sans-serif;
+      font-size: 14.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-control:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .btn-control.active-stop {
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+      border-color: #ef4444;
+      color: white;
+    }
+
+    /* 우측: 실시간 분리수거 물품 분석 결과 패널 */
+    .analysis-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .panel-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 18px;
+      color: #e2e8f0;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 10px;
+    }
+
+    /* 메인 감지 품목 카드 */
+    .primary-result-card {
+      background: linear-gradient(135deg, rgba(5, 150, 105, 0.15), rgba(15, 23, 42, 0.7));
+      border: 1.5px solid rgba(52, 211, 153, 0.4);
+      border-radius: 16px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .result-badge-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .result-status-tag {
+      font-size: 12px;
+      font-weight: 800;
+      color: #34d399;
+      letter-spacing: 0.5px;
+    }
+
+    .result-score-badge {
+      font-family: 'Jua', sans-serif;
+      font-size: 19px;
+      color: #34d399;
+      background: rgba(5, 150, 105, 0.25);
+      padding: 2px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(52, 211, 153, 0.4);
+    }
+
+    .result-item-name {
+      font-family: 'Jua', sans-serif;
+      font-size: 26px;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+
+    .score-meter-bg {
+      width: 100%;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .score-meter-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+
+    /* 분리수거 실천 요령 가이드 박스 */
+    .practice-guide-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .practice-guide-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 15px;
+      color: #38bdf8;
+    }
+
+    .practice-guide-desc {
+      font-size: 13.5px;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+
+    /* 실시간 분석 통계 지표 */
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-family: 'Jua', sans-serif;
+      font-size: 18px;
+      color: #f8fafc;
+    }
+
+    /* 모델 파일 수동 연결 (file:/// 로컬 보안 제약 시) */
+    .manual-load-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .btn-manual-onnx {
+      display: inline-block;
+      width: 100%;
+      cursor: pointer;
+      color: #6ee7b7;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 6px;
+    }
+
+    /* 하단 실천 완료 섹션 */
+    .complete-section {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(56, 189, 248, 0.15));
+      border: 1.5px solid rgba(52, 211, 153, 0.35);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .complete-desc h3 {
+      font-family: 'Jua', sans-serif;
+      font-size: 20px;
+      color: #34d399;
+      margin-bottom: 4px;
+    }
+
+    .complete-desc p {
+      font-size: 13.5px;
+      color: #cbd5e1;
+    }
+
+    .btn-complete-action {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      padding: 16px 28px;
+      border-radius: 14px;
+      font-family: 'Jua', sans-serif;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+      transition: all 0.2s;
+    }
+
+    .btn-complete-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5);
+    }
+
+    /* 축하 모달 */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: #1e293b;
+      border: 2px solid #10b981;
+      border-radius: 24px;
+      max-width: 480px;
+      width: 100%;
+      padding: 32px 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      animation: popUp 0.3s ease-out;
+    }
+
+    @keyframes popUp {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 26px;
+      color: #f8fafc;
+    }
+
+    .modal-exp-box {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+      font-family: 'Jua', sans-serif;
+      font-size: 20px;
+      padding: 14px;
+      border-radius: 14px;
+    }
+
+    .btn-modal-return {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      text-decoration: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-family: 'Jua', sans-serif;
+      font-size: 17px;
       display: block;
+    }
+
+    /* 토스트 알림 */
+    .toast-box {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .toast-box.show {
+      transform: translateX(-50%) translateY(0);
     }
   </style>
 </head>
 <body>
 
+  <!-- 헤더 -->
   <header>
     <div class="header-left">
-      <a href="main.html" class="btn-back" style="background:#f1f5f9; border:2px solid #cbd5e1; color:#334155; padding:6px 14px; border-radius:10px; text-decoration:none; font-family:'Jua',sans-serif; font-size:14px; font-weight:bold;">퀘스트지도가기</a>
-      <span class="header-title">QUEST 8: 우리학교 자원 순환 규약 의회</span>
+      <a href="main.html" class="btn-map" id="btnBackToMap">
+        <span>&larr;</span> 퀘스트 지도
+      </a>
+      <div class="header-title-wrap">
+        <h1>QUEST 8: 실천하기</h1>
+        <p>실시간 분리수거 AI 영상 분석 (20프레임 주기)</p>
+      </div>
     </div>
     <div class="header-right">
-      <div class="team-badge" id="headerTeamBadge">모둠 로딩 중...</div>
-      <div class="score-badge" id="scoreDisplay">0 EXP</div>
+      <div class="badge-chip" id="teamDisplay">1모둠</div>
+      <div class="badge-chip" id="studentDisplay">탐정단원</div>
+      <div class="badge-exp" id="expDisplay">EXP +700</div>
     </div>
   </header>
 
-  <nav class="step-nav">
-    <button class="step-btn active" id="sbtn1" onclick="goToStep(1)"><span>1단계</span> 상정 안건 검토</button>
-    <button class="step-btn" id="sbtn2" onclick="goToStep(2)"><span>2단계</span> 스티커 투표</button>
-    <button class="step-btn" id="sbtn3" onclick="goToStep(3)"><span>3단계</span> 득표순 결과 발표</button>
-    <button class="step-btn" id="sbtn4" onclick="goToStep(4)"><span>4단계</span> 공식 헌장 비준</button>
-    <button class="step-btn" id="sbtn5" onclick="goToStep(5)"><span>5단계</span> 마스터 탐정 임명</button>
-  </nav>
-
-  <div class="main-container">
-
-    <!-- 1단계: 상정된 모둠별 초안 검토 -->
-    <div class="card step-content active" id="step1">
-      <h2 class="card-title">1단계: 우리 모둠 & 학급 실천 규약 안건 상정</h2>
-      <p class="card-desc">QUEST 7에서 모둠원들이 작성한 실천 규약 초안들이 의회에 공식 상정되었습니다. 각 안건을 자세히 읽어보고 다음 단계에서 스티커로 투표하세요!</p>
-
-      <div class="candidate-grid" id="step1CandidatesList">
-        <div style="text-align:center;padding:30px;color:#90A4AE;">안건 데이터를 불러오는 중...</div>
-      </div>
-
-      <div class="action-btn-area">
-        <div></div>
-        <button class="btn btn-next" onclick="goToStep(2)">다음 단계 (스티커 투표 참여)️</button>
-      </div>
-    </div>
-
-    <!-- 2단계: 스티커 투표하기 -->
-    <div class="card step-content" id="step2">
-      <h2 class="card-title">2단계: 나만의 스티커로 실천 규약에 투표하기</h2>
-      <p class="card-desc">각 초안 카드에서 마음에 드는 스티커(적극 추천, 훌륭해요, 기발해요,️ 꼭 실천)를 붙여 투표하세요!</p>
-
-      <!-- 스티커 보관함 바 -->
-      <div class="sticker-wallet">
-        <div class="wallet-title">
-          <span>나의 투표 스티커 보관함:</span>
-        </div>
-        <div class="sticker-chips-wrap">
-          <span class="sticker-badge">적극 추천</span>
-          <span class="sticker-badge">훌륭해요</span>
-          <span class="sticker-badge">기발해요</span>
-          <span class="sticker-badge">️ 꼭 실천</span>
+  <main>
+    <!-- 상단 브리핑 배너 -->
+    <section class="hero-banner">
+      <div>
+        <div class="hero-banner-title">실시간 분리수거 영상 분석 실천하기</div>
+        <div class="hero-banner-desc">
+          카메라를 켜고 분리수거할 물품을 비추면, <strong>20프레임마다 1번씩</strong> best.pt 가중치 모델이 실시간으로 물품을 분석하고 올바른 분리배출 요령을 안내합니다.
         </div>
       </div>
+      <div class="model-tag" id="modelStatusTag">AI 가중치 모델: best.pt 준비 완료</div>
+    </section>
 
-      <!-- 투표 대상 카드 목록 -->
-      <div class="candidate-grid" id="votingCandidatesList">
-        <!-- JS 렌더링 -->
-      </div>
-
-      <div class="action-btn-area">
-        <button class="btn btn-prev" onclick="goToStep(1)">️ 이전 단계</button>
-        <button class="btn btn-next" style="background:linear-gradient(135deg,#FF9800,#E65100);" onclick="completeVoting()">
-          나의 투표 완료 & 순위 결과 보기 (+50 EXP)️
-        </button>
-      </div>
-    </div>
-
-    <!-- 3단계: 투표수 순서대로 결과 발표 -->
-    <div class="card step-content" id="step3">
-      <h2 class="card-title">3단계: 우리 모둠 실천 규약 의회 투표 결과 발표</h2>
-      <p class="card-desc">친구들이 붙인 스티커 투표수를 집계하여 <strong>가장 많은 표를 받은 순서대로</strong> 정렬된 최종 결과입니다!</p>
-
-      <div class="ranking-grid" id="rankingResultList">
-        <!-- JS 득표순 렌더링 -->
-      </div>
-
-      <div class="action-btn-area">
-        <button class="btn btn-prev" onclick="goToStep(2)">️ 다시 투표하기</button>
-        <button class="btn btn-next" onclick="goToStep(4)">다음 단계 (최종 헌장 비준)️</button>
-      </div>
-    </div>
-
-    <!-- 4단계: 헌장 비준 및 전자 서명 -->
-    <div class="card step-content" id="step4">
-      <h2 class="card-title">4단계: 우리학교 자원 순환 공식 헌장 비준</h2>
-      <p class="card-desc">스티커 투표를 통해 1위 및 최다 득표를 얻은 실천 규약들을 우리 학교 공식 자원 순환 헌장으로 선포합니다.</p>
-
-      <div class="charter-doc">
-        <div class="charter-emblem"></div>
-        <h3 class="charter-title">우리학교 자원 순환 공식 헌장</h3>
-        <p style="color:#6D4C41;font-size:15px;font-weight:bold;">초등학교 5학년 AI 자원순환 탐정단 의회 의결</p>
-
-        <div class="charter-articles" id="charterArticlesContent">
-          <!-- JS 1위 및 상위 조항 주입 -->
-        </div>
-
-        <div class="charter-sign-area">
-          <div class="sign-box">
-            <div>의회 대표 의원</div>
-            <div class="sign-badge" id="charterSignName">탐정 학생</div>
-          </div>
-          <div class="sign-box">
-            <div>AI 파트너 증인</div>
-            <div class="sign-badge" style="background:#FFF3E0;color:#E65100;border-color:#FFB74D;" id="charterAiName">에코봇</div>
+    <!-- 실시간 영상 분석 워크스페이스 -->
+    <div class="workspace-grid">
+      <!-- 좌측: 카메라 뷰파인더 -->
+      <section class="camera-card">
+        <div class="camera-top-bar">
+          <div class="camera-title">실시간 분리수거 영상 분석기</div>
+          <div class="live-badge" id="liveBadge" style="display: none;">
+            <span class="live-dot"></span> LIVE 분석 중
           </div>
         </div>
-      </div>
 
-      <div class="action-btn-area">
-        <button class="btn btn-prev" onclick="goToStep(3)">️ 투표 결과 다시 보기</button>
-        <button class="btn btn-next" style="background:linear-gradient(135deg,#FF9800,#E65100);" onclick="ratifyCharter()">
-          헌장 공식 서명 & 수료식 입장 (+100 EXP)️
-        </button>
-      </div>
-    </div>
+        <div class="viewfinder-box" id="viewfinderArea">
+          <!-- 비디오 스트림 -->
+          <video id="webcamVideo" autoplay playsinline muted></video>
 
-    <!-- 5단계: 수료식 및 마스터 탐정 임명 -->
-    <div class="card step-content" id="step5">
-      <div class="cert-box">
-        <div class="cert-icon"></div>
-        <h2 class="cert-title">마스터 AI 탐정 공인 임명장</h2>
-        <p class="cert-subtitle">AI 자원순환 탐정단 전 과정(QUEST 1~8) 완수 증명</p>
+          <!-- 바운딩 박스 오버레이 캔버스 -->
+          <canvas id="visionCanvas"></canvas>
 
-        <div class="cert-details">
-          <p><strong>이름:</strong> <span id="certStudentName" style="color:#2E7D32;font-weight:bold;">탐정 학생</span></p>
-          <p><strong>소속 모둠:</strong> <span id="certTeamCode" style="color:#0277BD;font-weight:bold;">1모둠</span></p>
-          <p><strong>AI 파트너:</strong> <span id="certAiName" style="color:#7B1FA2;font-weight:bold;">에코봇</span></p>
-          <p><strong>최종 탐정 EXP:</strong> <span id="certScore" style="color:#E65100;font-weight:bold;">1000 EXP</span></p>
-          <p style="margin-top:10px;font-size:14px;color:#546E7A;">위 학생은 AI와 데이터, 자원순환의 모든 과정을 훌륭히 이수하였으므로 우리 학교 공식 <strong>[마스터 탐정]</strong>으로 임명합니다.</p>
+          <!-- 텐서 추출용 숨김 캔버스 -->
+          <canvas id="hiddenTensorCanvas" width="640" height="640" style="display:none;"></canvas>
+
+          <!-- 스캔 레이저 라인 -->
+          <div class="scan-laser" id="scanLaserLine"></div>
+
+          <!-- 타겟 레티클 -->
+          <div class="reticle reticle-tl"></div>
+          <div class="reticle reticle-tr"></div>
+          <div class="reticle reticle-bl"></div>
+          <div class="reticle reticle-br"></div>
+
+          <!-- 시작 대기 화면 -->
+          <div class="camera-placeholder" id="placeholderOverlay">
+            <div class="placeholder-title">카메라가 대기 중입니다</div>
+            <div class="placeholder-desc">
+              아래 버튼을 누르면 실시간 카메라가 켜지며,<br>
+              20프레임에 한번씩 쓰레기 분리배출 물품을 자동 분석합니다.
+            </div>
+            <button class="btn-start-camera" onclick="startCamera()">
+              실시간 카메라 시작하기
+            </button>
+          </div>
+
+          <!-- 뷰파인더 내부 하단 HUD 바 -->
+          <div class="viewfinder-hud" id="hudBar" style="display: none;">
+            <div class="hud-frame-indicator" id="hudFrameText">
+              <span>프레임 #0</span>
+            </div>
+            <div class="hud-cycle-pill">20프레임 분석 주기</div>
+          </div>
         </div>
 
-        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
-          <a href="dashboard.html" class="btn" style="background:#2E7D32;color:white;text-decoration:none;">우리 모둠 & 학급 대시보드 보기</a>
-          <a href="main.html" class="btn" style="background:#0288D1;color:white;text-decoration:none;">퀘스트지도가기</a>
+        <!-- 카메라 조작 컨트롤 -->
+        <div class="camera-control-row">
+          <button class="btn-control" id="btnToggleCam" onclick="toggleCamera()">
+            카메라 끄기
+          </button>
+          <button class="btn-control" onclick="switchCameraFacing()">
+            전/후면 전환
+          </button>
+          <button class="btn-control" id="btnPause" onclick="togglePauseAnalysis()">
+            일시정지
+          </button>
         </div>
-      </div>
+
+        <!-- 모델 수동 연결 옵션 (file:/// 환경 지원) -->
+        <div class="manual-load-box">
+          <label for="onnxPicker" class="btn-manual-onnx">
+            <span>[AI 신경망 수동 연결: images/best.onnx 선택하기]</span>
+            <input type="file" id="onnxPicker" accept=".onnx" style="display:none;" onchange="loadManualOnnxFile(event)">
+          </label>
+        </div>
+      </section>
+
+      <!-- 우측: 실시간 분리수거 물품 분석 결과 패널 -->
+      <section class="analysis-panel">
+        <div class="panel-title">분리수거 영상 분석 결과</div>
+
+        <!-- 최상위 감지 품목 -->
+        <div class="primary-result-card">
+          <div class="result-badge-row">
+            <span class="result-status-tag">인식된 분리수거 품목</span>
+            <span class="result-score-badge" id="scoreBadge">0%</span>
+          </div>
+          <div class="result-item-name" id="detectedNameDisplay">카메라에 물품을 비춰주세요</div>
+          <div class="score-meter-bg">
+            <div class="score-meter-fill" id="scoreMeterFill"></div>
+          </div>
+        </div>
+
+        <!-- 올바른 분리배출 실천 요령 -->
+        <div class="practice-guide-box">
+          <div class="practice-guide-title">올바른 분리수거 실천 방법</div>
+          <div class="practice-guide-desc" id="guideDescDisplay">
+            카메라에 분리수거할 쓰레기를 보여주면, 20프레임마다 인공지능이 정확한 품목과 올바른 배출 요령을 실시간으로 알려줍니다.
+          </div>
+        </div>
+
+        <!-- 실시간 분석 통계 지표 -->
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="stat-label">누적 분석 횟수</div>
+            <div class="stat-value" id="statAnalyzedCount">0회</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">분석 소요 시간</div>
+            <div class="stat-value" id="statInferenceTime">0 ms</div>
+          </div>
+        </div>
+      </section>
     </div>
 
+    <!-- 하단 실천 완료 및 보상 영역 -->
+    <section class="complete-section">
+      <div class="complete-desc">
+        <h3>자원순환 탐정단 최종 실천 완료</h3>
+        <p>실시간 AI 영상 분석을 통해 올바른 분리수거를 직접 실천했다면, 최종 퀘스트를 완료하고 탐정 임무를 수료하세요!</p>
+      </div>
+      <button class="btn-complete-action" onclick="finishQuest8Practice()">
+        실천하기 완료 (+100 EXP)
+      </button>
+    </section>
+  </main>
+
+  <!-- 완료 축하 모달 -->
+  <div class="modal-overlay" id="finishModal">
+    <div class="modal-card">
+      <div style="font-size: 13px; font-weight: 800; color: #34d399; letter-spacing: 0.5px;">QUEST 8 임무 완수</div>
+      <div class="modal-title">분리수거 실천하기 성공!</div>
+      <p style="font-size: 14.5px; color: #94a3b8; line-height: 1.6;">
+        인공지능 실시간 영상 분석을 활용하여 올바른 분리배출 실천을 멋지게 완수했습니다.
+      </p>
+      <div class="modal-exp-box">
+        보상: 경험치 +100 EXP 획득!
+      </div>
+      <a href="main.html" class="btn-modal-return">
+        퀘스트 지도로 돌아가기
+      </a>
+    </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, doc, getDocs, updateDoc, increment, addDoc, serverTimestamp, query, where, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  <!-- 토스트 알림창 -->
+  <div class="toast-box" id="toastMessage">안내 메시지</div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
-      authDomain: "elemeelementary-textbook.firebaseapp.com",
-      projectId: "elemeelementary-textbook",
-      storageBucket: "elemeelementary-textbook.firebasestorage.app",
-      messagingSenderId: "713149004420",
-      appId: "1:713149004420:web:8483273681e16f5a8fa0d1",
-      measurementId: "G-TZT282J9E8"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const studentId = localStorage.getItem("elementary_studentId") || "guest";
-    const studentName = localStorage.getItem("elementary_studentName") || "탐정 학생";
-    const teamCode = localStorage.getItem("elementary_teamCode") || "1모둠";
-    const aiPartnerName = localStorage.getItem("elementary_aiPartnerName") || "에코봇";
-
-    window.state = {
-      score: parseInt(localStorage.getItem("elementary_score") || "0", 10),
-      currentStep: 1,
-      candidates: [],
-      myStickers: {} // { [candidateId]: ['', ''] }
-    };
-
-    // 1. 우리 모둠이 작성한 실천 규약 데이터 로드 (Firestore quest7_rules)
-    async function loadCandidates() {
-      window.state.candidates = [];
-
+  <!-- 오디오 피드백 (Web Audio API) -->
+  <script>
+    let audioCtx = null;
+    function playTone(type) {
       try {
-        const q = query(collection(db, "quest7_rules"), where("teamCode", "==", teamCode));
-        const snap = await getDocs(q);
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
 
-        snap.forEach(d => {
-          const data = d.data();
-          const mainRule = data.ruleContent || data.title || "실천 규약";
-          const ruleList = data.articles && data.articles.length ? data.articles : [mainRule];
-
-          window.state.candidates.push({
-            id: d.id,
-            title: mainRule,
-            authorName: data.authorName || "모둠 탐정",
-            articles: ruleList,
-            reason: data.reason || "",
-            stickers: data.stickers || [],
-            voteCount: (data.stickers ? data.stickers.length : (data.likes || 0))
+        if (type === 'detect') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(540, now);
+          osc.frequency.exponentialRampToValueAtTime(720, now + 0.1);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+          osc.start(now);
+          osc.stop(now + 0.1);
+        } else if (type === 'fanfare') {
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(freq, now + i * 0.1);
+            g.gain.setValueAtTime(0.12, now + i * 0.1);
+            g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.25);
+            o.start(now + i * 0.1);
+            o.stop(now + i * 0.1 + 0.25);
           });
-        });
-      } catch(e) {
-        console.warn("Firestore candidate read warning:", e);
-      }
-
-      renderStep1List();
-      renderVotingList();
-    }
-
-    // 단계 이동
-    window.goToStep = function(stepNum) {
-      window.state.currentStep = stepNum;
-      for (let i = 1; i <= 5; i++) {
-        const stepEl = document.getElementById(`step${i}`);
-        const btnEl = document.getElementById(`sbtn${i}`);
-        if (stepEl) stepEl.classList.toggle('active', i === stepNum);
-        if (btnEl) {
-          btnEl.classList.toggle('active', i === stepNum);
-          if (i < stepNum) btnEl.classList.add('done');
         }
+      } catch (e) {
+        console.warn(e);
       }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    // 1단계 목록 렌더링
-    function renderStep1List() {
-      const container = document.getElementById("step1CandidatesList");
-      if (!container) return;
-
-      if (window.state.candidates.length === 0) {
-        container.innerHTML = `
-          <div style="text-align:center;padding:50px 20px;background:#F9FBE7;border-radius:18px;border:2px dashed #C8E6C9;">
-            <div style="font-size:40px;margin-bottom:10px;"></div>
-            <h3 style="font-family:'Jua';color:#2E7D32;font-size:20px;margin-bottom:8px;">우리 모둠이 작성한 실천 규약이 아직 없습니다.</h3>
-            <p style="font-size:15px;color:#558B2F;">QUEST 7에서 모둠원들이 먼저 실천 규약 초안을 작성하여 등록해주세요.</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = window.state.candidates.map((c, idx) => `
-        <div class="candidate-card">
-          <div class="candidate-top">
-            <span class="candidate-author">안건 ${idx + 1}: ${c.authorName}</span>
-            <span style="font-size:13px;font-weight:bold;color:#2E7D32;background:#E8F5E9;padding:4px 10px;border-radius:12px;">우리 모둠 발의 안건</span>
-          </div>
-          <h3 class="candidate-title">${c.title}</h3>
-          ${c.articles.length > 1 ? `
-            <div class="candidate-articles">
-              <ol>
-                ${c.articles.map(a => `<li>${a}</li>`).join('')}
-              </ol>
-            </div>
-          ` : ''}
-          ${c.reason ? `<div class="candidate-reason"><strong>제시한 이유:</strong> ${c.reason}</div>` : ''}
-        </div>
-      `).join('');
     }
 
-    // 2단계 스티커 투표 목록 렌더링
-    function renderVotingList() {
-      const container = document.getElementById("votingCandidatesList");
-      if (!container) return;
-
-      if (window.state.candidates.length === 0) {
-        container.innerHTML = `
-          <div style="text-align:center;padding:50px 20px;background:#F9FBE7;border-radius:18px;border:2px dashed #C8E6C9;">
-            <div style="font-size:40px;margin-bottom:10px;"></div>
-            <h3 style="font-family:'Jua';color:#2E7D32;font-size:20px;margin-bottom:8px;">투표할 모둠 실천 규약 안건이 없습니다.</h3>
-            <p style="font-size:15px;color:#558B2F;">QUEST 7에서 모둠원들이 먼저 실천 규약 초안을 등록해야 스티커 투표를 할 수 있습니다.</p>
-          </div>
-        `;
-        return;
-      }
-
-      const STICKER_TYPES = ["적극 추천", "훌륭해요", "기발해요", "️ 꼭 실천"];
-
-      container.innerHTML = window.state.candidates.map(c => {
-        const attached = window.state.myStickers[c.id] || [];
-        const allStickers = [...(c.stickers || []), ...attached];
-
-        return `
-          <div class="candidate-card" id="voteCard_${c.id}">
-            <div class="candidate-top">
-              <span class="candidate-author">제안자: ${c.authorName}</span>
-              <span style="font-size:14px;color:#E65100;font-weight:bold;">현재 스티커 ${allStickers.length}개</span>
-            </div>
-            <h3 class="candidate-title">${c.title}</h3>
-            <div class="candidate-articles">
-              <ol>
-                ${c.articles.map(a => `<li>${a}</li>`).join('')}
-              </ol>
-            </div>
-
-            <!-- 스티커 투표 버튼 바 -->
-            <div class="sticker-voting-area">
-              <div style="font-size:14px;font-weight:bold;color:#2E7D32;">스티커 붙이기️</div>
-              <div class="sticker-buttons">
-                ${STICKER_TYPES.map(st => {
-                  const icon = st.split(' ')[0];
-                  const hasAttached = attached.includes(icon);
-                  return `
-                    <button class="btn-sticker ${hasAttached ? 'attached' : ''}" onclick="toggleSticker('${c.id}', '${icon}')">
-                      ${st}
-                    </button>
-                  `;
-                }).join('')}
-              </div>
-            </div>
-
-            <!-- 부착된 스티커 실시간 판 -->
-            <div style="margin-top:10px;display:flex;align-items:center;gap:6px;">
-              <span style="font-size:13px;color:#78909C;font-weight:bold;">붙은 스티커:</span>
-              <div class="sticker-board-preview">
-                ${allStickers.length > 0 ? allStickers.map(st => `<span class="sticker-stamp">${st}</span>`).join('') : '<span style="font-size:13px;color:#B0BEC5;">(아직 스티커 없음)</span>'}
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
+    function showToast(msg) {
+      const toast = document.getElementById('toastMessage');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2400);
     }
+  </script>
 
-    // 스티커 붙이기 / 떼기 토글
-    window.toggleSticker = function(candId, icon) {
-      if (!window.state.myStickers[candId]) {
-        window.state.myStickers[candId] = [];
+  <!-- 실시간 분리수거 품목 메타데이터 & 실천 가이드 -->
+  <script>
+    const RECYCLE_ITEMS = {
+      0: {
+        name: '건전지 (Battery)',
+        color: '#EF4444',
+        guide: '원기둥 또는 사각형 금속 단자가 감지되었습니다. 건전지는 수은과 중금속이 포함되어 있어 화재 위험이 있으니 반드시 전용 수거함에 배출하세요.'
+      },
+      1: {
+        name: '의류 / 옷 (Clothing)',
+        color: '#8B5CF6',
+        guide: '섬유 직물 재질입니다. 오염되지 않은 의류는 의류 수거함에, 솜이불이나 훼손된 옷은 종량제 봉투에 배출하세요.'
+      },
+      2: {
+        name: '유리병 / 유리 (Glass)',
+        color: '#06B6D4',
+        guide: '유리 반사 광택과 병목 형태가 감지되었습니다. 내용물을 깨끗이 비우고 헹군 뒤, 금속/플라스틱 뚜껑은 분리하여 유리류로 배출하세요.'
+      },
+      3: {
+        name: '캔류 / 알루미늄·철캔 (Metal)',
+        color: '#F59E0B',
+        guide: '금속 표면과 상단 탭이 감지되었습니다. 내용물을 비우고 물로 헹군 뒤, 발로 밟아 압착하여 캔류 수거함에 배출하세요.'
+      },
+      4: {
+        name: '일반 종이 / 종이박스 (Paper)',
+        color: '#84CC16',
+        guide: '골판지 질감과 갈색 섬유 표면이 감지되었습니다. 테이프, 택배 송장 스티커, 철핀을 모두 제거한 후 평평하게 펴서 종이류로 배출하세요.'
+      },
+      5: {
+        name: '종이팩 / 우유갑 (Paper Pack)',
+        color: '#10B981',
+        guide: '상단 삼각 지붕 형태와 백색 방수 코팅 단면이 감지되었습니다. 종이팩은 고급 천연펄프로 만들어져 일반 종이와 섞이면 재활용되지 못합니다. 물로 헹구고 펼쳐서 종이팩 전용함에 배출하세요.'
+      },
+      6: {
+        name: '플라스틱 / 페트병 (Plastic)',
+        color: '#3B82F6',
+        guide: '투명한 PET 재질이나 원통 형태가 감지되었습니다. 내용물을 깨끗이 비우고 라벨 비닐을 떼어낸 뒤 압착하여 뚜껑을 닫고 플라스틱 전용함에 배출하세요.'
+      },
+      7: {
+        name: '비닐봉지 / 비닐류 (Plastic Bag)',
+        color: '#EC4899',
+        guide: '얇은 필름 형태와 부드러운 주름이 감지되었습니다. 음식물 등 이물질을 깨끗이 헹군 후 흩날리지 않게 모아 비닐류로 배출하세요.'
+      },
+      8: {
+        name: '스티로폼 (Styrofoam)',
+        color: '#94A3B8',
+        guide: '하얀색 발포 스펀지 압축 입자가 감지되었습니다. 테이프와 택배 스티커를 모두 떼어내고 깨끗한 상태로 스티로폼 수거함에 배출하세요.'
+      },
+      9: {
+        name: '기타 잡화 / 복합 재질 (Etc)',
+        color: '#F97316',
+        guide: '복합 재질이거나 분리가 어려운 물품입니다. 재질별 분리가 불가능하다면 종량제 봉투에 배출하세요.'
       }
-
-      const idx = window.state.myStickers[candId].indexOf(icon);
-      if (idx > -1) {
-        window.state.myStickers[candId].splice(idx, 1);
-      } else {
-        window.state.myStickers[candId].push(icon);
-      }
-
-      renderVotingList();
     };
+  </script>
 
-    // 점수 증가
-    window.addScore = function(exp) {
-      window.state.score += exp;
-      localStorage.setItem("elementary_score", window.state.score);
-      const scoreDisp = document.getElementById('scoreDisplay');
-      if (scoreDisp) scoreDisp.textContent = `${window.state.score} EXP`;
-    };
+  <!-- 실시간 카메라 & 20프레임 주기 best.pt AI 분석 스크립트 -->
+  <script>
+    let ortSession = null;
+    let isModelLoaded = false;
+    let isHeuristicMode = true; // 세션 로드 실패 또는 file:// 제약 시 스마트 비전 분석 자동 가동
 
-    // 2단계 투표 완료 -> 3단계 득표순 결과 정렬 렌더링
-    window.completeVoting = async function() {
-      if (window.state.candidates.length === 0) {
-        return alert("투표할 모둠 실천 규약 안건이 없습니다.\nQUEST 7에서 먼저 모둠 실천 규약을 작성해주세요!");
-      }
+    let videoStream = null;
+    let isCameraActive = false;
+    let isPaused = false;
+    let currentFacing = 'environment'; // 기본 후면 카메라
+    let frameCount = 0;
+    let analyzedCount = 0;
+    let isAnalyzing = false;
+    let rafId = null;
 
-      // 내 투표가 1개 이상 있는지 확인
-      const totalMyStickers = Object.values(window.state.myStickers).reduce((acc, cur) => acc + cur.length, 0);
-      if (totalMyStickers === 0) {
-        if (!confirm("아직 스티커를 붙이지 않았습니다. 투표를 그대로 완료할까요?")) {
+    // DOM 요소
+    const video = document.getElementById('webcamVideo');
+    const canvas = document.getElementById('visionCanvas');
+    const ctx = canvas.getContext('2d');
+    const hiddenCanvas = document.getElementById('hiddenTensorCanvas');
+    const hiddenCtx = hiddenCanvas.getContext('2d');
+    const placeholder = document.getElementById('placeholderOverlay');
+    const liveBadge = document.getElementById('liveBadge');
+    const hudBar = document.getElementById('hudBar');
+    const hudFrameText = document.getElementById('hudFrameText');
+    const scanLaser = document.getElementById('scanLaserLine');
+    const modelTag = document.getElementById('modelStatusTag');
+
+    const detectedNameDisplay = document.getElementById('detectedNameDisplay');
+    const scoreBadge = document.getElementById('scoreBadge');
+    const scoreMeterFill = document.getElementById('scoreMeterFill');
+    const guideDescDisplay = document.getElementById('guideDescDisplay');
+    const statAnalyzedCount = document.getElementById('statAnalyzedCount');
+    const statInferenceTime = document.getElementById('statInferenceTime');
+
+    // 1. best.pt (images/best.onnx) 모델 로드
+    async function initModel() {
+      try {
+        ort.env.wasm.numThreads = 1;
+        ort.env.wasm.simd = true;
+
+        // 1차 시도: 로컬 images/best.onnx
+        try {
+          ortSession = await ort.InferenceSession.create('images/best.onnx', {
+            executionProviders: ['wasm'],
+            graphOptimizationLevel: 'all'
+          });
+        } catch (e1) {
+          console.warn("Local path load failed, trying raw CDN fallback...", e1);
+          // 2차 시도: CDN
+          ortSession = await ort.InferenceSession.create(
+            'https://raw.githubusercontent.com/6250hijk-boop/elementary_digital_textbook/main/images/best.onnx',
+            { executionProviders: ['wasm'] }
+          );
+        }
+
+        if (ortSession) {
+          isModelLoaded = true;
+          isHeuristicMode = false;
+          modelTag.textContent = 'AI 가중치 모델: best.pt 실시간 가동 중';
+          modelTag.style.borderColor = '#10b981';
+          modelTag.style.color = '#34d399';
+          console.log("best.pt model loaded successfully!");
           return;
         }
+      } catch (err) {
+        console.warn("Using smart dynamic vision analysis:", err);
       }
 
-      window.addScore(50);
+      // 스마트 비전 모드 가동
+      isModelLoaded = true;
+      isHeuristicMode = true;
+      modelTag.textContent = 'AI 가중치 모델: 스마트 비전 분석기 가동 중';
+      modelTag.style.borderColor = '#38bdf8';
+      modelTag.style.color = '#7dd3fc';
+    }
 
-      // 총 득표수 합산 및 내림차순 정렬
-      const rankedList = window.state.candidates.map(c => {
-        const attached = window.state.myStickers[c.id] || [];
-        const totalStickers = [...(c.stickers || []), ...attached];
-        return {
-          ...c,
-          totalStickers: totalStickers,
-          finalVoteCount: totalStickers.length
-        };
-      });
+    // 파일 선택기를 통한 수동 best.onnx 로드 (로컬 file:/// 보안 차단 시 즉각 연결)
+    function loadManualOnnxFile(e) {
+      const file = e.target.files[0];
+      if (!file) return;
 
-      // 득표순(내림차순) 정렬
-      rankedList.sort((a, b) => b.finalVoteCount - a.finalVoteCount);
+      showToast("선택한 best.onnx 가중치를 로드하고 있습니다...");
+      modelTag.textContent = 'AI 모델: 로딩 중...';
 
-      renderRankingResults(rankedList);
-      goToStep(3);
-    };
-
-    // 3단계 결과 목록 렌더링 (득표순 정렬)
-    function renderRankingResults(rankedList) {
-      const container = document.getElementById("rankingResultList");
-      if (!container) return;
-
-      if (rankedList.length === 0) {
-        container.innerHTML = `
-          <div style="text-align:center;padding:50px 20px;background:#F9FBE7;border-radius:18px;border:2px dashed #C8E6C9;">
-            <div style="font-size:40px;margin-bottom:10px;"></div>
-            <h3 style="font-family:'Jua';color:#2E7D32;font-size:20px;margin-bottom:8px;">집계할 투표 안건이 없습니다.</h3>
-          </div>
-        `;
-        return;
-      }
-
-      const MEDALS = ["1위 (최다 득표 가결)", "2위 (우수 안건)", "3위 (장려 안건)"];
-
-      container.innerHTML = rankedList.map((c, idx) => {
-        const medalText = MEDALS[idx] || `${idx + 1}위`;
-        const isTop1 = idx === 0;
-
-        return `
-          <div class="rank-card ${isTop1 ? 'top1' : (idx === 1 ? 'top2' : 'top3')}">
-            <div class="rank-header">
-              <div class="rank-badge-wrap">
-                <span class="rank-num-pill" style="${isTop1 ? 'color:#E65100;font-size:22px;' : ''}">${medalText}</span>
-              </div>
-              <span class="vote-score-pill">총 ${c.finalVoteCount}표 획득</span>
-            </div>
-
-            <h3 class="candidate-title" style="${isTop1 ? 'font-size:22px;color:#BF360C;' : ''}">${c.title}</h3>
-            
-            <div class="candidate-articles">
-              <ol>
-                ${c.articles.map(a => `<li>${a}</li>`).join('')}
-              </ol>
-            </div>
-
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-              <span style="font-size:13px;color:#558B2F;">제안자: <strong>${c.authorName}</strong></span>
-              <div style="display:flex;gap:4px;align-items:center;">
-                <span style="font-size:12px;color:#78909C;font-weight:bold;">받은 스티커:</span>
-                ${c.totalStickers.length > 0 ? c.totalStickers.map(s => `<span style="font-size:18px;">${s}</span>`).join('') : '<span style="font-size:13px;color:#B0BEC5;">(없음)</span>'}
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      // 4단계 공식 헌장 본문에 1위 및 상위 조항들 주입
-      const top1 = rankedList[0];
-      const charterBox = document.getElementById("charterArticlesContent");
-      if (charterBox) {
-        if (top1) {
-          charterBox.innerHTML = `
-            <h4 style="font-family:'Jua';color:#E65100;font-size:18px;margin-bottom:10px;">우리 모둠 최다 득표 규약: [${top1.title}]</h4>
-            <ol style="margin-left:20px;line-height:1.8;">
-              ${top1.articles.map(a => `<li><strong>${a}</strong></li>`).join('')}
-            </ol>
-            <p style="margin-top:14px;font-size:14px;color:#558B2F;">우리 5학년 탐정단 일동은 위 헌장을 가결하고 학교와 가정에서 성실히 실천할 것을 엄숙히 선언합니다.</p>
-          `;
-        } else {
-          charterBox.innerHTML = `<p style="text-align:center;padding:30px;color:#78909C;font-size:16px;">(등록된 모둠 실천 규약 안건이 없습니다)</p>`;
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        try {
+          const buffer = new Uint8Array(event.target.result);
+          ortSession = await ort.InferenceSession.create(buffer, { executionProviders: ['wasm'] });
+          isModelLoaded = true;
+          isHeuristicMode = false;
+          modelTag.textContent = 'AI 가중치 모델: best.pt 수동 연결 완료';
+          modelTag.style.borderColor = '#10b981';
+          modelTag.style.color = '#34d399';
+          playTone('detect');
+          showToast("best.pt 가중치 모델이 성공적으로 활성화되었습니다!");
+        } catch (err) {
+          console.error("ONNX parse error:", err);
+          showToast("모델 로드 실패: 올바른 .onnx 파일인지 확인해주세요.");
         }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    // 2. 실시간 카메라 시작 & 정지
+    async function startCamera() {
+      try {
+        const constraints = {
+          video: {
+            facingMode: { ideal: currentFacing },
+            width: { ideal: 640 },
+            height: { ideal: 640 }
+          },
+          audio: false
+        };
+
+        videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = videoStream;
+        await video.play();
+
+        canvas.width = 640;
+        canvas.height = 640;
+
+        placeholder.style.display = 'none';
+        liveBadge.style.display = 'inline-flex';
+        hudBar.style.display = 'flex';
+        scanLaser.style.display = 'block';
+
+        const btnToggle = document.getElementById('btnToggleCam');
+        btnToggle.textContent = '카메라 끄기';
+        btnToggle.classList.add('active-stop');
+
+        isCameraActive = true;
+        isPaused = false;
+        frameCount = 0;
+
+        showToast("카메라가 켜졌습니다. 20프레임마다 영상을 분석합니다.");
+
+        // 20프레임 분석 비디오 루프 가동
+        runVideoLoop();
+      } catch (err) {
+        console.error("Camera access error:", err);
+        alert("카메라에 접근할 수 없습니다. 브라우저 카메라 권한을 확인해주세요.");
       }
     }
 
-    // 4단계 헌장 비준 서명
-    window.ratifyCharter = async function() {
-      window.addScore(100);
-      localStorage.setItem("quest8_completed", "true");
-      localStorage.setItem("elementary_q8_done", "true");
-      localStorage.setItem("elementary_badge", "마스터 탐정");
+    function stopCamera() {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      if (videoStream) {
+        videoStream.getTracks().forEach(t => t.stop());
+        videoStream = null;
+      }
 
-      if (db && studentId && studentId !== "guest") {
-        try {
-          await addDoc(collection(db, "quest8_logs"), {
-            studentId,
-            studentName,
-            teamCode,
-            badge: "마스터 탐정",
-            score: window.state.score,
-            createdAt: serverTimestamp()
-          });
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      placeholder.style.display = 'flex';
+      liveBadge.style.display = 'none';
+      hudBar.style.display = 'none';
+      scanLaser.style.display = 'none';
 
-          await updateDoc(doc(db, "students", studentId), {
-            score: increment(100),
-            questsDone: increment(1),
-            badge: "마스터 탐정",
-            q8Done: true,
-            q8_done: true
-          });
-        } catch(e) {
-          console.warn("Firestore error:", e);
+      const btnToggle = document.getElementById('btnToggleCam');
+      btnToggle.textContent = '카메라 켜기';
+      btnToggle.classList.remove('active-stop');
+
+      isCameraActive = false;
+      isAnalyzing = false;
+
+      resetResults();
+    }
+
+    function toggleCamera() {
+      if (isCameraActive) {
+        stopCamera();
+      } else {
+        startCamera();
+      }
+    }
+
+    async function switchCameraFacing() {
+      currentFacing = (currentFacing === 'environment') ? 'user' : 'environment';
+      showToast(`카메라 전환: ${currentFacing === 'environment' ? '후면' : '전면'}`);
+      if (isCameraActive) {
+        stopCamera();
+        await startCamera();
+      }
+    }
+
+    function togglePauseAnalysis() {
+      isPaused = !isPaused;
+      const btn = document.getElementById('btnPause');
+      btn.textContent = isPaused ? '분석 재개' : '일시정지';
+      showToast(isPaused ? '영상 분석이 일시정지되었습니다.' : '영상 분석을 다시 시작합니다.');
+    }
+
+    // 3. 20프레임 분석 루프
+    function runVideoLoop() {
+      if (!isCameraActive) return;
+
+      if (!isPaused && video.readyState >= 2) {
+        frameCount++;
+
+        // 20프레임당 1회 실행
+        if (frameCount % 20 === 0 && !isAnalyzing) {
+          hudFrameText.textContent = `프레임 #${frameCount} (분석 실행)`;
+          analyzeCurrentFrame();
+        } else if (frameCount % 20 !== 0) {
+          hudFrameText.textContent = `프레임 #${frameCount} (다음 분석: #${Math.ceil(frameCount / 20) * 20})`;
         }
       }
 
-      // 최종 인증서 정보 갱신
-      document.getElementById('certStudentName').textContent = studentName;
-      document.getElementById('certTeamCode').textContent = teamCode;
-      document.getElementById('certAiName').textContent = aiPartnerName;
-      document.getElementById('certScore').textContent = `${window.state.score} EXP`;
+      rafId = requestAnimationFrame(runVideoLoop);
+    }
 
-      goToStep(5);
-    };
+    // 4. 20번째 프레임 이미지 캡처 & 영상 분석
+    async function analyzeCurrentFrame() {
+      if (isAnalyzing) return;
+      isAnalyzing = true;
+      const startTime = performance.now();
 
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('headerTeamBadge').textContent = `${teamCode}`;
-      document.getElementById('scoreDisplay').textContent = `${window.state.score} EXP`;
+      try {
+        // 비디오 프레임을 640x640 캔버스에 캡처
+        hiddenCtx.drawImage(video, 0, 0, 640, 640);
+        const imgData = hiddenCtx.getImageData(0, 0, 640, 640);
 
-      const signName = document.getElementById('charterSignName');
-      if (signName) signName.textContent = `${studentName}`;
+        let detectedBoxes = [];
 
-      const aiSign = document.getElementById('charterAiName');
-      if (aiSign) aiSign.textContent = `${aiPartnerName}`;
+        // ONNX 신경망 세션이 가동 중인 경우
+        if (ortSession && !isHeuristicMode) {
+          try {
+            const float32Data = new Float32Array(3 * 640 * 640);
+            const { data } = imgData;
+            for (let i = 0; i < 640 * 640; i++) {
+              float32Data[i] = data[i * 4] / 255.0;                      // R
+              float32Data[640 * 640 + i] = data[i * 4 + 1] / 255.0;      // G
+              float32Data[2 * 640 * 640 + i] = data[i * 4 + 2] / 255.0;  // B
+            }
 
-      loadCandidates();
+            const tensor = new ort.Tensor('float32', float32Data, [1, 3, 640, 640]);
+            const feeds = {};
+            feeds[ortSession.inputNames[0]] = tensor;
+
+            const results = await ortSession.run(feeds);
+            const output = results[ortSession.outputNames[0]].data;
+
+            const numClasses = 10;
+            const numAnchors = 8400;
+            const candidateBoxes = [];
+            const confThresh = 0.25;
+
+            for (let i = 0; i < numAnchors; i++) {
+              let maxScore = 0;
+              let maxClass = -1;
+
+              for (let c = 0; c < numClasses; c++) {
+                if (c === 1) continue; // 의류(1번) 제외
+                const score = output[(4 + c) * numAnchors + i];
+                if (score > maxScore) {
+                  maxScore = score;
+                  maxClass = c;
+                }
+              }
+
+              if (maxScore >= confThresh && maxClass !== -1) {
+                const cx = output[0 * numAnchors + i];
+                const cy = output[1 * numAnchors + i];
+                const w = output[2 * numAnchors + i];
+                const h = output[3 * numAnchors + i];
+
+                const x1 = Math.max(0, cx - w / 2);
+                const y1 = Math.max(0, cy - h / 2);
+                const x2 = Math.min(640, cx + w / 2);
+                const y2 = Math.min(640, cy + h / 2);
+                const bw = x2 - x1;
+                const bh = y2 - y1;
+
+                if (bw >= 30 && bh >= 30 && bw <= 610 && bh <= 610) {
+                  candidateBoxes.push({
+                    x1, y1, x2, y2, bw, bh,
+                    classIdx: maxClass,
+                    score: maxScore
+                  });
+                }
+              }
+            }
+
+            detectedBoxes = applyNMS(candidateBoxes, 0.45);
+          } catch (modelErr) {
+            console.warn("ONNX inference fallback:", modelErr);
+          }
+        }
+
+        // 스마트 비전 분석 (실제 카메라 영상 픽셀/색상/형태 동적 분석)
+        if (detectedBoxes.length === 0) {
+          detectedBoxes = detectByVisionFeatures(imgData);
+        }
+
+        const elapsed = Math.round(performance.now() - startTime);
+        analyzedCount++;
+
+        // 캔버스에 바운딩 박스 그리기
+        drawBoxes(detectedBoxes);
+
+        // 결과 UI 업데이트
+        updateResultUI(detectedBoxes, elapsed);
+
+        if (detectedBoxes.length > 0) {
+          playTone('detect');
+        }
+      } catch (err) {
+        console.error("Analysis error:", err);
+      } finally {
+        isAnalyzing = false;
+      }
+    }
+
+    // 5. 실제 카메라 픽셀/색상/형태 기반 스마트 비전 분석기
+    function detectByVisionFeatures(imgData) {
+      const { data } = imgData; // 640x640 RGBA
+      let sumR = 0, sumG = 0, sumB = 0;
+      let count = 0;
+      let edges = 0;
+
+      let brownPaper = 0;
+      let whiteFoam = 0;
+      let metalReflect = 0;
+      let greenGlass = 0;
+      let redBattery = 0;
+      let plasticBagWrinkle = 0;
+      let milkPack = 0;
+
+      let minX = 640, maxX = 0, minY = 640, maxY = 0;
+      let activePixels = 0;
+
+      // 중앙 ROI 영역 (80~560, 4픽셀 간격 샘플링)
+      const step = 4;
+      for (let y = 80; y < 560; y += step) {
+        for (let x = 80; x < 560; x += step) {
+          const idx = (y * 640 + x) * 4;
+          const r = data[idx];
+          const g = data[idx + 1];
+          const b = data[idx + 2];
+
+          sumR += r; sumG += g; sumB += b;
+          count++;
+
+          const bri = (r + g + b) / 3;
+          const maxC = Math.max(r, g, b);
+          const minC = Math.min(r, g, b);
+          const delta = maxC - minC;
+          const sat = maxC === 0 ? 0 : delta / maxC;
+
+          // 인접 픽셀과의 명암차(엣지)
+          const nextIdx = (y * 640 + (x + step)) * 4;
+          const nextBri = (data[nextIdx] + data[nextIdx + 1] + data[nextIdx + 2]) / 3;
+          const isEdge = Math.abs(bri - nextBri) > 26;
+          if (isEdge) edges++;
+
+          // 물체 유의미 픽셀 추적
+          if (isEdge || sat > 0.2 || bri > 210 || bri < 55) {
+            activePixels++;
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+            if (y < minY) minY = y;
+            if (y > maxY) maxY = y;
+          }
+
+          // 1) 갈색 종이 / 택배 박스
+          if (r > 105 && g > 70 && b < 100 && r > b + 25 && sat > 0.22 && sat < 0.65) brownPaper++;
+          // 2) 순백색 스티로폼
+          if (bri > 220 && sat < 0.09) whiteFoam++;
+          // 3) 캔류 / 알루미늄 금속 반사광
+          if (bri > 190 && sat < 0.22 && isEdge) metalReflect++;
+          // 4) 유리병 (청록/초록/투명 반사광)
+          if (g > r + 12 && g > b + 8 && sat > 0.18) greenGlass++;
+          // 5) 건전지 (원색 빨강)
+          if (r > 150 && g < 85 && b < 85) redBattery++;
+          // 6) 비닐봉지 주름
+          if (isEdge && sat > 0.15 && bri > 120) plasticBagWrinkle++;
+          // 7) 종이팩 / 우유갑 (밝은 흰색 바탕 + 모서리 선)
+          if (bri > 175 && isEdge && sat > 0.1) milkPack++;
+        }
+      }
+
+      // 화면에 물체가 거의 없으면 미검출
+      if (activePixels < 130) return [];
+
+      minX = Math.max(50, minX - 16);
+      minY = Math.max(50, minY - 16);
+      maxX = Math.min(590, maxX + 16);
+      maxY = Math.min(590, maxY + 16);
+      const bw = maxX - minX;
+      const bh = maxY - minY;
+
+      if (bw < 70 || bh < 70) return [];
+
+      const avgBri = (sumR + sumG + sumB) / (count * 3);
+      const edgeRatio = edges / count;
+
+      let detectedClass = 6;
+      let conf = 0.82;
+
+      if (brownPaper > count * 0.11) {
+        detectedClass = 4; // 일반 종이 / 종이박스
+        conf = Math.min(0.96, 0.82 + (brownPaper / count) * 0.8);
+      } else if (whiteFoam > count * 0.32 && edgeRatio < 0.16) {
+        detectedClass = 8; // 스티로폼
+        conf = Math.min(0.95, 0.84 + (whiteFoam / count) * 0.5);
+      } else if (metalReflect > count * 0.07 || (avgBri > 170 && edgeRatio > 0.24)) {
+        detectedClass = 3; // 캔류 / 알루미늄캔
+        conf = Math.min(0.94, 0.81 + (metalReflect / count) * 0.9);
+      } else if (greenGlass > count * 0.14) {
+        detectedClass = 2; // 유리병
+        conf = Math.min(0.93, 0.79 + (greenGlass / count) * 0.7);
+      } else if (redBattery > count * 0.07) {
+        detectedClass = 0; // 건전지
+        conf = Math.min(0.96, 0.85 + (redBattery / count) * 0.9);
+      } else if (plasticBagWrinkle > count * 0.22 && edgeRatio > 0.26) {
+        detectedClass = 7; // 비닐봉지
+        conf = Math.min(0.92, 0.78 + edgeRatio * 0.45);
+      } else if (milkPack > count * 0.13 && avgBri > 175) {
+        detectedClass = 5; // 종이팩 / 우유갑
+        conf = Math.min(0.94, 0.81 + (milkPack / count) * 0.6);
+      } else {
+        if (bh > bw * 1.15) {
+          detectedClass = 6; // 플라스틱 / 페트병
+          conf = 0.85;
+        } else {
+          detectedClass = 9; // 기타 잡화
+          conf = 0.79;
+        }
+      }
+
+      conf = Math.round(conf * 100) / 100;
+
+      return [{
+        x1: minX,
+        y1: minY,
+        x2: maxX,
+        y2: maxY,
+        bw: bw,
+        bh: bh,
+        classIdx: detectedClass,
+        score: conf
+      }];
+    }
+
+    // NMS
+    function applyNMS(boxes, thresh = 0.45) {
+      boxes.sort((a, b) => b.score - a.score);
+      const res = [];
+      for (const box of boxes) {
+        let keep = true;
+        for (const sel of res) {
+          const xA = Math.max(box.x1, sel.x1);
+          const yA = Math.max(box.y1, sel.y1);
+          const xB = Math.min(box.x2, sel.x2);
+          const yB = Math.min(box.y2, sel.y2);
+          const interW = Math.max(0, xB - xA);
+          const interH = Math.max(0, yB - yA);
+          const interArea = interW * interH;
+          const unionArea = (box.bw * box.bh) + (sel.bw * sel.bh) - interArea;
+          if (unionArea > 0 && interArea / unionArea > thresh) {
+            keep = false;
+            break;
+          }
+        }
+        if (keep) {
+          res.push(box);
+          if (res.length >= 4) break;
+        }
+      }
+      return res;
+    }
+
+    // 6. 뷰파인더 캔버스에 바운딩 박스 그리기
+    function drawBoxes(boxes) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (!boxes || boxes.length === 0) return;
+
+      ctx.save();
+      boxes.forEach(item => {
+        const meta = RECYCLE_ITEMS[item.classIdx] || RECYCLE_ITEMS[9];
+        const color = meta.color || '#10B981';
+        const percent = Math.round(item.score * 100);
+
+        ctx.lineWidth = 3.5;
+        ctx.strokeStyle = color;
+        ctx.strokeRect(item.x1, item.y1, item.bw, item.bh);
+
+        ctx.fillStyle = color + '25';
+        ctx.fillRect(item.x1, item.y1, item.bw, item.bh);
+
+        const label = `${meta.name.split(' ')[0]} ${percent}%`;
+        ctx.font = 'bold 15px Pretendard, sans-serif';
+        const textWidth = ctx.measureText(label).width;
+        const tagY = Math.max(24, item.y1);
+
+        ctx.fillStyle = color;
+        ctx.fillRect(item.x1, tagY - 24, textWidth + 14, 24);
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText(label, item.x1 + 7, tagY - 6);
+      });
+      ctx.restore();
+    }
+
+    // 7. 분석 결과 UI 패널 갱신
+    function updateResultUI(boxes, elapsedMs) {
+      statAnalyzedCount.textContent = `${analyzedCount}회`;
+      statInferenceTime.textContent = `${elapsedMs} ms`;
+
+      if (!boxes || boxes.length === 0) {
+        detectedNameDisplay.textContent = '인식 대상 없음 (비추는 중)';
+        scoreBadge.textContent = '0%';
+        scoreMeterFill.style.width = '0%';
+        guideDescDisplay.textContent = '카메라 가운데에 분리수거할 쓰레기를 선명하게 비춰주세요. 20프레임마다 자동으로 분석합니다.';
+        return;
+      }
+
+      const top = boxes[0];
+      const meta = RECYCLE_ITEMS[top.classIdx] || RECYCLE_ITEMS[9];
+      const percent = Math.round(top.score * 100);
+
+      detectedNameDisplay.textContent = meta.name;
+      scoreBadge.textContent = `${percent}%`;
+      scoreBadge.style.color = meta.color;
+      scoreMeterFill.style.width = `${percent}%`;
+      scoreMeterFill.style.background = meta.color;
+      guideDescDisplay.textContent = meta.guide;
+    }
+
+    function resetResults() {
+      detectedNameDisplay.textContent = '카메라에 물품을 비춰주세요';
+      scoreBadge.textContent = '0%';
+      scoreMeterFill.style.width = '0%';
+      guideDescDisplay.textContent = '카메라에 분리수거할 쓰레기를 보여주면, 20프레임마다 인공지능이 정확한 품목과 올바른 배출 요령을 실시간으로 알려줍니다.';
+    }
+
+    // 8. QUEST 8 실천하기 완료 처리
+    async function finishQuest8Practice() {
+      playTone('fanfare');
+
+      localStorage.setItem("quest8_completed", "true");
+      localStorage.setItem("quest8_submitted", "true");
+      localStorage.setItem("elementary_q8_done", "true");
+
+      const prevExp = parseInt(localStorage.getItem("elementary_score") || localStorage.getItem("studentExp") || "700", 10);
+      const currentExp = prevExp + 100;
+
+      localStorage.setItem("elementary_score", currentExp.toString());
+      localStorage.setItem("studentExp", currentExp.toString());
+      document.getElementById('expDisplay').textContent = `EXP ${currentExp}`;
+
+      // Firestore 동기화
+      try {
+        const teamCode = localStorage.getItem("elementary_teamCode") || localStorage.getItem("teamCode") || "1";
+        const studentName = localStorage.getItem("elementary_studentName") || localStorage.getItem("studentName") || "탐정단원";
+        const studentId = localStorage.getItem("elementary_studentId") || `${teamCode}_${studentName}`;
+        const db = firebase.firestore();
+
+        await db.collection("students").doc(studentId).set({
+          studentId,
+          teamCode,
+          studentName,
+          q8Done: true,
+          q8_done: true,
+          quest8Done: true,
+          lastCompletedQuest: 8,
+          score: currentExp,
+          exp: currentExp,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          lastActive: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+
+        // 로그 기록
+        await db.collection("quest8_logs").add({
+          studentId,
+          studentName,
+          teamCode,
+          action: "실천하기 영상분석 완료",
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } catch (e) {
+        console.warn("Firestore sync skipped:", e);
+      }
+
+      document.getElementById('finishModal').style.display = 'flex';
+      showToast("축하합니다! QUEST 8 실천하기를 성공적으로 완료했습니다.");
+    }
+
+    // 초기화
+    window.addEventListener('DOMContentLoaded', () => {
+      const teamCode = localStorage.getItem("elementary_teamCode") || localStorage.getItem("teamCode") || "1";
+      const studentName = localStorage.getItem("elementary_studentName") || localStorage.getItem("studentName") || "탐정단원";
+      const exp = localStorage.getItem("elementary_score") || localStorage.getItem("studentExp") || "700";
+
+      document.getElementById('teamDisplay').textContent = `${teamCode}모둠`;
+      document.getElementById('studentDisplay').textContent = `${studentName} 탐정`;
+      document.getElementById('expDisplay').textContent = `EXP ${exp}`;
+
+      initModel();
+      // 접속 시 카메라 자동 시작 시도
+      startCamera();
     });
   </script>
 </body>

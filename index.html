@@ -302,10 +302,10 @@
         }, { merge: true });
       }
 
-      const ex = teamSnap.data();
+      const ex = teamSnap.data() || {};
       const teamScore = ex.score !== undefined ? ex.score : 10;
-      const questsDone = ex.questsDone !== undefined ? ex.questsDone : 0;
-      const badge = ex.badge || "신입 탐정단";
+      const teamQuestsDone = ex.questsDone !== undefined ? ex.questsDone : 0;
+      const teamBadge = ex.badge || "신입 탐정단";
       const aiName = ex.aiName || "에코봇";
 
       // 팀원 목록에 학생 추가
@@ -315,20 +315,55 @@
         lastActive: serverTimestamp()
       }, { merge: true });
 
-      // 2. 학생(Student) 개별 데이터 기록
+      // 2. 학생(Student) 개별 데이터 조회 & 보존 (다른 기기/네트워크에서 접속 시 활동 내역 유지)
       const studentRef = doc(db, "students", studentId);
-      await setDoc(studentRef, {
-        studentId: studentId,
-        studentName: studentName,
-        teamCode: teamCode,
-        aiPartnerName: aiName,
-        score: teamScore,
-        badge: badge,
-        questsDone: questsDone,
-        lastActive: serverTimestamp()
-      }, { merge: true });
+      const studentSnap = await getDoc(studentRef);
 
-      // 3. 로컬 스토리지에 모둠 및 학생 세션 저장
+      let finalScore = teamScore;
+      let finalBadge = teamBadge;
+      let finalAiName = aiName;
+      let finalQuestsDone = teamQuestsDone;
+      let completedMap = {};
+
+      if (studentSnap.exists()) {
+        const sd = studentSnap.data();
+        // 기존 학생의 점수, 배지, 진행도를 우선 보존 (초기화 방지)
+        if (sd.score !== undefined) finalScore = sd.score;
+        if (sd.exp !== undefined && sd.exp > finalScore) finalScore = sd.exp;
+        if (sd.badge) finalBadge = sd.badge;
+        if (sd.aiPartnerName) finalAiName = sd.aiPartnerName;
+        if (sd.questsDone !== undefined) finalQuestsDone = sd.questsDone;
+
+        // 완료한 퀘스트 목록 복원
+        for (let i = 1; i <= 8; i++) {
+          if (sd[`q${i}Done`] || sd[`q${i}_done`] || sd[`quest${i}Done`] || sd[`quest${i}_done`] || sd[`quest${i}Completed`] || (finalQuestsDone >= i)) {
+            completedMap[`q${i}`] = true;
+          }
+        }
+
+        // 활동 시간만 업데이트하여 기존 데이터 보존
+        await setDoc(studentRef, {
+          studentId: studentId,
+          studentName: studentName,
+          teamCode: teamCode,
+          lastActive: serverTimestamp()
+        }, { merge: true });
+      } else {
+        // 최초 가입 학생인 경우에만 초기값으로 신규 생성
+        await setDoc(studentRef, {
+          studentId: studentId,
+          studentName: studentName,
+          teamCode: teamCode,
+          aiPartnerName: aiName,
+          score: teamScore,
+          badge: teamBadge,
+          questsDone: 0,
+          createdAt: serverTimestamp(),
+          lastActive: serverTimestamp()
+        }, { merge: true });
+      }
+
+      // 3. 로컬 스토리지에 모둠 및 학생 세션 완벽 복원 (Hydration)
       const prevStudentId = localStorage.getItem("elementary_studentId");
       if (prevStudentId && prevStudentId !== studentId) {
         for (let i = 1; i <= 8; i++) {
@@ -338,12 +373,28 @@
         }
       }
 
+      // 기본 세션 정보
       localStorage.setItem("elementary_teamCode", teamCode);
       localStorage.setItem("elementary_studentId", studentId);
       localStorage.setItem("elementary_studentName", studentName);
-      localStorage.setItem("elementary_aiName", aiName);
-      localStorage.setItem("elementary_score", teamScore.toString());
+      localStorage.setItem("elementary_aiName", finalAiName);
+      localStorage.setItem("elementary_score", finalScore.toString());
+      localStorage.setItem("elementary_badge", finalBadge);
+
+      // 호환용 키 동기화 (quest8 등)
+      localStorage.setItem("teamCode", teamCode);
+      localStorage.setItem("studentName", studentName);
+      localStorage.setItem("studentExp", finalScore.toString());
       localStorage.removeItem("elementary_isAdmin");
+
+      // 기존에 완료했던 퀘스트를 새 컴퓨터 로컬스토리지에도 모두 복원
+      for (let i = 1; i <= 8; i++) {
+        if (completedMap[`q${i}`]) {
+          localStorage.setItem(`quest${i}_completed`, "true");
+          localStorage.setItem(`quest${i}_submitted`, "true");
+          localStorage.setItem(`elementary_q${i}_done`, "true");
+        }
+      }
 
       window.location.href = "main.html";
 

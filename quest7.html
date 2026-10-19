@@ -527,6 +527,154 @@
       white-space: nowrap;
     }
 
+    /* 3단계: 우리 반 모둠별 대표 규약 전당 */
+    .best-class-rule-box {
+      background: linear-gradient(135deg, #FEFCE8, #FEF08A);
+      border: 3px solid #EAB308;
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 10px 28px rgba(234, 179, 8, 0.25);
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .best-class-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(234, 179, 8, 0.4);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .best-class-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 22px;
+      color: #854D0E;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .best-class-votes-badge {
+      background: #854D0E;
+      color: #FEF08A;
+      font-family: 'Jua', sans-serif;
+      font-size: 14px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: 800;
+    }
+
+    .rep-rules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .rep-rule-card {
+      background: #FFFFFF;
+      border: 2px solid #E2E8F0;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s;
+    }
+
+    .rep-rule-card:hover {
+      border-color: #38BDF8;
+      box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .rep-rule-card.is-first {
+      border-color: #FACC15;
+      background: #FEFDF7;
+    }
+
+    .rep-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 1px dashed #E2E8F0;
+      padding-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .rep-team-badge {
+      background: #E0F2FE;
+      color: #0369A1;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 10px;
+      border: 1px solid #BAE6FD;
+    }
+
+    .rep-source-likes {
+      font-size: 12px;
+      font-weight: 700;
+      color: #15803D;
+      background: #DCFCE7;
+      padding: 3px 8px;
+      border-radius: 8px;
+    }
+
+    .btn-vote-class {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1.5px solid #86EFAC;
+      background: #F0FDF4;
+      color: #166534;
+      font-family: 'Jua', sans-serif;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      margin-top: 14px;
+    }
+
+    .btn-vote-class:hover {
+      background: #DCFCE7;
+      border-color: #22C55E;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+    }
+
+    .btn-vote-class.voted {
+      background: linear-gradient(135deg, #16A34A, #15803D);
+      color: #FFFFFF;
+      border-color: #15803D;
+      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+    }
+
+    .vote-count-badge {
+      background: rgba(255, 255, 255, 0.3);
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .btn-vote-class:not(.voted) .vote-count-badge {
+      background: #DCFCE7;
+      color: #15803D;
+      border: 1px solid #BBF7D0;
+    }
+
     /* 하단 버튼 */
     .action-btn-area {
       display: flex;
@@ -610,6 +758,7 @@
   <nav class="step-nav">
     <button class="step-btn active" id="sbtn1" onclick="goToStep(1)"><span>1단계</span> 실천 규약 내용 작성하기</button>
     <button class="step-btn" id="sbtn2" onclick="goToStep(2)"><span>2단계</span> 모둠 실시간 공유 게시판</button>
+    <button class="step-btn" id="sbtn3" onclick="goToStep(3)"><span>3단계</span> 우리 반 대표 규약 전당</button>
   </nav>
 
   <div class="main-container">
@@ -662,7 +811,7 @@
 
       <div class="action-btn-area">
         <div></div>
-        <button class="btn btn-next" onclick="goToStep(2)">2단계: 친구들 규약 보러가기️</button>
+        <button class="btn btn-next" onclick="goToStep(2)">2단계: 친구들 규약 보러가기</button>
       </div>
     </div>
 
@@ -685,17 +834,70 @@
         </div>
       </div>
 
+      <!-- 3단계 이동 안내 배너 -->
+      <div style="background:linear-gradient(135deg, #E0F2FE, #BAE6FD);border:2.5px solid #38BDF8;border-radius:18px;padding:22px;text-align:center;margin-top:20px;">
+        <h3 style="font-family:'Jua';color:#0369A1;font-size:21px;margin-bottom:8px;">우리 모둠 대표 규약 선정 완료!</h3>
+        <p style="color:#0C4A6E;font-size:14.5px;margin-bottom:16px;">모둠원들에게 가장 많은 '좋아요'를 받은 규약이 <strong>모둠 대표 규약</strong>으로 3단계 전당에 자동 등록됩니다.</p>
+        <button class="btn" style="background:linear-gradient(135deg,#0284C7,#0369A1);color:white;font-size:17px;padding:14px 30px;" onclick="goToStep(3)">
+          3단계: 우리 반 모둠별 대표 규약 전당 가기
+        </button>
+      </div>
+
+      <div class="action-btn-area">
+        <button class="btn btn-prev" onclick="goToStep(1)">내 규약 수정하러 가기</button>
+        <button class="btn btn-next" onclick="goToStep(3)">3단계 가기</button>
+      </div>
+    </div>
+
+    <!-- 3단계: 우리 반 모둠별 대표 규약 전당 & 학급 대표 최종 규약 선정 -->
+    <div class="card step-content" id="step3">
+      <div class="board-header">
+        <h2 class="card-title" style="margin-bottom:0;">3단계: 우리 반 모둠별 대표 규약 전당</h2>
+        <div class="live-status-pill" style="border-color:#FDE047;background:#FEFCE8;color:#854D0E;">
+          <div class="pulse-green" style="background:#EAB308;"></div>
+          <span id="classSyncStatus">전체 학급 실시간 집계 중</span>
+        </div>
+      </div>
+      <p class="card-desc">
+        각 모둠에서 모둠원들의 <strong>좋아요 1위</strong>를 차지한 대표 규약들이 출품되었습니다.<br>
+        가장 훌륭한 규약에 <strong>[반 대표 좋아요]</strong>를 눌러주세요! 가장 많은 지지를 받은 규약이 <strong>우리 반 대표 규약</strong>으로 최종 선정됩니다.
+      </p>
+
+      <!-- 우리 반 최종 1위 대표 규약 명예의 전당 박스 -->
+      <div class="best-class-rule-box" id="bestClassRuleBox">
+        <div class="best-class-header">
+          <div class="best-class-title">
+            <span>우리 반 대표 최종 규약 (현재 1위)</span>
+          </div>
+          <span class="best-class-votes-badge" id="bestClassVotesBadge">0표 획득</span>
+        </div>
+        <div id="bestClassRuleContent" style="font-size:17px;font-weight:700;color:#713F12;line-height:1.7;margin-bottom:8px;">
+          각 모둠의 대표 규약에 좋아요를 눌러 투표해보세요!
+        </div>
+        <div id="bestClassRuleReason" style="font-size:14px;color:#854D0E;font-style:italic;">
+          -
+        </div>
+      </div>
+
+      <!-- 모둠별 대표 규약 목록 그리드 -->
+      <h3 style="font-family:'Jua';color:#1E293B;font-size:20px;margin-bottom:14px;">각 모둠의 1위 대표 규약 후보 목록</h3>
+      <div class="rep-rules-grid" id="teamRepRulesGrid">
+        <div style="text-align:center;padding:40px 20px;color:#78909C;grid-column:1/-1;">
+          모둠별 대표 규약을 불러오는 중입니다...
+        </div>
+      </div>
+
       <!-- 최종 완료 & 메인 이동 배너 -->
-      <div style="background:linear-gradient(135deg, #FFF9C4, #FFF59D);border:3px solid #FBC02D;border-radius:18px;padding:24px;text-align:center;margin-top:20px;">
-        <h3 style="font-family:'Jua';color:#E65100;font-size:22px;margin-bottom:8px;">모둠 실천 규약 공유 완료!</h3>
-        <p style="color:#5D4037;font-size:15px;margin-bottom:16px;">모둠원들과 의견을 나눈 후, <strong>메인 화면</strong>으로 이동하여 전체 탐정단 현황을 확인해보세요!</p>
-        <button class="btn" style="background:linear-gradient(135deg,#2E7D32,#1B5E20);color:white;font-size:18px;padding:16px 32px;" onclick="finishQuest7()">
+      <div style="background:linear-gradient(135deg, #FFF9C4, #FFF59D);border:3px solid #FBC02D;border-radius:18px;padding:24px;text-align:center;margin-top:24px;">
+        <h3 style="font-family:'Jua';color:#E65100;font-size:22px;margin-bottom:8px;">QUEST 7 모든 과정 완수!</h3>
+        <p style="color:#5D4037;font-size:15px;margin-bottom:16px;">우리 반 대표 규약 투표를 완료했습니다. <strong>메인 대지도</strong>로 이동하여 다음 단계에 도전하세요!</p>
+        <button class="btn" style="background:linear-gradient(135deg,#2E7D32,#1B5E20);color:white;font-size:18px;padding:16px 36px;" onclick="finishQuest7()">
           QUEST 7 완료 & 퀘스트지도가기 (+100 EXP)
         </button>
       </div>
 
       <div class="action-btn-area">
-        <button class="btn btn-prev" onclick="goToStep(1)">️ 내 규약 수정하러 가기</button>
+        <button class="btn btn-prev" onclick="goToStep(2)">2단계 모둠 게시판 가기</button>
         <div></div>
       </div>
     </div>
@@ -730,16 +932,17 @@
       drafts: []
     };
 
-    // 단계 이동
+    // 단계 이동 (1, 2, 3단계 지원)
     window.goToStep = function(stepNum) {
       window.state.currentStep = stepNum;
-      for (let i = 1; i <= 2; i++) {
+      for (let i = 1; i <= 3; i++) {
         const stepEl = document.getElementById(`step${i}`);
         const btnEl = document.getElementById(`sbtn${i}`);
         if (stepEl) stepEl.classList.toggle('active', i === stepNum);
         if (btnEl) {
           btnEl.classList.toggle('active', i === stepNum);
           if (i < stepNum) btnEl.classList.add('done');
+          else btnEl.classList.remove('done');
         }
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1033,6 +1236,167 @@
       }
     };
 
+    // ── 3단계: 우리 반 모둠별 대표 규약 전당 로직 ──
+    let currentRepRulesList = [];
+
+    // 3단계: 전체 모둠 규약 실시간 구독 (각 모둠 내 좋아요 1위 대표 규약 집계)
+    function subscribeAllTeamRepRules() {
+      const q = collection(db, "quest7_rules");
+
+      onSnapshot(q, (snapshot) => {
+        const allRules = [];
+        snapshot.forEach(docSnap => {
+          allRules.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        // 1. 모둠별(teamCode)로 그룹화
+        const teamGroups = {};
+        allRules.forEach(rule => {
+          const tCode = rule.teamCode || '미지정';
+          if (!teamGroups[tCode]) teamGroups[tCode] = [];
+          teamGroups[tCode].push(rule);
+        });
+
+        // 2. 각 모둠별로 모둠 내 좋아요(likes) 1위 추출
+        const repRules = [];
+        Object.entries(teamGroups).forEach(([tCode, rules]) => {
+          rules.sort((a, b) => {
+            const likesA = (typeof a.likes === 'number') ? a.likes : (Array.isArray(a.likedBy) ? a.likedBy.length : 0);
+            const likesB = (typeof b.likes === 'number') ? b.likes : (Array.isArray(b.likedBy) ? b.likedBy.length : 0);
+            if (likesB !== likesA) return likesB - likesA;
+            return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
+          });
+          const bestRule = rules[0];
+          if (bestRule) {
+            repRules.push(bestRule);
+          }
+        });
+
+        // 3. 3단계 반 대표 좋아요(classLikes) 순으로 정렬
+        repRules.sort((a, b) => {
+          const vA = (typeof a.classLikes === 'number') ? a.classLikes : (Array.isArray(a.classLikedBy) ? a.classLikedBy.length : 0);
+          const vB = (typeof b.classLikes === 'number') ? b.classLikes : (Array.isArray(b.classLikedBy) ? b.classLikedBy.length : 0);
+          if (vB !== vA) return vB - vA;
+          const mA = (typeof a.likes === 'number') ? a.likes : (Array.isArray(a.likedBy) ? a.likedBy.length : 0);
+          const mB = (typeof b.likes === 'number') ? b.likes : (Array.isArray(b.likedBy) ? b.likedBy.length : 0);
+          return mB - mA;
+        });
+
+        currentRepRulesList = repRules;
+        renderRepRulesUI(repRules);
+      }, (error) => {
+        console.warn("Class rules listener error:", error);
+      });
+    }
+
+    // 3단계 UI 렌더링
+    function renderRepRulesUI(repRules) {
+      const grid = document.getElementById("teamRepRulesGrid");
+      const bestVotesBadge = document.getElementById("bestClassVotesBadge");
+      const bestContent = document.getElementById("bestClassRuleContent");
+      const bestReason = document.getElementById("bestClassRuleReason");
+      const syncStatus = document.getElementById("classSyncStatus");
+
+      if (syncStatus) {
+        syncStatus.textContent = `총 ${repRules.length}개 모둠 대표 규약 집계 중`;
+      }
+
+      if (!grid) return;
+
+      if (repRules.length === 0) {
+        grid.innerHTML = `
+          <div style="text-align:center;padding:40px 20px;background:#F8FAFC;border-radius:16px;border:2px dashed #CBD5E1;grid-column:1/-1;">
+            <h4 style="font-family:'Jua';color:#475569;font-size:18px;margin-bottom:6px;">아직 등록된 모둠 실천 규약이 없습니다.</h4>
+            <p style="font-size:14px;color:#64748B;">각 모둠원들이 1단계에서 규약을 게시하면 이곳에 모둠별 1위 대표 규약이 전시됩니다.</p>
+          </div>
+        `;
+        if (bestContent) bestContent.textContent = '아직 등록된 모둠 대표 규약이 없습니다.';
+        if (bestReason) bestReason.textContent = '-';
+        if (bestVotesBadge) bestVotesBadge.textContent = '0표';
+        return;
+      }
+
+      // 현재 1위 대표 규약 하이라이트 박스 갱신
+      const topRule = repRules[0];
+      const topVotes = (typeof topRule.classLikes === 'number') ? topRule.classLikes : (Array.isArray(topRule.classLikedBy) ? topRule.classLikedBy.length : 0);
+      
+      if (bestVotesBadge) bestVotesBadge.textContent = `${topVotes}표 획득`;
+      if (bestContent) bestContent.innerHTML = `<span style="background:#FEF08A;color:#854D0E;padding:2px 8px;border-radius:8px;font-size:13px;font-weight:bold;margin-right:6px;">[${topRule.teamCode || '모둠'}]</span> ${topRule.ruleContent || (topRule.articles ? topRule.articles.join(', ') : '실천 규약')}`;
+      if (bestReason) bestReason.textContent = `이유: ${topRule.reason || '자원순환 실천을 위해 작성되었습니다.'} (작성: ${topRule.authorName || '모둠원'})`;
+
+      // 그리드 렌더링
+      grid.innerHTML = repRules.map((item, idx) => {
+        const isFirst = (idx === 0);
+        const classLikedBy = Array.isArray(item.classLikedBy) ? item.classLikedBy : [];
+        const isVoted = classLikedBy.includes(studentId);
+        const votesCount = (typeof item.classLikes === 'number') ? Math.max(0, item.classLikes) : classLikedBy.length;
+        const sourceLikes = (typeof item.likes === 'number') ? item.likes : (Array.isArray(item.likedBy) ? item.likedBy.length : 0);
+
+        const ruleText = item.ruleContent || (item.articles ? item.articles.join(', ') : item.title || '실천 규약');
+        const reasonText = item.reason || '자원순환 실천을 위해 작성되었습니다.';
+
+        return `
+          <div class="rep-rule-card ${isFirst ? 'is-first' : ''}">
+            <div>
+              <div class="rep-card-top">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <span class="rep-team-badge">${item.teamCode || '모둠'} 대표</span>
+                  ${isFirst ? '<span class="rank-badge rank-1">학급 1위</span>' : ''}
+                </div>
+                <span class="rep-source-likes">모둠 내 공감: ${sourceLikes}표</span>
+              </div>
+
+              <div style="font-size:12px;color:#64748B;margin-bottom:8px;">
+                작성 탐정: <strong>${item.authorName || '모둠원'}</strong>
+              </div>
+
+              <div style="font-family:'Jua';font-size:15px;color:#1B5E20;margin-bottom:4px;">대표 규약:</div>
+              <div style="background:#F1F8E9;border:1px solid #DCEDC8;border-radius:12px;padding:12px 14px;font-size:15px;color:#1B5E20;line-height:1.6;margin-bottom:10px;">
+                ${ruleText}
+              </div>
+
+              <div style="font-family:'Jua';font-size:14px;color:#5D4037;margin-bottom:4px;">제시한 이유:</div>
+              <div style="background:#FFFDE7;border:1px solid #FFF59D;border-radius:12px;padding:10px 12px;font-size:13.5px;color:#5D4037;line-height:1.5;">
+                ${reasonText}
+              </div>
+            </div>
+
+            <!-- 반 대표 투표(좋아요) 버튼 -->
+            <button class="btn-vote-class ${isVoted ? 'voted' : ''}" onclick="toggleVoteClassRepRule('${item.id}')" title="우리 반 최종 대표 규약으로 투표합니다">
+              <span>${isVoted ? '우리 반 대표 투표완료' : '우리 반 대표로 투표(좋아요)'}</span>
+              <span class="vote-count-badge">${votesCount}표</span>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 3단계: 반 대표 투표(좋아요) 토글
+    window.toggleVoteClassRepRule = async function(postId) {
+      if (!postId) return;
+      const target = currentRepRulesList.find(it => it.id === postId);
+      const isAlreadyVoted = target && Array.isArray(target.classLikedBy) && target.classLikedBy.includes(studentId);
+
+      playLikeTone(!isAlreadyVoted);
+
+      try {
+        if (isAlreadyVoted) {
+          await updateDoc(doc(db, "quest7_rules", postId), {
+            classLikes: increment(-1),
+            classLikedBy: arrayRemove(studentId)
+          });
+        } else {
+          await updateDoc(doc(db, "quest7_rules", postId), {
+            classLikes: increment(1),
+            classLikedBy: arrayUnion(studentId)
+          });
+          window.addScore(10);
+        }
+      } catch (e) {
+        console.warn("Class vote error:", e);
+      }
+    };
+
     // QUEST 7 최종 완료
     window.finishQuest7 = async function() {
       window.addScore(100);
@@ -1071,8 +1435,10 @@
         showMyPostPreview(savedRule, savedReason);
       }
 
-      // 실시간 모둠 피드 구독 시작
+      // 실시간 모둠 피드 구독 시작 (2단계)
       subscribeTeamRules();
+      // 실시간 전체 모둠 대표 피드 구독 시작 (3단계)
+      subscribeAllTeamRepRules();
     });
   </script>
 </body>

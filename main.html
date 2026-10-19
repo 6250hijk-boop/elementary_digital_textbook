@@ -348,11 +348,11 @@
       <span class="hotspot-title-overlay" id="overlay-q7">Q7. 실천규약</span>
     </a>
 
-    <!-- 8: 자원 순환 의회 -->
-    <a href="quest8.html" class="quest-hotspot" id="hotspot-q8" style="left: 80.81%; top: 33.73%; width: 12.1%; height: 22.33%;" title="퀘스트 8: 자원 순환 의회" aria-label="8. 자원 순환 의회">
-      <img src="images/lock.png" alt="퀘스트 8: 자원 순환 의회" class="hotspot-full-img" id="icon-q8">
+    <!-- 8: 실천하기 -->
+    <a href="quest8.html" class="quest-hotspot" id="hotspot-q8" style="left: 80.81%; top: 33.73%; width: 12.1%; height: 22.33%;" title="퀘스트 8: 실천하기" aria-label="8. 실천하기">
+      <img src="images/lock.png" alt="퀘스트 8: 실천하기" class="hotspot-full-img" id="icon-q8">
       <span class="hotspot-pulse"></span>
-      <span class="hotspot-title-overlay" id="overlay-q8">Q8. 의회선포</span>
+      <span class="hotspot-title-overlay" id="overlay-q8">Q8. 실천하기</span>
     </a>
   </div>
 
@@ -534,19 +534,32 @@
     });
   }
 
-  // 학생 개별 문서 구독 (완료 퀘스트 동기화)
+  // 학생 개별 문서 구독 (완료 퀘스트 및 점수 실시간 동기화)
   if (studentId) {
     onSnapshot(doc(db, "students", studentId), (docSnap) => {
       if (docSnap.exists()) {
         const sd = docSnap.data();
-        if (sd.q1Done || sd.q1_done) submittedQuestsState.q1 = true;
-        if (sd.q2Done || sd.q2_done) submittedQuestsState.q2 = true;
-        if (sd.q3_done || sd.q3Done) submittedQuestsState.q3 = true;
-        if (sd.q4_done || sd.q4Done) submittedQuestsState.q4 = true;
-        if (sd.q5Done || sd.q5_done) submittedQuestsState.q5 = true;
-        if (sd.q6Done || sd.q6_done) submittedQuestsState.q6 = true;
-        if (sd.q7Done || sd.q7_done) submittedQuestsState.q7 = true;
-        if (sd.q8Done || sd.q8_done) submittedQuestsState.q8 = true;
+        if (sd.score !== undefined) {
+          localStorage.setItem("elementary_score", sd.score.toString());
+          localStorage.setItem("studentExp", sd.score.toString());
+        }
+        if (sd.badge) {
+          localStorage.setItem("elementary_badge", sd.badge);
+        }
+        if (sd.aiPartnerName) {
+          localStorage.setItem("elementary_aiName", sd.aiPartnerName);
+        }
+
+        const maxDone = sd.questsDone || 0;
+        for (let i = 1; i <= 8; i++) {
+          const isDone = !!(sd[`q${i}Done`] || sd[`q${i}_done`] || sd[`quest${i}Done`] || sd[`quest${i}_done`] || sd[`quest${i}Completed`] || (maxDone >= i));
+          if (isDone) {
+            submittedQuestsState[`q${i}`] = true;
+            localStorage.setItem(`quest${i}_completed`, "true");
+            localStorage.setItem(`quest${i}_submitted`, "true");
+            localStorage.setItem(`elementary_q${i}_done`, "true");
+          }
+        }
 
         updateQuestLockImages();
       }
@@ -556,36 +569,41 @@
   // 초기 로컬 상태 반영
   updateQuestLockImages();
 
-  // Firestore 컬렉션 실시간 구독으로 퀘스트 과제 제출 여부 감지 (본인 또는 모둠원 제출 시 즉시 다음 퀘스트 자동 해금)
+  // Firestore 컬렉션 실시간 구독으로 퀘스트 과제 제출 여부 감지 (본인 또는 모둠원 제출 시 즉시 다음 퀘스트 자동 해금 및 동기화)
   if (studentId || teamCode) {
     const questCollections = [
-      { col: "quest1_records", key: "q1" },
-      { col: "quest2_rules", key: "q2" },
-      { col: "quest3_data", key: "q3" },
-      { col: "uploads", key: "q3" },
-      { col: "quest4_labeling", key: "q4" },
-      { col: "labels", key: "q4" },
-      { col: "quest5_logs", key: "q5" },
-      { col: "quest5_records", key: "q5" },
-      { col: "quest6_logs", key: "q6" },
-      { col: "quest6_errors", key: "q6" },
-      { col: "quest6_museum", key: "q6" },
-      { col: "quest6_reflections", key: "q6" },
-      { col: "quest7_rules", key: "q7" },
-      { col: "quest7_logs", key: "q7" },
-      { col: "quest8_logs", key: "q8" }
+      { col: "quest1_records", key: "q1", num: 1 },
+      { col: "quest2_rules", key: "q2", num: 2 },
+      { col: "quest3_data", key: "q3", num: 3 },
+      { col: "uploads", key: "q3", num: 3 },
+      { col: "quest4_labeling", key: "q4", num: 4 },
+      { col: "labels", key: "q4", num: 4 },
+      { col: "quest5_logs", key: "q5", num: 5 },
+      { col: "quest5_records", key: "q5", num: 5 },
+      { col: "quest6_logs", key: "q6", num: 6 },
+      { col: "quest6_errors", key: "q6", num: 6 },
+      { col: "quest6_museum", key: "q6", num: 6 },
+      { col: "quest6_reflections", key: "q6", num: 6 },
+      { col: "quest7_rules", key: "q7", num: 7 },
+      { col: "quest7_logs", key: "q7", num: 7 },
+      { col: "quest8_logs", key: "q8", num: 8 }
     ];
 
-    questCollections.forEach(({ col, key }) => {
+    questCollections.forEach(({ col, key, num }) => {
       try {
         onSnapshot(collection(db, col), (snapshot) => {
           snapshot.forEach((docSnap) => {
             const data = docSnap.data();
-            const sidMatch = studentId && (data.studentId === studentId || data.userId === studentId);
-            const teamMatch = teamCode && (data.teamCode === teamCode);
+            const sidMatch = studentId && (data.studentId === studentId || data.userId === studentId || data.authorName === studentName || data.userName === studentName);
+            const teamMatch = teamCode && (data.teamCode === teamCode || data.teamName === teamCode);
 
             if (sidMatch || teamMatch) {
               submittedQuestsState[key] = true;
+              if (sidMatch) {
+                localStorage.setItem(`quest${num}_completed`, "true");
+                localStorage.setItem(`quest${num}_submitted`, "true");
+                localStorage.setItem(`elementary_q${num}_done`, "true");
+              }
             }
           });
           updateQuestLockImages();
