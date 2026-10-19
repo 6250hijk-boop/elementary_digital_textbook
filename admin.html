@@ -983,7 +983,7 @@
           <div class="quest-mini-count" id="qCount-7">0팀</div>
         </div>
         <div class="quest-mini-box" id="qBox-8">
-          <div class="quest-mini-name">Q8. 의회선포</div>
+          <div class="quest-mini-name">Q8. 실천하기</div>
           <div class="quest-mini-count" id="qCount-8">0팀</div>
         </div>
       </div>
@@ -1013,7 +1013,7 @@
               <th class="col-quest" title="Q5. 교실쓰레기 AI탐정단">Q5<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">탐정</span></th>
               <th class="col-quest" title="Q6. 오류박물관">Q6<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">오류</span></th>
               <th class="col-quest" title="Q7. 실천 규약 초안">Q7<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">규약</span></th>
-              <th class="col-quest" title="Q8. 자원 순환 의회">Q8<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">의회</span></th>
+              <th class="col-quest" title="Q8. 실천하기">Q8<br><span style="font-size:10px;font-weight:normal;color:#558B2F;">실천</span></th>
               <th class="col-progress">진도율</th>
               <th class="col-score">점수/배지</th>
               <th class="col-action">과제 검토 및 관리</th>
@@ -1257,7 +1257,7 @@
     { name: "quest6_museum", key: "q6", title: "Q6. 오류 큐레이션" },
     { name: "quest7_rules", key: "q7", title: "Q7. 실천 규약 초안" },
     { name: "quest7_logs", key: "q7", title: "Q7. 실천 규약" },
-    { name: "quest8_logs", key: "q8", title: "Q8. 자원 순환 의회" }
+    { name: "quest8_logs", key: "q8", title: "Q8. 실천하기" }
   ];
 
   questCollections.forEach(({ name, key }) => {
@@ -1622,7 +1622,7 @@
       { key: "q5", title: "QUEST 5: 교실쓰레기 AI탐정단", desc: "실시간 AI 객체 감지 및 탐정 수사 기록" },
       { key: "q6", title: "QUEST 6: 오류박물관", desc: "AI 오인식 원인 분석 및 태그" },
       { key: "q7", title: "QUEST 7: 실천 규약 초안", desc: "우리 모둠 실천 규약 및 제시 이유" },
-      { key: "q8", title: "QUEST 8: 자원 순환 의회", desc: "최종 헌장 비준 및 전자 서명" }
+      { key: "q8", title: "QUEST 8: 실천하기", desc: "실시간 분리수거 영상 분석 및 실천" }
     ];
 
     let html = '';
@@ -2188,7 +2188,7 @@
       return;
     }
 
-    const header = "모둠코드,AI파트너이름,참여학생명단,Q1(AI의눈),Q2(분류기준),Q3(사진데이터),Q4(이름표라벨),Q5(AI탐정),Q6(오류관),Q7(실천규약),Q8(의회선포),진도율,총점수,배지";
+    const header = "모둠코드,AI파트너이름,참여학생명단,Q1(AI의눈),Q2(분류기준),Q3(사진데이터),Q4(이름표라벨),Q5(AI탐정),Q6(오류관),Q7(실천규약),Q8(실천하기),진도율,총점수,배지";
     const rows = mergedTeams.map(t => {
       const code = t.teamCode || t.id;
       const approved = t.approvedQuests || {};
