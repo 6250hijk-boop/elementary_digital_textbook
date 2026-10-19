@@ -189,41 +189,25 @@
     /* 우리 모둠 아지트 (My Home) 클릭 네모 스타일 */
     .hotspot-myhome {
       border-radius: 18px;
+      z-index: 20;
     }
 
-    .myhome-box-inner {
+    .myhome-img {
       width: 100%;
       height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      object-fit: cover;
       border-radius: 18px;
-      background: rgba(15, 23, 42, 0.55);
       border: 3px solid rgba(56, 189, 248, 0.95);
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.7), inset 0 0 14px rgba(56, 189, 248, 0.35);
-      backdrop-filter: blur(4px);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.7);
       transition: all 0.25s ease;
+      display: block;
     }
 
-    .myhome-icon {
-      font-size: clamp(26px, 3.8vw, 52px);
-      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
-      animation: myhomeBounce 2s infinite ease-in-out;
-      pointer-events: none;
-    }
-
-    @keyframes myhomeBounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
-    }
-
-    .hotspot-myhome:hover .myhome-box-inner,
-    .hotspot-myhome:focus .myhome-box-inner {
-      background: rgba(14, 165, 233, 0.65);
+    .hotspot-myhome:hover .myhome-img,
+    .hotspot-myhome:focus .myhome-img {
       border-color: #FFFFFF;
-      box-shadow: 0 0 32px rgba(56, 189, 248, 1), inset 0 0 20px rgba(255, 255, 255, 0.5);
-      transform: scale(1.05);
+      box-shadow: 0 0 32px rgba(56, 189, 248, 1), 0 8px 24px rgba(0, 0, 0, 0.5);
+      transform: scale(1.06);
     }
 
     .myhome-pulse {
@@ -291,10 +275,8 @@
     
     <!-- 추가 네모: 우리 모둠 아지트 (My Home) -->
     <!-- 크기: quest4와 동일(width: 12.2%, height: 21.82%) | x축: quest4 위치(left: 30.31%) | y축: quest1(16.34%)과 quest2(39.21%) 사이(top: 27.77%) -->
-    <a href="myhome.html" class="quest-hotspot hotspot-myhome" id="hotspot-myhome" style="left: 30.31%; top: 27.77%; width: 12.2%; height: 21.82%;" title="모둠 아지트 가기" aria-label="우리 모둠 아지트">
-      <div class="myhome-box-inner">
-        <span class="myhome-icon" style="font-size:18px; font-weight:800; color:#38BDF8;">아지트</span>
-      </div>
+    <a href="myhome.html" class="quest-hotspot hotspot-myhome" id="hotspot-myhome" style="left: 30.31%; top: 27.77%; width: 12.2%; height: 21.82%;" title="우리 모둠 아지트 가기" aria-label="우리 모둠 아지트">
+      <img src="images/azit.png" alt="우리 모둠 아지트" class="hotspot-full-img myhome-img" id="icon-myhome">
       <span class="hotspot-pulse myhome-pulse"></span>
       <span class="hotspot-title-overlay myhome-overlay" id="myhomeOverlay">모둠 아지트</span>
     </a>
