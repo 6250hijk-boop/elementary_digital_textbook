@@ -26,25 +26,36 @@
     }
 
     html, body {
-      width: 100%;
-      min-height: 100vh;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
       margin: 0;
       padding: 0;
       background: #0F172A;
-      overflow-x: hidden;
+      overflow: hidden; /* 스크롤바 완전히 제거 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* 메인 퀘스트 대지도 맵 - 화면 크기 변화에도 100% 동일한 비율 및 좌표 고정 */
+    /* 메인 퀘스트 대지도 맵 - 화면 종횡비에 맞춰 스크롤 없이 자동 맞춤 */
     .quest-map-container {
       position: relative;
-      width: 100%;
-      max-width: 100%;
-      margin: 0 auto;
-      padding: 0;
+      /* 화면이 좁을 땐 좌우폭(100vw)에 맞추고, 상하가 좁을 땐 상하폭(100vh)에 자동 맞춤 */
+      width: min(100vw, calc(100vh * (2704 / 1568)));
+      width: min(100vw, calc(100dvh * (2704 / 1568)));
+      height: min(100vh, calc(100vw * (1568 / 2704)));
+      height: min(100dvh, calc(100vw * (1568 / 2704)));
       aspect-ratio: 2704 / 1568;
+      max-width: 100vw;
+      max-height: 100vh;
+      max-height: 100dvh;
+      margin: auto;
+      padding: 0;
       user-select: none;
       background: #000000;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      container-type: inline-size;
     }
 
     .quest-map-img {
@@ -135,10 +146,10 @@
       transform: translateX(-50%);
       background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.95));
       color: #FEF08A;
-      font-size: clamp(11px, 1.3vw, 16px);
+      font-size: clamp(10px, 1.35cqi, 16px);
       font-weight: 800;
       font-family: 'Jua', sans-serif;
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: 12px;
       white-space: nowrap;
       pointer-events: none;
