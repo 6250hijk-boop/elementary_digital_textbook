@@ -889,7 +889,10 @@
         };
 
         if (db) {
-          await addDoc(collection(db, "quest2_rules"), postData);
+          const docRef = await addDoc(collection(db, "quest2_rules"), postData);
+          if (docRef && docRef.id) {
+            localStorage.setItem("quest2_my_post_doc_id", docRef.id);
+          }
 
           // 점수 및 퀘스트 완료 처리
           if (studentId && studentId !== "guest") {
@@ -973,7 +976,18 @@
         posts.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
         container.innerHTML = posts.map(post => {
-          const isMe = (post.studentId === studentId) || (post.studentName === studentName);
+          const sName = (studentName || '').trim().toLowerCase();
+          const tCode = (teamCode || '').trim().toLowerCase();
+          const pName = (post.studentName || post.authorName || '').trim().toLowerCase();
+          const pId = (post.studentId || '').trim();
+          const sId = (studentId || '').trim();
+          const savedDocId = localStorage.getItem("quest2_my_post_doc_id");
+
+          const isMe = (pId && sId && pId === sId) ||
+                       (savedDocId && post.id === savedDocId) ||
+                       (pName && (pName === sName || pName === tCode)) ||
+                       (pId && (pId.includes(sName) || pId.includes(tCode)));
+
           const authorCharId = isMe ? (myCharId || post.charId || 1) : (post.charId || getCharIdForName(post.studentName));
           const timeStr = post.createdAt?.seconds 
             ? new Date(post.createdAt.seconds * 1000).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) 
@@ -983,7 +997,7 @@
             <div class="post-card ${isMe ? 'my-post' : ''}">
               <div class="post-top">
                 <div class="post-author-wrap">
-                  <div class="author-avatar ${isMe ? 'my-avatar' : ''}" title="${isMe ? '내 탐정 캐릭터' : '모둠원 캐릭터'}">
+                  <div class="author-avatar ${isMe ? 'my-avatar' : ''}" title="${isMe ? '내가 쓴 글 (내 캐릭터)' : '모둠원 캐릭터'}">
                     <img src="images/bs-char (${authorCharId}).png" onerror="this.onerror=null; this.src='images/char(${authorCharId}).png';" alt="캐릭터 #${authorCharId}" class="author-avatar-img">
                   </div>
                   <div class="author-name">${post.studentName || '탐정 모둠원'}</div>
