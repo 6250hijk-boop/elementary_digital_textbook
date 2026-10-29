@@ -14,27 +14,9 @@
   const qNum = detectQuestNumber();
   if (qNum < 1 || qNum > 7) return;
 
-  // 인트로 표시 여부 판별 (이번 세션에서 방금 완료했거나 닫은 경우만 스킵, 강제 실행 시 무조건 표시)
+  // 인트로 표시 여부 판별 (요청: q1부터 q7까지 intro는 퀘스트 완료했어도 항상 보이도록 설정)
   function shouldSkipIntro(num) {
-    try {
-      // 1. URL에 intro=1 또는 replay=1 파라미터가 있으면 무조건 표시
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('intro') === '1' || params.get('replay') === '1') {
-        return false;
-      }
-
-      // 2. 현재 탭 세션에서 방금 퀘스트를 완료(제출)하고 재진입한 경우 스킵
-      if (sessionStorage.getItem(`quest${num}_just_completed`) === 'true') {
-        return true;
-      }
-
-      // 3. 현재 탭 세션에서 사용자가 이미 인트로를 보고 '시작하기'나 '스킵'으로 닫은 경우 스킵
-      if (sessionStorage.getItem(`quest_intro_dismissed_${num}`) === 'true') {
-        return true;
-      }
-    } catch(e) {
-      console.warn('[quest-intro] shouldSkipIntro error:', e);
-    }
+    // 퀘스트 완료 여부나 세션과 관계없이 퀘스트 진입 시 항상 대화형 인트로 표시
     return false;
   }
 
@@ -147,22 +129,75 @@
       pointer-events: none;
     }
 
+    /* 좌측 상단 bs-logo */
+    .quest-intro-logo-wrap {
+      position: absolute;
+      top: 24px;
+      left: 28px;
+      z-index: 12;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+      animation: introLogoFade 0.6s ease forwards;
+    }
+
+    .quest-intro-logo-img {
+      height: 64px;
+      max-width: 200px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.7));
+    }
+
+    @keyframes introLogoFade {
+      0% { opacity: 0; transform: translateY(-10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 좌측 크게 bs-char (대화창과 겹치면 항상 대화창이 위로 가도록 z-index: 6 설정) */
+    .quest-intro-char-wrap {
+      position: absolute;
+      bottom: 0;
+      left: 2%;
+      height: 82vh;
+      max-height: 860px;
+      z-index: 6; /* 대화창(z-index: 15)보다 아래에 위치 */
+      display: flex;
+      align-items: flex-end;
+      pointer-events: none;
+      animation: introCharSlideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .quest-intro-char-img {
+      height: 100%;
+      width: auto;
+      max-width: 46vw;
+      object-fit: contain;
+      object-position: bottom left;
+      filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.75));
+    }
+
+    @keyframes introCharSlideIn {
+      0% { opacity: 0; transform: translateX(-50px) scale(0.95); }
+      100% { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
     .quest-intro-skip-btn {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      z-index: 10;
-      background: rgba(15, 23, 42, 0.8);
-      color: #E2E8F0;
-      border: 1.5px solid rgba(255, 255, 255, 0.3);
-      padding: 8px 18px;
+      top: 24px;
+      right: 28px;
+      z-index: 25;
+      background: rgba(6, 27, 80, 0.85);
+      color: #FFFFFF;
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+      padding: 9px 20px;
       border-radius: 20px;
-      font-size: 13.5px;
+      font-size: 15px;
       font-weight: 700;
+      font-family: 'Jua', sans-serif;
       cursor: pointer;
       backdrop-filter: blur(8px);
       transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
     }
 
     .quest-intro-skip-btn:hover {
@@ -172,20 +207,27 @@
       transform: scale(1.05);
     }
 
+    /* 하단 대화창 (대화창과 bs-char이 겹치면 항상 대화창이 위로 가도록 z-index: 15 설정) */
     .quest-intro-dialog-card {
       position: relative;
-      z-index: 5;
+      z-index: 15; /* bs-char(z-index: 6)보다 항상 위! */
       width: 100%;
-      max-width: 920px;
-      background: rgba(15, 23, 42, 0.88);
+      max-width: 960px;
+      background: rgba(6, 27, 80, 0.94);
       border: 2.5px solid #38BDF8;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7), 0 0 24px rgba(56, 189, 248, 0.35);
-      border-radius: 24px;
-      padding: 24px 30px;
-      backdrop-filter: blur(12px);
-      margin-bottom: 20px;
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.8), 0 0 28px rgba(56, 189, 248, 0.45);
+      border-radius: 26px;
+      padding: 26px 36px;
+      backdrop-filter: blur(14px);
+      margin-bottom: 24px;
       animation: dialogPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .quest-intro-logo-img { height: 46px; }
+      .quest-intro-char-wrap { height: 60vh; max-width: 65vw; }
+      .quest-intro-dialog-card { padding: 18px 22px; margin-bottom: 14px; }
     }
 
     @keyframes dialogPop {
@@ -391,6 +433,16 @@
       <img src="images/bs-bg.png" alt="퀘스트 인트로 배경" class="quest-intro-bg-img" onerror="this.style.display='none'">
       <div class="quest-intro-vignette"></div>
 
+      <!-- 좌측 상단 bs-logo -->
+      <div class="quest-intro-logo-wrap">
+        <img src="images/bs-logo.png" alt="AI 자원순환 탐정단 로고" class="quest-intro-logo-img">
+      </div>
+
+      <!-- 좌측 크게 bs-char (대화창과 겹치면 대화창이 위로 오도록 설정) -->
+      <div class="quest-intro-char-wrap">
+        <img src="images/bs-char.png" alt="탐정 캐릭터" class="quest-intro-char-img">
+      </div>
+
       <button class="quest-intro-skip-btn" id="questIntroSkipBtn">스킵 (건너뛰기)</button>
 
       <div class="quest-intro-dialog-card" id="questIntroDialogCard">
@@ -461,9 +513,6 @@
     }
 
     function closeIntro() {
-      try {
-        sessionStorage.setItem(`quest_intro_dismissed_${qNum}`, 'true');
-      } catch(e) {}
       playFanfare();
       overlay.style.opacity = '0';
       overlay.style.pointerEvents = 'none';
