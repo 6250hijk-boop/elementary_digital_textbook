@@ -81,17 +81,18 @@
       background: var(--btn-yellow);
       border: 2px solid #eab308;
       color: #0F172A;
-      padding: 8px 14px;
+      padding: 8px 16px;
       border-radius: 12px;
-      font-size: 14px;
+      font-size: 16px;
       font-family: 'Jua', sans-serif;
       text-decoration: none;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
       transition: all 0.2s;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
       font-weight: bold;
+      white-space: nowrap;
     }
 
     .btn-quest-map:hover {
@@ -101,15 +102,17 @@
 
     .header-title {
       font-family: 'Jua', sans-serif;
-      font-size: 20px;
+      font-size: 24px;
       letter-spacing: 0.5px;
       color: var(--text-white);
+      white-space: nowrap;
     }
 
     .header-right {
       display: flex;
       align-items: center;
       gap: 10px;
+      white-space: nowrap;
     }
 
     .team-badge {
@@ -117,9 +120,10 @@
       border: 1.5px solid rgba(255, 255, 255, 0.3);
       color: white;
       font-family: 'Jua', sans-serif;
-      font-size: 15px;
-      padding: 6px 14px;
+      font-size: 16px;
+      padding: 7px 16px;
       border-radius: 20px;
+      white-space: nowrap;
     }
 
     .score-badge {
@@ -127,20 +131,21 @@
       border: 2px solid var(--btn-yellow);
       color: var(--btn-yellow);
       font-family: 'Jua', sans-serif;
-      font-size: 15px;
-      padding: 6px 14px;
+      font-size: 18px;
+      padding: 7px 18px;
       border-radius: 20px;
       font-weight: bold;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      white-space: nowrap;
     }
 
     .btn-intro-replay {
       background: rgba(254, 218, 53, 0.18);
       border: 1.5px solid var(--btn-yellow);
       color: var(--btn-yellow);
-      padding: 6px 12px;
+      padding: 7px 14px;
       border-radius: 12px;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 800;
       font-family: 'Jua', sans-serif;
       cursor: pointer;
@@ -148,6 +153,7 @@
       align-items: center;
       gap: 4px;
       transition: all 0.2s;
+      white-space: nowrap;
     }
 
     .btn-intro-replay:hover {
@@ -168,11 +174,11 @@
     }
 
     .step-btn {
-      padding: 10px 24px;
+      padding: 11px 24px;
       border-radius: 20px;
       border: 2px solid rgba(255, 255, 255, 0.2);
       background: #FFFFFF;
-      font-size: 15px;
+      font-size: 18px;
       font-weight: 700;
       color: #0F172A;
       cursor: pointer;
@@ -227,7 +233,7 @@
 
     .card-title {
       font-family: 'Jua', sans-serif;
-      font-size: 24px;
+      font-size: 26px;
       color: var(--text-white);
       margin-bottom: 10px;
       display: flex;
@@ -237,7 +243,7 @@
 
     .card-desc {
       color: var(--text-white-dim);
-      font-size: 15px;
+      font-size: 17px;
       line-height: 1.6;
       margin-bottom: 20px;
     }
@@ -256,21 +262,21 @@
       align-items: center;
       gap: 8px;
       font-family: 'Jua', sans-serif;
-      font-size: 19px;
+      font-size: 22px;
       color: var(--btn-yellow);
       margin-bottom: 10px;
     }
 
     .badge-num-circle {
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       background: var(--btn-yellow);
       color: #0F172A;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: bold;
     }
 
@@ -279,7 +285,7 @@
       padding: 14px 18px;
       border: 2px solid #cbd5e1;
       border-radius: 14px;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 600;
       color: #0F172A;
       outline: none;
@@ -320,10 +326,11 @@
       background: var(--btn-yellow);
       color: #0F172A;
       font-family: 'Jua', sans-serif;
-      font-size: 14px;
+      font-size: 15px;
       padding: 4px 12px;
       border-radius: 12px;
       font-weight: bold;
+      white-space: nowrap;
     }
 
     .btn-delete-my-post {
@@ -332,13 +339,14 @@
       border: 1.5px solid #FFCDD2;
       padding: 6px 14px;
       border-radius: 10px;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 4px;
       transition: all 0.2s;
+      white-space: nowrap;
     }
 
     .btn-delete-my-post:hover {
@@ -351,7 +359,7 @@
       padding: 16px;
       margin-bottom: 12px;
       border: 1px solid #cbd5e1;
-      font-size: 16px;
+      font-size: 18px;
       line-height: 1.6;
       color: #0F172A;
     }
@@ -360,7 +368,7 @@
       background: #FFFFFF;
       border-radius: 12px;
       padding: 14px 16px;
-      font-size: 15px;
+      font-size: 16px;
       color: #0F172A;
       border: 1px solid #cbd5e1;
       line-height: 1.5;
@@ -406,18 +414,20 @@
     .author-badge-pill {
       background: var(--btn-yellow);
       color: #0F172A;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 800;
       padding: 4px 12px;
       border-radius: 12px;
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      white-space: nowrap;
     }
 
     .card-time-text {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text-white-dim);
+      white-space: nowrap;
     }
 
     .card-rule-content {
@@ -426,7 +436,7 @@
       padding: 16px;
       border: 1px solid #cbd5e1;
       margin-bottom: 12px;
-      font-size: 16px;
+      font-size: 18px;
       line-height: 1.7;
       color: #0F172A;
     }
@@ -435,7 +445,7 @@
       background: #FFFFFF;
       border-radius: 12px;
       padding: 12px 16px;
-      font-size: 14px;
+      font-size: 16px;
       color: #0F172A;
       border: 1px solid #cbd5e1;
       margin-bottom: 14px;
@@ -455,15 +465,16 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 7px 16px;
+      padding: 8px 18px;
       border-radius: 12px;
       border: 1.5px solid #cbd5e1;
       background: #FFFFFF;
       color: #0F172A;
       font-family: 'Jua', sans-serif;
-      font-size: 14px;
+      font-size: 16px;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      white-space: nowrap;
     }
 
     .btn-like-post:hover {
@@ -483,9 +494,9 @@
 
     .like-count-badge {
       background: rgba(0, 0, 0, 0.1);
-      padding: 2px 7px;
+      padding: 2px 8px;
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
     }
 
@@ -496,12 +507,13 @@
 
     .rank-badge {
       font-family: 'Jua', sans-serif;
-      font-size: 12px;
-      padding: 3px 9px;
+      font-size: 14px;
+      padding: 4px 10px;
       border-radius: 8px;
       display: inline-flex;
       align-items: center;
       font-weight: 800;
+      white-space: nowrap;
     }
 
     .rank-badge.rank-1 {
@@ -533,12 +545,13 @@
 
     .comments-title {
       font-family: 'Jua', sans-serif;
-      font-size: 14px;
+      font-size: 16px;
       color: var(--btn-yellow);
       margin-bottom: 8px;
       display: flex;
       align-items: center;
       gap: 4px;
+      white-space: nowrap;
     }
 
     .comments-list {
@@ -552,7 +565,7 @@
       background: #FFFFFF;
       border-radius: 10px;
       padding: 8px 12px;
-      font-size: 13px;
+      font-size: 14px;
       color: #0F172A;
       border: 1px solid #cbd5e1;
       line-height: 1.4;
@@ -573,7 +586,7 @@
       padding: 8px 14px;
       border: 1.5px solid #cbd5e1;
       border-radius: 10px;
-      font-size: 13px;
+      font-size: 15px;
       outline: none;
       background: #FFFFFF;
       color: #0F172A;
@@ -585,12 +598,12 @@
     }
 
     .btn-submit-comment {
-      padding: 8px 16px;
+      padding: 8px 18px;
       background: var(--btn-yellow);
       color: #0F172A;
       border: none;
       border-radius: 10px;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: bold;
       cursor: pointer;
       white-space: nowrap;
@@ -626,21 +639,23 @@
 
     .best-class-title {
       font-family: 'Jua', sans-serif;
-      font-size: 22px;
+      font-size: 25px;
       color: var(--btn-yellow);
       display: flex;
       align-items: center;
       gap: 8px;
+      white-space: nowrap;
     }
 
     .best-class-votes-badge {
       background: var(--btn-yellow);
       color: #0F172A;
       font-family: 'Jua', sans-serif;
-      font-size: 14px;
-      padding: 4px 12px;
+      font-size: 15px;
+      padding: 4px 14px;
       border-radius: 12px;
       font-weight: 800;
+      white-space: nowrap;
     }
 
     .rep-rules-grid {
@@ -688,19 +703,21 @@
     .rep-team-badge {
       background: var(--btn-yellow);
       color: #0F172A;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 800;
-      padding: 3px 10px;
+      padding: 4px 12px;
       border-radius: 10px;
+      white-space: nowrap;
     }
 
     .rep-source-likes {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       color: #0F172A;
       background: #fef08a;
-      padding: 3px 8px;
+      padding: 3px 10px;
       border-radius: 8px;
+      white-space: nowrap;
     }
 
     .btn-vote-class {
@@ -709,16 +726,17 @@
       justify-content: center;
       align-items: center;
       gap: 8px;
-      padding: 10px 16px;
+      padding: 12px 18px;
       border-radius: 12px;
       border: 1.5px solid #cbd5e1;
       background: #FFFFFF;
       color: #0F172A;
       font-family: 'Jua', sans-serif;
-      font-size: 15px;
+      font-size: 17px;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       margin-top: 14px;
+      white-space: nowrap;
     }
 
     .btn-vote-class:hover {
@@ -738,9 +756,9 @@
 
     .vote-count-badge {
       background: rgba(0, 0, 0, 0.1);
-      padding: 2px 7px;
+      padding: 2px 8px;
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
     }
 
@@ -760,7 +778,7 @@
     .btn {
       padding: 14px 28px;
       border-radius: 16px;
-      font-size: 16px;
+      font-size: 19px;
       font-weight: 800;
       cursor: pointer;
       display: inline-flex;
@@ -769,6 +787,7 @@
       border: none;
       transition: all 0.2s;
       font-family: 'Jua', sans-serif;
+      white-space: nowrap;
     }
 
     .btn-prev {
@@ -795,12 +814,13 @@
     .btn-post {
       background: var(--btn-yellow);
       color: #0F172A;
-      font-size: 18px;
+      font-size: 22px;
       padding: 16px 32px;
       width: 100%;
       justify-content: center;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
       margin-top: 10px;
+      white-space: nowrap;
     }
 
     .btn-post:hover {

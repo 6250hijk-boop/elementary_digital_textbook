@@ -98,7 +98,7 @@
       padding: 8px 16px;
       border-radius: 12px;
       font-family: 'Jua', sans-serif;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 800;
       text-decoration: none;
       display: inline-flex;
@@ -118,47 +118,52 @@
     .header-title-group {
       display: flex;
       flex-direction: column;
+      white-space: nowrap;
     }
 
     .badge-chasi {
       font-family: 'Jua', sans-serif;
-      font-size: 12px;
+      font-size: 14px;
       color: var(--btn-yellow);
       background: rgba(254, 218, 53, 0.2);
       border: 1px solid var(--btn-yellow);
-      padding: 2px 8px;
-      border-radius: 6px;
+      padding: 3px 10px;
+      border-radius: 8px;
       display: inline-block;
       width: fit-content;
       font-weight: bold;
+      white-space: nowrap;
     }
 
     .header-title {
       font-family: 'Jua', sans-serif;
-      font-size: 20px;
+      font-size: 24px;
       color: var(--text-white);
       display: flex;
       align-items: center;
       gap: 6px;
+      white-space: nowrap;
     }
 
     .header-right {
       display: flex;
       align-items: center;
       gap: 12px;
+      white-space: nowrap;
     }
 
     .student-badge {
       background: rgba(14, 70, 191, 0.4);
       border: 1.5px solid rgba(255, 255, 255, 0.3);
-      padding: 6px 14px;
+      padding: 7px 16px;
       border-radius: 20px;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--text-white);
       display: flex;
       align-items: center;
       gap: 6px;
+      white-space: nowrap;
     }
 
     .score-badge {
@@ -167,13 +172,14 @@
       color: var(--btn-yellow);
       font-family: 'Jua', sans-serif;
       font-weight: 900;
-      font-size: 16px;
-      padding: 6px 16px;
+      font-size: 18px;
+      padding: 7px 18px;
       border-radius: 20px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
       display: flex;
       align-items: center;
       gap: 4px;
+      white-space: nowrap;
     }
 
     .btn-sound {
@@ -181,18 +187,19 @@
       border: 1.5px solid rgba(255, 255, 255, 0.3);
       color: #FFFFFF;
       border-radius: 12px;
-      padding: 6px 12px;
+      padding: 7px 14px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 15px;
+      white-space: nowrap;
     }
 
     .btn-intro-replay {
       background: rgba(254, 218, 53, 0.18);
       border: 1.5px solid var(--btn-yellow);
       color: var(--btn-yellow);
-      padding: 6px 12px;
+      padding: 7px 14px;
       border-radius: 12px;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 800;
       font-family: 'Jua', sans-serif;
       cursor: pointer;
@@ -200,6 +207,7 @@
       align-items: center;
       gap: 4px;
       transition: all 0.2s;
+      white-space: nowrap;
     }
 
     .btn-intro-replay:hover {
@@ -246,13 +254,13 @@
 
     .intro-text h2 {
       font-family: 'Jua', sans-serif;
-      font-size: 22px;
+      font-size: 26px;
       color: var(--text-white);
       margin-bottom: 4px;
     }
 
     .intro-text p {
-      font-size: 14.5px;
+      font-size: 17px;
       color: var(--text-white-dim);
       line-height: 1.5;
       font-weight: 500;
@@ -284,7 +292,7 @@
 
     .card-title {
       font-family: 'Jua', sans-serif;
-      font-size: 19px;
+      font-size: 22px;
       color: var(--text-white);
       margin-bottom: 14px;
       display: flex;
@@ -343,7 +351,7 @@
     }
 
     .view-placeholder .icon { font-size: 46px; margin-bottom: 8px; }
-    .view-placeholder p { font-size: 15px; font-weight: 600; }
+    .view-placeholder p { font-size: 16px; font-weight: 600; }
 
     /* 입력 컨트롤 버튼 바 */
     .control-actions {
@@ -359,7 +367,7 @@
       border-radius: 14px;
       padding: 12px 14px;
       font-family: 'Jua', sans-serif;
-      font-size: 15px;
+      font-size: 17px;
       color: #0F172A;
       cursor: pointer;
       display: flex;
@@ -367,6 +375,7 @@
       justify-content: center;
       gap: 6px;
       transition: all 0.2s;
+      white-space: nowrap;
     }
 
     .btn-action:hover, .btn-action:active {
@@ -387,9 +396,10 @@
       background: var(--btn-yellow);
       border: 2px solid #eab308;
       color: #0F172A;
-      font-size: 17px;
+      font-size: 20px;
       padding: 14px;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+      white-space: nowrap;
     }
 
     .btn-action.btn-predict:hover {
@@ -400,7 +410,7 @@
 
     /* 샘플 사진 원클릭 테스트 칩 */
     .sample-chips-title {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 800;
       color: var(--text-white-dim);
       margin-top: 14px;
@@ -410,19 +420,20 @@
     .sample-chips {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 8px;
     }
 
     .sample-chip {
       background: #FFFFFF;
       border: 1.5px solid #cbd5e1;
-      padding: 6px 12px;
+      padding: 7px 14px;
       border-radius: 20px;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 700;
       color: #0F172A;
       cursor: pointer;
       transition: all 0.15s;
+      white-space: nowrap;
     }
 
     .sample-chip:hover, .sample-chip:active, .sample-chip.active {
@@ -449,17 +460,18 @@
     }
 
     .confidence-label {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 800;
       color: var(--btn-yellow);
       letter-spacing: 0.5px;
       text-transform: uppercase;
       margin-bottom: 4px;
+      white-space: nowrap;
     }
 
     .detected-name {
       font-family: 'Jua', sans-serif;
-      font-size: 28px;
+      font-size: 32px;
       color: var(--text-white);
       margin-bottom: 8px;
     }
@@ -492,12 +504,13 @@
 
     .confidence-score-text {
       font-family: 'Jua', sans-serif;
-      font-size: 22px;
+      font-size: 25px;
       color: var(--btn-yellow);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
+      white-space: nowrap;
     }
 
     /* 상위 예측 랭킹 리스트 */
@@ -516,7 +529,7 @@
       background: #FFFFFF;
       border: 1.5px solid #e2e8f0;
       border-radius: 12px;
-      font-size: 14px;
+      font-size: 16px;
       color: #0F172A;
     }
 
@@ -565,7 +578,7 @@
 
     .ai-feedback-header {
       font-family: 'Jua', sans-serif;
-      font-size: 15px;
+      font-size: 18px;
       color: var(--btn-yellow);
       margin-bottom: 6px;
       display: flex;
@@ -574,7 +587,7 @@
     }
 
     .ai-feedback-desc {
-      font-size: 13.5px;
+      font-size: 16px;
       color: var(--text-white);
       line-height: 1.6;
       font-weight: 500;
@@ -588,7 +601,7 @@
       padding: 14px;
       border-radius: 14px;
       font-family: 'Jua', sans-serif;
-      font-size: 16px;
+      font-size: 19px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -596,6 +609,7 @@
       gap: 8px;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
       transition: all 0.2s;
+      white-space: nowrap;
     }
 
     .btn-share-team:hover {
@@ -647,13 +661,14 @@
       color: white;
       padding: 12px 24px;
       border-radius: 30px;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 700;
       z-index: 1000;
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       opacity: 0;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
       pointer-events: none;
+      white-space: nowrap;
     }
 
     .toast-msg.show {
