@@ -420,7 +420,7 @@
     overlay.id = 'questIntroOverlay';
 
     overlay.innerHTML = `
-      <img src="images/q1intro.png" alt="퀘스트 인트로 배경" class="quest-intro-bg-img" onerror="this.style.display='none'">
+      <img src="images/bs-bg.png" alt="퀘스트 인트로 배경" class="quest-intro-bg-img" onerror="this.style.display='none'">
       <div class="quest-intro-vignette"></div>
 
       <button class="quest-intro-skip-btn" id="questIntroSkipBtn">스킵 (건너뛰기)</button>
