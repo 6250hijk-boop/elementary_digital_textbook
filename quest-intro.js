@@ -13,6 +13,64 @@
   const qNum = detectQuestNumber();
   if (qNum < 1 || qNum > 7) return;
 
+  // 퀘스트 완료 여부 판별 함수
+  function isQuestCompleted(num) {
+    try {
+      // 1. 직접 저장된 완료 플래그 검사 (questN_completed, elementary_qN_done, questN_submitted 등)
+      const completedKeys = [
+        `quest${num}_completed`,
+        `elementary_q${num}_done`,
+        `quest${num}_submitted`,
+        `q${num}_done`,
+        `quest_${num}_done`,
+        `q${num}Done`,
+        `quest${num}Done`
+      ];
+
+      for (const k of completedKeys) {
+        if (localStorage.getItem(k) === 'true' || sessionStorage.getItem(k) === 'true') {
+          return true;
+        }
+      }
+
+      // 2. 누적 완료 수치 검사 (questsDone >= num)
+      const qDone = parseInt(
+        localStorage.getItem('questsDone') ||
+        localStorage.getItem('elementary_questsDone') ||
+        sessionStorage.getItem('questsDone') ||
+        '0',
+        10
+      );
+      if (!isNaN(qDone) && qDone >= num) {
+        return true;
+      }
+
+      // 3. 학생 데이터 객체(JSON) 내부 완료 기록 검사
+      const jsonKeys = ['studentInfo', 'elementary_student', 'elementary_studentData', 'user'];
+      for (const jk of jsonKeys) {
+        const raw = localStorage.getItem(jk) || sessionStorage.getItem(jk);
+        if (raw) {
+          try {
+            const data = JSON.parse(raw);
+            if (
+              data[`q${num}Done`] ||
+              data[`q${num}_done`] ||
+              data[`quest${num}Done`] ||
+              data[`quest${num}_completed`] ||
+              (data.questsDone !== undefined && Number(data.questsDone) >= num)
+            ) {
+              return true;
+            }
+          } catch(e) {}
+        }
+      }
+    } catch(e) {
+      console.warn('[quest-intro] isQuestCompleted error:', e);
+    }
+    return false;
+  }
+
+
   const INTRO_DIALOGS = {
     1: {
       title: "QUEST 1. AI의 눈",
@@ -346,7 +404,17 @@
     } catch(e) {}
   }
 
-  function createIntroDOM() {
+  function createIntroDOM(force = false) {
+    // 이미 완료된 퀘스트라면 수동 강제실행(force === true)이 아닌 한 인트로 생성/표시 안 함
+    if (!force && isQuestCompleted(qNum)) {
+      return;
+    }
+
+    // 이미 오버레이가 생성되어 있으면 중복 생성 방지
+    if (document.getElementById('questIntroOverlay')) {
+      return;
+    }
+
     const overlay = document.createElement('div');
     overlay.className = 'quest-intro-overlay';
     overlay.id = 'questIntroOverlay';
@@ -430,6 +498,9 @@
       overlay.style.pointerEvents = 'none';
       setTimeout(() => {
         overlay.style.display = 'none';
+        if (overlay.parentNode) {
+          overlay.parentNode.removeChild(overlay);
+        }
       }, 400);
     }
 
@@ -450,9 +521,32 @@
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', createIntroDOM);
-  } else {
-    createIntroDOM();
+  // 인트로 수동 다시보기 함수 (필요 시 콘솔 또는 버튼에서 호출 가능)
+  window.replayQuestIntro = function() {
+    createIntroDOM(true);
+  };
+
+  // 퀘스트 완료 상태가 비동기로 확인되었을 때 오버레이를 즉시 닫는 함수
+  function dismissIntroIfCompleted() {
+    if (isQuestCompleted(qNum)) {
+      const existing = document.getElementById('questIntroOverlay');
+      if (existing) {
+        existing.remove();
+      }
+    }
+  }
+
+  window.dismissQuestIntroIfCompleted = dismissIntroIfCompleted;
+  window.addEventListener('storage', dismissIntroIfCompleted);
+  setTimeout(dismissIntroIfCompleted, 400);
+  setTimeout(dismissIntroIfCompleted, 1200);
+
+  // 초기 실행: 이미 완료된 퀘스트인 경우 인트로를 전혀 띄우지 않음
+  if (!isQuestCompleted(qNum)) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => createIntroDOM(false));
+    } else {
+      createIntroDOM(false);
+    }
   }
 })();

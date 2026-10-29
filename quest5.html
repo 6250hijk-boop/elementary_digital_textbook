@@ -680,6 +680,19 @@
           </div>
         </div>
 
+        <!-- 카메라 선택 드롭다운 및 전환 바 (웨일북 등 다중 웹캠 완벽 지원) -->
+        <div class="camera-select-bar" id="cameraSelectBar" style="display:flex; gap:8px; align-items:center; margin-top:12px; margin-bottom:4px; background:#f8fafc; padding:10px 14px; border-radius:14px; border:2px solid #e2e8f0;">
+          <span style="font-size:14px; font-weight:700; color:#334155; white-space:nowrap; display:flex; align-items:center; gap:6px;">
+            카메라 선택:
+          </span>
+          <select id="cameraSelect" onchange="onCameraChange(this.value)" style="flex:1; padding:8px 12px; border-radius:10px; border:1.5px solid #cbd5e1; font-size:13.5px; font-weight:600; color:#1e293b; background:white; outline:none; cursor:pointer;">
+            <option value="">카메라 감지 중...</option>
+          </select>
+          <button type="button" class="btn-action" onclick="cycleNextCamera()" style="padding:8px 14px; font-size:13.5px; background:#e0f2fe; border:1.5px solid #7dd3fc; color:#0369a1; border-radius:10px; margin:0;" title="다음 카메라로 전환">
+            카메라 전환
+          </button>
+        </div>
+
         <!-- 입력 액션 버튼 -->
         <div class="control-actions" id="controlActions">
           <!-- 1) 찰칵 사진 촬영 버튼 (카메라 켜졌을 때 최우선 표시) -->
@@ -1194,9 +1207,100 @@
       return selected;
     }
 
-    // 카메라 켜기 / 끄기 토글
-    async function toggleCamera() {
-      window.playSound('click');
+    let videoDevices = [];
+    let currentCameraDeviceId = localStorage.getItem('quest_selected_camera_id') || '';
+
+    // 연결된 웹캠 장치 목록 동기화 (웨일북 등 다중 웹캠 완벽 지원)
+    async function updateCameraDeviceList() {
+      const select = document.getElementById('cameraSelect');
+      if (!select) return;
+
+      try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+          select.innerHTML = '<option value="">카메라 API 미지원 브라우저</option>';
+          return;
+        }
+
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        videoDevices = devices.filter(d => d.kind === 'videoinput');
+
+        if (videoDevices.length === 0) {
+          select.innerHTML = '<option value="">연결된 카메라 없음</option>';
+          return;
+        }
+
+        select.innerHTML = '';
+        videoDevices.forEach((dev, idx) => {
+          const opt = document.createElement('option');
+          opt.value = dev.deviceId;
+          let label = dev.label;
+          if (!label) {
+            if (idx === 0) label = `카메라 1 (기본)`;
+            else if (idx === 1) label = `카메라 2 (보조/후면)`;
+            else label = `카메라 ${idx + 1}`;
+          }
+          opt.textContent = label;
+
+          if (dev.deviceId === currentCameraDeviceId || (!currentCameraDeviceId && idx === 0)) {
+            opt.selected = true;
+            currentCameraDeviceId = dev.deviceId;
+          }
+          select.appendChild(opt);
+        });
+
+        if (!videoDevices.some(d => d.deviceId === currentCameraDeviceId) && videoDevices.length > 0) {
+          currentCameraDeviceId = videoDevices[0].deviceId;
+          select.value = currentCameraDeviceId;
+        }
+      } catch (err) {
+        console.warn("Failed to enumerate camera devices:", err);
+      }
+    }
+
+    if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
+      navigator.mediaDevices.addEventListener('devicechange', () => {
+        updateCameraDeviceList();
+      });
+    }
+
+    async function onCameraChange(deviceId) {
+      currentCameraDeviceId = deviceId;
+      localStorage.setItem('quest_selected_camera_id', deviceId);
+      if (isCameraActive) {
+        stopCamera();
+        await startQuest5Camera();
+      }
+    }
+
+    async function cycleNextCamera() {
+      if (!videoDevices || videoDevices.length <= 1) {
+        await updateCameraDeviceList();
+      }
+      if (!videoDevices || videoDevices.length <= 1) {
+        window.showToast("전환할 수 있는 다른 카메라가 없습니다.");
+        return;
+      }
+
+      const currentIndex = videoDevices.findIndex(d => d.deviceId === currentCameraDeviceId);
+      const nextIndex = (currentIndex + 1) % videoDevices.length;
+      currentCameraDeviceId = videoDevices[nextIndex].deviceId;
+
+      const select = document.getElementById('cameraSelect');
+      if (select) {
+        select.value = currentCameraDeviceId;
+      }
+      localStorage.setItem('quest_selected_camera_id', currentCameraDeviceId);
+
+      const targetLabel = videoDevices[nextIndex].label || `카메라 ${nextIndex + 1}`;
+      window.showToast(`카메라 변경: ${targetLabel}`);
+
+      if (isCameraActive) {
+        stopCamera();
+        await startQuest5Camera();
+      }
+    }
+
+    async function startQuest5Camera() {
       const btn = document.getElementById('btnToggleCamera');
       const text = document.getElementById('cameraBtnText');
       const captureBtn = document.getElementById('btnCapturePhoto');
@@ -1205,44 +1309,63 @@
       const statusBadge = document.getElementById('cameraStatusBadge');
       const statusText = document.getElementById('cameraStatusText');
 
+      try {
+        let constraints = {
+          video: currentCameraDeviceId
+            ? { deviceId: { exact: currentCameraDeviceId }, width: { ideal: 640 }, height: { ideal: 640 } }
+            : { facingMode: { ideal: 'environment' }, width: { ideal: 640 }, height: { ideal: 640 } }
+        };
+
+        try {
+          cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+        } catch (exactErr) {
+          console.warn("Exact camera constraint failed, falling back:", exactErr);
+          constraints = {
+            video: currentCameraDeviceId
+              ? { deviceId: { ideal: currentCameraDeviceId }, width: { ideal: 640 }, height: { ideal: 640 } }
+              : { width: { ideal: 640 }, height: { ideal: 640 } }
+          };
+          cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+        }
+
+        video.srcObject = cameraStream;
+        await video.play();
+
+        // 카메라 권한 승인 후 장치 라벨 즉시 갱신
+        setTimeout(() => updateCameraDeviceList(), 250);
+
+        // 카메라 비디오 라이브 프리뷰 표시
+        video.style.display = 'block';
+        canvas.style.display = 'none';
+        placeholder.style.display = 'none';
+        isCameraActive = true;
+        isPaused = false;
+        currentImageElement = video;
+
+        btn.classList.add('active-camera');
+        text.textContent = '카메라 끄기';
+
+        if (captureBtn) captureBtn.style.display = 'flex';
+        if (retakeBtn) retakeBtn.style.display = 'none';
+        if (statusBadge) {
+          statusBadge.style.display = 'flex';
+          statusText.textContent = '쓰레기를 비추고 [사진 촬영]을 누르세요';
+        }
+
+        window.showToast("카메라 준비 완료! 쓰레기를 비춘 후 [찰칵! 사진 촬영] 버튼을 눌러주세요.");
+      } catch(err) {
+        console.error("Camera access error:", err);
+        alert("카메라에 접근할 수 없습니다. 브라우저 권한을 확인하거나 사진 파일 선택을 이용해주세요.");
+      }
+    }
+
+    // 카메라 켜기 / 끄기 토글
+    async function toggleCamera() {
+      window.playSound('click');
       if (isCameraActive) {
         stopCamera();
       } else {
-        try {
-          const constraints = {
-            video: {
-              facingMode: { ideal: 'environment' },
-              width: { ideal: 640 },
-              height: { ideal: 640 }
-            }
-          };
-          cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
-          video.srcObject = cameraStream;
-          await video.play();
-
-          // 카메라 비디오 라이브 프리뷰 표시
-          video.style.display = 'block';
-          canvas.style.display = 'none';
-          placeholder.style.display = 'none';
-          isCameraActive = true;
-          isPaused = false;
-          currentImageElement = video;
-
-          btn.classList.add('active-camera');
-          text.textContent = '카메라 끄기';
-
-          if (captureBtn) captureBtn.style.display = 'flex';
-          if (retakeBtn) retakeBtn.style.display = 'none';
-          if (statusBadge) {
-            statusBadge.style.display = 'flex';
-            statusText.textContent = '쓰레기를 비추고 [사진 촬영]을 누르세요';
-          }
-
-          window.showToast("카메라 준비 완료! 쓰레기를 비춘 후 [찰칵! 사진 촬영] 버튼을 눌러주세요.");
-        } catch(err) {
-          console.error("Camera access error:", err);
-          alert("카메라에 접근할 수 없습니다. 브라우저 권한을 확인하거나 사진 파일 선택을 이용해주세요.");
-        }
+        await startQuest5Camera();
       }
     }
 
@@ -1713,6 +1836,7 @@
     // 초기화 실행
     document.addEventListener('DOMContentLoaded', () => {
       initYoloModel();
+      updateCameraDeviceList();
     });
   </script>
 </body>

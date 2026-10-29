@@ -1187,8 +1187,8 @@
       <div class="manage-card" style="margin-bottom:0;">
         <div class="section-header">
           <div>
-            <h2>5대 탐정 핵심 영역 성장 레이더</h2>
-            <p style="font-size:13px; color:#64748B; margin-top:3px;">AI원리, 데이터품질, 분리배출, 비판적사고, 환경협업 5개 영역</p>
+            <h2>5대 핵심 역량 성장 레이더</h2>
+            <p style="font-size:13px; color:#64748B; margin-top:3px;">AI리터러시&책임, AI문제해결, 협업역량, AI원리·데이터, 자원순환·분리배출 5개 영역</p>
           </div>
         </div>
         <div style="position:relative; width:100%; height:340px; display:flex; align-items:center; justify-content:center;">
@@ -1698,14 +1698,23 @@
 
       return `
         <tr>
-          <td><strong>${sName}</strong></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <strong style="color:#1E293B;">${sName}</strong>
+              <button onclick="editStudentNicknameAdmin('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-edit" style="padding:2px 6px;font-size:11px;" title="닉네임 수정">✏️</button>
+              <button onclick="deleteStudentNicknameAdmin('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-del" style="padding:2px 6px;font-size:11px;" title="닉네임 초기화">✕</button>
+            </div>
+          </td>
           <td><span class="code-tag" style="font-size:12px;padding:2px 6px;">${s.teamCode || '미지정'}</span></td>
           <td>${s.aiPartnerName || team?.aiName || '에코봇'}</td>
           <td><strong style="color:#2E7D32;">${s.score || 0} EXP</strong></td>
           <td><strong style="color:#16A34A;">${completedCount}/8 완료됨</strong></td>
           <td style="font-size:12px;color:#64748B;">${formatDateTime(s.lastActive || s.joinedAt || s.createdAt)}</td>
           <td>
-            <button onclick="deleteStudent('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-del" style="padding:4px 8px;font-size:12px;">삭제</button>
+            <div style="display:flex;gap:4px;">
+              <button onclick="editStudentNicknameAdmin('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-edit" style="padding:4px 8px;font-size:12px;">닉네임 수정</button>
+              <button onclick="deleteStudent('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-del" style="padding:4px 8px;font-size:12px;">삭제</button>
+            </div>
           </td>
         </tr>
       `;
@@ -2206,24 +2215,24 @@
 
   // ── 사전·사후 설문 분석 그래프 및 통계 함수 ──
   const SURVEY_QUESTIONS = [
-    { key: "q1", title: "Q1. AI 원리", area: "AI 원리 이해" },
-    { key: "q2", title: "Q2. 라벨링 중요성", area: "데이터 품질 & 라벨링" },
-    { key: "q3", title: "Q3. 데이터 품질", area: "데이터 품질 & 라벨링" },
-    { key: "q4", title: "Q4. 분리배출 기준", area: "자원순환 지식 & 탐색" },
-    { key: "q5", title: "Q5. 환경 문제 발견", area: "자원순환 지식 & 탐색" },
-    { key: "q6", title: "Q6. AI 오인식 분석", area: "AI 원리 이해" },
-    { key: "q7", title: "Q7. 비판적 검증", area: "비판적 검증 사고" },
-    { key: "q8", title: "Q8. 개선 데이터 수집", area: "데이터 품질 & 라벨링" },
-    { key: "q9", title: "Q9. 실천 규약 약속", area: "환경문제 해결 & 협업" },
-    { key: "q10", title: "Q10. AI 환경 효능감", area: "환경문제 해결 & 협업" }
+    { key: "q1", title: "Q1. AI리터러시", area: "AI 리터러시 & 책임", question: "나는 AI가 알려주는 정보를 그대로 받아들이지 않고 스스로 판단할 수 있다." },
+    { key: "q2", title: "Q2. AI활용 문제해결력", area: "AI 활용 & 문제해결", question: "나는 문제를 해결하기 위해 AI를 활용할 수 있다." },
+    { key: "q3", title: "Q3. 학습 유용성", area: "AI 활용 & 문제해결", question: "나는 AI를 활용한 수업이 공부에 도움이 된다고 생각한다." },
+    { key: "q4", title: "Q4. 협업 역량", area: "협업 역량", question: "나는 AI를 활용한 수업에서 친구들과 협력하여 활동할 수 있다." },
+    { key: "q5", title: "Q5. AI학습 원리이해", area: "AI 원리 & 데이터", question: "나는 AI가 이름표가 붙은 많은 사진을 보고 배운다는 것을 설명할 수 있다." },
+    { key: "q6", title: "Q6. 데이터 리터러시", area: "AI 원리 & 데이터", question: "나는 AI가 잘 배울 수 있는 좋은 사진과 그렇지 않은 사진을 구별할 수 있다." },
+    { key: "q7", title: "Q7. AI오류 분석", area: "AI 원리 & 데이터", question: "나는 AI가 물건을 잘 못 알아보았을 때 그 까닭을 찾아 말할 수 있다." },
+    { key: "q8", title: "Q8. AI활용 책임", area: "AI 리터러시 & 책임", question: "나는 AI를 사용할 때 마지막 판단은 사람이 해야한다고 생각한다." },
+    { key: "q9", title: "Q9. 자원순환 인식", area: "자원순환 & 분리배출", question: "나는 분리배출을 올바르게 하면 자원을 다시 쓸 수 있다는 것을 설명할 수 있다." },
+    { key: "q10", title: "Q10. 분리배출 실천", area: "자원순환 & 분리배출", question: "나는 헷갈리는 쓰레기를 버리기 전에 올바른 방법을 확인한다." }
   ];
 
   const SURVEY_AREAS = [
-    { name: "AI 원리 이해", keys: ["q1", "q6"] },
-    { name: "데이터 품질 & 라벨링", keys: ["q2", "q3", "q8"] },
-    { name: "자원순환 지식 & 탐색", keys: ["q4", "q5"] },
-    { name: "비판적 검증 사고", keys: ["q7"] },
-    { name: "환경문제 해결 & 협업", keys: ["q9", "q10"] }
+    { name: "AI 리터러시 & 책임", keys: ["q1", "q8"] },
+    { name: "AI 활용 & 문제해결", keys: ["q2", "q3"] },
+    { name: "협업 역량", keys: ["q4"] },
+    { name: "AI 원리 & 데이터", keys: ["q5", "q6", "q7"] },
+    { name: "자원순환 & 분리배출", keys: ["q9", "q10"] }
   ];
 
   let surveyBarChartInstance = null;
@@ -2406,6 +2415,11 @@
               },
               tooltip: {
                 callbacks: {
+                  title: function(items) {
+                    const idx = items[0].dataIndex;
+                    const item = SURVEY_QUESTIONS[idx];
+                    return `${item.title}: ${item.question || ''}`;
+                  },
                   label: function(context) {
                     return `${context.dataset.label}: ${context.parsed.y}점 / 5.0점`;
                   }
@@ -2597,16 +2611,16 @@
       "학번/아이디", "이름", "소속모둠",
       "사전총점(50점)", "사후총점(50점)", "점수변화", "성장률(%)",
       "사전평균(5점)", "사후평균(5점)",
-      "Q1_사전", "Q1_사후",
-      "Q2_사전", "Q2_사후",
-      "Q3_사전", "Q3_사후",
-      "Q4_사전", "Q4_사후",
-      "Q5_사전", "Q5_사후",
-      "Q6_사전", "Q6_사후",
-      "Q7_사전", "Q7_사후",
-      "Q8_사전", "Q8_사후",
-      "Q9_사전", "Q9_사후",
-      "Q10_사전", "Q10_사후",
+      "Q1_AI리터러시_사전", "Q1_AI리터러시_사후",
+      "Q2_AI활용문제해결_사전", "Q2_AI활용문제해결_사후",
+      "Q3_학습유용성_사전", "Q3_학습유용성_사후",
+      "Q4_협업역량_사전", "Q4_협업역량_사후",
+      "Q5_AI학습원리이해_사전", "Q5_AI학습원리이해_사후",
+      "Q6_데이터리터러시_사전", "Q6_데이터리터러시_사후",
+      "Q7_AI오류분석_사전", "Q7_AI오류분석_사후",
+      "Q8_AI활용책임_사전", "Q8_AI활용책임_사후",
+      "Q9_자원순환인식_사전", "Q9_자원순환인식_사후",
+      "Q10_분리배출실천_사전", "Q10_분리배출실천_사후",
       "11번_사후소감", "사후제출일시"
     ];
 
@@ -2710,6 +2724,112 @@
   };
 
   // 학생 개별 데이터 삭제
+  
+  // ── 관리자 사진 및 닉네임 관리 기능 ──
+  window.deletePhotoFromAdmin = async function(photoId, photoName) {
+    if (!confirm(`'${photoName || '선택한 사진'}'을(를) 삭제하시겠습니까?\n이 작업은 취소할 수 없습니다.`)) return;
+    try {
+      await deleteDoc(doc(db, "uploads", photoId));
+      uploadsCache = uploadsCache.filter(u => u.id !== photoId);
+      labelsCache = labelsCache.filter(l => l.imageId !== photoId);
+      renderTabPhotos(currentTeamCode);
+      showToast("사진이 성공적으로 삭제되었습니다.");
+    } catch(err) {
+      console.error("Photo delete error:", err);
+      alert("사진 삭제 실패: " + err.message);
+    }
+  };
+
+  window.deleteStudentAllPhotos = async function(teamCode, studentName) {
+    if (!confirm(`'${studentName}' 학생이 올린 모든 사진을 일괄 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+    try {
+      const allTeamPhotos = getTeamPhotos(teamCode);
+      const studentPhotos = allTeamPhotos.filter(p => {
+        const matchName = (p.userName && p.userName.trim().toLowerCase() === studentName.trim().toLowerCase());
+        const matchUid = (p.userId && (
+          p.userId === `${teamCode}_${studentName}` || 
+          p.userId.endsWith('_' + studentName) || 
+          p.userId === studentName
+        ));
+        return matchName || matchUid;
+      });
+
+      if (studentPhotos.length === 0) {
+        alert("삭제할 사진이 없습니다.");
+        return;
+      }
+
+      for (const p of studentPhotos) {
+        await deleteDoc(doc(db, "uploads", p.id));
+      }
+
+      const deletedIds = new Set(studentPhotos.map(p => p.id));
+      uploadsCache = uploadsCache.filter(u => !deletedIds.has(u.id));
+      labelsCache = labelsCache.filter(l => !deletedIds.has(l.imageId));
+
+      renderTabPhotos(teamCode);
+      showToast(`'${studentName}' 학생의 사진 ${studentPhotos.length}장이 모두 삭제되었습니다.`);
+    } catch(err) {
+      console.error("Batch photo delete error:", err);
+      alert("사진 일괄 삭제 실패: " + err.message);
+    }
+  };
+
+  window.editStudentNicknameAdmin = async function(studentId, currentName) {
+    const newName = prompt(`[${currentName || '학생'}]의 새 닉네임을 입력하세요:`, currentName || '');
+    if (newName === null) return;
+    const trimmed = newName.trim();
+    if (!trimmed) {
+      alert("닉네임을 한 글자 이상 입력해주세요.");
+      return;
+    }
+
+    try {
+      await updateDoc(doc(db, "students", studentId), {
+        studentName: trimmed,
+        name: trimmed
+      });
+
+      const sObj = studentsCache.find(s => (s.id === studentId || s.docId === studentId));
+      if (sObj) {
+        sObj.studentName = trimmed;
+        sObj.name = trimmed;
+      }
+
+      renderStudentTable();
+      renderMatrix();
+      showToast(`닉네임이 '${trimmed}'(으)로 성공적으로 수정되었습니다.`);
+    } catch(err) {
+      console.error("Nickname edit error:", err);
+      alert("닉네임 수정 실패: " + err.message);
+    }
+  };
+
+  window.deleteStudentNicknameAdmin = async function(studentId, currentName) {
+    const defaultName = `탐원_${studentId.slice(0, 4)}`;
+    if (!confirm(`'${currentName}' 학생의 닉네임을 기본값('${defaultName}')으로 초기화하시겠습니까?`)) return;
+
+    try {
+      await updateDoc(doc(db, "students", studentId), {
+        studentName: defaultName,
+        name: defaultName
+      });
+
+      const sObj = studentsCache.find(s => (s.id === studentId || s.docId === studentId));
+      if (sObj) {
+        sObj.studentName = defaultName;
+        sObj.name = defaultName;
+      }
+
+      renderStudentTable();
+      renderMatrix();
+      showToast(`닉네임이 초기화되었습니다.`);
+    } catch(err) {
+      console.error("Nickname reset error:", err);
+      alert("닉네임 초기화 실패: " + err.message);
+    }
+  };
+
   window.deleteStudent = async function(studentId, studentName) {
     if (!confirm(`정말로 [${studentName}] 학생의 데이터를 삭제하시겠습니까?\n(개인 점수 및 학습 참여 기록이 삭제됩니다.)`)) return;
 
@@ -2938,6 +3058,7 @@
             <div style="margin-top:auto; padding-top:10px; border-top:1px solid #F1F5F9; display:flex; gap:6px;">
               <button onclick="openPhotoLightbox('${p.id}')" class="btn-sm-action btn-sm-view" style="flex:1; text-align:center;">상세 검사</button>
               <a href="${p.url}" target="_blank" class="btn-sm-action btn-sm-edit" style="text-align:center; text-decoration:none;" title="새 탭에서 원본 보기">원본 열기</a>
+              <button onclick="deletePhotoFromAdmin('${p.id}', '${safeName}')" class="btn-sm-action btn-sm-del" style="padding:4px 8px;font-size:12px;background:#FFEBEE;color:#C62828;border:1px solid #FFCDD2;" title="사진 삭제">삭제</button>
             </div>
           </div>
         </div>
@@ -3082,6 +3203,7 @@
             <div style="display:flex; gap:8px; align-items:center; font-size:13px; font-weight:700;">
               <span style="background:#F1F8E9; color:#2E7D32; padding:4px 10px; border-radius:10px; border:1px solid #C8E6C9;">수집 사진: <b>${totalCnt}장</b></span>
               <span style="background:#E0F2FE; color:#0284C7; padding:4px 10px; border-radius:10px; border:1px solid #BAE6FD;">라벨링 완료: <b>${labeledCnt}장</b></span>
+              ${totalCnt > 0 ? `<button onclick="deleteStudentAllPhotos('${teamCode}', '${(name||'').replace(/'/g, "\\'")}')" class="btn-sm-action btn-sm-del" style="font-size:12px;padding:4px 10px;background:#FFEBEE;color:#C62828;border:1px solid #FFCDD2;" title="해당 학생의 모든 사진 일괄 삭제">🗑️ 사진 전체 삭제</button>` : ''}
             </div>
           </div>
           ${filteredPhotos.length > 0 

@@ -4,6 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>AI 자원순환 탐정단 - 8대 퀘스트 지도</title>
+  <script>
+    // localhost 상의 다른 PWA 서비스 워커 및 캐시 충돌 자동 해제
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        for (const reg of regs) reg.unregister();
+      });
+    }
+    if ('caches' in window) {
+      caches.keys().then(keys => {
+        for (const k of keys) caches.delete(k);
+      });
+    }
+  </script>
   <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua 사용 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">

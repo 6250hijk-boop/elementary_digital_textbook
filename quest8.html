@@ -783,13 +783,21 @@
           </div>
         </div>
 
+        <!-- 웹캠 선택 및 전환 컨트롤 바 (웨일북 등 다중 웹캠 완벽 지원) -->
+        <div class="camera-select-row" style="display:flex; gap:10px; align-items:center; margin-bottom:12px; background:rgba(255,255,255,0.04); padding:10px 14px; border-radius:12px; border:1px solid var(--card-border);">
+          <label for="cameraSelect" style="font-size:13.5px; font-weight:700; color:#38bdf8; white-space:nowrap;">카메라 선택:</label>
+          <select id="cameraSelect" onchange="onCameraChange(this.value)" style="flex:1; background:#0f172a; border:1px solid var(--card-border); color:#f1f5f9; padding:8px 12px; border-radius:8px; font-size:13.5px; font-family:'Pretendard', sans-serif; outline:none; cursor:pointer;">
+            <option value="" style="background:#1e293b; color:#fff;">카메라 감지 중...</option>
+          </select>
+          <button type="button" class="btn-control" onclick="cycleNextCamera()" style="flex:0 0 auto; padding:8px 14px; font-size:13.5px; background:rgba(56,189,248,0.15); border:1px solid #0284c7; color:#38bdf8;" title="다음 카메라로 전환">
+            카메라 전환
+          </button>
+        </div>
+
         <!-- 카메라 조작 컨트롤 -->
         <div class="camera-control-row">
           <button class="btn-control" id="btnToggleCam" onclick="toggleCamera()">
-            카메라 끄기
-          </button>
-          <button class="btn-control" onclick="switchCameraFacing()">
-            전/후면 전환
+            카메라 켜기
           </button>
           <button class="btn-control" id="btnPause" onclick="togglePauseAnalysis()">
             일시정지
@@ -990,6 +998,8 @@
     let isCameraActive = false;
     let isPaused = false;
     let currentFacing = 'environment'; // 기본 후면 카메라
+    let videoDevices = [];
+    let currentCameraDeviceId = localStorage.getItem('quest_selected_camera_id') || '';
     let frameCount = 0;
     let analyzedCount = 0;
     let isAnalyzing = false;
@@ -1085,21 +1095,126 @@
       reader.readAsArrayBuffer(file);
     }
 
+    // 연결된 웹캠 장치 목록 동기화 (웨일북 등 다중 웹캠 완벽 지원)
+    async function updateCameraDeviceList() {
+      const select = document.getElementById('cameraSelect');
+      if (!select) return;
+
+      try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+          select.innerHTML = '<option value="">카메라 API 미지원 브라우저</option>';
+          return;
+        }
+
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        videoDevices = devices.filter(d => d.kind === 'videoinput');
+
+        if (videoDevices.length === 0) {
+          select.innerHTML = '<option value="">연결된 카메라 없음</option>';
+          return;
+        }
+
+        select.innerHTML = '';
+        videoDevices.forEach((dev, idx) => {
+          const opt = document.createElement('option');
+          opt.value = dev.deviceId;
+          let label = dev.label;
+          if (!label) {
+            if (idx === 0) label = `카메라 1 (기본)`;
+            else if (idx === 1) label = `카메라 2 (보조/후면)`;
+            else label = `카메라 ${idx + 1}`;
+          }
+          opt.textContent = label;
+          opt.style.background = '#1e293b';
+          opt.style.color = '#ffffff';
+
+          if (dev.deviceId === currentCameraDeviceId || (!currentCameraDeviceId && idx === 0)) {
+            opt.selected = true;
+            currentCameraDeviceId = dev.deviceId;
+          }
+          select.appendChild(opt);
+        });
+
+        if (!videoDevices.some(d => d.deviceId === currentCameraDeviceId) && videoDevices.length > 0) {
+          currentCameraDeviceId = videoDevices[0].deviceId;
+          select.value = currentCameraDeviceId;
+        }
+      } catch (err) {
+        console.warn("Failed to enumerate camera devices:", err);
+      }
+    }
+
+    if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
+      navigator.mediaDevices.addEventListener('devicechange', () => {
+        updateCameraDeviceList();
+      });
+    }
+
+    async function onCameraChange(deviceId) {
+      currentCameraDeviceId = deviceId;
+      localStorage.setItem('quest_selected_camera_id', deviceId);
+      if (isCameraActive) {
+        stopCamera();
+        await startCamera();
+      }
+    }
+
+    async function cycleNextCamera() {
+      if (!videoDevices || videoDevices.length <= 1) {
+        await updateCameraDeviceList();
+      }
+      if (!videoDevices || videoDevices.length <= 1) {
+        showToast("전환할 수 있는 다른 카메라가 없습니다.");
+        return;
+      }
+
+      const currentIndex = videoDevices.findIndex(d => d.deviceId === currentCameraDeviceId);
+      const nextIndex = (currentIndex + 1) % videoDevices.length;
+      currentCameraDeviceId = videoDevices[nextIndex].deviceId;
+
+      const select = document.getElementById('cameraSelect');
+      if (select) {
+        select.value = currentCameraDeviceId;
+      }
+      localStorage.setItem('quest_selected_camera_id', currentCameraDeviceId);
+
+      const targetLabel = videoDevices[nextIndex].label || `카메라 ${nextIndex + 1}`;
+      showToast(`카메라 변경: ${targetLabel}`);
+
+      if (isCameraActive) {
+        stopCamera();
+        await startCamera();
+      }
+    }
+
     // 2. 실시간 카메라 시작 & 정지
     async function startCamera() {
       try {
-        const constraints = {
-          video: {
-            facingMode: { ideal: currentFacing },
-            width: { ideal: 640 },
-            height: { ideal: 640 }
-          },
+        let constraints = {
+          video: currentCameraDeviceId
+            ? { deviceId: { exact: currentCameraDeviceId }, width: { ideal: 640 }, height: { ideal: 640 } }
+            : { facingMode: { ideal: currentFacing }, width: { ideal: 640 }, height: { ideal: 640 } },
           audio: false
         };
 
-        videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+        try {
+          videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+        } catch (exactErr) {
+          console.warn("Exact camera constraint failed, falling back:", exactErr);
+          constraints = {
+            video: currentCameraDeviceId
+              ? { deviceId: { ideal: currentCameraDeviceId }, width: { ideal: 640 }, height: { ideal: 640 } }
+              : { width: { ideal: 640 }, height: { ideal: 640 } },
+            audio: false
+          };
+          videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+        }
+
         video.srcObject = videoStream;
         await video.play();
+
+        // 카메라 권한 승인 후 장치 라벨 즉시 갱신
+        setTimeout(() => updateCameraDeviceList(), 250);
 
         canvas.width = 640;
         canvas.height = 640;
@@ -1162,12 +1277,7 @@
     }
 
     async function switchCameraFacing() {
-      currentFacing = (currentFacing === 'environment') ? 'user' : 'environment';
-      showToast(`카메라 전환: ${currentFacing === 'environment' ? '후면' : '전면'}`);
-      if (isCameraActive) {
-        stopCamera();
-        await startCamera();
-      }
+      await cycleNextCamera();
     }
 
     function togglePauseAnalysis() {
@@ -1584,6 +1694,7 @@
       document.getElementById('expDisplay').textContent = `EXP ${exp}`;
 
       initModel();
+      updateCameraDeviceList();
       // 접속 시 카메라 자동 시작 시도
       startCamera();
     });
