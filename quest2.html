@@ -437,11 +437,29 @@
     }
 
     .author-avatar {
-      font-size: 24px;
-      background: rgba(6, 27, 80, 0.7);
-      padding: 6px;
+      width: 44px;
+      height: 44px;
+      background: radial-gradient(circle, rgba(14, 70, 191, 0.7) 0%, rgba(6, 27, 80, 0.95) 100%);
       border-radius: 50%;
-      border: 1.5px solid var(--accent-cyan);
+      border: 2px solid var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+    }
+
+    .author-avatar.my-avatar {
+      border: 2.5px solid var(--btn-yellow);
+      box-shadow: 0 0 12px rgba(254, 218, 53, 0.55);
+    }
+
+    .author-avatar-img {
+      width: 90%;
+      height: 90%;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
     }
 
     .author-name {
@@ -776,6 +794,22 @@
     const teamCode = localStorage.getItem("elementary_teamCode") || "1모둠";
     let currentScore = parseInt(localStorage.getItem("elementary_score") || "0", 10);
 
+    // 내 탐정 캐릭터 (bs-char (1) ~ bs-char (11))
+    let savedChar = localStorage.getItem("elementary_my_char") || localStorage.getItem("my_avatar_char");
+    let myCharId = parseInt(savedChar, 10);
+    if (!myCharId || myCharId < 1 || myCharId > 11) {
+      myCharId = 1;
+    }
+
+    function getCharIdForName(name) {
+      if (!name) return 1;
+      let hash = 0;
+      for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return (Math.abs(hash) % 11) + 1;
+    }
+
     // 상단 HUD 표시
     document.getElementById("dispStudent").textContent = `${studentName} (${teamCode})`;
     document.getElementById("scoreDisplay").textContent = `${currentScore} EXP`;
@@ -844,6 +878,7 @@
           studentId: studentId,
           studentName: studentName,
           teamCode: teamCode,
+          charId: myCharId,
           paperRule: paper || "규칙 미작성",
           plasticRule: plastic || "규칙 미작성",
           canRule: can || "규칙 미작성",
@@ -939,6 +974,7 @@
 
         container.innerHTML = posts.map(post => {
           const isMe = (post.studentId === studentId) || (post.studentName === studentName);
+          const authorCharId = isMe ? (myCharId || post.charId || 1) : (post.charId || getCharIdForName(post.studentName));
           const timeStr = post.createdAt?.seconds 
             ? new Date(post.createdAt.seconds * 1000).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) 
             : '방금 전';
@@ -947,7 +983,9 @@
             <div class="post-card ${isMe ? 'my-post' : ''}">
               <div class="post-top">
                 <div class="post-author-wrap">
-                  <div class="author-avatar" style="font-size:12px; font-weight:bold;">${isMe ? '나' : '학생'}</div>
+                  <div class="author-avatar ${isMe ? 'my-avatar' : ''}" title="${isMe ? '내 탐정 캐릭터' : '모둠원 캐릭터'}">
+                    <img src="images/bs-char (${authorCharId}).png" onerror="this.onerror=null; this.src='images/char(${authorCharId}).png';" alt="캐릭터 #${authorCharId}" class="author-avatar-img">
+                  </div>
                   <div class="author-name">${post.studentName || '탐정 모둠원'}</div>
                   <span class="author-tag ${isMe ? 'me' : ''}">${isMe ? '내가 쓴 글' : '모둠원'}</span>
                 </div>

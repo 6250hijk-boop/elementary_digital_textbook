@@ -412,16 +412,48 @@
     }
 
     .author-badge-pill {
-      background: var(--btn-yellow);
+      background: #FFFFFF;
       color: #0F172A;
       font-size: 15px;
       font-weight: 800;
-      padding: 4px 12px;
-      border-radius: 12px;
+      padding: 4px 14px 4px 5px;
+      border-radius: 24px;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 8px;
       white-space: nowrap;
+      border: 1.5px solid #CBD5E1;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .author-badge-pill.my-author-badge {
+      background: #FFFDF0;
+      border: 2px solid var(--btn-yellow);
+      box-shadow: 0 0 12px rgba(254, 218, 53, 0.45);
+    }
+
+    .author-char-icon-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(14, 70, 191, 0.7) 0%, rgba(6, 27, 80, 0.95) 100%);
+      border: 1.5px solid var(--accent-cyan, #38BDF8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .my-author-badge .author-char-icon-circle {
+      border-color: var(--btn-yellow);
+    }
+
+    .author-char-icon-img {
+      width: 90%;
+      height: 90%;
+      object-fit: contain;
+      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35));
     }
 
     .card-time-text {
@@ -890,7 +922,7 @@
       </div>
 
       <div style="display:flex;justify-content:space-between;align-items:center;background:#E8F5E9;padding:12px 16px;border-radius:12px;margin-bottom:14px;">
-        <span style="font-size:14px;color:#2E7D32;font-weight:bold;">작성 탐정: <span id="dispWriterName" style="color:#1B5E20;">-</span></span>
+        <span style="display:inline-flex;align-items:center;gap:6px;font-size:14px;color:#2E7D32;font-weight:bold;">작성 탐정: <span style="display:inline-flex;width:26px;height:26px;border-radius:50%;overflow:hidden;background:#061B50;border:1.5px solid #F59E0B;vertical-align:middle;box-shadow:0 1px 4px rgba(0,0,0,0.3);"><img id="dispWriterCharImg" src="images/bs-char (1).png" style="width:100%;height:100%;object-fit:contain;"></span> <span id="dispWriterName" style="color:#1B5E20;">-</span></span>
         <span style="font-size:14px;color:#558B2F;">소속 모둠: <span id="dispWriterTeam" style="font-weight:bold;">-</span></span>
       </div>
 
@@ -1028,6 +1060,22 @@
     const studentName = localStorage.getItem("elementary_studentName") || "탐정 학생";
     const teamCode = localStorage.getItem("elementary_teamCode") || "1모둠";
 
+    // 내 탐정 캐릭터 (bs-char (1) ~ bs-char (11))
+    let savedChar = localStorage.getItem("elementary_my_char") || localStorage.getItem("my_avatar_char");
+    let myCharId = parseInt(savedChar, 10);
+    if (!myCharId || myCharId < 1 || myCharId > 11) {
+      myCharId = 1;
+    }
+
+    function getCharIdForName(name) {
+      if (!name) return 1;
+      let hash = 0;
+      for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return (Math.abs(hash) % 11) + 1;
+    }
+
     window.state = {
       score: parseInt(localStorage.getItem("elementary_score") || "0", 10),
       currentStep: 1,
@@ -1080,6 +1128,7 @@
           teamCode: teamCode,
           studentId: studentId,
           authorName: studentName,
+          charId: myCharId,
           ruleContent: ruleContent,
           reason: reason,
           likes: 0,
@@ -1225,7 +1274,8 @@
       }
 
       grid.innerHTML = list.map((item, idx) => {
-        const isMyPost = item.studentId === studentId;
+        const isMyPost = (item.studentId === studentId) || (item.authorName === studentName);
+        const authorCharId = isMyPost ? (myCharId || item.charId || 1) : (item.charId || getCharIdForName(item.authorName));
         const timeStr = item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '방금 전';
 
         const ruleText = item.ruleContent || (item.articles ? item.articles.join(', ') : item.title || '실천 규약');
@@ -1254,7 +1304,10 @@
           <div class="board-feed-card ${isMyPost ? 'my-card' : ''}">
             <div class="card-top-row">
               <div style="display:flex; align-items:center; gap:8px;">
-                <div class="author-badge-pill">
+                <div class="author-badge-pill ${isMyPost ? 'my-author-badge' : ''}" title="${isMyPost ? '내 탐정 캐릭터' : '모둠원 캐릭터'}">
+                  <div class="author-char-icon-circle">
+                    <img src="images/bs-char (${authorCharId}).png" onerror="this.onerror=null; this.src='images/char(${authorCharId}).png';" alt="캐릭터 #${authorCharId}" class="author-char-icon-img">
+                  </div>
                   <span>${item.authorName || '모둠원'}</span>
                   ${isMyPost ? '<span style="font-size:12px;color:#0288D1;font-weight:900;">(내가 작성)</span>' : ''}
                 </div>
@@ -1528,6 +1581,12 @@
       document.getElementById('dispWriterName').textContent = studentName;
       document.getElementById('dispWriterTeam').textContent = teamCode;
       document.getElementById('scoreDisplay').textContent = `${window.state.score} EXP`;
+
+      const writerCharImg = document.getElementById('dispWriterCharImg');
+      if (writerCharImg) {
+        writerCharImg.src = `images/bs-char (${myCharId}).png`;
+        writerCharImg.onerror = () => { writerCharImg.src = `images/char(${myCharId}).png`; };
+      }
 
       // 저장된 내 글이 있으면 표시
       const savedRule = localStorage.getItem("quest7_my_rule_content");

@@ -965,16 +965,16 @@
     if (teamBadgeEl) teamBadgeEl.textContent = currentTeam || "탐정단";
     if (myNickEl) myNickEl.textContent = studentName || "나";
 
-    // 홈 이모지(🏠) 자리에 내 캐릭터 아바타 표시
+    // 홈 이모지(🏠) 자리에 내 캐릭터 아바타 표시 (1~11)
     let savedChar = localStorage.getItem("elementary_my_char") || localStorage.getItem("my_avatar_char");
     let myCharId = parseInt(savedChar, 10);
-    if (!myCharId || myCharId < 1 || myCharId > 7) {
+    if (!myCharId || myCharId < 1 || myCharId > 11) {
       myCharId = 1;
     }
     const azitIconEl = document.getElementById("azitBtnCharIcon");
     if (azitIconEl) {
       azitIconEl.innerHTML = `
-        <img src="images/char(${myCharId}).png" alt="내 캐릭터" onerror="this.onerror=null; this.src='images/char${myCharId}.png';" style="width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));">
+        <img src="images/bs-char (${myCharId}).png" alt="내 캐릭터" onerror="this.onerror=null; this.src='images/char(${myCharId}).png';" style="width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));">
       `;
     }
   }

@@ -1193,34 +1193,34 @@
   document.getElementById("dispAiName").textContent = `모둠 AI: ${currentAiName}`;
 
   // ============================================================
-  // 내 탐정 캐릭터 (char(1) ~ char(7)) 초기화 & 랜덤 설정
+  // 내 탐정 캐릭터 (bs-char (1) ~ bs-char (11)) 초기화 & 랜덤 설정
   // ============================================================
   let savedChar = localStorage.getItem("elementary_my_char") || localStorage.getItem("my_avatar_char");
   let myCharId = parseInt(savedChar, 10);
-  if (!myCharId || myCharId < 1 || myCharId > 7) {
-    myCharId = Math.floor(Math.random() * 7) + 1; // 1~7 랜덤
+  if (!myCharId || myCharId < 1 || myCharId > 11) {
+    myCharId = Math.floor(Math.random() * 11) + 1; // 1~11 랜덤
     localStorage.setItem("elementary_my_char", myCharId);
     localStorage.setItem("my_avatar_char", myCharId);
   }
 
-  // 모둠원 이름 기반 고유 캐릭터 (1~7) 매핑
+  // 모둠원 이름 기반 고유 캐릭터 (1~11) 매핑
   function getCharIdForName(name) {
     if (!name) return 1;
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
       hash = name.charCodeAt(i) + ((hash << 5) - hash);
     }
-    return (Math.abs(hash) % 7) + 1;
+    return (Math.abs(hash) % 11) + 1;
   }
 
   // 원형 캐릭터 아바타 HTML 생성
   function getCharacterAvatarHtml(charId, isMe = false) {
-    const cid = (charId >= 1 && charId <= 7) ? charId : 1;
+    const cid = (charId >= 1 && charId <= 11) ? charId : 1;
     const borderCol = isMe ? 'var(--accent-green, #22C55E)' : 'var(--accent-cyan, #38BDF8)';
     const glowCol = isMe ? 'rgba(34, 197, 94, 0.45)' : 'rgba(56, 189, 248, 0.35)';
     return `
       <div class="char-avatar-circle" style="border: 2px solid ${borderCol}; box-shadow: 0 0 12px ${glowCol};">
-        <img src="images/char(${cid}).png" alt="탐정 캐릭터 ${cid}" class="char-avatar-img" onerror="this.onerror=null; this.src='images/char${cid}.png';">
+        <img src="images/bs-char (${cid}).png" alt="탐정 캐릭터 ${cid}" class="char-avatar-img" onerror="this.onerror=null; this.src='images/char(${cid}).png';">
       </div>
     `;
   }
@@ -1231,7 +1231,7 @@
     if (myAvatarEl) {
       myAvatarEl.innerHTML = `
         <div class="char-avatar-circle">
-          <img src="images/char(${myCharId}).png" alt="내 캐릭터" class="char-avatar-img" onerror="this.onerror=null; this.src='images/char${myCharId}.png';">
+          <img src="images/bs-char (${myCharId}).png" alt="내 캐릭터" class="char-avatar-img" onerror="this.onerror=null; this.src='images/char(${myCharId}).png';">
         </div>
         <div class="avatar-edit-badge" title="캐릭터 변경">✏️</div>
       `;
@@ -1325,15 +1325,15 @@
   };
 
   window.selectCharOption = function(num) {
-    if (num < 1 || num > 7) return;
+    if (num < 1 || num > 11) return;
     tempSelectedChar = num;
     updateCharPickerView();
   };
 
   window.selectRandomCharacter = function() {
-    let rand = Math.floor(Math.random() * 7) + 1;
+    let rand = Math.floor(Math.random() * 11) + 1;
     if (rand === tempSelectedChar) {
-      rand = (rand % 7) + 1;
+      rand = (rand % 11) + 1;
     }
     selectCharOption(rand);
   };
@@ -1343,22 +1343,22 @@
     const prevImg = document.getElementById("charModalPreviewImg");
     const prevNum = document.getElementById("charModalPreviewNum");
     if (prevImg) {
-      prevImg.innerHTML = `<img src="images/char(${tempSelectedChar}).png" alt="캐릭터 ${tempSelectedChar}" onerror="this.onerror=null; this.src='images/char${tempSelectedChar}.png';">`;
+      prevImg.innerHTML = `<img src="images/bs-char (${tempSelectedChar}).png" alt="캐릭터 ${tempSelectedChar}" onerror="this.onerror=null; this.src='images/char(${tempSelectedChar}).png';">`;
     }
     if (prevNum) {
       prevNum.textContent = `탐정 캐릭터 ${tempSelectedChar}번 선택 중`;
     }
 
-    // 2. 7개 카드 갱신
+    // 2. 11개 카드 갱신
     const grid = document.getElementById("charGridList");
     if (grid) {
       let html = "";
-      for (let i = 1; i <= 7; i++) {
+      for (let i = 1; i <= 11; i++) {
         const isSel = i === tempSelectedChar;
         html += `
           <div class="char-card ${isSel ? 'selected' : ''}" onclick="selectCharOption(${i})">
             <div class="char-card-img-wrap">
-              <img src="images/char(${i}).png" alt="캐릭터 ${i}" onerror="this.onerror=null; this.src='images/char${i}.png';">
+              <img src="images/bs-char (${i}).png" alt="캐릭터 ${i}" onerror="this.onerror=null; this.src='images/char(${i}).png';">
             </div>
             <div class="char-card-name">캐릭터 ${i}</div>
             <div class="char-card-badge">${isSel ? '선택됨 ✔' : '선택'}</div>
