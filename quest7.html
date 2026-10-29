@@ -12,39 +12,42 @@
   
   <style>
     :root {
-      --primary: #2E7D32;
-      --primary-dark: #1B5E20;
-      --primary-light: #E8F5E9;
-      --secondary: #FF9800;
-      --secondary-light: #FFF3E0;
-      --accent-blue: #0288D1;
-      --accent-purple: #7B1FA2;
-      --bg: #F4F9F4;
-      --card-bg: #FFFFFF;
-      --text: #263238;
-      --text-muted: #546E7A;
-      --shadow: 0 8px 24px rgba(46, 125, 50, 0.12);
+      --bg-blue: rgb(14, 70, 191);
+      --card-navy: rgb(6, 27, 80);
+      --btn-yellow: rgb(254, 218, 53);
+      --btn-yellow-hover: #fde047;
+      --text-white: #FFFFFF;
+      --text-white-dim: rgba(255, 255, 255, 0.85);
+      --answer-bg: #FFFFFF;
+      --answer-text: #0F172A;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
       --radius: 22px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
 
     body {
-      background-color: var(--bg);
-      color: var(--text);
+      background-color: var(--bg-blue);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.12), transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(6, 27, 80, 0.5), transparent 40%),
+        linear-gradient(to bottom, rgb(14, 70, 191), rgb(10, 52, 148));
+      color: var(--text-white);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
     header {
-      background: linear-gradient(135deg, #2E7D32, #1B5E20);
+      background: rgba(6, 27, 80, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.15);
       color: white;
-      padding: 16px 24px;
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
       position: sticky;
       top: 0;
       z-index: 100;
@@ -56,24 +59,51 @@
       gap: 12px;
     }
 
-    .header-left a {
-      color: white;
+    .header-logo-link {
+      display: flex;
+      align-items: center;
       text-decoration: none;
-      font-size: 22px;
-      background: rgba(255,255,255,0.2);
-      padding: 6px 12px;
-      border-radius: 12px;
-      transition: all 0.2s;
+      transition: transform 0.2s;
     }
 
-    .header-left a:hover {
-      background: rgba(255,255,255,0.3);
+    .header-logo-link:hover {
+      transform: scale(1.04);
+    }
+
+    .header-bs-logo {
+      height: 42px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    .btn-quest-map {
+      background: var(--btn-yellow);
+      border: 2px solid #eab308;
+      color: #0F172A;
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: 'Jua', sans-serif;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      font-weight: bold;
+    }
+
+    .btn-quest-map:hover {
+      background: var(--btn-yellow-hover);
+      transform: translateY(-1px);
     }
 
     .header-title {
       font-family: 'Jua', sans-serif;
-      font-size: 22px;
+      font-size: 20px;
       letter-spacing: 0.5px;
+      color: var(--text-white);
     }
 
     .header-right {
@@ -83,8 +113,8 @@
     }
 
     .team-badge {
-      background: rgba(255,255,255,0.25);
-      border: 1px solid rgba(255,255,255,0.4);
+      background: rgba(14, 70, 191, 0.4);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
       color: white;
       font-family: 'Jua', sans-serif;
       font-size: 15px;
@@ -93,19 +123,21 @@
     }
 
     .score-badge {
-      background: #FFF9C4;
-      color: #F57F17;
+      background: rgba(6, 27, 80, 0.8);
+      border: 2px solid var(--btn-yellow);
+      color: var(--btn-yellow);
       font-family: 'Jua', sans-serif;
       font-size: 15px;
       padding: 6px 14px;
       border-radius: 20px;
       font-weight: bold;
-      border: 2px solid #FBC02D;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
     }
 
     .step-nav {
-      background: white;
-      border-bottom: 2px solid #E8F5E9;
+      background: rgba(6, 27, 80, 0.85);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.15);
       display: flex;
       justify-content: center;
       gap: 12px;
@@ -116,29 +148,35 @@
     .step-btn {
       padding: 10px 24px;
       border-radius: 20px;
-      border: 2px solid #C8E6C9;
-      background: #F1F8E9;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: #FFFFFF;
       font-size: 15px;
       font-weight: 700;
-      color: var(--primary-dark);
+      color: #0F172A;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 8px;
       white-space: nowrap;
       transition: all 0.2s;
+      font-family: 'Jua', sans-serif;
+    }
+
+    .step-btn:hover {
+      background: #fef08a;
     }
 
     .step-btn.active {
-      background: var(--primary-dark);
-      color: white;
-      border-color: var(--primary-dark);
-      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+      background: var(--btn-yellow);
+      color: #0F172A;
+      border-color: #eab308;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      font-weight: bold;
     }
 
     .step-btn.done {
-      background: #E8F5E9;
-      border-color: #81C784;
+      background: #fffbeb;
+      border-color: var(--btn-yellow);
     }
 
     .main-container {
@@ -150,13 +188,14 @@
     }
 
     .card {
-      background: var(--card-bg);
+      background: var(--card-navy);
       border-radius: var(--radius);
       padding: 28px;
       box-shadow: var(--shadow);
       margin-bottom: 24px;
-      border: 2px solid #E8F5E9;
+      border: 2px solid rgba(255, 255, 255, 0.25);
       animation: fadeIn 0.4s ease-out;
+      color: var(--text-white);
     }
 
     @keyframes fadeIn {
@@ -167,7 +206,7 @@
     .card-title {
       font-family: 'Jua', sans-serif;
       font-size: 24px;
-      color: var(--primary-dark);
+      color: var(--text-white);
       margin-bottom: 10px;
       display: flex;
       align-items: center;
@@ -175,7 +214,7 @@
     }
 
     .card-desc {
-      color: var(--text-muted);
+      color: var(--text-white-dim);
       font-size: 15px;
       line-height: 1.6;
       margin-bottom: 20px;
@@ -183,8 +222,8 @@
 
     /* 1단계 2개 입력칸 전용 스타일 */
     .form-group-item {
-      background: #F9FBE7;
-      border: 2px solid #C8E6C9;
+      background: rgba(14, 70, 191, 0.25);
+      border: 2px solid rgba(255, 255, 255, 0.2);
       border-radius: 18px;
       padding: 20px;
       margin-bottom: 18px;
@@ -196,30 +235,31 @@
       gap: 8px;
       font-family: 'Jua', sans-serif;
       font-size: 19px;
-      color: #1B5E20;
+      color: var(--btn-yellow);
       margin-bottom: 10px;
     }
 
     .badge-num-circle {
       width: 28px;
       height: 28px;
-      background: #2E7D32;
-      color: white;
+      background: var(--btn-yellow);
+      color: #0F172A;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       font-size: 15px;
+      font-weight: bold;
     }
 
     .rule-textarea {
       width: 100%;
       padding: 14px 18px;
-      border: 2px solid #C8E6C9;
+      border: 2px solid #cbd5e1;
       border-radius: 14px;
       font-size: 16px;
       font-weight: 600;
-      color: #1B5E20;
+      color: #0F172A;
       outline: none;
       background: #FFFFFF;
       transition: all 0.2s;
@@ -228,19 +268,21 @@
     }
 
     .rule-textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.12);
+      border-color: var(--btn-yellow);
+      background: #fffbeb;
+      box-shadow: 0 0 0 4px rgba(254, 218, 53, 0.25);
     }
 
     /* 내가 작성한 글 미리보기 카드 */
     .my-post-preview-card {
-      background: #E1F5FE;
-      border: 2px solid #81D4FA;
+      background: rgba(14, 70, 191, 0.35);
+      border: 2px solid rgba(255, 255, 255, 0.25);
       border-radius: 18px;
       padding: 22px;
       margin-top: 24px;
       position: relative;
       animation: fadeIn 0.3s ease-out;
+      color: var(--text-white);
     }
 
     .my-preview-header {
@@ -249,16 +291,17 @@
       align-items: center;
       margin-bottom: 14px;
       padding-bottom: 10px;
-      border-bottom: 1px dashed #B3E5FC;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
     }
 
     .my-preview-tag {
-      background: #0288D1;
-      color: white;
+      background: var(--btn-yellow);
+      color: #0F172A;
       font-family: 'Jua', sans-serif;
       font-size: 14px;
       padding: 4px 12px;
       border-radius: 12px;
+      font-weight: bold;
     }
 
     .btn-delete-my-post {
@@ -281,23 +324,23 @@
     }
 
     .my-rule-display-box {
-      background: white;
+      background: #FFFFFF;
       border-radius: 12px;
       padding: 16px;
       margin-bottom: 12px;
-      border: 1px solid #B3E5FC;
+      border: 1px solid #cbd5e1;
       font-size: 16px;
       line-height: 1.6;
-      color: #01579B;
+      color: #0F172A;
     }
 
     .my-reason-display-box {
-      background: #F1F8E9;
+      background: #FFFFFF;
       border-radius: 12px;
       padding: 14px 16px;
       font-size: 15px;
-      color: #2E7D32;
-      border: 1px solid #C8E6C9;
+      color: #0F172A;
+      border: 1px solid #cbd5e1;
       line-height: 1.5;
     }
 
@@ -310,22 +353,23 @@
     }
 
     .board-feed-card {
-      background: #FFFFFF;
-      border: 2px solid #C8E6C9;
+      background: rgba(14, 70, 191, 0.25);
+      border: 2px solid rgba(255, 255, 255, 0.2);
       border-radius: 18px;
       padding: 22px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       transition: all 0.2s;
+      color: var(--text-white);
     }
 
     .board-feed-card:hover {
-      border-color: var(--primary);
-      box-shadow: 0 8px 20px rgba(46, 125, 50, 0.15);
+      border-color: var(--btn-yellow);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
     }
 
     .board-feed-card.my-card {
-      border-color: #81D4FA;
-      background: #F9FDFF;
+      border-color: var(--btn-yellow);
+      background: rgba(6, 27, 80, 0.6);
     }
 
     .card-top-row {
@@ -334,17 +378,16 @@
       align-items: center;
       margin-bottom: 14px;
       padding-bottom: 8px;
-      border-bottom: 1px dashed #E0E0E0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
     }
 
     .author-badge-pill {
-      background: #E8F5E9;
-      color: #2E7D32;
+      background: var(--btn-yellow);
+      color: #0F172A;
       font-size: 14px;
       font-weight: 800;
       padding: 4px 12px;
       border-radius: 12px;
-      border: 1px solid #A5D6A7;
       display: inline-flex;
       align-items: center;
       gap: 4px;
@@ -352,27 +395,27 @@
 
     .card-time-text {
       font-size: 12px;
-      color: #90A4AE;
+      color: var(--text-white-dim);
     }
 
     .card-rule-content {
-      background: #F1F8E9;
+      background: #FFFFFF;
       border-radius: 14px;
       padding: 16px;
-      border: 1px solid #DCEDC8;
+      border: 1px solid #cbd5e1;
       margin-bottom: 12px;
       font-size: 16px;
       line-height: 1.7;
-      color: #1B5E20;
+      color: #0F172A;
     }
 
     .card-reason-content {
-      background: #FFFDE7;
+      background: #FFFFFF;
       border-radius: 12px;
       padding: 12px 16px;
       font-size: 14px;
-      color: #5D4037;
-      border: 1px solid #FFF59D;
+      color: #0F172A;
+      border: 1px solid #cbd5e1;
       margin-bottom: 14px;
       line-height: 1.5;
     }
@@ -392,9 +435,9 @@
       gap: 8px;
       padding: 7px 16px;
       border-radius: 12px;
-      border: 1.5px solid #C8E6C9;
-      background: #F1F8E9;
-      color: #2E7D32;
+      border: 1.5px solid #cbd5e1;
+      background: #FFFFFF;
+      color: #0F172A;
       font-family: 'Jua', sans-serif;
       font-size: 14px;
       cursor: pointer;
@@ -402,20 +445,22 @@
     }
 
     .btn-like-post:hover {
+      background: var(--btn-yellow);
+      border-color: #eab308;
+      color: #0F172A;
       transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.15);
-      border-color: #2E7D32;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
 
     .btn-like-post.liked {
-      background: linear-gradient(135deg, #2E7D32, #1B5E20);
-      color: #FFFFFF;
-      border-color: #1B5E20;
-      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+      background: var(--btn-yellow);
+      color: #0F172A;
+      border-color: #eab308;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
 
     .like-count-badge {
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(0, 0, 0, 0.1);
       padding: 2px 7px;
       border-radius: 8px;
       font-size: 13px;
@@ -423,9 +468,8 @@
     }
 
     .btn-like-post:not(.liked) .like-count-badge {
-      background: #E8F5E9;
-      color: #1B5E20;
-      border: 1px solid #C8E6C9;
+      background: #e2e8f0;
+      color: #0F172A;
     }
 
     .rank-badge {
@@ -439,9 +483,9 @@
     }
 
     .rank-badge.rank-1 {
-      background: #FFF9C4;
-      color: #B45309;
-      border: 1.5px solid #FDE047;
+      background: var(--btn-yellow);
+      color: #0F172A;
+      border: 1.5px solid #eab308;
     }
 
     .rank-badge.rank-2 {
@@ -458,16 +502,17 @@
 
     /* 댓글 영역 */
     .comments-section {
-      background: #FAFAFA;
+      background: rgba(6, 27, 80, 0.6);
       border-radius: 14px;
       padding: 14px;
-      border: 1px solid #EEEEEE;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-white);
     }
 
     .comments-title {
       font-family: 'Jua', sans-serif;
       font-size: 14px;
-      color: #546E7A;
+      color: var(--btn-yellow);
       margin-bottom: 8px;
       display: flex;
       align-items: center;
@@ -482,17 +527,17 @@
     }
 
     .comment-item-pill {
-      background: white;
+      background: #FFFFFF;
       border-radius: 10px;
       padding: 8px 12px;
       font-size: 13px;
-      color: #37474F;
-      border: 1px solid #E0E0E0;
+      color: #0F172A;
+      border: 1px solid #cbd5e1;
       line-height: 1.4;
     }
 
     .comment-item-pill strong {
-      color: #2E7D32;
+      color: #1d4ed8;
       margin-right: 6px;
     }
 
@@ -504,21 +549,23 @@
     .comment-input-field {
       flex: 1;
       padding: 8px 14px;
-      border: 1.5px solid #CFD8DC;
+      border: 1.5px solid #cbd5e1;
       border-radius: 10px;
       font-size: 13px;
       outline: none;
-      background: white;
+      background: #FFFFFF;
+      color: #0F172A;
     }
 
     .comment-input-field:focus {
-      border-color: var(--primary);
+      border-color: var(--btn-yellow);
+      background: #fffbeb;
     }
 
     .btn-submit-comment {
       padding: 8px 16px;
-      background: #2E7D32;
-      color: white;
+      background: var(--btn-yellow);
+      color: #0F172A;
       border: none;
       border-radius: 10px;
       font-size: 13px;
@@ -527,16 +574,21 @@
       white-space: nowrap;
     }
 
+    .btn-submit-comment:hover {
+      background: var(--btn-yellow-hover);
+    }
+
     /* 3단계: 우리 반 모둠별 대표 규약 전당 */
     .best-class-rule-box {
-      background: linear-gradient(135deg, #FEFCE8, #FEF08A);
-      border: 3px solid #EAB308;
+      background: var(--card-navy);
+      border: 3px solid var(--btn-yellow);
       border-radius: 22px;
       padding: 24px;
-      box-shadow: 0 10px 28px rgba(234, 179, 8, 0.25);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
       margin-bottom: 24px;
       position: relative;
       overflow: hidden;
+      color: var(--text-white);
     }
 
     .best-class-header {
@@ -545,7 +597,7 @@
       align-items: center;
       margin-bottom: 12px;
       padding-bottom: 10px;
-      border-bottom: 2px solid rgba(234, 179, 8, 0.4);
+      border-bottom: 2px solid rgba(254, 218, 53, 0.4);
       flex-wrap: wrap;
       gap: 8px;
     }
@@ -553,15 +605,15 @@
     .best-class-title {
       font-family: 'Jua', sans-serif;
       font-size: 22px;
-      color: #854D0E;
+      color: var(--btn-yellow);
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
     .best-class-votes-badge {
-      background: #854D0E;
-      color: #FEF08A;
+      background: var(--btn-yellow);
+      color: #0F172A;
       font-family: 'Jua', sans-serif;
       font-size: 14px;
       padding: 4px 12px;
@@ -577,26 +629,27 @@
     }
 
     .rep-rule-card {
-      background: #FFFFFF;
-      border: 2px solid #E2E8F0;
+      background: rgba(14, 70, 191, 0.25);
+      border: 2px solid rgba(255, 255, 255, 0.2);
       border-radius: 18px;
       padding: 20px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       transition: all 0.2s;
+      color: var(--text-white);
     }
 
     .rep-rule-card:hover {
-      border-color: #38BDF8;
-      box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12);
+      border-color: var(--btn-yellow);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
       transform: translateY(-2px);
     }
 
     .rep-rule-card.is-first {
-      border-color: #FACC15;
-      background: #FEFDF7;
+      border-color: var(--btn-yellow);
+      background: rgba(6, 27, 80, 0.8);
     }
 
     .rep-card-top {
@@ -604,27 +657,26 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
-      border-bottom: 1px dashed #E2E8F0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
       padding-bottom: 8px;
       flex-wrap: wrap;
       gap: 6px;
     }
 
     .rep-team-badge {
-      background: #E0F2FE;
-      color: #0369A1;
+      background: var(--btn-yellow);
+      color: #0F172A;
       font-size: 13px;
       font-weight: 800;
       padding: 3px 10px;
       border-radius: 10px;
-      border: 1px solid #BAE6FD;
     }
 
     .rep-source-likes {
       font-size: 12px;
       font-weight: 700;
-      color: #15803D;
-      background: #DCFCE7;
+      color: #0F172A;
+      background: #fef08a;
       padding: 3px 8px;
       border-radius: 8px;
     }
@@ -637,9 +689,9 @@
       gap: 8px;
       padding: 10px 16px;
       border-radius: 12px;
-      border: 1.5px solid #86EFAC;
-      background: #F0FDF4;
-      color: #166534;
+      border: 1.5px solid #cbd5e1;
+      background: #FFFFFF;
+      color: #0F172A;
       font-family: 'Jua', sans-serif;
       font-size: 15px;
       cursor: pointer;
@@ -648,21 +700,22 @@
     }
 
     .btn-vote-class:hover {
-      background: #DCFCE7;
-      border-color: #22C55E;
+      background: var(--btn-yellow);
+      border-color: #eab308;
+      color: #0F172A;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .btn-vote-class.voted {
-      background: linear-gradient(135deg, #16A34A, #15803D);
-      color: #FFFFFF;
-      border-color: #15803D;
-      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+      background: var(--btn-yellow);
+      color: #0F172A;
+      border-color: #eab308;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
     }
 
     .vote-count-badge {
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(0, 0, 0, 0.1);
       padding: 2px 7px;
       border-radius: 8px;
       font-size: 13px;
@@ -670,9 +723,8 @@
     }
 
     .btn-vote-class:not(.voted) .vote-count-badge {
-      background: #DCFCE7;
-      color: #15803D;
-      border: 1px solid #BBF7D0;
+      background: #e2e8f0;
+      color: #0F172A;
     }
 
     /* 하단 버튼 */
@@ -698,34 +750,39 @@
     }
 
     .btn-prev {
-      background: #ECEFF1;
-      color: #455A64;
+      background: rgba(255, 255, 255, 0.2);
+      color: #FFFFFF;
     }
 
     .btn-prev:hover {
-      background: #CFD8DC;
+      background: rgba(255, 255, 255, 0.3);
     }
 
     .btn-next {
-      background: linear-gradient(135deg, #4CAF50, #2E7D32);
-      color: white;
-      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+      background: var(--btn-yellow);
+      color: #0F172A;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
 
     .btn-next:hover {
+      background: var(--btn-yellow-hover);
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
     }
 
     .btn-post {
-      background: linear-gradient(135deg, #FF9800, #E65100);
-      color: white;
+      background: var(--btn-yellow);
+      color: #0F172A;
       font-size: 18px;
       padding: 16px 32px;
       width: 100%;
       justify-content: center;
-      box-shadow: 0 6px 18px rgba(230, 81, 0, 0.3);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
       margin-top: 10px;
+    }
+
+    .btn-post:hover {
+      background: var(--btn-yellow-hover);
     }
 
     .btn-post:active {
@@ -746,7 +803,10 @@
 
   <header>
     <div class="header-left">
-      <a href="main.html" class="btn-back" style="background:#f1f5f9; border:2px solid #cbd5e1; color:#334155; padding:6px 14px; border-radius:10px; text-decoration:none; font-family:'Jua',sans-serif; font-size:14px; font-weight:bold;">퀘스트지도가기</a>
+      <a href="main.html" class="header-logo-link" title="메인 화면으로 이동">
+        <img src="images/bs-logo.png" alt="AI 자원순환 탐정단" class="header-bs-logo">
+      </a>
+      <a href="main.html" class="btn-quest-map" title="퀘스트 지도로 이동">🧭 퀘스트지도가기</a>
       <span class="header-title">QUEST 7: 우리 모둠 실천 규약 초안 입력하기</span>
     </div>
     <div class="header-right">

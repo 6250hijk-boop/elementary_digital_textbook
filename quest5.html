@@ -16,21 +16,16 @@
 
   <style>
     :root {
-      --bg-light: #f0f7ff;
-      --bg-card: #ffffff;
-      --border-card: #d0e4ff;
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --primary-light: #eff6ff;
-      --accent-gold: #f59e0b;
-      --accent-green: #10b981;
-      --accent-purple: #8b5cf6;
-      --accent-red: #ef4444;
-      --text-main: #1e293b;
-      --text-sub: #475569;
-      --text-muted: #64748b;
+      --bg-blue: rgb(14, 70, 191);        /* 배경 파랑 r14, g70, b191 */
+      --card-navy: rgb(6, 27, 80);        /* 기타 남색 r6, g27, b80 */
+      --btn-yellow: rgb(254, 218, 53);    /* 버튼 노랑 r254, g218, b53 */
+      --btn-yellow-hover: rgb(255, 230, 80);
+      --accent-cyan: #38BDF8;
+      --accent-green: #22C55E;
+      --text-white: #FFFFFF;              /* 글씨: 흰색 */
+      --text-white-dim: rgba(255, 255, 255, 0.85);
       --radius: 22px;
-      --shadow: 0 10px 30px rgba(37, 99, 235, 0.08);
+      --shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
     }
 
     * {
@@ -43,12 +38,12 @@
 
     body {
       font-family: 'Pretendard', sans-serif;
-      background-color: var(--bg-light);
+      background-color: var(--bg-blue);
       background-image: 
-        radial-gradient(circle at 10% 10%, rgba(37, 99, 235, 0.08), transparent 35%),
-        radial-gradient(circle at 90% 90%, rgba(245, 158, 11, 0.08), transparent 35%),
-        linear-gradient(to bottom, #f0f7ff, #e8f2fc);
-      color: var(--text-main);
+        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.2), transparent 35%),
+        radial-gradient(circle at 90% 90%, rgba(254, 218, 53, 0.15), transparent 35%),
+        linear-gradient(to bottom, rgb(14, 70, 191), rgb(8, 50, 145));
+      color: var(--text-white);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -62,40 +57,62 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.95);
+      background: var(--card-navy);
       backdrop-filter: blur(12px);
-      border-bottom: 2px solid #e2e8f0;
-      padding: 12px 20px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+      padding: 10px 22px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
-    .btn-back {
-      background: #f1f5f9;
-      border: 2px solid #cbd5e1;
-      color: #334155;
+    .header-logo-link {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+
+    .header-logo-link:hover {
+      transform: scale(1.05);
+    }
+
+    .header-bs-logo {
+      height: 42px;
+      max-width: 130px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+    }
+
+    .btn-quest-map {
+      background: var(--btn-yellow);
+      color: #0F172A;
+      border: 1.5px solid rgba(255, 255, 255, 0.6);
       padding: 8px 16px;
       border-radius: 12px;
+      font-family: 'Jua', sans-serif;
       font-size: 15px;
       font-weight: 800;
       text-decoration: none;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(254, 218, 53, 0.4);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
     }
 
-    .btn-back:hover {
-      background: #e2e8f0;
-      transform: translateY(-1px);
+    .btn-quest-map:hover {
+      background: var(--btn-yellow-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(254, 218, 53, 0.6);
     }
 
     .header-title-group {
@@ -106,8 +123,9 @@
     .badge-chasi {
       font-family: 'Jua', sans-serif;
       font-size: 12px;
-      color: #2563eb;
-      background: #eff6ff;
+      color: var(--btn-yellow);
+      background: rgba(254, 218, 53, 0.2);
+      border: 1px solid var(--btn-yellow);
       padding: 2px 8px;
       border-radius: 6px;
       display: inline-block;
@@ -118,7 +136,7 @@
     .header-title {
       font-family: 'Jua', sans-serif;
       font-size: 20px;
-      color: #1e293b;
+      color: var(--text-white);
       display: flex;
       align-items: center;
       gap: 6px;
@@ -127,46 +145,45 @@
     .header-right {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .student-badge {
-      background: #f8fafc;
-      border: 1.5px solid #cbd5e1;
+      background: rgba(14, 70, 191, 0.4);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
       padding: 6px 14px;
       border-radius: 20px;
       font-size: 14px;
       font-weight: 700;
-      color: #334155;
+      color: var(--text-white);
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
     .score-badge {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      color: white;
+      background: rgba(6, 27, 80, 0.8);
+      border: 2px solid var(--btn-yellow);
+      color: var(--btn-yellow);
       font-family: 'Jua', sans-serif;
-      font-size: 15px;
-      padding: 6px 14px;
+      font-weight: 900;
+      font-size: 16px;
+      padding: 6px 16px;
       border-radius: 20px;
-      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
       display: flex;
       align-items: center;
       gap: 4px;
     }
 
     .btn-sound {
-      background: #f1f5f9;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 50%;
-      width: 38px;
-      height: 38px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      color: #FFFFFF;
+      border-radius: 12px;
+      padding: 6px 12px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
+      font-size: 14px;
     }
 
     /* 메인 컨테이너 */
@@ -181,39 +198,40 @@
 
     /* 메인 안내 카드 */
     .intro-banner {
-      background: linear-gradient(135deg, #eff6ff, #dbeafe);
-      border: 2.5px solid #93c5fd;
+      background: var(--card-navy);
+      border: 2px solid rgba(255, 255, 255, 0.25);
       border-radius: var(--radius);
       padding: 22px 24px;
       display: flex;
       align-items: center;
       gap: 16px;
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.08);
+      box-shadow: var(--shadow);
+      color: var(--text-white);
     }
 
     .intro-icon {
       font-size: 48px;
       flex-shrink: 0;
-      background: white;
+      background: rgba(14, 70, 191, 0.4);
       width: 72px;
       height: 72px;
       border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
     }
 
     .intro-text h2 {
       font-family: 'Jua', sans-serif;
       font-size: 22px;
-      color: #1e3a8a;
+      color: var(--text-white);
       margin-bottom: 4px;
     }
 
     .intro-text p {
       font-size: 14.5px;
-      color: #334155;
+      color: var(--text-white-dim);
       line-height: 1.5;
       font-weight: 500;
     }
@@ -232,19 +250,20 @@
     }
 
     .card-panel {
-      background: #ffffff;
-      border: 2.5px solid var(--border-card);
+      background: var(--card-navy);
+      border: 2px solid rgba(255, 255, 255, 0.25);
       border-radius: var(--radius);
       padding: 22px;
       box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
+      color: var(--text-white);
     }
 
     .card-title {
       font-family: 'Jua', sans-serif;
       font-size: 19px;
-      color: #1e293b;
+      color: var(--text-white);
       margin-bottom: 14px;
       display: flex;
       align-items: center;
@@ -313,13 +332,13 @@
     }
 
     .btn-action {
-      background: #f8fafc;
+      background: #FFFFFF;
       border: 2px solid #cbd5e1;
       border-radius: 14px;
       padding: 12px 14px;
       font-family: 'Jua', sans-serif;
       font-size: 15px;
-      color: #334155;
+      color: #0F172A;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -328,10 +347,10 @@
       transition: all 0.2s;
     }
 
-    .btn-action:hover {
-      background: #eff6ff;
-      border-color: #3b82f6;
-      color: #1d4ed8;
+    .btn-action:hover, .btn-action:active {
+      background: var(--btn-yellow);
+      border-color: #eab308;
+      color: #0F172A;
       transform: translateY(-2px);
     }
 
@@ -343,24 +362,25 @@
 
     .btn-action.btn-predict {
       grid-column: span 2;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      border: none;
-      color: white;
+      background: var(--btn-yellow);
+      border: 2px solid #eab308;
+      color: #0F172A;
       font-size: 17px;
       padding: 14px;
-      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
     }
 
     .btn-action.btn-predict:hover {
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
-      color: white;
+      background: #fde047;
+      color: #0F172A;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     }
 
     /* 샘플 사진 원클릭 테스트 칩 */
     .sample-chips-title {
       font-size: 13px;
       font-weight: 800;
-      color: #64748b;
+      color: var(--text-white-dim);
       margin-top: 14px;
       margin-bottom: 6px;
     }
@@ -372,43 +392,44 @@
     }
 
     .sample-chip {
-      background: #f1f5f9;
-      border: 1px solid #cbd5e1;
+      background: #FFFFFF;
+      border: 1.5px solid #cbd5e1;
       padding: 6px 12px;
       border-radius: 20px;
       font-size: 13px;
       font-weight: 700;
-      color: #334155;
+      color: #0F172A;
       cursor: pointer;
       transition: all 0.15s;
     }
 
-    .sample-chip:hover {
-      background: #dbeafe;
-      border-color: #3b82f6;
-      color: #1d4ed8;
+    .sample-chip:hover, .sample-chip:active, .sample-chip.active {
+      background: var(--btn-yellow);
+      border-color: #eab308;
+      color: #0F172A;
     }
 
     /* 오른쪽 결과 패널: AI 자신감 & 분석 */
     .confidence-hero {
-      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-      border: 2.5px solid #86efac;
+      background: rgba(6, 27, 80, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.2);
       border-radius: 18px;
       padding: 20px;
       text-align: center;
       margin-bottom: 16px;
       position: relative;
+      color: var(--text-white);
     }
 
     .confidence-hero.conf-low {
-      background: linear-gradient(135deg, #fffbeb, #fef3c7);
-      border-color: #fde68a;
+      background: rgba(6, 27, 80, 0.95);
+      border-color: rgba(254, 218, 53, 0.5);
     }
 
     .confidence-label {
       font-size: 13px;
       font-weight: 800;
-      color: #15803d;
+      color: var(--btn-yellow);
       letter-spacing: 0.5px;
       text-transform: uppercase;
       margin-bottom: 4px;
@@ -417,14 +438,14 @@
     .detected-name {
       font-family: 'Jua', sans-serif;
       font-size: 28px;
-      color: #14532d;
+      color: var(--text-white);
       margin-bottom: 8px;
     }
 
     .confidence-meter-wrap {
       width: 100%;
       height: 20px;
-      background: rgba(0, 0, 0, 0.08);
+      background: rgba(0, 0, 0, 0.2);
       border-radius: 20px;
       overflow: hidden;
       margin-bottom: 8px;
@@ -450,7 +471,7 @@
     .confidence-score-text {
       font-family: 'Jua', sans-serif;
       font-size: 22px;
-      color: #15803d;
+      color: var(--btn-yellow);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -470,15 +491,16 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px 14px;
-      background: #f8fafc;
+      background: #FFFFFF;
       border: 1.5px solid #e2e8f0;
       border-radius: 12px;
       font-size: 14px;
+      color: #0F172A;
     }
 
     .rank-item.rank-1 {
-      border-color: #86efac;
-      background: #f0fdf4;
+      border-color: var(--btn-yellow);
+      background: #fffbeb;
       font-weight: 800;
     }
 
@@ -486,7 +508,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      color: #1e293b;
+      color: #0F172A;
     }
 
     .rank-bar-mini {
@@ -511,17 +533,18 @@
 
     /* AI 분석 해설 박스 */
     .ai-feedback-card {
-      background: #f8fafc;
-      border: 2px solid #e2e8f0;
+      background: rgba(6, 27, 80, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.2);
       border-radius: 16px;
       padding: 16px;
       margin-bottom: 16px;
+      color: var(--text-white);
     }
 
     .ai-feedback-header {
       font-family: 'Jua', sans-serif;
       font-size: 15px;
-      color: #1e40af;
+      color: var(--btn-yellow);
       margin-bottom: 6px;
       display: flex;
       align-items: center;
@@ -530,16 +553,16 @@
 
     .ai-feedback-desc {
       font-size: 13.5px;
-      color: #475569;
+      color: var(--text-white);
       line-height: 1.6;
       font-weight: 500;
     }
 
     /* 모둠 공유 & 저장 버튼 */
     .btn-share-team {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: white;
-      border: none;
+      background: var(--btn-yellow);
+      color: #0F172A;
+      border: 2px solid #eab308;
       padding: 14px;
       border-radius: 14px;
       font-family: 'Jua', sans-serif;
@@ -549,22 +572,24 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
       transition: all 0.2s;
     }
 
     .btn-share-team:hover {
+      background: #fde047;
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
     }
 
     /* 우리 모둠 실시간 수사 피드 */
     .team-feed-section {
-      background: #ffffff;
-      border: 2.5px solid var(--border-card);
+      background: var(--card-navy);
+      border: 2px solid rgba(255, 255, 255, 0.25);
       border-radius: var(--radius);
       padding: 24px;
       box-shadow: var(--shadow);
+      color: var(--text-white);
     }
 
     .feed-grid {
@@ -575,18 +600,19 @@
     }
 
     .feed-card {
-      background: #f8fafc;
+      background: #FFFFFF;
       border: 2px solid #e2e8f0;
       border-radius: 16px;
       padding: 14px;
       display: flex;
       flex-direction: column;
       gap: 8px;
+      color: #0F172A;
     }
 
     .feed-card.is-me {
-      border-color: #93c5fd;
-      background: #eff6ff;
+      border-color: var(--btn-yellow);
+      background: #fffbeb;
     }
 
     /* 토스트 알림창 */
@@ -620,7 +646,10 @@
   <!-- 상단 앱 HUD 네비게이션 -->
   <header class="app-header">
     <div class="header-left">
-      <a href="main.html" class="btn-back">퀘스트지도가기</a>
+      <a href="main.html" class="header-logo-link" title="메인 화면으로 이동">
+        <img src="images/bs-logo.png" alt="AI 자원순환 탐정단" class="header-bs-logo">
+      </a>
+      <a href="main.html" class="btn-quest-map" title="퀘스트 지도로 이동">🧭 퀘스트지도가기</a>
       <div class="header-title-group">
         <span class="badge-chasi">QUEST 5 • YOLO AI 실시간 분류</span>
         <h1 class="header-title">교실쓰레기 AI 탐정단</h1>

@@ -13,13 +13,16 @@
 
   <style>
     :root {
-      --primary: #2E7D32;
-      --primary-light: #E8F5E9;
-      --accent: #FFB300;
-      --card-bg: #FFFFFF;
-      --text-dark: #263238;
-      --border: #C8E6C9;
-      --muted: #558B2F;
+      --bg-blue: rgb(14, 70, 191);        /* 배경 파랑 r14, g70, b191 */
+      --card-navy: rgb(6, 27, 80);        /* 기타 남색 r6, g27, b80 */
+      --btn-yellow: rgb(254, 218, 53);    /* 버튼 노랑 r254, g218, b53 */
+      --btn-yellow-hover: rgb(255, 230, 80);
+      --accent-cyan: #38BDF8;
+      --accent-green: #22C55E;
+      --text-white: #FFFFFF;              /* 글씨: 흰색 */
+      --text-white-dim: rgba(255, 255, 255, 0.85);
+      --radius: 20px;
+      --shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
     }
 
     * {
@@ -31,8 +34,12 @@
     }
 
     body {
-      background: #F1F8E9;
-      color: var(--text-dark);
+      background: var(--bg-blue);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.2), transparent 35%),
+        radial-gradient(circle at 90% 90%, rgba(254, 218, 53, 0.15), transparent 35%),
+        linear-gradient(to bottom, rgb(14, 70, 191), rgb(8, 50, 145));
+      color: var(--text-white);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -43,36 +50,72 @@
 
     .page-wrap {
       width: 100%;
-      max-width: 860px;
+      max-width: 880px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 20px;
       padding-bottom: 60px;
     }
 
     header {
-      background: #FFFFFF;
-      border: 3px solid #A5D6A7;
+      background: var(--card-navy);
+      border: 2px solid rgba(255, 255, 255, 0.25);
       border-radius: 20px;
-      padding: 16px 20px;
+      padding: 12px 22px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 6px 16px rgba(46, 125, 50, 0.1);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
-    .btn-back {
-      background: #E8F5E9;
-      border: 2px solid #A5D6A7;
-      color: #2E7D32;
-      padding: 10px 18px;
-      border-radius: 14px;
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .header-logo-link {
+      display: inline-flex;
+      align-items: center;
       text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+
+    .header-logo-link:hover {
+      transform: scale(1.05);
+    }
+
+    .header-bs-logo {
+      height: 42px;
+      max-width: 130px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+    }
+
+    .btn-quest-map {
+      background: var(--btn-yellow);
+      color: #0F172A;
+      border: 1.5px solid rgba(255, 255, 255, 0.6);
+      padding: 8px 16px;
+      border-radius: 12px;
       font-family: 'Jua', sans-serif;
-      font-size: 18px;
+      font-size: 15px;
+      font-weight: 800;
+      text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      box-shadow: 0 4px 14px rgba(254, 218, 53, 0.4);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+    }
+
+    .btn-quest-map:hover {
+      background: var(--btn-yellow-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(254, 218, 53, 0.6);
     }
 
     .header-info-group {
@@ -82,80 +125,82 @@
     }
 
     .header-team {
-      background: #F1F8E9;
-      border: 1.5px solid #C8E6C9;
+      background: rgba(14, 70, 191, 0.4);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
       padding: 8px 14px;
       border-radius: 14px;
       font-weight: 700;
       font-size: 15px;
-      color: #2E7D32;
+      color: var(--text-white);
     }
 
     .header-score {
-      background: #FFF9C4;
-      border: 2px solid #FBC02D;
+      background: rgba(6, 27, 80, 0.8);
+      border: 2px solid var(--btn-yellow);
       padding: 8px 18px;
       border-radius: 16px;
       font-family: 'Jua', sans-serif;
-      font-size: 19px;
-      color: #F57F17;
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--btn-yellow);
     }
 
     .page-title {
       font-family: 'Jua', sans-serif;
       font-size: 28px;
-      color: var(--primary);
+      color: var(--text-white);
       margin-top: 4px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .page-desc {
       font-size: 16px;
-      color: #455A64;
-      font-weight: 600;
+      color: var(--text-white-dim);
+      font-weight: 500;
       line-height: 1.5;
       margin-top: 4px;
     }
 
     .card {
-      background: var(--card-bg);
-      border: 3px solid var(--border);
+      background: var(--card-navy);
+      border: 2px solid rgba(255, 255, 255, 0.25);
       border-radius: 20px;
       padding: 24px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+      box-shadow: var(--shadow);
+      color: var(--text-white);
     }
 
     .card h3 {
       font-family: 'Jua', sans-serif;
       font-size: 22px;
-      color: var(--primary);
+      color: var(--text-white);
       margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-
-
     /* 업로드 영역 */
     .upload-zone {
-      border: 3px dashed #81C784;
+      border: 3px dashed rgba(56, 189, 248, 0.5);
       border-radius: 18px;
       padding: 30px 20px;
       text-align: center;
       cursor: pointer;
       transition: all .2s;
-      background: #F1F8E9;
+      background: rgba(14, 70, 191, 0.3);
+      color: var(--text-white);
     }
 
     .upload-zone:hover, .upload-zone.dragover {
-      border-color: var(--primary);
-      background: #E8F5E9;
+      border-color: var(--btn-yellow);
+      background: rgba(14, 70, 191, 0.45);
       transform: scale(1.01);
     }
 
     .upload-zone .icon { font-size: 46px; margin-bottom: 8px; }
-    .upload-zone h4 { font-family: 'Jua', sans-serif; font-size: 22px; color: var(--primary); margin-bottom: 6px; }
-    .upload-zone p { font-size: 15px; font-weight: 600; color: #558B2F; }
+    .upload-zone h4 { font-family: 'Jua', sans-serif; font-size: 22px; color: var(--text-white); margin-bottom: 6px; }
+    .upload-zone p { font-size: 15px; font-weight: 500; color: var(--text-white-dim); }
 
     #file-input { display: none; }
 
@@ -175,40 +220,61 @@
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #4CAF50, #2E7D32);
-      color: white;
-      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+      background: var(--btn-yellow);
+      color: #0F172A;
+      font-weight: 800;
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 4px 14px rgba(254, 218, 53, 0.4);
     }
 
-    .btn-primary:active { transform: translateY(2px); }
+    .btn-primary:hover {
+      background: var(--btn-yellow-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(254, 218, 53, 0.6);
+    }
+
+    .btn-primary:active { transform: translateY(1px); }
 
     .btn-gold {
-      background: linear-gradient(135deg, #F59E0B, #D97706);
-      color: white;
-      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+      background: var(--btn-yellow);
+      color: #0F172A;
+      font-weight: 800;
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 4px 14px rgba(254, 218, 53, 0.4);
     }
 
     .btn-ghost {
-      background: #FFFFFF;
-      border: 2px solid #C8E6C9;
-      color: #2E7D32;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      color: #FFFFFF;
     }
 
+    /* 카테고리 탭 버튼: 흰색 배경에 검정 글씨, 클릭 시 노란색으로 변화 */
     .btn-tab {
-      background: #ECEFF1;
-      color: #455A64;
-      border: 2px solid transparent;
-      padding: 8px 16px;
+      background: #FFFFFF !important;
+      color: #0F172A !important;
+      border: 2px solid #CBD5E1;
+      padding: 9px 18px;
       border-radius: 12px;
       font-family: 'Jua', sans-serif;
       font-size: 15px;
+      font-weight: 800;
       cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
-    .btn-tab.active {
-      background: #E8F5E9;
-      border-color: var(--primary);
-      color: var(--primary);
+    .btn-tab:hover {
+      border-color: var(--btn-yellow);
+      background: #FFFDF0 !important;
+      transform: translateY(-1px);
+    }
+
+    .btn-tab.active, .btn-tab:active {
+      background: var(--btn-yellow) !important;
+      border-color: #F59E0B !important;
+      color: #0F172A !important;
+      box-shadow: 0 4px 12px rgba(254, 218, 53, 0.4);
     }
 
     .preview-grid {
@@ -298,10 +364,11 @@
       align-items: center;
       gap: 14px;
       padding: 12px 16px;
-      background: #F9FBE7;
-      border: 2px solid #DCEDC8;
+      background: rgba(14, 70, 191, 0.35);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
       border-radius: 16px;
       margin-bottom: 10px;
+      color: #FFFFFF;
     }
 
     .uploaded-thumb {
@@ -310,18 +377,24 @@
       border-radius: 12px;
       object-fit: cover;
       flex-shrink: 0;
-      border: 1px solid #C8E6C9;
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     .del-btn {
-      background: #FFEBEE;
-      border: 1px solid #FFCDD2;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.5);
       border-radius: 10px;
       padding: 6px 12px;
-      color: #C62828;
+      color: #FECACA;
       font-size: 14px;
       font-weight: bold;
       cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .del-btn:hover {
+      background: rgba(239, 68, 68, 0.4);
+      color: #FFFFFF;
     }
 
     .alert {
@@ -331,8 +404,8 @@
       font-weight: 600;
       margin-bottom: 12px;
     }
-    .alert-success { background: #E8F5E9; border: 2px solid #81C784; color: #2E7D32; }
-    .alert-error { background: #FFEBEE; border: 2px solid #E57373; color: #C62828; }
+    .alert-success { background: rgba(34, 197, 94, 0.25); border: 2px solid var(--accent-green); color: #DCFCE7; }
+    .alert-error { background: rgba(239, 68, 68, 0.25); border: 2px solid #EF4444; color: #FEE2E2; }
   </style>
   <script src="quest-intro.js"></script>
 </head>
@@ -341,7 +414,12 @@
 <div class="page-wrap">
   <!-- 상단 헤더 -->
   <header>
-    <a href="main.html" class="btn-back">퀘스트지도가기</a>
+    <div class="header-left">
+      <a href="main.html" class="header-logo-link" title="메인 화면으로 이동">
+        <img src="images/bs-logo.png" alt="AI 자원순환 탐정단" class="header-bs-logo">
+      </a>
+      <a href="main.html" class="btn-quest-map" title="퀘스트 지도로 이동">🧭 퀘스트지도가기</a>
+    </div>
     <div class="header-info-group">
       <div class="header-team" id="dispTeam">1모둠</div>
       <div class="header-score" id="dispScore">0점</div>
