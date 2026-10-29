@@ -172,32 +172,32 @@
       margin-bottom: 10px;
     }
 
-    /* 🟢 실시간 동접 (동시 접속) 상태 바 */
+    /* 🟢 실시간 동접 (동시 접속) 상태 바 - 폰트 150% 확대 */
     .presence-bar {
       width: 100%;
-      background: rgba(15, 23, 42, 0.82);
-      border: 1.5px solid rgba(255, 255, 255, 0.2);
-      border-radius: 14px;
-      padding: 10px 18px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      border-radius: 16px;
+      padding: 12px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+      gap: 16px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(10px);
     }
 
     .presence-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       flex-wrap: wrap;
       overflow: hidden;
     }
 
     .live-pulse-dot {
-      width: 11px;
-      height: 11px;
+      width: 14px;
+      height: 14px;
       background: #22C55E;
       border-radius: 50%;
       box-shadow: 0 0 0 rgba(34, 197, 94, 0.6);
@@ -213,7 +213,7 @@
 
     .presence-label {
       color: #F8FAFC;
-      font-size: 14px;
+      font-size: 21px; /* 14px * 1.5 */
       font-weight: 700;
       letter-spacing: -0.2px;
       white-space: nowrap;
@@ -226,21 +226,22 @@
     .presence-names {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
     .member-chip {
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      border-radius: 8px;
-      padding: 3px 8px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1.5px solid rgba(255, 255, 255, 0.28);
+      border-radius: 10px;
+      padding: 4px 12px;
       color: #E2E8F0;
-      font-size: 13px;
+      font-size: 19px; /* 13px * 1.5 */
       font-weight: 600;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      white-space: nowrap;
     }
 
     .member-chip.my-chip {
@@ -253,10 +254,10 @@
     .me-tag {
       background: #22C55E;
       color: #0F172A;
-      font-size: 10px;
+      font-size: 14px; /* 10px * 1.5 */
       font-weight: 800;
-      padding: 1px 4px;
-      border-radius: 4px;
+      padding: 2px 6px;
+      border-radius: 6px;
       line-height: 1.2;
     }
 
@@ -265,45 +266,48 @@
       align-items: center;
       gap: 12px;
       flex-shrink: 0;
+      white-space: nowrap;
     }
 
     .team-badge {
       background: var(--color-primary-blue);
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
       color: #FFFFFF;
-      padding: 4px 12px;
-      border-radius: 8px;
-      font-size: 13px;
+      padding: 6px 16px;
+      border-radius: 10px;
+      font-size: 19px; /* 13px * 1.5 */
       font-weight: 700;
+      white-space: nowrap;
     }
 
     .score-badge {
       background: rgba(252, 220, 48, 0.2);
-      border: 1px solid var(--color-completed-yellow);
+      border: 1.5px solid var(--color-completed-yellow);
       color: var(--color-completed-yellow);
-      padding: 4px 12px;
-      border-radius: 8px;
-      font-size: 13px;
+      padding: 6px 16px;
+      border-radius: 10px;
+      font-size: 20px; /* 13px * 1.5 */
       font-weight: 800;
       font-family: 'Jua', sans-serif;
+      white-space: nowrap;
     }
 
     /* ============================================================
-       상단: "'팀코드'의 아지트" 사각형 버튼
+       상단: "'팀코드'의 아지트" 사각형 버튼 (80% 정돈)
        ============================================================ */
     .btn-azit-main {
       width: 100%;
       background: var(--color-primary-blue);
       color: var(--color-white);
-      border: 2.5px solid rgba(255, 255, 255, 0.35);
-      border-radius: 18px;
-      padding: 14px 22px;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-radius: 16px;
+      padding: 10px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       text-decoration: none;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(15, 71, 192, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 6px 20px rgba(15, 71, 192, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
       transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
@@ -311,7 +315,7 @@
       background: var(--color-primary-blue-hover);
       border-color: #FFFFFF;
       transform: translateY(-2px) scale(1.01);
-      box-shadow: 0 12px 30px rgba(15, 71, 192, 0.65), 0 0 20px rgba(56, 189, 248, 0.5);
+      box-shadow: 0 10px 26px rgba(15, 71, 192, 0.6), 0 0 16px rgba(56, 189, 248, 0.45);
     }
 
     .btn-azit-main:active {
@@ -321,11 +325,11 @@
     .azit-btn-left {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
     .azit-btn-icon {
-      font-size: 32px;
+      font-size: 28px;
       filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
     }
 
@@ -336,7 +340,7 @@
     }
 
     .azit-sub {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       color: rgba(255, 255, 255, 0.85);
       letter-spacing: -0.2px;
@@ -344,7 +348,7 @@
 
     .azit-title {
       font-family: 'Jua', sans-serif;
-      font-size: 26px;
+      font-size: 22px;
       font-weight: 800;
       letter-spacing: 0.5px;
       color: #FFFFFF;
@@ -355,9 +359,9 @@
       background: rgba(255, 255, 255, 0.2);
       border: 1px solid rgba(255, 255, 255, 0.4);
       color: #FFFFFF;
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-size: 14px;
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 13px;
       font-weight: 700;
       font-family: 'Jua', sans-serif;
       transition: all 0.2s ease;
@@ -379,14 +383,14 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .quests-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       padding: 0 4px;
     }
 
@@ -438,17 +442,17 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: repeat(4, 1fr);
-      gap: 11px;
+      gap: 10px;
       flex: 1;
       min-height: 0;
     }
 
-    /* 퀘스트 사각형 버튼 공통 */
+    /* 퀘스트 사각형 버튼 공통 (80% 크기 정돈) */
     .quest-card-btn {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 18px;
+      padding: 10px 16px;
       border-radius: 14px;
       text-decoration: none;
       position: relative;
@@ -490,10 +494,10 @@
       border: 1.5px solid rgba(255, 255, 255, 0.35);
       color: #FFFFFF;
       font-family: 'Jua', sans-serif;
-      font-size: 30px;
+      font-size: 24px; /* 30px * 0.8 */
       font-weight: 800;
-      padding: 4px 12px;
-      border-radius: 10px;
+      padding: 3px 10px;
+      border-radius: 8px;
       flex-shrink: 0;
       line-height: 1.1;
       white-space: nowrap;
@@ -510,7 +514,7 @@
 
     .quest-name {
       font-family: 'Jua', sans-serif;
-      font-size: 36px;
+      font-size: 28px; /* 36px * 0.8 ≈ 28.8px */
       font-weight: 800;
       color: #FFFFFF;
       white-space: nowrap;
@@ -521,7 +525,7 @@
     }
 
     .quest-desc {
-      font-size: 20px;
+      font-size: 16px; /* 20px * 0.8 */
       font-weight: 600;
       color: rgba(255, 255, 255, 0.88);
       white-space: nowrap;
@@ -539,9 +543,9 @@
     }
 
     .status-tag {
-      padding: 6px 14px;
-      border-radius: 12px;
-      font-size: 22px;
+      padding: 5px 12px;
+      border-radius: 10px;
+      font-size: 17px; /* 22px * 0.8 ≈ 17.6px */
       font-weight: 700;
       font-family: 'Jua', sans-serif;
       white-space: nowrap;
