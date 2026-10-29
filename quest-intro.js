@@ -1,7 +1,8 @@
 // quest-intro.js: QUEST 1~7 대화형 비주얼 인트로 시스템
 (function() {
   function detectQuestNumber() {
-    const match = window.location.pathname.match(/quest(\d+)\.html/i);
+    const fullPath = window.location.pathname + window.location.search + window.location.hash;
+    const match = fullPath.match(/quest(\d+)/i);
     if (match) return parseInt(match[1], 10);
     const scriptTag = document.currentScript;
     if (scriptTag && scriptTag.getAttribute('data-quest')) {
@@ -13,59 +14,26 @@
   const qNum = detectQuestNumber();
   if (qNum < 1 || qNum > 7) return;
 
-  // 퀘스트 완료 여부 판별 함수
-  function isQuestCompleted(num) {
+  // 인트로 표시 여부 판별 (이번 세션에서 방금 완료했거나 닫은 경우만 스킵, 강제 실행 시 무조건 표시)
+  function shouldSkipIntro(num) {
     try {
-      // 1. 직접 저장된 완료 플래그 검사 (questN_completed, elementary_qN_done, questN_submitted 등)
-      const completedKeys = [
-        `quest${num}_completed`,
-        `elementary_q${num}_done`,
-        `quest${num}_submitted`,
-        `q${num}_done`,
-        `quest_${num}_done`,
-        `q${num}Done`,
-        `quest${num}Done`
-      ];
-
-      for (const k of completedKeys) {
-        if (localStorage.getItem(k) === 'true' || sessionStorage.getItem(k) === 'true') {
-          return true;
-        }
+      // 1. URL에 intro=1 또는 replay=1 파라미터가 있으면 무조건 표시
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('intro') === '1' || params.get('replay') === '1') {
+        return false;
       }
 
-      // 2. 누적 완료 수치 검사 (questsDone >= num)
-      const qDone = parseInt(
-        localStorage.getItem('questsDone') ||
-        localStorage.getItem('elementary_questsDone') ||
-        sessionStorage.getItem('questsDone') ||
-        '0',
-        10
-      );
-      if (!isNaN(qDone) && qDone >= num) {
+      // 2. 현재 탭 세션에서 방금 퀘스트를 완료(제출)하고 재진입한 경우 스킵
+      if (sessionStorage.getItem(`quest${num}_just_completed`) === 'true') {
         return true;
       }
 
-      // 3. 학생 데이터 객체(JSON) 내부 완료 기록 검사
-      const jsonKeys = ['studentInfo', 'elementary_student', 'elementary_studentData', 'user'];
-      for (const jk of jsonKeys) {
-        const raw = localStorage.getItem(jk) || sessionStorage.getItem(jk);
-        if (raw) {
-          try {
-            const data = JSON.parse(raw);
-            if (
-              data[`q${num}Done`] ||
-              data[`q${num}_done`] ||
-              data[`quest${num}Done`] ||
-              data[`quest${num}_completed`] ||
-              (data.questsDone !== undefined && Number(data.questsDone) >= num)
-            ) {
-              return true;
-            }
-          } catch(e) {}
-        }
+      // 3. 현재 탭 세션에서 사용자가 이미 인트로를 보고 '시작하기'나 '스킵'으로 닫은 경우 스킵
+      if (sessionStorage.getItem(`quest_intro_dismissed_${num}`) === 'true') {
+        return true;
       }
     } catch(e) {
-      console.warn('[quest-intro] isQuestCompleted error:', e);
+      console.warn('[quest-intro] shouldSkipIntro error:', e);
     }
     return false;
   }
@@ -405,8 +373,8 @@
   }
 
   function createIntroDOM(force = false) {
-    // 이미 완료된 퀘스트라면 수동 강제실행(force === true)이 아닌 한 인트로 생성/표시 안 함
-    if (!force && isQuestCompleted(qNum)) {
+    // 세션 건너뛰기 조건 확인 (force === true인 경우 수동 다시보기이므로 무조건 표시)
+    if (!force && shouldSkipIntro(qNum)) {
       return;
     }
 
@@ -493,6 +461,9 @@
     }
 
     function closeIntro() {
+      try {
+        sessionStorage.setItem(`quest_intro_dismissed_${qNum}`, 'true');
+      } catch(e) {}
       playFanfare();
       overlay.style.opacity = '0';
       overlay.style.pointerEvents = 'none';
@@ -521,32 +492,29 @@
     }
   }
 
-  // 인트로 수동 다시보기 함수 (필요 시 콘솔 또는 버튼에서 호출 가능)
+  // 인트로 수동 다시보기 함수 (헤더 버튼 또는 개발자 콘솔에서 호출 가능)
   window.replayQuestIntro = function() {
+    try {
+      sessionStorage.removeItem(`quest_intro_dismissed_${qNum}`);
+      sessionStorage.removeItem(`quest${qNum}_just_completed`);
+    } catch(e) {}
+    const existing = document.getElementById('questIntroOverlay');
+    if (existing) {
+      existing.remove();
+    }
     createIntroDOM(true);
   };
 
-  // 퀘스트 완료 상태가 비동기로 확인되었을 때 오버레이를 즉시 닫는 함수
-  function dismissIntroIfCompleted() {
-    if (isQuestCompleted(qNum)) {
-      const existing = document.getElementById('questIntroOverlay');
-      if (existing) {
-        existing.remove();
-      }
+  // 초기 실행: 인트로 표시
+  function initIntro() {
+    if (!shouldSkipIntro(qNum)) {
+      createIntroDOM(false);
     }
   }
 
-  window.dismissQuestIntroIfCompleted = dismissIntroIfCompleted;
-  window.addEventListener('storage', dismissIntroIfCompleted);
-  setTimeout(dismissIntroIfCompleted, 400);
-  setTimeout(dismissIntroIfCompleted, 1200);
-
-  // 초기 실행: 이미 완료된 퀘스트인 경우 인트로를 전혀 띄우지 않음
-  if (!isQuestCompleted(qNum)) {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => createIntroDOM(false));
-    } else {
-      createIntroDOM(false);
-    }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initIntro);
+  } else {
+    initIntro();
   }
 })();
