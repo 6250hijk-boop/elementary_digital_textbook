@@ -481,19 +481,22 @@
       align-items: center;
       gap: 12px;
       overflow: hidden;
+      min-width: 0;
+      flex: 1;
     }
 
     .quest-num-pill {
       background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
       color: #FFFFFF;
       font-family: 'Jua', sans-serif;
-      font-size: 16px;
+      font-size: 30px;
       font-weight: 800;
-      padding: 4px 9px;
-      border-radius: 8px;
+      padding: 4px 12px;
+      border-radius: 10px;
       flex-shrink: 0;
       line-height: 1.1;
+      white-space: nowrap;
     }
 
     .quest-name-group {
@@ -501,47 +504,52 @@
       flex-direction: column;
       text-align: left;
       overflow: hidden;
+      min-width: 0;
+      gap: 2px;
     }
 
     .quest-name {
       font-family: 'Jua', sans-serif;
-      font-size: 19px;
+      font-size: 36px;
       font-weight: 800;
       color: #FFFFFF;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
-      letter-spacing: 0.3px;
+      letter-spacing: -0.2px;
+      line-height: 1.15;
     }
 
     .quest-desc {
-      font-size: 12px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.85);
+      font-size: 20px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.88);
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
-      letter-spacing: -0.2px;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
     }
 
     .card-right {
       display: flex;
       align-items: center;
       flex-shrink: 0;
-      margin-left: 8px;
+      margin-left: 10px;
     }
 
     .status-tag {
-      padding: 5px 12px;
-      border-radius: 10px;
-      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-size: 22px;
       font-weight: 700;
       font-family: 'Jua', sans-serif;
       white-space: nowrap;
       background: rgba(255, 255, 255, 0.18);
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
       color: #FFFFFF;
       transition: all 0.2s ease;
+      line-height: 1.2;
     }
 
     /* 2. 학습 완료 상태: 로그인 화면의 다음 버튼 색 rgb(252, 220, 48) */
