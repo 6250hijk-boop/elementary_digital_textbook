@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AI 자원순환 탐정단 - 8대 퀘스트 지도</title>
+  <title>AI 자원순환 탐정단 - 메인 본부</title>
   <script>
     // localhost 상의 다른 PWA 서비스 워커 및 캐시 충돌 자동 해제
     if ('serviceWorker' in navigator) {
@@ -25,9 +25,14 @@
   
   <style>
     :root {
-      --primary: #2E7D32;
-      --accent: #FFB300;
-      --text-dark: #263238;
+      --color-primary-blue: rgb(15, 71, 192); /* 로그인 화면 기본 배경색 */
+      --color-primary-blue-hover: rgb(24, 85, 219);
+      --color-primary-blue-dark: rgb(10, 50, 140);
+      --color-completed-yellow: rgb(252, 220, 48); /* 로그인 화면 다음 버튼 색 */
+      --color-completed-yellow-hover: rgb(255, 230, 80);
+      --color-completed-text: #0F172A;
+      --color-white: #FFFFFF;
+      --color-dark: #0F172A;
     }
 
     * {
@@ -44,327 +49,818 @@
       height: 100dvh;
       margin: 0;
       padding: 0;
-      background: #0F172A;
-      overflow: hidden; /* 스크롤바 완전히 제거 */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* 메인 퀘스트 대지도 맵 - 화면 종횡비에 맞춰 스크롤 없이 자동 맞춤 */
-    .quest-map-container {
-      position: relative;
-      /* 화면이 좁을 땐 좌우폭(100vw)에 맞추고, 상하가 좁을 땐 상하폭(100vh)에 자동 맞춤 */
-      width: min(100vw, calc(100vh * (2704 / 1568)));
-      width: min(100vw, calc(100dvh * (2704 / 1568)));
-      height: min(100vh, calc(100vw * (1568 / 2704)));
-      height: min(100dvh, calc(100vw * (1568 / 2704)));
-      aspect-ratio: 2704 / 1568;
-      max-width: 100vw;
-      max-height: 100vh;
-      max-height: 100dvh;
-      margin: auto;
-      padding: 0;
+      background: #0B1120;
+      overflow: hidden;
       user-select: none;
-      background: #000000;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      container-type: inline-size;
     }
 
-    .quest-map-img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      vertical-align: middle;
-      object-fit: fill;
-      pointer-events: none;
-    }
-
-    .quest-hotspot {
-      position: absolute;
+    /* 전체 화면 배경: images/bs-bg.png */
+    .main-page-wrapper {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 16px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-      z-index: 10;
-      overflow: visible;
+      flex-direction: row;
+      background: url('images/bs-bg.png') center center / cover no-repeat;
+      position: relative;
+      overflow: hidden;
     }
 
-    .hotspot-full-img {
-      height: 100%;
-      width: auto;
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      object-position: center;
-      display: block;
-      margin: 0 auto;
-      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
-      transition: all 0.25s ease;
-      pointer-events: none;
-    }
-
-    .quest-hotspot:hover, .quest-hotspot:focus {
-      transform: scale(1.08);
-      z-index: 25;
-    }
-
-    .quest-hotspot:hover .hotspot-full-img {
-      filter: drop-shadow(0 0 16px rgba(250, 204, 21, 0.95)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
-    }
-
-    .quest-hotspot.is-completed .hotspot-full-img {
-      filter: drop-shadow(0 4px 12px rgba(34, 197, 94, 0.45));
-    }
-
-    .quest-hotspot.is-completed:hover .hotspot-full-img {
-      filter: drop-shadow(0 0 18px rgba(34, 197, 94, 0.95)) drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
-    }
-
-    .quest-hotspot:active {
-      transform: scale(0.96);
-    }
-
-    .hotspot-pulse {
+    /* 배경 은은한 오버레이 */
+    .main-page-wrapper::before {
+      content: '';
       position: absolute;
       inset: 0;
-      border-radius: 14px;
-      border: 2px solid rgba(250, 204, 21, 0.6);
-      animation: hotspotGlow 2s infinite ease-in-out;
+      background: linear-gradient(90deg, rgba(11, 17, 32, 0.25) 0%, rgba(15, 23, 42, 0.45) 40%, rgba(15, 23, 42, 0.7) 100%);
       pointer-events: none;
+      z-index: 1;
     }
 
-    @keyframes hotspotGlow {
-      0% {
-        box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.4);
-        border-color: rgba(250, 204, 21, 0.3);
-      }
-      50% {
-        box-shadow: 0 0 14px 4px rgba(250, 204, 21, 0.7);
-        border-color: rgba(234, 179, 8, 0.9);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(250, 204, 21, 0);
-        border-color: rgba(250, 204, 21, 0.3);
-      }
+    /* ============================================================
+       [왼쪽 30% 영역]: 사진 이미지 공간 (상단: bs-logo, 하단: bs-char)
+       ============================================================ */
+    .left-showcase-panel {
+      width: 30%;
+      min-width: 280px;
+      max-width: 440px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 20px 16px 24px;
+      position: relative;
+      z-index: 10;
+      box-sizing: border-box;
     }
 
-    .hotspot-title-overlay {
-      position: absolute;
-      bottom: -6px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.95));
-      color: #FEF08A;
-      font-size: clamp(10px, 1.35cqi, 16px);
+    /* 상단 bs-logo 박스 */
+    .logo-box {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-height: 28vh;
+      padding-top: 6px;
+    }
+
+    .logo-image {
+      max-width: 95%;
+      max-height: 24vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.45));
+      animation: gentleFloat 4s ease-in-out infinite;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-image:hover {
+      transform: scale(1.03);
+    }
+
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* 하단 bs-char 박스 */
+    .char-box {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      flex: 1;
+      max-height: 70vh;
+    }
+
+    .char-image {
+      max-width: 100%;
+      max-height: 66vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.55));
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .char-image:hover {
+      transform: scale(1.04) translateY(-4px);
+    }
+
+    /* ============================================================
+       [오른쪽 70% 영역]: 상단 아지트 버튼 + 실시간 동접 바 + 하단 퀘스트 사각 버튼들
+       ============================================================ */
+    .right-content-panel {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px 32px 20px 16px;
+      position: relative;
+      z-index: 10;
+      box-sizing: border-box;
+      backdrop-filter: blur(4px);
+    }
+
+    /* 상단 헤더 컨테이너 */
+    .top-header-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    /* 🟢 실시간 동접 (동시 접속) 상태 바 */
+    .presence-bar {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.82);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(10px);
+    }
+
+    .presence-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      overflow: hidden;
+    }
+
+    .live-pulse-dot {
+      width: 11px;
+      height: 11px;
+      background: #22C55E;
+      border-radius: 50%;
+      box-shadow: 0 0 0 rgba(34, 197, 94, 0.6);
+      animation: pulseGreen 1.8s infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulseGreen {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+
+    .presence-label {
+      color: #F8FAFC;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      white-space: nowrap;
+    }
+
+    .presence-label span {
+      color: #4ADE80;
+    }
+
+    .presence-names {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .member-chip {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 8px;
+      padding: 3px 8px;
+      color: #E2E8F0;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .member-chip.my-chip {
+      background: rgba(34, 197, 94, 0.25);
+      border-color: #22C55E;
+      color: #DCFCE7;
+      font-weight: 700;
+    }
+
+    .me-tag {
+      background: #22C55E;
+      color: #0F172A;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 1px 4px;
+      border-radius: 4px;
+      line-height: 1.2;
+    }
+
+    .presence-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .team-badge {
+      background: var(--color-primary-blue);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #FFFFFF;
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .score-badge {
+      background: rgba(252, 220, 48, 0.2);
+      border: 1px solid var(--color-completed-yellow);
+      color: var(--color-completed-yellow);
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 13px;
       font-weight: 800;
       font-family: 'Jua', sans-serif;
-      padding: 3px 8px;
-      border-radius: 12px;
-      white-space: nowrap;
-      pointer-events: none;
-      opacity: 1;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
-      border: 2px solid #FACC15;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-      z-index: 25;
+    }
+
+    /* ============================================================
+       상단: "'팀코드'의 아지트" 사각형 버튼
+       ============================================================ */
+    .btn-azit-main {
+      width: 100%;
+      background: var(--color-primary-blue);
+      color: var(--color-white);
+      border: 2.5px solid rgba(255, 255, 255, 0.35);
+      border-radius: 18px;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(15, 71, 192, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
       transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .quest-hotspot:hover .hotspot-title-overlay,
-    .quest-hotspot:focus .hotspot-title-overlay {
-      transform: translateX(-50%) translateY(-3px) scale(1.08);
-      background: linear-gradient(135deg, #1E293B, #0F172A);
+    .btn-azit-main:hover {
+      background: var(--color-primary-blue-hover);
       border-color: #FFFFFF;
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 12px 30px rgba(15, 71, 192, 0.65), 0 0 20px rgba(56, 189, 248, 0.5);
+    }
+
+    .btn-azit-main:active {
+      transform: scale(0.98);
+    }
+
+    .azit-btn-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .azit-btn-icon {
+      font-size: 32px;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+    }
+
+    .azit-btn-text {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .azit-sub {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+      letter-spacing: -0.2px;
+    }
+
+    .azit-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
       color: #FFFFFF;
-      box-shadow: 0 0 18px rgba(250, 204, 21, 0.9), 0 6px 16px rgba(0, 0, 0, 0.5);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
     }
 
-    .quest-hotspot.is-completed .hotspot-title-overlay {
-      border-color: #4ADE80;
-      color: #DCFCE7;
+    .azit-arrow {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #FFFFFF;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Jua', sans-serif;
+      transition: all 0.2s ease;
+      white-space: nowrap;
     }
 
-    .quest-hotspot.is-pending .hotspot-full-img {
-      filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.85)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
-      animation: pendingHotspotGlow 1.8s infinite ease-in-out;
-    }
-
-    @keyframes pendingHotspotGlow {
-      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.7)); }
-      50% { transform: scale(1.05); filter: drop-shadow(0 0 18px rgba(245, 158, 11, 1)); }
-    }
-
-    .quest-hotspot.is-pending .hotspot-title-overlay {
-      border-color: #F59E0B;
-      color: #FEF3C7;
-      background: linear-gradient(135deg, rgba(69, 26, 3, 0.95), rgba(120, 53, 15, 0.95));
-      box-shadow: 0 0 14px rgba(245, 158, 11, 0.75);
-    }
-
-    .quest-hotspot.is-completed:hover .hotspot-title-overlay {
-      border-color: #86EFAC;
-      box-shadow: 0 0 18px rgba(34, 197, 94, 0.9), 0 6px 16px rgba(0, 0, 0, 0.5);
-    }
-
-    /* 우리 모둠 아지트 (My Home) 클릭 네모 스타일 */
-    .hotspot-myhome {
-      border-radius: 18px;
-      z-index: 20;
-    }
-
-    .myhome-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 18px;
-      border: 3px solid rgba(56, 189, 248, 0.95);
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.7);
-      transition: all 0.25s ease;
-      display: block;
-    }
-
-    .hotspot-myhome:hover .myhome-img,
-    .hotspot-myhome:focus .myhome-img {
+    .btn-azit-main:hover .azit-arrow {
+      background: #FFFFFF;
+      color: var(--color-primary-blue);
       border-color: #FFFFFF;
-      box-shadow: 0 0 32px rgba(56, 189, 248, 1), 0 8px 24px rgba(0, 0, 0, 0.5);
-      transform: scale(1.06);
+      transform: translateX(4px);
     }
 
-    .myhome-pulse {
-      border-color: rgba(56, 189, 248, 0.8) !important;
-      animation: myhomePulse 2s infinite ease-in-out !important;
+    /* ============================================================
+       하단: 퀘스트 진행 영역 및 8대 퀘스트 사각 버튼 그리드
+       ============================================================ */
+    .quests-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      margin-top: 8px;
     }
 
-    @keyframes myhomePulse {
-      0% {
-        box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.5);
-        border-color: rgba(56, 189, 248, 0.4);
-      }
-      50% {
-        box-shadow: 0 0 16px 6px rgba(56, 189, 248, 0.85);
-        border-color: rgba(125, 211, 252, 1);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
-        border-color: rgba(56, 189, 248, 0.4);
-      }
+    .quests-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding: 0 4px;
     }
 
-    .myhome-overlay {
-      border-color: #38BDF8 !important;
-      color: #E0F2FE !important;
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(3, 105, 161, 0.95)) !important;
+    .quests-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 20px;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
 
-    .hotspot-myhome:hover .myhome-overlay {
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-text {
+      color: #F8FAFC;
+      font-size: 14px;
+      font-weight: 800;
+      font-family: 'Jua', sans-serif;
+      background: rgba(15, 23, 42, 0.65);
+      padding: 3px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .progress-bar-bg {
+      width: 140px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #FACC15, #F59E0B);
+      border-radius: 5px;
+      transition: width 0.4s ease;
+    }
+
+    /* 8대 퀘스트 2열 x 4행 사각 버튼 그리드 */
+    .quests-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 11px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* 퀘스트 사각형 버튼 공통 */
+    .quest-card-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-radius: 14px;
+      text-decoration: none;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    }
+
+    /* 1. 기본 상태 (미완료 / 진행 가능): 로그인 화면의 배경색 rgb(15, 71, 192) */
+    .quest-card-btn {
+      background: var(--color-primary-blue);
+      color: var(--color-white);
+      border: 2px solid rgba(255, 255, 255, 0.28);
+    }
+
+    .quest-card-btn:hover {
+      background: var(--color-primary-blue-hover);
+      border-color: #FFFFFF;
+      transform: translateY(-2px) scale(1.015);
+      box-shadow: 0 8px 22px rgba(15, 71, 192, 0.55), 0 0 16px rgba(255, 255, 255, 0.35);
+      z-index: 5;
+    }
+
+    .quest-card-btn:active {
+      transform: scale(0.97);
+    }
+
+    .card-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow: hidden;
+    }
+
+    .quest-num-pill {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #FFFFFF;
+      font-family: 'Jua', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      padding: 4px 9px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      line-height: 1.1;
+    }
+
+    .quest-name-group {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      overflow: hidden;
+    }
+
+    .quest-name {
+      font-family: 'Jua', sans-serif;
+      font-size: 19px;
+      font-weight: 800;
+      color: #FFFFFF;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      letter-spacing: 0.3px;
+    }
+
+    .quest-desc {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.85);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      letter-spacing: -0.2px;
+    }
+
+    .card-right {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+
+    .status-tag {
+      padding: 5px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Jua', sans-serif;
+      white-space: nowrap;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #FFFFFF;
+      transition: all 0.2s ease;
+    }
+
+    /* 2. 학습 완료 상태: 로그인 화면의 다음 버튼 색 rgb(252, 220, 48) */
+    .quest-card-btn.is-completed {
+      background: var(--color-completed-yellow) !important;
+      color: var(--color-completed-text) !important;
+      border: 2.5px solid #F59E0B !important;
+      box-shadow: 0 6px 20px rgba(252, 220, 48, 0.45), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .quest-card-btn.is-completed:hover {
+      background: var(--color-completed-yellow-hover) !important;
       border-color: #FFFFFF !important;
-      color: #FFFFFF !important;
-      box-shadow: 0 0 20px rgba(56, 189, 248, 1) !important;
+      transform: translateY(-2px) scale(1.015);
+      box-shadow: 0 10px 28px rgba(252, 220, 48, 0.65), 0 0 20px rgba(252, 220, 48, 0.8) !important;
     }
 
-    /* 잠겨있는 퀘스트 (앞단계 미완료) 스타일 */
-    .quest-hotspot.is-locked {
-      opacity: 0.55;
-      filter: grayscale(85%) contrast(0.85);
+    .quest-card-btn.is-completed .quest-num-pill {
+      background: rgba(15, 23, 42, 0.15) !important;
+      border-color: rgba(15, 23, 42, 0.3) !important;
+      color: var(--color-completed-text) !important;
+    }
+
+    .quest-card-btn.is-completed .quest-name {
+      color: var(--color-completed-text) !important;
+    }
+
+    .quest-card-btn.is-completed .quest-desc {
+      color: rgba(15, 23, 42, 0.8) !important;
+      font-weight: 600 !important;
+    }
+
+    .quest-card-btn.is-completed .status-tag {
+      background: #0F172A !important;
+      border-color: #0F172A !important;
+      color: #FDE047 !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    }
+
+    /* 3. 잠김 상태: 이전 단계 미완료 */
+    .quest-card-btn.is-locked {
+      background: rgba(15, 71, 192, 0.5) !important;
+      color: rgba(255, 255, 255, 0.65) !important;
+      border: 1.5px dashed rgba(255, 255, 255, 0.35) !important;
+      opacity: 0.72;
+      box-shadow: none !important;
       cursor: not-allowed !important;
     }
 
-    .quest-hotspot.is-locked .hotspot-pulse {
-      display: none !important;
-    }
-
-    .quest-hotspot.is-locked:hover,
-    .quest-hotspot.is-locked:focus {
+    .quest-card-btn.is-locked:hover {
       transform: none !important;
-      filter: grayscale(80%) contrast(0.9) !important;
+      background: rgba(15, 71, 192, 0.55) !important;
+      box-shadow: none !important;
     }
 
-    .quest-hotspot.is-locked .hotspot-title-overlay {
-      border-color: #64748B !important;
-      color: #94A3B8 !important;
-      background: rgba(15, 23, 42, 0.95) !important;
-      box-shadow: none !important;
+    .quest-card-btn.is-locked .quest-num-pill {
+      background: rgba(0, 0, 0, 0.2) !important;
+      border-color: rgba(255, 255, 255, 0.2) !important;
+      color: rgba(255, 255, 255, 0.6) !important;
+    }
+
+    .quest-card-btn.is-locked .quest-name {
+      color: rgba(255, 255, 255, 0.75) !important;
+    }
+
+    .quest-card-btn.is-locked .quest-desc {
+      color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    .quest-card-btn.is-locked .status-tag {
+      background: rgba(0, 0, 0, 0.35) !important;
+      border-color: rgba(255, 255, 255, 0.2) !important;
+      color: rgba(255, 255, 255, 0.6) !important;
+    }
+
+    /* 현재 도전 중인 퀘스트 펄스 효과 */
+    .quest-card-btn.is-current {
+      animation: currentPulse 2s infinite ease-in-out;
+      border-color: #60A5FA !important;
+    }
+
+    @keyframes currentPulse {
+      0%, 100% { box-shadow: 0 4px 14px rgba(15, 71, 192, 0.4); }
+      50% { box-shadow: 0 0 20px 4px rgba(96, 165, 250, 0.7); }
+    }
+
+    /* ============================================================
+       반응형 스타일 (태블릿 & 모바일 대응)
+       ============================================================ */
+    @media (max-width: 900px) {
+      .main-page-wrapper {
+        flex-direction: column;
+        overflow-y: auto;
+      }
+
+      .left-showcase-panel {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        flex-direction: row;
+        padding: 14px 20px;
+        justify-content: space-around;
+      }
+
+      .logo-box {
+        max-height: 90px;
+      }
+
+      .logo-image {
+        max-height: 80px;
+      }
+
+      .char-box {
+        max-height: 110px;
+      }
+
+      .char-image {
+        max-height: 100px;
+      }
+
+      .right-content-panel {
+        padding: 14px 20px 24px;
+        overflow: visible;
+      }
+
+      .quests-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- 메인 퀘스트 대지도 맵 (화면 전체 폭 맞춤) -->
-  <div class="quest-map-container" id="questMapContainer">
-    <img src="images/bs-bg.png" alt="AI 자원순환 탐정단 8대 퀘스트 맵" class="quest-map-img">
-    
-    <!-- 추가 네모: 우리 모둠 아지트 (My Home) -->
-    <!-- 크기: quest4와 동일(width: 12.2%, height: 21.82%) | x축: quest4 위치(left: 30.31%) | y축: quest1(16.34%)과 quest2(39.21%) 사이(top: 27.77%) -->
-    <a href="myhome.html" class="quest-hotspot hotspot-myhome" id="hotspot-myhome" style="left: 30.31%; top: 27.77%; width: 12.2%; height: 21.82%;" title="우리 모둠 아지트 가기" aria-label="우리 모둠 아지트">
-      <img src="images/azit.png" alt="우리 모둠 아지트" class="hotspot-full-img myhome-img" id="icon-myhome">
-      <span class="hotspot-pulse myhome-pulse"></span>
-      <span class="hotspot-title-overlay myhome-overlay" id="myhomeOverlay">모둠 아지트</span>
-    </a>
+  <div class="main-page-wrapper">
+    <!-- ============================================================
+         [왼쪽 30% 영역]: 사진 이미지 공간 (상단: bs-logo, 하단: bs-char)
+         ============================================================ -->
+    <aside class="left-showcase-panel">
+      <!-- 상단 bs-logo -->
+      <div class="logo-box">
+        <img src="images/bs-logo.png" alt="AI 자원순환 탐정단 로고" class="logo-image" id="logoImg">
+      </div>
 
-    <!-- 1: AI의 눈 -->
-    <a href="quest1.html" class="quest-hotspot" id="hotspot-q1" style="left: 0.71%; top: 16.34%; width: 12%; height: 21.82%;" title="퀘스트 1: AI의 눈" aria-label="1. AI의 눈">
-      <img src="images/lock.png" alt="퀘스트 1: AI의 눈" class="hotspot-full-img" id="icon-q1">
-      <span class="hotspot-pulse"></span>
-      <span class="hotspot-title-overlay" id="overlay-q1">Q1. AI의 눈</span>
-    </a>
+      <!-- 하단 bs-char -->
+      <div class="char-box">
+        <img src="images/bs-char.png" alt="탐정 캐릭터" class="char-image" id="charImg">
+      </div>
+    </aside>
 
-    <!-- 2: 분류기준 만들기 -->
-    <a href="quest2.html" class="quest-hotspot" id="hotspot-q2" style="left: 7.91%; top: 39.21%; width: 11.6%; height: 21.47%;" title="퀘스트 2: 분류기준 만들기" aria-label="2. 분류기준 만들기">
-      <img src="images/lock.png" alt="퀘스트 2: 분류기준 만들기" class="hotspot-full-img" id="icon-q2">
-      <span class="hotspot-pulse"></span>
-      <span class="hotspot-title-overlay" id="overlay-q2">Q2. 분류기준</span>
-    </a>
+    <!-- ============================================================
+         [오른쪽 70% 영역]: 상단 아지트 버튼 + 실시간 동접 바 + 하단 퀘스트 사각 버튼들
+         ============================================================ -->
+    <main class="right-content-panel">
+      <!-- 상단 헤더 섹션 -->
+      <header class="top-header-section">
+        <!-- 🟢 실시간 동시 접속 (동접 웹페이지) 상태 바 -->
+        <div class="presence-bar" id="presenceBar">
+          <div class="presence-left">
+            <span class="live-pulse-dot"></span>
+            <span class="presence-label">실시간 동시 접속 (<span id="onlineCount">1</span>명):</span>
+            <div class="presence-names" id="onlineNamesList">
+              <span class="member-chip my-chip"><span id="myNickDisplay">학생 탐정</span> <small class="me-tag">나</small></span>
+            </div>
+          </div>
+          <div class="presence-right">
+            <span class="team-badge" id="teamBadgeDisplay">모둠 로딩 중</span>
+            <span class="score-badge">🏆 <span id="teamScoreDisplay">0</span>P</span>
+          </div>
+        </div>
 
-    <!-- 3: AI가 잘 배우는 사진 -->
-    <a href="quest3.html" class="quest-hotspot" id="hotspot-q3" style="left: 16.41%; top: 62.93%; width: 12.1%; height: 23.36%;" title="퀘스트 3: AI가 잘 배우는 사진" aria-label="3. AI가 잘 배우는 사진">
-      <img src="images/lock.png" alt="퀘스트 3: AI가 잘 배우는 사진" class="hotspot-full-img" id="icon-q3">
-      <span class="hotspot-pulse"></span>
-      <span class="hotspot-title-overlay" id="overlay-q3">Q3. 사진수집</span>
-    </a>
+        <!-- 상단: "'팀코드'의 아지트" 사각형 버튼 -->
+        <a href="myhome.html" class="btn-azit-main" id="btnAzit" title="우리 모둠 아지트 바로가기">
+          <div class="azit-btn-left">
+            <div class="azit-btn-icon">🏠</div>
+            <div class="azit-btn-text">
+              <span class="azit-sub">우리 모둠 전용 협동 공간</span>
+              <span class="azit-title" id="azitButtonTitle">'팀코드'의 아지트</span>
+            </div>
+          </div>
+          <div class="azit-arrow">아지트 입장 ➔</div>
+        </a>
+      </header>
 
-    <!-- 4: 이름표 붙이기 -->
-    <a href="quest4.html" class="quest-hotspot" id="hotspot-q4" style="left: 30.31%; top: 74.1%; width: 12.2%; height: 21.82%;" title="퀘스트 4: 이름표 붙이기" aria-label="4. 이름표 붙이기">
-      <img src="images/lock.png" alt="퀘스트 4: 이름표 붙이기" class="hotspot-full-img" id="icon-q4">
-      <span class="hotspot-pulse"></span>
-      <span class="hotspot-title-overlay" id="overlay-q4">Q4. 이름표</span>
-    </a>
+      <!-- 하단: 8대 퀘스트 사각 버튼 그리드 -->
+      <section class="quests-section">
+        <div class="quests-header">
+          <h2 class="quests-title">
+            <span>🧭</span> 8대 퀘스트 미션 보드
+          </h2>
+          <div class="progress-wrap">
+            <span class="progress-text" id="progressStatusText">0 / 8 완료</span>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
 
-    <!-- 5: 교실쓰레기 AI탐정단 -->
-    <a href="quest5.html" class="quest-hotspot" id="hotspot-q5" style="left: 44.01%; top: 67.05%; width: 11.9%; height: 23.02%;" title="퀘스트 5: 교실쓰레기 AI탐정단" aria-label="5. 교실쓰레기 AI탐정단">
-      <img src="images/lock.png" alt="퀘스트 5: 교실쓰레기 AI탐정단" class="hotspot-full-img" id="icon-q5">
-      <span class="hotspot-pulse"></span>
-      <span class="hotspot-title-overlay" id="overlay-q5">Q5. AI탐정</span>
-    </a>
+        <!-- 8대 퀘스트 사각 버튼들 -->
+        <div class="quests-grid" id="questsGrid">
+          <!-- Q1. AI의 눈 -->
+          <a href="quest1.html" class="quest-card-btn" id="questBtn-1" data-quest="1">
+            <div class="card-left">
+              <span class="quest-num-pill">Q1</span>
+              <div class="quest-name-group">
+                <span class="quest-name">AI의 눈</span>
+                <span class="quest-desc">사물인식 AI 체험하기</span>
+              </div>
+            </div>
+            <div class="card-right">
+              <span class="status-tag" id="statusTag-1">도전하기</span>
+            </div>
+          </a>
 
-    <!-- 6: 오류박물관 -->
-    <a href="quest6.html" class="quest-hotspot" id="hotspot-q6" style="left: 53.21%; top: 43.18%; width: 11.8%; height: 22.33%;" title="퀘스트 6: 오류박물관" aria-label="6. 오류박물관">
-      <img src="images/lock.png" alt="퀘스트 6: 오류박물관" class="hotspot-full-img" id="icon-q6">
-      <span class="hotspot-pulse"></span>
-      <span class="hotspot-title-overlay" id="overlay-q6">Q6. 오류관</span>
-    </a>
+          <!-- Q2. 분류기준 만들기 -->
+          <a href="quest2.html" class="quest-card-btn" id="questBtn-2" data-quest="2">
+            <div class="card-left">
+              <span class="quest-num-pill">Q2</span>
+              <div class="quest-name-group">
+                <span class="quest-name">분류기준 만들기</span>
+                <span class="quest-desc">재활용 쓰레기 기준 정하기</span>
+              </div>
+            </div>
+            <div class="card-right">
+              <span class="status-tag" id="statusTag-2">도전하기</span>
+            </div>
+          </a>
 
-    <!-- 7: 실천 규약 초안 -->
-    <a href="quest7.html" class="quest-hotspot" id="hotspot-q7" style="left: 67.21%; top: 26.51%; width: 11.5%; height: 21.3%;" title="퀘스트 7: 실천 규약 초안" aria-label="7. 실천 규약 초안">
-      <img src="images/lock.png" alt="퀘스트 7: 실천 규약 초안" class="hotspot-full-img" id="icon-q7">
-      <span class="hotspot-pulse"></span>
-      <span class="hotspot-title-overlay" id="overlay-q7">Q7. 실천규약</span>
-    </a>
+          <!-- Q3. 사진 데이터 수집 -->
+          <a href="quest3.html" class="quest-card-btn" id="questBtn-3" data-quest="3">
+            <div class="card-left">
+              <span class="quest-num-pill">Q3</span>
+              <div class="quest-name-group">
+                <span class="quest-name">사진 데이터 수집</span>
+                <span class="quest-desc">AI가 잘 배우는 사진 촬영</span>
+              </div>
+            </div>
+            <div class="card-right">
+              <span class="status-tag" id="statusTag-3">도전하기</span>
+            </div>
+          </a>
 
-    <!-- 8: 실천하기 -->
-    <a href="quest8.html" class="quest-hotspot" id="hotspot-q8" style="left: 80.81%; top: 33.73%; width: 12.1%; height: 22.33%;" title="퀘스트 8: 실천하기" aria-label="8. 실천하기">
-      <img src="images/lock.png" alt="퀘스트 8: 실천하기" class="hotspot-full-img" id="icon-q8">
-      <span class="hotspot-pulse"></span>
-      <span class="hotspot-title-overlay" id="overlay-q8">Q8. 실천하기</span>
-    </a>
+          <!-- Q4. 이름표 붙이기 -->
+          <a href="quest4.html" class="quest-card-btn" id="questBtn-4" data-quest="4">
+            <div class="card-left">
+              <span class="quest-num-pill">Q4</span>
+              <div class="quest-name-group">
+                <span class="quest-name">이름표 붙이기</span>
+                <span class="quest-desc">학습 데이터 라벨링하기</span>
+              </div>
+            </div>
+            <div class="card-right">
+              <span class="status-tag" id="statusTag-4">도전하기</span>
+            </div>
+          </a>
+
+          <!-- Q5. 교실쓰레기 AI탐정단 -->
+          <a href="quest5.html" class="quest-card-btn" id="questBtn-5" data-quest="5">
+            <div class="card-left">
+              <span class="quest-num-pill">Q5</span>
+              <div class="quest-name-group">
+                <span class="quest-name">교실쓰레기 AI탐정단</span>
+                <span class="quest-desc">실시간 카메라 AI 분류 테스트</span>
+              </div>
+            </div>
+            <div class="card-right">
+              <span class="status-tag" id="statusTag-5">도전하기</span>
+            </div>
+          </a>
+
+          <!-- Q6. 오류박물관 -->
+          <a href="quest6.html" class="quest-card-btn" id="questBtn-6" data-quest="6">
+            <div class="card-left">
+              <span class="quest-num-pill">Q6</span>
+              <div class="quest-name-group">
+                <span class="quest-name">오류박물관</span>
+                <span class="quest-desc">AI 오류 원인 분석 및 성찰</span>
+              </div>
+            </div>
+            <div class="card-right">
+              <span class="status-tag" id="statusTag-6">도전하기</span>
+            </div>
+          </a>
+
+          <!-- Q7. 실천 규약 초안 -->
+          <a href="quest7.html" class="quest-card-btn" id="questBtn-7" data-quest="7">
+            <div class="card-left">
+              <span class="quest-num-pill">Q7</span>
+              <div class="quest-name-group">
+                <span class="quest-name">실천 규약 초안</span>
+                <span class="quest-desc">AI와 함께하는 분리배출 규칙</span>
+              </div>
+            </div>
+            <div class="card-right">
+              <span class="status-tag" id="statusTag-7">도전하기</span>
+            </div>
+          </a>
+
+          <!-- Q8. 실천하기 -->
+          <a href="quest8.html" class="quest-card-btn" id="questBtn-8" data-quest="8">
+            <div class="card-left">
+              <span class="quest-num-pill">Q8</span>
+              <div class="quest-name-group">
+                <span class="quest-name">실천하기</span>
+                <span class="quest-desc">최종 분리수거 탐정 실천 챌린지</span>
+              </div>
+            </div>
+            <div class="card-right">
+              <span class="status-tag" id="statusTag-8">도전하기</span>
+            </div>
+          </a>
+        </div>
+      </section>
+    </main>
   </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, updateDoc, onSnapshot, collection, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, doc, updateDoc, setDoc, onSnapshot, collection, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
@@ -379,37 +875,83 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  const teamCode = localStorage.getItem("elementary_teamCode");
-  const studentId = localStorage.getItem("elementary_studentId");
-  const studentName = localStorage.getItem("elementary_studentName") || "학생 탐정";
+  let teamCode = localStorage.getItem("elementary_teamCode") || "";
+  let studentId = localStorage.getItem("elementary_studentId") || "";
+  let studentName = localStorage.getItem("elementary_studentName") || "학생 탐정";
 
-  if (!studentId || !teamCode) {
-    window.location.href = "index.html";
+  // 로그인 정보가 전혀 없을 경우 index.html 로 안전하게 이동 (로컬 테스트 편의 지원)
+  if (!studentId && !teamCode) {
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      window.location.href = "index.html";
+    } else {
+      teamCode = "1모둠";
+      studentId = "test_student";
+      studentName = "체험 탐정";
+      localStorage.setItem("elementary_teamCode", teamCode);
+      localStorage.setItem("elementary_studentId", studentId);
+      localStorage.setItem("elementary_studentName", studentName);
+    }
   }
 
-  // 접속 시 내 이름을 모둠 멤버로 활성화
-  if (teamCode && studentName) {
-    updateDoc(doc(db, "teams", teamCode), {
-      members: arrayUnion(studentName),
-      lastActive: serverTimestamp()
-    }).catch(e => console.warn(e));
-  }
-
-  // 모둠 이름에 따른 아지트 이름 동적 반영
+  // 1. 상단 "'팀코드'의 아지트" 버튼 텍스트 동적 업데이트
   function updateMyHomeTitle() {
-    const overlayEl = document.getElementById("myhomeOverlay");
-    const hotspotEl = document.getElementById("hotspot-myhome");
     const currentTeam = localStorage.getItem("elementary_teamCode") || teamCode || "";
     const nameText = currentTeam ? `${currentTeam}의 아지트` : "우리 모둠 아지트";
-    if (overlayEl) {
-      overlayEl.textContent = `${nameText}`;
-    }
-    if (hotspotEl) {
-      hotspotEl.title = `[${nameText}] 바로가기 (클릭)`;
+    
+    const azitTitleEl = document.getElementById("azitButtonTitle");
+    const btnAzitEl = document.getElementById("btnAzit");
+    const teamBadgeEl = document.getElementById("teamBadgeDisplay");
+    const myNickEl = document.getElementById("myNickDisplay");
+
+    if (azitTitleEl) azitTitleEl.textContent = nameText;
+    if (btnAzitEl) btnAzitEl.title = `[${nameText}] 바로가기 (클릭)`;
+    if (teamBadgeEl) teamBadgeEl.textContent = currentTeam || "탐정단";
+    if (myNickEl) myNickEl.textContent = studentName || "나";
+  }
+  updateMyHomeTitle();
+
+  // 2. 🟢 동접웹페이지: 실시간 동시 접속(Presence) 하트비트 전송
+  async function sendPresenceHeartbeat() {
+    if (!teamCode || !studentId) return;
+    try {
+      const teamRef = doc(db, "teams", teamCode);
+      const now = Date.now();
+      await updateDoc(teamRef, {
+        [`presence.${studentId}`]: {
+          name: studentName,
+          lastSeen: now
+        },
+        members: arrayUnion(studentName),
+        lastActive: serverTimestamp()
+      });
+    } catch (err) {
+      // presence 필드가 없을 경우 setDoc merge 로 초기화
+      try {
+        await setDoc(doc(db, "teams", teamCode), {
+          presence: {
+            [studentId]: {
+              name: studentName,
+              lastSeen: Date.now()
+            }
+          },
+          members: arrayUnion(studentName),
+          lastActive: serverTimestamp()
+        }, { merge: true });
+      } catch (e) {
+        console.warn("Presence heartbeat error:", e);
+      }
     }
   }
 
-  // 1. 실시간 퀘스트 승인/완료 상태 동기화 및 맵 아이콘/순차 잠금 업데이트
+  sendPresenceHeartbeat();
+  // 15초마다 실시간 접속 하트비트 유지
+  const heartbeatTimer = setInterval(sendPresenceHeartbeat, 15000);
+
+  window.addEventListener("beforeunload", () => {
+    clearInterval(heartbeatTimer);
+  });
+
+  // 3. 퀘스트 상태 관리
   let approvedQuestsState = {};
   const submittedQuestsState = {
     q1: false, q2: false, q3: false, q4: false,
@@ -417,17 +959,17 @@
   };
 
   const QUEST_INFO = {
-    q1: { name: "Q1. AI의 눈", title: "퀘스트 1: AI의 눈" },
-    q2: { name: "Q2. 분류기준", title: "퀘스트 2: 분류기준 만들기" },
-    q3: { name: "Q3. 사진수집", title: "퀘스트 3: 사진 데이터 수집" },
-    q4: { name: "Q4. 이름표", title: "퀘스트 4: 이름표 붙이기" },
-    q5: { name: "Q5. AI탐정", title: "퀘스트 5: 교실쓰레기 AI탐정단" },
-    q6: { name: "Q6. 오류관", title: "퀘스트 6: 오류박물관" },
-    q7: { name: "Q7. 실천규약", title: "퀘스트 7: 실천 규약 초안" },
-    q8: { name: "Q8. 실천하기", title: "퀘스트 8: 실천하기" }
+    q1: { name: "AI의 눈", num: 1 },
+    q2: { name: "분류기준 만들기", num: 2 },
+    q3: { name: "사진 데이터 수집", num: 3 },
+    q4: { name: "이름표 붙이기", num: 4 },
+    q5: { name: "교실쓰레기 AI탐정단", num: 5 },
+    q6: { name: "오류박물관", num: 6 },
+    q7: { name: "실천 규약 초안", num: 7 },
+    q8: { name: "실천하기", num: 8 }
   };
 
-  // 개별 퀘스트 자체의 완료 기록 존재 여부 검사
+  // 개별 퀘스트 완료 기록 검사
   function hasQuestCompletionRecord(num) {
     if (num < 1 || num > 8) return false;
     const key = `q${num}`;
@@ -438,7 +980,7 @@
            (localStorage.getItem(`elementary_q${num}_done`) === "true");
   }
 
-  // 특정 퀘스트가 완료(Unlock) 상태인지 검사 (엄격한 순차 검증: 1번부터 num번까지 차례대로 완료되어야만 함)
+  // 순차 검증: 1번부터 num번까지 완료되어야 해금
   function isQuestUnlocked(num) {
     if (num < 1 || num > 8) return false;
     for (let k = 1; k <= num; k++) {
@@ -449,75 +991,78 @@
     return true;
   }
 
-  // 특정 퀘스트가 열려있는지(도전 가능한지) 검사
-  // 1단계는 항상 열림, 2단계부터는 바로 앞단계(num - 1)가 완료(Unlocked)되어야만 열림
+  // 퀘스트 열림 여부: 1단계는 항상 열림, 그 이후는 이전 단계 완료 시 열림
   function isQuestOpen(num) {
     if (num === 1) return true;
     return isQuestUnlocked(num - 1);
   }
 
+  // 4. 사각형 퀘스트 버튼 상태 및 색상 실시간 업데이트
   function updateQuestLockImages() {
     updateMyHomeTitle();
 
+    let completedCount = 0;
+    let firstCurrentQuestNum = 1;
+    let foundCurrent = false;
+
     for (let i = 1; i <= 8; i++) {
       const key = `q${i}`;
-      const isApproved = !!approvedQuestsState[key];
       const isUnlocked = isQuestUnlocked(i);
       const isOpen = isQuestOpen(i);
 
-      const iconEl = document.getElementById(`icon-q${i}`);
-      const hotspotEl = document.getElementById(`hotspot-q${i}`);
-      const overlayEl = document.getElementById(`overlay-q${i}`);
-      const qMeta = QUEST_INFO[key] || { name: `Q${i}`, title: `퀘스트 ${i}` };
+      const btnEl = document.getElementById(`questBtn-${i}`);
+      const tagEl = document.getElementById(`statusTag-${i}`);
+      const qMeta = QUEST_INFO[key];
 
-      if (iconEl && hotspotEl) {
-        // 앞단계 미완료 퀘스트 클릭 시 친절한 안내 알림창 제공 및 진입 차단
-        hotspotEl.onclick = (e) => {
+      if (btnEl && tagEl) {
+        // 클릭 이벤트 핸들러: 잠긴 퀘스트 클릭 시 친절한 안내 제공
+        btnEl.onclick = (e) => {
           if (!isQuestOpen(i)) {
             e.preventDefault();
             e.stopPropagation();
-            alert(`[${qMeta.name}] 퀘스트는 아직 잠겨있습니다.\n\n앞 단계인 [Q${i-1}. ${QUEST_INFO['q'+(i-1)].name}] 퀘스트를 먼저 완료해야 다음 단계에 도전할 수 있습니다.`);
+            alert(`[Q${i}. ${qMeta.name}] 퀘스트는 아직 잠겨있습니다.\n\n앞 단계인 [Q${i-1}. ${QUEST_INFO['q'+(i-1)].name}] 퀘스트를 먼저 완료해야 도전할 수 있습니다.`);
             return false;
           }
         };
 
-        if (isUnlocked) {
-          // 완료된 퀘스트는 unlock.png 이미지로 즉시 변경 및 잠금 해제
-          iconEl.src = "images/unlock.png";
-          iconEl.alt = "퀘스트 완료됨";
-          hotspotEl.classList.add("is-completed");
-          hotspotEl.classList.remove("is-locked", "is-pending");
-          hotspotEl.title = `[${qMeta.title}] 완료`;
-          if (overlayEl) {
-            overlayEl.innerHTML = `${qMeta.name} [완료]`;
-          }
-        } else {
-          // 아직 미완료된 퀘스트는 lock.png 이미지
-          iconEl.src = "images/lock.png";
-          iconEl.alt = "퀘스트 미완료";
-          hotspotEl.classList.remove("is-completed", "is-pending");
+        // 클래스 초기화
+        btnEl.classList.remove("is-completed", "is-locked", "is-current");
 
+        if (isUnlocked) {
+          // 학습 완료: 로그인 화면의 다음 버튼 색 rgb(252, 220, 48) 적용
+          completedCount++;
+          btnEl.classList.add("is-completed");
+          btnEl.title = `[Q${i}. ${qMeta.name}] 학습 완료! 언제든 다시 복습할 수 있습니다.`;
+          tagEl.innerHTML = `완료 ✓`;
+        } else {
+          // 미완료: 로그인 화면의 기본 배경색 rgb(15, 71, 192) 적용
           if (isOpen) {
-            // 앞단계가 완료되어 현재 단계가 열려있는(도전 가능한) 상태
-            hotspotEl.classList.remove("is-locked");
-            hotspotEl.title = `[${qMeta.title}] 도전하기 (클릭하여 시작)`;
-            if (overlayEl) {
-              overlayEl.innerHTML = `${qMeta.name}`;
+            // 지금 도전 가능한 퀘스트
+            if (!foundCurrent) {
+              btnEl.classList.add("is-current");
+              foundCurrent = true;
+              firstCurrentQuestNum = i;
             }
+            btnEl.title = `[Q${i}. ${qMeta.name}] 지금 도전할 수 있습니다! (클릭)`;
+            tagEl.innerHTML = `도전하기 ➔`;
           } else {
-            // 앞단계가 아직 완료되지 않아 잠겨있는 상태
-            hotspotEl.classList.add("is-locked");
-            hotspotEl.title = `[${qMeta.title}] 이전 단계(Q${i-1}) 완료 필요`;
-            if (overlayEl) {
-              overlayEl.innerHTML = `${qMeta.name} [잠김]`;
-            }
+            // 앞단계 미완료로 잠긴 퀘스트
+            btnEl.classList.add("is-locked");
+            btnEl.title = `[Q${i}. ${qMeta.name}] 이전 단계(Q${i-1}) 완료 필요`;
+            tagEl.innerHTML = `잠김 🔒`;
           }
         }
       }
     }
+
+    // 상단 진행도 업데이트
+    const progressTextEl = document.getElementById("progressStatusText");
+    const progressFillEl = document.getElementById("progressBarFill");
+    if (progressTextEl) progressTextEl.textContent = `${completedCount} / 8 완료`;
+    if (progressFillEl) progressFillEl.style.width = `${(completedCount / 8) * 100}%`;
   }
 
-  // 모둠(Team) 실시간 구독 (교사 승인 상태 동기화)
+  // 5. 모둠(Team) 실시간 구독 (교사 승인 상태 & 동접 멤버 목록 동기화)
   if (teamCode) {
     onSnapshot(doc(db, "teams", teamCode), (docSnap) => {
       if (docSnap.exists()) {
@@ -527,6 +1072,8 @@
         }
         if (d.score !== undefined) {
           localStorage.setItem("elementary_score", d.score.toString());
+          const scoreEl = document.getElementById("teamScoreDisplay");
+          if (scoreEl) scoreEl.textContent = d.score.toString();
         }
         if (d.approvedQuests) {
           for (let i = 1; i <= 8; i++) {
@@ -535,12 +1082,47 @@
             }
           }
         }
+
+        // 🟢 실시간 동시 접속자 렌더링
+        const presenceData = d.presence || {};
+        const now = Date.now();
+        const activeMembers = [];
+
+        // 본인은 항상 포함
+        activeMembers.push({ id: studentId, name: studentName, isMe: true });
+
+        // 최근 45초 이내 하트비트가 수신된 팀원 필터링
+        for (const [sid, info] of Object.entries(presenceData)) {
+          if (sid !== studentId && info && info.lastSeen && (now - info.lastSeen < 45000)) {
+            activeMembers.push({
+              id: sid,
+              name: info.name || "동료 탐정",
+              isMe: false
+            });
+          }
+        }
+
+        // 화면 갱신
+        const countEl = document.getElementById("onlineCount");
+        const listEl = document.getElementById("onlineNamesList");
+        if (countEl) countEl.textContent = activeMembers.length.toString();
+
+        if (listEl) {
+          listEl.innerHTML = activeMembers.map(m => {
+            if (m.isMe) {
+              return `<span class="member-chip my-chip">${m.name} <small class="me-tag">나</small></span>`;
+            } else {
+              return `<span class="member-chip">🟢 ${m.name}</span>`;
+            }
+          }).join("");
+        }
+
         updateQuestLockImages();
       }
     });
   }
 
-  // 학생 개별 문서 구독 (완료 퀘스트 및 점수 실시간 동기화)
+  // 6. 학생 개별 문서 구독 (점수 및 퀘스트 완료 동기화)
   if (studentId) {
     onSnapshot(doc(db, "students", studentId), (docSnap) => {
       if (docSnap.exists()) {
@@ -548,6 +1130,8 @@
         if (sd.score !== undefined) {
           localStorage.setItem("elementary_score", sd.score.toString());
           localStorage.setItem("studentExp", sd.score.toString());
+          const scoreEl = document.getElementById("teamScoreDisplay");
+          if (scoreEl) scoreEl.textContent = sd.score.toString();
         }
         if (sd.badge) {
           localStorage.setItem("elementary_badge", sd.badge);
@@ -572,10 +1156,10 @@
     });
   }
 
-  // 초기 로컬 상태 반영
+  // 초기 렌더링
   updateQuestLockImages();
 
-  // Firestore 컬렉션 실시간 구독으로 퀘스트 과제 제출 여부 감지 (본인 또는 모둠원 제출 시 즉시 다음 퀘스트 자동 해금 및 동기화)
+  // 7. 과제 제출 실시간 컬렉션 감지 (자동 해금)
   if (studentId || teamCode) {
     const questCollections = [
       { col: "quest1_records", key: "q1", num: 1 },
