@@ -487,63 +487,138 @@
     }
 
     /* ============================================================
-       스마트폰 & 태블릿 앱 모드 (html.is-mobile-app 전용: bs-char 미사용, 대화창은 동일하게 우측 50% 유지)
+       스마트폰 & 태블릿 모바일 모드 (컴퓨터는 우측 50% 유지, 모바일은 상단 bs-char + 하단 대화창 배치)
        ============================================================ */
     html.is-mobile-app .quest-intro-overlay {
-      flex-direction: row !important;
-      justify-content: space-between !important;
-      align-items: stretch !important;
-      padding: 0 !important;
-    }
-    html.is-mobile-app .quest-intro-left-col {
-      width: 50% !important;
-      flex: 0 0 50% !important;
-      max-width: 50% !important;
-      height: 100vh !important;
-      height: 100dvh !important;
-      padding: 16px 12px !important;
       flex-direction: column !important;
-      justify-content: flex-start !important;
-      align-items: flex-start !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      padding: 14px 16px 20px !important;
+    }
+    html.is-mobile-app .quest-intro-vignette {
+      background:
+        radial-gradient(circle at 50% 30%, rgba(56, 189, 248, 0.22) 0%, transparent 60%),
+        linear-gradient(180deg, rgba(6, 27, 80, 0.45) 0%, rgba(15, 23, 42, 0.92) 75%) !important;
+    }
+    /* 모바일 상단 영역: 좌측 상단 로고 + 상단 중앙 bs-char 캐릭터 표시 */
+    html.is-mobile-app .quest-intro-left-col {
+      width: 100% !important;
+      flex: 1 1 auto !important;
+      max-width: 100% !important;
+      min-height: 0 !important;
+      height: auto !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      align-items: center !important;
     }
     html.is-mobile-app .quest-intro-logo-wrap {
-      height: auto !important;
-      max-height: 90px !important;
-      margin-bottom: 0 !important;
       width: 100% !important;
+      height: 44px !important;
+      min-height: 0 !important;
+      max-height: 48px !important;
+      margin-bottom: 4px !important;
+      justify-content: flex-start !important;
+      align-items: center !important;
     }
     html.is-mobile-app .quest-intro-logo-img {
-      max-width: 85% !important;
-      max-height: 80px !important;
+      height: 42px !important;
+      max-width: 165px !important;
     }
-    html.is-mobile-app .quest-intro-char-wrap,
-    html.is-mobile-app .quest-intro-speaker-avatar,
-    html.is-mobile-app .author-avatar,
-    html.is-mobile-app .author-char-icon-circle,
-    html.is-mobile-app #dispWriterCharImg {
-      display: none !important;
-    }
-    html.is-mobile-app .quest-intro-right-col {
-      width: 50% !important;
-      flex: 0 0 50% !important;
-      max-width: 50% !important;
-      height: 100vh !important;
-      height: 100dvh !important;
-      padding: 48px 16px 24px 12px !important;
+    html.is-mobile-app .quest-intro-char-wrap {
       display: flex !important;
-      align-items: center !important;
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      width: 100% !important;
+      align-items: flex-end !important;
+      justify-content: center !important;
+      padding-bottom: 12px !important;
+    }
+    html.is-mobile-app .quest-intro-char-img {
+      display: block !important;
+      max-height: 40vh !important;
+      max-width: 82% !important;
+      width: auto !important;
+      height: auto !important;
+      object-fit: contain !important;
+      object-position: bottom center !important;
+    }
+    html.is-mobile-app .quest-intro-skip-btn {
+      top: 16px !important;
+      right: 16px !important;
+      padding: 7px 15px !important;
+      font-size: 13.5px !important;
+    }
+    /* 모바일 하단 영역: 화면 하단에 대화창 전체 폭 배치 */
+    html.is-mobile-app .quest-intro-right-col {
+      width: 100% !important;
+      flex: 0 0 auto !important;
+      max-width: 100% !important;
+      height: auto !important;
+      padding: 0 !important;
+      display: flex !important;
+      align-items: flex-end !important;
       justify-content: center !important;
     }
     html.is-mobile-app .quest-intro-dialog-card {
       width: 100% !important;
-      max-width: 100% !important;
-      padding: 20px 18px !important;
-      border-radius: 22px !important;
+      max-width: 600px !important;
+      padding: 20px 20px 18px !important;
+      border-radius: 24px !important;
     }
-    html.is-mobile-app .quest-intro-dialog-card::before,
+    /* 모바일 말풍선 꼬리: 상단의 bs-char 방향(위쪽 중앙)을 가리킴 */
+    html.is-mobile-app .quest-intro-dialog-card::before {
+      display: block !important;
+      left: 50% !important;
+      top: -22px !important;
+      transform: translateX(-50%) !important;
+      border-width: 0 16px 22px 16px !important;
+      border-color: transparent transparent #38BDF8 transparent !important;
+    }
     html.is-mobile-app .quest-intro-dialog-card::after {
-      display: none !important;
+      display: block !important;
+      left: 50% !important;
+      top: -17px !important;
+      transform: translateX(-50%) !important;
+      border-width: 0 13px 18px 13px !important;
+      border-color: transparent transparent rgba(6, 27, 80, 0.96) transparent !important;
     }
+    html.is-mobile-app .quest-intro-speaker-row {
+      margin-bottom: 12px !important;
+      padding-bottom: 10px !important;
+      gap: 6px !important;
+    }
+    html.is-mobile-app .quest-intro-speaker-tag {
+      font-size: 14.5px !important;
+      padding: 5px 12px 5px 6px !important;
+    }
+    html.is-mobile-app .quest-intro-speaker-avatar {
+      width: 28px !important;
+      height: 28px !important;
+    }
+    html.is-mobile-app .quest-intro-quest-title-label {
+      font-size: 15px !important;
+    }
+    html.is-mobile-app .quest-intro-text {
+      font-size: 17px !important;
+      line-height: 1.65 !important;
+      min-height: 84px !important;
+    }
+    html.is-mobile-app .quest-intro-footer {
+      margin-top: 14px !important;
+      padding-top: 10px !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+    }
+    html.is-mobile-app .quest-intro-step-hint {
+      font-size: 12.5px !important;
+      padding: 4px 10px !important;
+    }
+    html.is-mobile-app .quest-intro-click-prompt {
+      font-size: 13.5px !important;
+    }
+    /* 퀘스트 본문 모바일 헤더 최적화 */
     html.is-mobile-app .app-header,
     html.is-mobile-app header,
     html.is-mobile-app .select-header {
@@ -576,6 +651,11 @@
     html.is-mobile-app .btn-intro-replay {
       font-size: 13px !important;
       padding: 5px 10px !important;
+    }
+    html.is-mobile-app .author-avatar,
+    html.is-mobile-app .author-char-icon-circle,
+    html.is-mobile-app #dispWriterCharImg {
+      display: none !important;
     }
   `;
   document.head.appendChild(styleEl);
