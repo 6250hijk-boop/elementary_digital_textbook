@@ -472,12 +472,27 @@
       align-items: center;
       gap: 6px;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      flex-shrink: 0;
+    }
+
+    .quests-title-text {
+      display: inline-block;
+      line-height: 1.2;
+    }
+
+    /* 노트북에서는 줄바꿈 없이 한 줄 표시 ("8대 퀘스트 미션 보드") */
+    .mobile-br {
+      display: none;
+    }
+    .quests-title-text::before {
+      content: '';
     }
 
     .progress-wrap {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      flex-shrink: 0;
     }
 
     .progress-text {
@@ -486,7 +501,11 @@
       font-weight: 800;
       font-family: 'Jua', sans-serif;
       background: rgba(255, 255, 255, 0.12);
-      padding: 3px 10px;
+      padding: 4px 14px;
+      min-width: 96px;
+      text-align: center;
+      white-space: nowrap;
+      flex-shrink: 0;
       border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.22);
     }
@@ -786,7 +805,37 @@
     html.is-mobile-app .azit-sub { font-size: 13px; }
     html.is-mobile-app .azit-title { font-size: 18px; }
     html.is-mobile-app .azit-arrow { padding: 8px 14px; font-size: 14px; border-radius: 12px; }
-    html.is-mobile-app .quests-header { width: 100%; }
+    html.is-mobile-app .quests-header {
+      width: 100%;
+      padding: 10px 14px;
+      gap: 10px;
+    }
+    html.is-mobile-app .quests-title {
+      font-size: 15.5px;
+      gap: 6px;
+    }
+    html.is-mobile-app .quests-title-text {
+      line-height: 1.25;
+      white-space: nowrap;
+    }
+    html.is-mobile-app .mobile-br {
+      display: inline;
+    }
+    html.is-mobile-app .progress-wrap {
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    html.is-mobile-app .progress-text {
+      min-width: 102px;
+      padding: 5px 14px;
+      font-size: 14px;
+      white-space: nowrap;
+      text-align: center;
+    }
+    html.is-mobile-app .progress-bar-bg {
+      width: 72px;
+      flex-shrink: 0;
+    }
     html.is-mobile-app .quests-grid { width: 100%; grid-template-rows: auto; gap: 12px; }
     html.is-mobile-app .quest-card-btn { padding: 14px 16px; border-radius: 16px; min-height: 74px; }
 
@@ -855,7 +904,8 @@
       <section class="quests-section">
         <div class="quests-header">
           <h2 class="quests-title">
-            <span>🧭</span> 8대 퀘스트 미션 보드
+            <span>🧭</span>
+            <span class="quests-title-text">8대 퀘스트<br class="mobile-br"> 미션 보드</span>
           </h2>
           <div class="progress-wrap">
             <span class="progress-text" id="progressStatusText">0 / 8 완료</span>
