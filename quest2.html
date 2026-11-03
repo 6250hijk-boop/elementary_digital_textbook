@@ -638,6 +638,88 @@
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
+
+    /* ==============================================================
+       [모바일 상단 헤더 통일]
+       - QUEST 제목/차시 배지 숨김
+       - 인트로 다시보기 버튼 및 소리 버튼 숨김
+       - 퀘스트지도가기 옆에 '닉네임'과 '점수'만 한 줄로 깔끔하게 표시
+       ============================================================== */
+    @media (max-width: 768px) {
+      .app-header,
+      header,
+      .select-header {
+        flex-wrap: nowrap !important;
+        padding: 8px 10px !important;
+        gap: 6px !important;
+        justify-content: space-between !important;
+      }
+
+      .header-left {
+        gap: 6px !important;
+        flex-shrink: 0 !important;
+      }
+
+      .header-bs-logo {
+        height: 30px !important;
+        max-width: 80px !important;
+      }
+
+      .btn-quest-map {
+        padding: 6px 10px !important;
+        font-size: 13px !important;
+        border-radius: 10px !important;
+        white-space: nowrap !important;
+      }
+
+      /* QUEST 제목 블록, 인트로 다시보기 버튼, 소리 버튼, 모둠 배지(Q8) 모바일에서 제거 */
+      .header-title-group,
+      .header-title,
+      .header-main-title,
+      .badge-chasi,
+      .header-quest-badge,
+      .btn-intro-replay,
+      .btn-sound,
+      #soundToggle,
+      #teamDisplay {
+        display: none !important;
+      }
+
+      .header-right,
+      .header-info-group {
+        gap: 6px !important;
+        flex-shrink: 1 !important;
+        min-width: 0 !important;
+      }
+
+      .student-badge,
+      .header-team,
+      .team-badge {
+        padding: 5px 10px !important;
+        font-size: 12.5px !important;
+        border-radius: 14px !important;
+        max-width: 110px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        display: inline-flex !important;
+        align-items: center !important;
+      }
+
+      #myHeaderChar {
+        display: none !important;
+      }
+
+      .score-badge,
+      .header-score,
+      #dispScore {
+        padding: 5px 10px !important;
+        font-size: 13px !important;
+        border-radius: 14px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+      }
+    }
   </style>
   <script src="quest-intro.js?v=7"></script>
 </head>
@@ -811,7 +893,7 @@
     }
 
     // 상단 HUD 표시
-    document.getElementById("dispStudent").textContent = `${studentName} (${teamCode})`;
+    document.getElementById("dispStudent").textContent = (window.innerWidth <= 768) ? `${studentName}` : `${studentName} (${teamCode})`;
     document.getElementById("scoreDisplay").textContent = `${currentScore} EXP`;
 
     // 사운드 시스템
