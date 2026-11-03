@@ -903,6 +903,143 @@
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
+
+    /* ==============================================================
+       모바일 (스마트폰 폭) 최적화
+       ============================================================== */
+    @media (max-width: 768px) {
+      .app-container {
+        width: 100% !important;
+        max-width: 100vw !important;
+        padding: 14px 12px 60px !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+      }
+
+      .intro-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px !important;
+        gap: 10px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .intro-icon {
+        display: none;
+      }
+
+      .intro-text h2 {
+        font-size: 20px !important;
+        line-height: 1.35;
+      }
+
+      .intro-text p {
+        font-size: 14px !important;
+      }
+
+      /* 1전시관 / 2전시관 선택 탭 위아래 배치 */
+      .museum-nav-tabs {
+        flex-direction: column !important;
+        gap: 8px !important;
+        padding: 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      .tab-btn {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 13px 12px !important;
+        font-size: 16px !important;
+        white-space: normal !important;
+        word-break: keep-all;
+        text-align: center;
+        line-height: 1.35;
+      }
+
+      .museum-section {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding: 18px 14px !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+      }
+
+      .section-title {
+        font-size: 19px !important;
+        white-space: normal !important;
+        word-break: keep-all;
+        line-height: 1.35;
+      }
+
+      .museum-grid {
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+      }
+
+      .museum-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding: 14px !important;
+        box-sizing: border-box !important;
+      }
+
+      .detection-badge {
+        white-space: normal !important;
+        flex-wrap: wrap;
+        font-size: 14.5px !important;
+      }
+
+      /* '오류 원인 태그 직접 입력' + '태그 추가' 버튼 위아래 배치 */
+      .tag-add-form {
+        flex-direction: column !important;
+        gap: 8px !important;
+        width: 100% !important;
+      }
+
+      .tag-input {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 15px !important;
+        padding: 10px 12px !important;
+      }
+
+      .btn-add-tag {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 11px 14px !important;
+        font-size: 16px !important;
+        text-align: center;
+      }
+
+      .tag-stats-chart-card,
+      .reflection-builder-card {
+        padding: 16px 14px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      .tag-stats-title {
+        font-size: 18px !important;
+        white-space: normal !important;
+        word-break: keep-all;
+      }
+
+      .btn-submit-thought {
+        width: 100% !important;
+        justify-content: center;
+        font-size: 16px !important;
+        padding: 13px 14px !important;
+        white-space: normal !important;
+        text-align: center;
+      }
+    }
   </style>
   <script src="quest-intro.js?v=7"></script>
 </head>
