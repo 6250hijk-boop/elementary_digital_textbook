@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -9,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-  
+
   <style>
     :root {
       --bg-blue: rgb(14, 70, 191);
@@ -24,11 +25,17 @@
       --radius: 22px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     body {
       background-color: var(--bg-blue);
-      background-image: 
+      background-image:
         radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.12), transparent 40%),
         radial-gradient(circle at 90% 90%, rgba(6, 27, 80, 0.5), transparent 40%),
         linear-gradient(to bottom, rgb(14, 70, 191), rgb(10, 52, 148));
@@ -47,7 +54,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
       position: sticky;
       top: 0;
       z-index: 100;
@@ -74,7 +81,7 @@
       height: 42px;
       width: auto;
       object-fit: contain;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
     }
 
     .btn-quest-map {
@@ -90,7 +97,7 @@
       align-items: center;
       gap: 6px;
       transition: all 0.2s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       font-weight: bold;
       white-space: nowrap;
     }
@@ -227,8 +234,15 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .card-title {
@@ -387,7 +401,7 @@
       border: 2px solid rgba(255, 255, 255, 0.2);
       border-radius: 18px;
       padding: 22px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       transition: all 0.2s;
       color: var(--text-white);
     }
@@ -873,8 +887,9 @@
       display: block;
     }
   </style>
-  <script src="quest-intro.js?v=2"></script>
+  <script src="quest-intro.js?v=6"></script>
 </head>
+
 <body>
 
   <header>
@@ -886,7 +901,8 @@
       <span class="header-title">QUEST 7: 우리 모둠 실천 규약 초안 입력하기</span>
     </div>
     <div class="header-right">
-      <button class="btn-intro-replay" onclick="window.replayQuestIntro && window.replayQuestIntro()" title="대화형 인트로 다시보기">🎬 인트로</button>
+      <button class="btn-intro-replay" onclick="window.replayQuestIntro && window.replayQuestIntro()"
+        title="대화형 인트로 다시보기">🎬 인트로</button>
       <div class="team-badge" id="headerTeamBadge">모둠 로딩 중...</div>
       <div class="score-badge" id="scoreDisplay">0 EXP</div>
     </div>
@@ -911,7 +927,8 @@
           <span class="badge-num-circle">1</span>
           <span>규약:</span>
         </label>
-        <textarea id="inputRuleContent" class="rule-textarea" rows="3" placeholder="예: 음료수 투명 페트병은 비닐 라벨을 100% 떼어내고 물로 깨끗이 헹군 뒤 납작하게 압축하여 버린다."></textarea>
+        <textarea id="inputRuleContent" class="rule-textarea" rows="3"
+          placeholder="예: 음료수 투명 페트병은 비닐 라벨을 100% 떼어내고 물로 깨끗이 헹군 뒤 납작하게 압축하여 버린다."></textarea>
       </div>
 
       <!-- 2. 제시한 이유 입력칸 -->
@@ -920,12 +937,20 @@
           <span class="badge-num-circle">2</span>
           <span>제시한 이유:</span>
         </label>
-        <textarea id="inputRuleReason" class="rule-textarea" rows="3" placeholder="예: 라벨이 붙어있거나 이물질이 남아있으면 고품질 재활용이 불가능해지고, 교실 AI 탐정도 정확히 구분할 수 없기 때문입니다."></textarea>
+        <textarea id="inputRuleReason" class="rule-textarea" rows="3"
+          placeholder="예: 라벨이 붙어있거나 이물질이 남아있으면 고품질 재활용이 불가능해지고, 교실 AI 탐정도 정확히 구분할 수 없기 때문입니다."></textarea>
       </div>
 
-      <div style="display:flex;justify-content:space-between;align-items:center;background:#E8F5E9;padding:12px 16px;border-radius:12px;margin-bottom:14px;">
-        <span style="display:inline-flex;align-items:center;gap:6px;font-size:14px;color:#2E7D32;font-weight:bold;">작성 탐정: <span style="display:inline-flex;width:26px;height:26px;border-radius:50%;overflow:hidden;background:#061B50;border:1.5px solid #F59E0B;vertical-align:middle;box-shadow:0 1px 4px rgba(0,0,0,0.3);"><img id="dispWriterCharImg" src="images/bs-char (1).png" style="width:100%;height:100%;object-fit:contain;"></span> <span id="dispWriterName" style="color:#1B5E20;">-</span></span>
-        <span style="font-size:14px;color:#558B2F;">소속 모둠: <span id="dispWriterTeam" style="font-weight:bold;">-</span></span>
+      <div
+        style="display:flex;justify-content:space-between;align-items:center;background:#E8F5E9;padding:12px 16px;border-radius:12px;margin-bottom:14px;">
+        <span style="display:inline-flex;align-items:center;gap:6px;font-size:14px;color:#2E7D32;font-weight:bold;">작성
+          탐정: <span
+            style="display:inline-flex;width:26px;height:26px;border-radius:50%;overflow:hidden;background:#061B50;border:1.5px solid #F59E0B;vertical-align:middle;box-shadow:0 1px 4px rgba(0,0,0,0.3);"><img
+              id="dispWriterCharImg" src="images/bs-char (1).png"
+              style="width:100%;height:100%;object-fit:contain;"></span> <span id="dispWriterName"
+            style="color:#1B5E20;">-</span></span>
+        <span style="font-size:14px;color:#558B2F;">소속 모둠: <span id="dispWriterTeam"
+            style="font-weight:bold;">-</span></span>
       </div>
 
       <button class="btn btn-post" id="btnPublishDraft" onclick="publishRuleDraft()">게시하기 (+50 EXP)</button>
@@ -961,7 +986,8 @@
           <span id="liveTeamCount">우리 모둠 실시간 동기화 중</span>
         </div>
       </div>
-      <p class="card-desc">친구들의 실천 규약을 확인하고 마음에 드는 규약에 <strong>좋아요</strong>를 눌러보세요! 모둠원들의 많은 지지를 받은 규약이 <strong>좋아요 순</strong>으로 상단에 정렬됩니다.</p>
+      <p class="card-desc">친구들의 실천 규약을 확인하고 마음에 드는 규약에 <strong>좋아요</strong>를 눌러보세요! 모둠원들의 많은 지지를 받은 규약이 <strong>좋아요
+          순</strong>으로 상단에 정렬됩니다.</p>
 
       <!-- 모둠원들의 규약 목록 피드 -->
       <div class="rules-grid" id="sharedRulesGrid">
@@ -972,10 +998,14 @@
       </div>
 
       <!-- 3단계 이동 안내 배너 -->
-      <div style="background:linear-gradient(135deg, #E0F2FE, #BAE6FD);border:2.5px solid #38BDF8;border-radius:18px;padding:22px;text-align:center;margin-top:20px;">
+      <div
+        style="background:linear-gradient(135deg, #E0F2FE, #BAE6FD);border:2.5px solid #38BDF8;border-radius:18px;padding:22px;text-align:center;margin-top:20px;">
         <h3 style="font-family:'Jua';color:#0369A1;font-size:21px;margin-bottom:8px;">우리 모둠 대표 규약 선정 완료!</h3>
-        <p style="color:#0C4A6E;font-size:14.5px;margin-bottom:16px;">모둠원들에게 가장 많은 '좋아요'를 받은 규약이 <strong>모둠 대표 규약</strong>으로 3단계 전당에 자동 등록됩니다.</p>
-        <button class="btn" style="background:linear-gradient(135deg,#0284C7,#0369A1);color:white;font-size:17px;padding:14px 30px;" onclick="goToStep(3)">
+        <p style="color:#0C4A6E;font-size:14.5px;margin-bottom:16px;">모둠원들에게 가장 많은 '좋아요'를 받은 규약이 <strong>모둠 대표
+            규약</strong>으로 3단계 전당에 자동 등록됩니다.</p>
+        <button class="btn"
+          style="background:linear-gradient(135deg,#0284C7,#0369A1);color:white;font-size:17px;padding:14px 30px;"
+          onclick="goToStep(3)">
           3단계: 우리 반 모둠별 대표 규약 전당 가기
         </button>
       </div>
@@ -1008,7 +1038,8 @@
           </div>
           <span class="best-class-votes-badge" id="bestClassVotesBadge">0표 획득</span>
         </div>
-        <div id="bestClassRuleContent" style="font-size:17px;font-weight:700;color:#713F12;line-height:1.7;margin-bottom:8px;">
+        <div id="bestClassRuleContent"
+          style="font-size:17px;font-weight:700;color:#713F12;line-height:1.7;margin-bottom:8px;">
           각 모둠의 대표 규약에 좋아요를 눌러 투표해보세요!
         </div>
         <div id="bestClassRuleReason" style="font-size:14px;color:#854D0E;font-style:italic;">
@@ -1025,10 +1056,14 @@
       </div>
 
       <!-- 최종 완료 & 메인 이동 배너 -->
-      <div style="background:linear-gradient(135deg, #FFF9C4, #FFF59D);border:3px solid #FBC02D;border-radius:18px;padding:24px;text-align:center;margin-top:24px;">
+      <div
+        style="background:linear-gradient(135deg, #FFF9C4, #FFF59D);border:3px solid #FBC02D;border-radius:18px;padding:24px;text-align:center;margin-top:24px;">
         <h3 style="font-family:'Jua';color:#E65100;font-size:22px;margin-bottom:8px;">QUEST 7 모든 과정 완수!</h3>
-        <p style="color:#5D4037;font-size:15px;margin-bottom:16px;">우리 반 대표 규약 투표를 완료했습니다. <strong>메인 대지도</strong>로 이동하여 다음 단계에 도전하세요!</p>
-        <button class="btn" style="background:linear-gradient(135deg,#2E7D32,#1B5E20);color:white;font-size:18px;padding:16px 36px;" onclick="finishQuest7()">
+        <p style="color:#5D4037;font-size:15px;margin-bottom:16px;">우리 반 대표 규약 투표를 완료했습니다. <strong>메인 대지도</strong>로 이동하여
+          다음 단계에 도전하세요!</p>
+        <button class="btn"
+          style="background:linear-gradient(135deg,#2E7D32,#1B5E20);color:white;font-size:18px;padding:16px 36px;"
+          onclick="finishQuest7()">
           QUEST 7 완료 & 퀘스트지도가기 (+100 EXP)
         </button>
       </div>
@@ -1086,7 +1121,7 @@
     };
 
     // 단계 이동 (1, 2, 3단계 지원)
-    window.goToStep = function(stepNum) {
+    window.goToStep = function (stepNum) {
       window.state.currentStep = stepNum;
       for (let i = 1; i <= 3; i++) {
         const stepEl = document.getElementById(`step${i}`);
@@ -1102,7 +1137,7 @@
     };
 
     // 점수 증가
-    window.addScore = function(exp) {
+    window.addScore = function (exp) {
       window.state.score += exp;
       localStorage.setItem("elementary_score", window.state.score);
       const scoreDisp = document.getElementById('scoreDisplay');
@@ -1110,7 +1145,7 @@
     };
 
     // 1단계: 실천 규약 게시 (Firestore 저장 & 즉시 표시)
-    window.publishRuleDraft = async function() {
+    window.publishRuleDraft = async function () {
       const ruleContent = document.getElementById("inputRuleContent").value.trim();
       const reason = document.getElementById("inputRuleReason").value.trim();
 
@@ -1173,7 +1208,7 @@
     }
 
     // 내 글 삭제 기능
-    window.deleteMyPost = async function() {
+    window.deleteMyPost = async function () {
       if (!confirm("정말 내가 작성한 실천 규약을 삭제할까요?")) return;
 
       try {
@@ -1192,7 +1227,7 @@
 
         alert("작성한 실천 규약이 삭제되었습니다. 새로운 규약을 다시 작성할 수 있습니다.");
 
-      } catch(e) {
+      } catch (e) {
         console.error(e);
         alert("삭제 중 오류가 발생했습니다: " + e.message);
       }
@@ -1216,7 +1251,7 @@
         gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
         osc.start(now);
         osc.stop(now + 0.12);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     // 2단계: 실시간 모둠 규약 피드 구독
@@ -1284,10 +1319,10 @@
         const savedDocId = localStorage.getItem("quest7_my_post_doc_id");
 
         const isMyPost = (iId && sId && iId === sId) ||
-                         (savedDocId && item.id === savedDocId) ||
-                         (window.state && window.state.myPostDocId && item.id === window.state.myPostDocId) ||
-                         (aName && (aName === sName || aName === tCode)) ||
-                         (iId && (iId.includes(sName) || iId.includes(tCode)));
+          (savedDocId && item.id === savedDocId) ||
+          (window.state && window.state.myPostDocId && item.id === window.state.myPostDocId) ||
+          (aName && (aName === sName || aName === tCode)) ||
+          (iId && (iId.includes(sName) || iId.includes(tCode)));
 
         const authorCharId = isMyPost ? (myCharId || item.charId || 1) : (item.charId || getCharIdForName(item.authorName));
         const timeStr = item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '방금 전';
@@ -1361,7 +1396,7 @@
     }
 
     // 좋아요 토글 (누를 때마다 좋아요 등록 / 취소)
-    window.toggleLikePost = async function(postId) {
+    window.toggleLikePost = async function (postId) {
       if (!postId) return;
       const cachedItem = currentRulesList.find(it => it.id === postId);
       const isAlreadyLiked = cachedItem && Array.isArray(cachedItem.likedBy) && cachedItem.likedBy.includes(studentId);
@@ -1387,7 +1422,7 @@
     };
 
     // 댓글 등록
-    window.addCommentToPost = async function(postId) {
+    window.addCommentToPost = async function (postId) {
       const input = document.getElementById(`commentInput_${postId}`);
       if (!input) return;
       const text = input.value.trim();
@@ -1489,7 +1524,7 @@
       // 현재 1위 대표 규약 하이라이트 박스 갱신
       const topRule = repRules[0];
       const topVotes = (typeof topRule.classLikes === 'number') ? topRule.classLikes : (Array.isArray(topRule.classLikedBy) ? topRule.classLikedBy.length : 0);
-      
+
       if (bestVotesBadge) bestVotesBadge.textContent = `${topVotes}표 획득`;
       if (bestContent) bestContent.innerHTML = `<span style="background:#FEF08A;color:#854D0E;padding:2px 8px;border-radius:8px;font-size:13px;font-weight:bold;margin-right:6px;">[${topRule.teamCode || '모둠'}]</span> ${topRule.ruleContent || (topRule.articles ? topRule.articles.join(', ') : '실천 규약')}`;
       if (bestReason) bestReason.textContent = `이유: ${topRule.reason || '자원순환 실천을 위해 작성되었습니다.'} (작성: ${topRule.authorName || '모둠원'})`;
@@ -1542,7 +1577,7 @@
     }
 
     // 3단계: 반 대표 투표(좋아요) 토글
-    window.toggleVoteClassRepRule = async function(postId) {
+    window.toggleVoteClassRepRule = async function (postId) {
       if (!postId) return;
       const target = currentRepRulesList.find(it => it.id === postId);
       const isAlreadyVoted = target && Array.isArray(target.classLikedBy) && target.classLikedBy.includes(studentId);
@@ -1568,7 +1603,7 @@
     };
 
     // QUEST 7 최종 완료
-    window.finishQuest7 = async function() {
+    window.finishQuest7 = async function () {
       window.addScore(100);
       localStorage.setItem("quest7_completed", "true");
       localStorage.setItem("elementary_q7_done", "true");
@@ -1581,7 +1616,7 @@
             q7Done: true,
             q7_done: true
           });
-        } catch(e) {
+        } catch (e) {
           console.warn("Firestore update error:", e);
         }
       }
@@ -1618,4 +1653,5 @@
     });
   </script>
 </body>
+
 </html>

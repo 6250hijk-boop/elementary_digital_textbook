@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <title>QUEST 6: 오류박물관 | AI 자원순환 탐정단</title>
-  
+
   <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
   <style>
     :root {
       --bg-blue: rgb(14, 70, 191);
@@ -36,7 +38,7 @@
     body {
       font-family: 'Pretendard', sans-serif;
       background-color: var(--bg-blue);
-      background-image: 
+      background-image:
         radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.12), transparent 40%),
         radial-gradient(circle at 90% 90%, rgba(6, 27, 80, 0.5), transparent 40%),
         linear-gradient(to bottom, rgb(14, 70, 191), rgb(10, 52, 148));
@@ -85,7 +87,7 @@
       height: 42px;
       width: auto;
       object-fit: contain;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
     }
 
     .btn-quest-map {
@@ -101,7 +103,7 @@
       align-items: center;
       gap: 6px;
       transition: all 0.2s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       white-space: nowrap;
     }
 
@@ -371,7 +373,7 @@
       flex-direction: column;
       gap: 10px;
       transition: all 0.2s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       color: var(--text-white);
     }
 
@@ -506,7 +508,8 @@
       white-space: nowrap;
     }
 
-    .quick-tag-chip:hover, .quick-tag-chip:active {
+    .quick-tag-chip:hover,
+    .quick-tag-chip:active {
       background: var(--btn-yellow);
       border-color: #eab308;
       color: #0F172A;
@@ -653,6 +656,7 @@
         align-items: stretch;
         gap: 6px;
       }
+
       .tag-chart-label-group {
         width: 100%;
       }
@@ -863,8 +867,17 @@
       color: var(--text-white);
     }
 
-    .cert-icon { font-size: 52px; margin-bottom: 8px; }
-    .cert-title { font-family: 'Jua', sans-serif; font-size: 28px; color: var(--btn-yellow); margin-bottom: 6px; }
+    .cert-icon {
+      font-size: 52px;
+      margin-bottom: 8px;
+    }
+
+    .cert-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 28px;
+      color: var(--btn-yellow);
+      margin-bottom: 6px;
+    }
 
     /* 토스트 알림창 */
     .toast-msg {
@@ -881,7 +894,7 @@
       z-index: 1000;
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       opacity: 0;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
       pointer-events: none;
       white-space: nowrap;
     }
@@ -891,8 +904,9 @@
       opacity: 1;
     }
   </style>
-  <script src="quest-intro.js?v=2"></script>
+  <script src="quest-intro.js?v=6"></script>
 </head>
+
 <body>
 
   <!-- 상단 앱 HUD 네비게이션 -->
@@ -908,10 +922,12 @@
       </div>
     </div>
     <div class="header-right">
-      <button class="btn-intro-replay" onclick="window.replayQuestIntro && window.replayQuestIntro()" title="대화형 인트로 다시보기">🎬 인트로</button>
+      <button class="btn-intro-replay" onclick="window.replayQuestIntro && window.replayQuestIntro()"
+        title="대화형 인트로 다시보기">🎬 인트로</button>
       <div class="student-badge" id="studentDisplay">탐정 학생 (1모둠)</div>
       <div class="score-badge" id="scoreDisplay">0 EXP</div>
-      <button class="btn-sound" id="soundToggle" onclick="toggleSound()" style="font-size:13px; font-weight:bold; padding:6px 10px; border-radius:10px; cursor:pointer;">소리</button>
+      <button class="btn-sound" id="soundToggle" onclick="toggleSound()"
+        style="font-size:13px; font-weight:bold; padding:6px 10px; border-radius:10px; cursor:pointer;">소리</button>
     </div>
   </header>
 
@@ -924,7 +940,8 @@
       <div class="intro-text">
         <h2>교실쓰레기 AI의 오인식 사례를 전시하고 원인을 탐색해보세요!</h2>
         <p>
-          QUEST 5에서 캡처한 AI의 오인식 순간들을 박물관에 전시하고, 모둠원들과 함께 <strong>오류 원인 태그</strong>를 달며 <strong>AI의 한계와 사람의 역할</strong>을 정립해봅시다.
+          QUEST 5에서 캡처한 AI의 오인식 순간들을 박물관에 전시하고, 모둠원들과 함께 <strong>오류 원인 태그</strong>를 달며 <strong>AI의 한계와 사람의 역할</strong>을
+          정립해봅시다.
         </p>
       </div>
     </div>
@@ -976,7 +993,8 @@
           모둠원들이 1전시관에서 오류 사진들을 관찰하며 등록한 <strong>오류 원인 태그</strong>들의 선택 숫자를 집계한 실시간 분포 그래프입니다.
         </p>
         <div class="tag-chart-list" id="tagStatsChartContainer">
-          <div style="text-align:center; padding:24px; color:#94a3b8; font-size:14px; background:#f8fafc; border-radius:12px; border:1px dashed #cbd5e1;">
+          <div
+            style="text-align:center; padding:24px; color:#94a3b8; font-size:14px; background:#f8fafc; border-radius:12px; border:1px dashed #cbd5e1;">
             1전시관에서 오류 사진들을 확인하고 원인 태그를 추가해보세요! 태그 집계 결과가 그래프로 나타납니다.
           </div>
         </div>
@@ -986,7 +1004,9 @@
         <div class="section-title">
           <span></span> <span>AI의 한계와 사람의 역할: 한 문장 발표 게시판</span>
         </div>
-        <span style="font-size:13px; font-weight:800; background:#fef08a; color:#854d0e; padding:4px 10px; border-radius:12px;" id="thoughtCount">
+        <span
+          style="font-size:13px; font-weight:800; background:#fef08a; color:#854d0e; padding:4px 10px; border-radius:12px;"
+          id="thoughtCount">
           우리 모둠 생각 0건
         </span>
       </div>
@@ -1000,26 +1020,14 @@
         <div class="sentence-template-row">
           <div class="template-input-group">
             <label class="template-input-label">① 인공지능(AI)의 한계점:</label>
-            <input 
-              type="text" 
-              id="aiLimitInput" 
-              class="template-input" 
-              value="" 
-              placeholder="인공지능(AI)이 가진 한계점을 빈칸에 직접 작성해보세요"
-              oninput="updateSentencePreview()"
-            >
+            <input type="text" id="aiLimitInput" class="template-input" value=""
+              placeholder="인공지능(AI)이 가진 한계점을 빈칸에 직접 작성해보세요" oninput="updateSentencePreview()">
           </div>
 
           <div class="template-input-group">
             <label class="template-input-label">② 우리 사람(인간)의 책임과 역할:</label>
-            <input 
-              type="text" 
-              id="humanRoleInput" 
-              class="template-input" 
-              value="" 
-              placeholder="우리 사람(인간)이 해야 할 책임과 역할을 빈칸에 직접 작성해보세요"
-              oninput="updateSentencePreview()"
-            >
+            <input type="text" id="humanRoleInput" class="template-input" value=""
+              placeholder="우리 사람(인간)이 해야 할 책임과 역할을 빈칸에 직접 작성해보세요" oninput="updateSentencePreview()">
           </div>
         </div>
 
@@ -1037,7 +1045,8 @@
 
       <!-- 실시간 모둠 게시판 피드 -->
       <div style="margin-top:20px;">
-        <h4 style="font-family:'Jua'; color:#1e293b; font-size:18px; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+        <h4
+          style="font-family:'Jua'; color:#1e293b; font-size:18px; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
           <span></span> <span id="feedBoardTitle">우리 모둠('1모둠') 생각 나눔 게시판</span>
         </h4>
 
@@ -1073,20 +1082,20 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, addDoc, updateDoc, doc, increment, serverTimestamp, query, where, onSnapshot, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    const firebaseConfig = { 
-      apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00", 
-      authDomain: "elemeelementary-textbook.firebaseapp.com", 
-      projectId: "elemeelementary-textbook", 
-      storageBucket: "elemeelementary-textbook.firebasestorage.app", 
-      messagingSenderId: "713149004420", 
-      appId: "1:713149004420:web:8483273681e16f5a8fa0d1" 
+    const firebaseConfig = {
+      apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+      authDomain: "elemeelementary-textbook.firebaseapp.com",
+      projectId: "elemeelementary-textbook",
+      storageBucket: "elemeelementary-textbook.firebasestorage.app",
+      messagingSenderId: "713149004420",
+      appId: "1:713149004420:web:8483273681e16f5a8fa0d1"
     };
 
     let db = null;
     try {
       const app = initializeApp(firebaseConfig);
       db = getFirestore(app);
-    } catch(e) {
+    } catch (e) {
       console.warn("Firebase offline:", e);
     }
 
@@ -1115,7 +1124,7 @@
 
     // 오디오 사운드
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    window.playSound = function(type) {
+    window.playSound = function (type) {
       if (!window.state.soundEnabled) return;
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const osc = audioCtx.createOscillator();
@@ -1146,19 +1155,19 @@
       }
     };
 
-    window.toggleSound = function() {
+    window.toggleSound = function () {
       window.state.soundEnabled = !window.state.soundEnabled;
       document.getElementById('soundToggle').textContent = window.state.soundEnabled ? '소리 ON' : '소리 OFF';
     };
 
-    window.showToast = function(msg) {
+    window.showToast = function (msg) {
       const toast = document.getElementById('toastMsg');
       toast.textContent = msg;
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2500);
     };
 
-    window.addScore = function(pts) {
+    window.addScore = function (pts) {
       window.state.score += pts;
       document.getElementById('scoreDisplay').textContent = `${window.state.score} EXP`;
       localStorage.setItem("elementary_score", window.state.score);
@@ -1239,7 +1248,7 @@
     }
 
     // 탭 전환
-    window.switchTab = function(tabName) {
+    window.switchTab = function (tabName) {
       window.playSound('click');
       window.state.currentTab = tabName;
       document.getElementById('tabGalleryBtn').classList.toggle('active', tabName === 'gallery');
@@ -1297,13 +1306,13 @@
           // 로컬 백업과 샘플 결합
           const localList = JSON.parse(localStorage.getItem("quest6_museum_local") || "[]");
           const merged = [...items, ...localList];
-          
+
           // 중복 ID 제거
           const uniqueMap = new Map();
           merged.forEach(item => {
             if (item.id && !uniqueMap.has(item.id)) uniqueMap.set(item.id, item);
           });
-          
+
           let displayList = Array.from(uniqueMap.values());
           if (displayList.length === 0) {
             displayList = SAMPLE_ERRORS;
@@ -1378,7 +1387,7 @@
     }
 
     // 태그 추가 함수 (모둠 실시간 동기화)
-    window.addQuickTag = async function(docId, tagText) {
+    window.addQuickTag = async function (docId, tagText) {
       window.playSound('tag');
       window.addScore(10);
 
@@ -1404,7 +1413,7 @@
           await updateDoc(doc(db, "quest6_museum", docId), {
             tags: arrayUnion(tagText)
           });
-        } catch(e) {
+        } catch (e) {
           console.warn("Tag update failed:", e);
         }
       }
@@ -1412,7 +1421,7 @@
       showToast(`'${tagText}' 원인 태그가 모둠에 추가되었습니다! (+10 EXP)`);
     };
 
-    window.submitCustomTag = function(docId) {
+    window.submitCustomTag = function (docId) {
       const input = document.getElementById(`tagInput-${docId}`);
       if (!input || !input.value.trim()) return;
 
@@ -1424,7 +1433,7 @@
     };
 
     // 문장 실시간 프리뷰 갱신 (빈칸 유지)
-    window.updateSentencePreview = function() {
+    window.updateSentencePreview = function () {
       const limitInput = document.getElementById('aiLimitInput');
       const roleInput = document.getElementById('humanRoleInput');
       const preview = document.getElementById('sentencePreview');
@@ -1440,7 +1449,7 @@
     };
 
     // 한 문장 게시글 제출
-    window.submitReflection = async function() {
+    window.submitReflection = async function () {
       const limit = document.getElementById('aiLimitInput').value.trim();
       const role = document.getElementById('humanRoleInput').value.trim();
 
@@ -1473,7 +1482,7 @@
             q6Done: true,
             q6_done: true
           });
-        } catch(e) {
+        } catch (e) {
           console.warn("Reflection save err:", e);
         }
       }
@@ -1528,7 +1537,7 @@
                   <button class="btn-react" onclick="reactReflection('${item.id}', 'think')">깊은 생각 ${rx.think || 0}</button>
                   <button class="btn-react" onclick="reactReflection('${item.id}', 'cheer')">멋져요 ${rx.cheer || 0}</button>
                 </div>
-                <div>${item.createdAt?.seconds ? new Date(item.createdAt.seconds * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '방금 전'}</div>
+                <div>${item.createdAt?.seconds ? new Date(item.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '방금 전'}</div>
               </div>
             </div>
           `;
@@ -1536,7 +1545,7 @@
       });
     }
 
-    window.reactReflection = async function(docId, reactKey) {
+    window.reactReflection = async function (docId, reactKey) {
       window.playSound('click');
       if (!db) return;
       try {
@@ -1544,12 +1553,12 @@
         await updateDoc(ref, {
           [`reactions.${reactKey}`]: increment(1)
         });
-      } catch(e) {
+      } catch (e) {
         console.warn(e);
       }
     };
 
-    window.deleteReflection = async function(docId) {
+    window.deleteReflection = async function (docId) {
       if (!confirm("작성한 한 문장 게시글을 삭제할까요?")) return;
       if (!db) return;
       try {
@@ -1557,7 +1566,7 @@
           teamCode: "_deleted_"
         });
         showToast("삭제되었습니다.");
-      } catch(e) {
+      } catch (e) {
         alert("삭제 실패: " + e.message);
       }
     };
@@ -1571,4 +1580,5 @@
     });
   </script>
 </body>
+
 </html>

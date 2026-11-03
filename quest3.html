@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>QUEST 3: AI가 잘 배우는 사진은 무엇일까? | AI 자원순환 탐정단</title>
-  
+
   <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,13 +14,17 @@
 
   <style>
     :root {
-      --bg-blue: rgb(14, 70, 191);        /* 배경 파랑 r14, g70, b191 */
-      --card-navy: rgb(6, 27, 80);        /* 기타 남색 r6, g27, b80 */
-      --btn-yellow: rgb(254, 218, 53);    /* 버튼 노랑 r254, g218, b53 */
+      --bg-blue: rgb(14, 70, 191);
+      /* 배경 파랑 r14, g70, b191 */
+      --card-navy: rgb(6, 27, 80);
+      /* 기타 남색 r6, g27, b80 */
+      --btn-yellow: rgb(254, 218, 53);
+      /* 버튼 노랑 r254, g218, b53 */
       --btn-yellow-hover: rgb(255, 230, 80);
       --accent-cyan: #38BDF8;
       --accent-green: #22C55E;
-      --text-white: #FFFFFF;              /* 글씨: 흰색 */
+      --text-white: #FFFFFF;
+      /* 글씨: 흰색 */
       --text-white-dim: rgba(255, 255, 255, 0.85);
       --radius: 20px;
       --shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
@@ -35,7 +40,7 @@
 
     body {
       background: var(--bg-blue);
-      background-image: 
+      background-image:
         radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.2), transparent 35%),
         radial-gradient(circle at 90% 90%, rgba(254, 218, 53, 0.15), transparent 35%),
         linear-gradient(to bottom, rgb(14, 70, 191), rgb(8, 50, 145));
@@ -218,17 +223,34 @@
       color: var(--text-white);
     }
 
-    .upload-zone:hover, .upload-zone.dragover {
+    .upload-zone:hover,
+    .upload-zone.dragover {
       border-color: var(--btn-yellow);
       background: rgba(14, 70, 191, 0.45);
       transform: scale(1.01);
     }
 
-    .upload-zone .icon { font-size: 46px; margin-bottom: 8px; }
-    .upload-zone h4 { font-family: 'Jua', sans-serif; font-size: 24px; color: var(--text-white); margin-bottom: 6px; }
-    .upload-zone p { font-size: 16px; font-weight: 500; color: var(--text-white-dim); }
+    .upload-zone .icon {
+      font-size: 46px;
+      margin-bottom: 8px;
+    }
 
-    #file-input { display: none; }
+    .upload-zone h4 {
+      font-family: 'Jua', sans-serif;
+      font-size: 24px;
+      color: var(--text-white);
+      margin-bottom: 6px;
+    }
+
+    .upload-zone p {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-white-dim);
+    }
+
+    #file-input {
+      display: none;
+    }
 
     .btn {
       display: inline-flex;
@@ -260,7 +282,9 @@
       box-shadow: 0 6px 18px rgba(254, 218, 53, 0.6);
     }
 
-    .btn-primary:active { transform: translateY(1px); }
+    .btn-primary:active {
+      transform: translateY(1px);
+    }
 
     .btn-gold {
       background: var(--btn-yellow);
@@ -298,7 +322,8 @@
       transform: translateY(-1px);
     }
 
-    .btn-tab.active, .btn-tab:active {
+    .btn-tab.active,
+    .btn-tab:active {
       background: var(--btn-yellow) !important;
       border-color: #F59E0B !important;
       color: #0F172A !important;
@@ -347,16 +372,29 @@
 
     .status-badge {
       position: absolute;
-      bottom: 0; left: 0; right: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       padding: 3px;
       font-size: 12px;
       font-weight: bold;
       text-align: center;
     }
 
-    .status-pending { background: #FFE082; color: #5D4037; }
-    .status-done { background: #A5D6A7; color: #1B5E20; }
-    .status-error { background: #EF9A9A; color: #B71C1C; }
+    .status-pending {
+      background: #FFE082;
+      color: #5D4037;
+    }
+
+    .status-done {
+      background: #A5D6A7;
+      color: #1B5E20;
+    }
+
+    .status-error {
+      background: #EF9A9A;
+      color: #B71C1C;
+    }
 
     .progress-wrap {
       background: #E0E0E0;
@@ -433,353 +471,367 @@
       font-weight: 600;
       margin-bottom: 12px;
     }
-    .alert-success { background: rgba(34, 197, 94, 0.25); border: 2px solid var(--accent-green); color: #DCFCE7; }
-    .alert-error { background: rgba(239, 68, 68, 0.25); border: 2px solid #EF4444; color: #FEE2E2; }
+
+    .alert-success {
+      background: rgba(34, 197, 94, 0.25);
+      border: 2px solid var(--accent-green);
+      color: #DCFCE7;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.25);
+      border: 2px solid #EF4444;
+      color: #FEE2E2;
+    }
   </style>
-  <script src="quest-intro.js?v=2"></script>
+  <script src="quest-intro.js?v=6"></script>
 </head>
+
 <body>
 
-<div class="page-wrap">
-  <!-- 상단 헤더 -->
-  <header>
-    <div class="header-left">
-      <a href="main.html" class="header-logo-link" title="메인 화면으로 이동">
-        <img src="images/bs-logo.png" alt="AI 자원순환 탐정단" class="header-bs-logo">
-      </a>
-      <a href="main.html" class="btn-quest-map" title="퀘스트 지도로 이동">🧭 퀘스트지도가기</a>
-    </div>
-    <div class="header-info-group">
-      <button class="btn-intro-replay" onclick="window.replayQuestIntro && window.replayQuestIntro()" title="대화형 인트로 다시보기">🎬 인트로</button>
-      <div class="header-team" id="dispTeam">1모둠</div>
-      <div class="header-score" id="dispScore">0점</div>
-    </div>
-  </header>
+  <div class="page-wrap">
+    <!-- 상단 헤더 -->
+    <header>
+      <div class="header-left">
+        <a href="main.html" class="header-logo-link" title="메인 화면으로 이동">
+          <img src="images/bs-logo.png" alt="AI 자원순환 탐정단" class="header-bs-logo">
+        </a>
+        <a href="main.html" class="btn-quest-map" title="퀘스트 지도로 이동">🧭 퀘스트지도가기</a>
+      </div>
+      <div class="header-info-group">
+        <button class="btn-intro-replay" onclick="window.replayQuestIntro && window.replayQuestIntro()"
+          title="대화형 인트로 다시보기">🎬 인트로</button>
+        <div class="header-team" id="dispTeam">1모둠</div>
+        <div class="header-score" id="dispScore">0점</div>
+      </div>
+    </header>
 
-  <div>
-    <div class="page-title">QUEST 3: AI가 잘 배우는 사진은 무엇일까?</div>
-    <div class="page-desc">
-      우리가 만든 분류 기준을 바탕으로 AI 학습용 사진 데이터를 직접 수집해봅시다!
+    <div>
+      <div class="page-title">QUEST 3: AI가 잘 배우는 사진은 무엇일까?</div>
+      <div class="page-desc">
+        우리가 만든 분류 기준을 바탕으로 AI 학습용 사진 데이터를 직접 수집해봅시다!
+      </div>
     </div>
-  </div>
 
-  <div id="main-alert"></div>
+    <div id="main-alert"></div>
 
-  <!-- ==================== 사진 업로드 및 데이터 수집 존 ==================== -->
-  <div class="card">
-    <h3>사진 데이터 직접 수집 & 업로드</h3>
-    <div class="upload-zone" id="upload-zone"
-      onclick="document.getElementById('file-input').click()"
-      ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFiles(event)">
-      <div class="icon"></div>
-      <h4>사진을 여기에 끌어다 놓거나 클릭하여 선택하세요!</h4>
-      <p>JPG, PNG, WEBP 지원 · 600×600 자동 변환 · 최대 20장</p>
-    </div>
-    <input type="file" id="file-input" accept="image/*" multiple onchange="handleFiles(this.files)">
+    <!-- ==================== 사진 업로드 및 데이터 수집 존 ==================== -->
+    <div class="card">
+      <h3>사진 데이터 직접 수집 & 업로드</h3>
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()"
+        ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFiles(event)">
+        <div class="icon"></div>
+        <h4>사진을 여기에 끌어다 놓거나 클릭하여 선택하세요!</h4>
+        <p>JPG, PNG, WEBP 지원 · 600×600 자동 변환 · 최대 20장</p>
+      </div>
+      <input type="file" id="file-input" accept="image/*" multiple onchange="handleFiles(this.files)">
 
-    <div id="pending-card" style="display:none; margin-top:16px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
-        <span style="font-size:16px; font-weight:bold; color:#2E7D32;">대기 중인 사진: <strong id="pending-count">0</strong>장</span>
-        <div style="display:flex; gap:8px;">
-          <button class="btn btn-primary" id="upload-btn" onclick="uploadAll()">업로드 시작</button>
-          <button class="btn btn-ghost" onclick="clearPending()">초기화</button>
+      <div id="pending-card" style="display:none; margin-top:16px;">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+          <span style="font-size:16px; font-weight:bold; color:#2E7D32;">대기 중인 사진: <strong
+              id="pending-count">0</strong>장</span>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-primary" id="upload-btn" onclick="uploadAll()">업로드 시작</button>
+            <button class="btn btn-ghost" onclick="clearPending()">초기화</button>
+          </div>
         </div>
+
+        <div class="preview-grid" id="preview-grid"></div>
+
+        <div class="progress-wrap" id="progress-wrap" style="display:none;">
+          <div class="progress-bar" id="progress-bar" style="width:0%;"></div>
+        </div>
+        <div class="progress-text" id="upload-status"></div>
+      </div>
+    </div>
+
+    <!-- 올린 사진 목록 및 팀 활동 내역 -->
+    <div class="card">
+      <div
+        style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+        <h3 style="margin:0;">사진 데이터 목록 (<span id="my-count">0</span>장)</h3>
+        <a href="main.html" class="btn btn-primary" style="font-size:16px;">퀘스트지도가기</a>
       </div>
 
-      <div class="preview-grid" id="preview-grid"></div>
-
-      <div class="progress-wrap" id="progress-wrap" style="display:none;">
-        <div class="progress-bar" id="progress-bar" style="width:0%;"></div>
+      <!-- 탭 전환 바 (내 사진 / 팀 모둠 사진) -->
+      <div class="filter-bar">
+        <button class="btn btn-tab active" id="tab-my" onclick="switchView('my')">내가 올린 사진</button>
+        <button class="btn btn-tab" id="tab-team" onclick="switchView('team')">팀 활동 내역 보기</button>
       </div>
-      <div class="progress-text" id="upload-status"></div>
+
+      <div id="my-uploads">
+        <div style="text-align:center; padding:24px; color:#78909C;">데이터를 로딩 중입니다...</div>
+      </div>
     </div>
   </div>
 
-  <!-- 올린 사진 목록 및 팀 활동 내역 -->
-  <div class="card">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
-      <h3 style="margin:0;">사진 데이터 목록 (<span id="my-count">0</span>장)</h3>
-      <a href="main.html" class="btn btn-primary" style="font-size:16px;">퀘스트지도가기</a>
-    </div>
+  <!-- Firebase compat SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-    <!-- 탭 전환 바 (내 사진 / 팀 모둠 사진) -->
-    <div class="filter-bar">
-      <button class="btn btn-tab active" id="tab-my" onclick="switchView('my')">내가 올린 사진</button>
-      <button class="btn btn-tab" id="tab-team" onclick="switchView('team')">팀 활동 내역 보기</button>
-    </div>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
+      authDomain: "elemeelementary-textbook.firebaseapp.com",
+      projectId: "elemeelementary-textbook",
+      storageBucket: "elemeelementary-textbook.firebasestorage.app",
+      messagingSenderId: "713149004420",
+      appId: "1:713149004420:web:8483273681e16f5a8fa0d1"
+    };
 
-    <div id="my-uploads">
-      <div style="text-align:center; padding:24px; color:#78909C;">데이터를 로딩 중입니다...</div>
-    </div>
-  </div>
-</div>
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
 
-<!-- Firebase compat SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    const CLOUDINARY_NAME = 'dbthgzdfu';
+    const CLOUDINARY_PRESET = 'vxhz699w';
+    const TARGET_SIZE = 600;
+    const QUALITY = 0.75;
+    const PARALLEL = 5;
 
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyCdx4xwK3XIzgw_4hFEohnMe64dc4LDB00",
-    authDomain: "elemeelementary-textbook.firebaseapp.com",
-    projectId: "elemeelementary-textbook",
-    storageBucket: "elemeelementary-textbook.firebasestorage.app",
-    messagingSenderId: "713149004420",
-    appId: "1:713149004420:web:8483273681e16f5a8fa0d1"
-  };
+    const studentId = localStorage.getItem("elementary_studentId");
+    const studentName = localStorage.getItem("elementary_studentName") || "학생 탐정";
+    const teamCode = localStorage.getItem("elementary_teamCode") || "1모둠";
 
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-  const db = firebase.firestore();
+    if (!studentId) {
+      window.location.href = "index.html";
+    }
 
-  const CLOUDINARY_NAME   = 'dbthgzdfu';
-  const CLOUDINARY_PRESET = 'vxhz699w';
-  const TARGET_SIZE = 600;
-  const QUALITY     = 0.75;
-  const PARALLEL    = 5;
+    let pendingFiles = [];
+    let currentMode = 'my'; // 'my' or 'team'
 
-  const studentId = localStorage.getItem("elementary_studentId");
-  const studentName = localStorage.getItem("elementary_studentName") || "학생 탐정";
-  const teamCode = localStorage.getItem("elementary_teamCode") || "1모둠";
+    // 초기 유저 정보 로드
+    async function initUser() {
+      document.getElementById('dispTeam').textContent = `${teamCode}`;
 
-  if (!studentId) {
-    window.location.href = "index.html";
-  }
-
-  let pendingFiles = [];
-  let currentMode = 'my'; // 'my' or 'team'
-
-  // 초기 유저 정보 로드
-  async function initUser() {
-    document.getElementById('dispTeam').textContent = `${teamCode}`;
-
-    try {
-      const docSnap = await db.collection('students').doc(studentId).get();
-      if (docSnap.exists) {
-        const d = docSnap.data();
-        document.getElementById('dispScore').textContent = `${d.score || 0}점`;
-      } else {
-        const score = localStorage.getItem("elementary_score") || "0";
-        document.getElementById('dispScore').textContent = `${score}점`;
+      try {
+        const docSnap = await db.collection('students').doc(studentId).get();
+        if (docSnap.exists) {
+          const d = docSnap.data();
+          document.getElementById('dispScore').textContent = `${d.score || 0}점`;
+        } else {
+          const score = localStorage.getItem("elementary_score") || "0";
+          document.getElementById('dispScore').textContent = `${score}점`;
+        }
+      } catch (e) {
+        console.error(e);
       }
-    } catch(e) {
-      console.error(e);
+
+      loadCurrentView();
     }
-    
-    loadCurrentView();
-  }
 
-  function switchView(mode) {
-    currentMode = mode;
-    document.getElementById('tab-my').classList.toggle('active', mode === 'my');
-    document.getElementById('tab-team').classList.toggle('active', mode === 'team');
-    loadCurrentView();
-  }
-
-  function loadCurrentView() {
-    if (currentMode === 'team') {
-      loadTeamUploads();
-    } else {
-      loadMyUploads();
+    function switchView(mode) {
+      currentMode = mode;
+      document.getElementById('tab-my').classList.toggle('active', mode === 'my');
+      document.getElementById('tab-team').classList.toggle('active', mode === 'team');
+      loadCurrentView();
     }
-  }
 
-  // 600×600 리사이징 -> Blob
-  function resizeToBlob(file) {
-    return new Promise(resolve => {
-      const img = new Image();
-      const url = URL.createObjectURL(file);
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = TARGET_SIZE;
-        canvas.height = TARGET_SIZE;
-        const ctx = canvas.getContext('2d');
-        const minDim = Math.min(img.width, img.height);
-        const sx = (img.width - minDim) / 2;
-        const sy = (img.height - minDim) / 2;
-        ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, TARGET_SIZE, TARGET_SIZE);
-        URL.revokeObjectURL(url);
-        canvas.toBlob(b => resolve(b), 'image/jpeg', QUALITY);
-      };
-      img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
-      img.src = url;
-    });
-  }
-
-  // Cloudinary 업로드
-  async function uploadToCloudinary(blob, fileName) {
-    const fd = new FormData();
-    fd.append('file', blob, fileName);
-    fd.append('upload_preset', CLOUDINARY_PRESET);
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/image/upload`, {
-      method: 'POST', body: fd
-    });
-    if (!res.ok) throw new Error('Cloudinary error');
-    return await res.json();
-  }
-
-  function dragOver(e) { e.preventDefault(); document.getElementById('upload-zone').classList.add('dragover'); }
-  function dragLeave(e) { e.preventDefault(); document.getElementById('upload-zone').classList.remove('dragover'); }
-  function dropFiles(e) {
-    e.preventDefault();
-    document.getElementById('upload-zone').classList.remove('dragover');
-    handleFiles(e.dataTransfer.files);
-  }
-
-  function handleFiles(files) {
-    const valid = Array.from(files).filter(f => f.type.startsWith('image/'));
-    if (!valid.length) { showAlert('이미지 파일만 올려주세요!', 'error'); return; }
-    if (pendingFiles.length + valid.length > 20) {
-      showAlert('한 번에 최대 20장까지 등록 가능합니다.', 'error');
-      return;
+    function loadCurrentView() {
+      if (currentMode === 'team') {
+        loadTeamUploads();
+      } else {
+        loadMyUploads();
+      }
     }
-    valid.forEach(f => {
-      pendingFiles.push({ id: Math.random().toString(36).substr(2, 9), file: f, blob: null, status: 'pending' });
-    });
-    renderPreview();
-    document.getElementById('pending-card').style.display = 'block';
 
-    pendingFiles.filter(f => !f.blob && f.status === 'pending').forEach(async pf => {
-      pf.blob = await resizeToBlob(pf.file);
-    });
-  }
+    // 600×600 리사이징 -> Blob
+    function resizeToBlob(file) {
+      return new Promise(resolve => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = TARGET_SIZE;
+          canvas.height = TARGET_SIZE;
+          const ctx = canvas.getContext('2d');
+          const minDim = Math.min(img.width, img.height);
+          const sx = (img.width - minDim) / 2;
+          const sy = (img.height - minDim) / 2;
+          ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, TARGET_SIZE, TARGET_SIZE);
+          URL.revokeObjectURL(url);
+          canvas.toBlob(b => resolve(b), 'image/jpeg', QUALITY);
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+        img.src = url;
+      });
+    }
 
-  function renderPreview() {
-    document.getElementById('pending-count').textContent = pendingFiles.length;
-    document.getElementById('preview-grid').innerHTML = pendingFiles.map(pf => {
-      const url = URL.createObjectURL(pf.file);
-      const sc = pf.status === 'done' ? 'status-done' : pf.status === 'error' ? 'status-error' : 'status-pending';
-      const st = pf.status === 'done' ? '완료' : pf.status === 'error' ? '오류' : '대기';
-      return `<div class="preview-item">
+    // Cloudinary 업로드
+    async function uploadToCloudinary(blob, fileName) {
+      const fd = new FormData();
+      fd.append('file', blob, fileName);
+      fd.append('upload_preset', CLOUDINARY_PRESET);
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/image/upload`, {
+        method: 'POST', body: fd
+      });
+      if (!res.ok) throw new Error('Cloudinary error');
+      return await res.json();
+    }
+
+    function dragOver(e) { e.preventDefault(); document.getElementById('upload-zone').classList.add('dragover'); }
+    function dragLeave(e) { e.preventDefault(); document.getElementById('upload-zone').classList.remove('dragover'); }
+    function dropFiles(e) {
+      e.preventDefault();
+      document.getElementById('upload-zone').classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    }
+
+    function handleFiles(files) {
+      const valid = Array.from(files).filter(f => f.type.startsWith('image/'));
+      if (!valid.length) { showAlert('이미지 파일만 올려주세요!', 'error'); return; }
+      if (pendingFiles.length + valid.length > 20) {
+        showAlert('한 번에 최대 20장까지 등록 가능합니다.', 'error');
+        return;
+      }
+      valid.forEach(f => {
+        pendingFiles.push({ id: Math.random().toString(36).substr(2, 9), file: f, blob: null, status: 'pending' });
+      });
+      renderPreview();
+      document.getElementById('pending-card').style.display = 'block';
+
+      pendingFiles.filter(f => !f.blob && f.status === 'pending').forEach(async pf => {
+        pf.blob = await resizeToBlob(pf.file);
+      });
+    }
+
+    function renderPreview() {
+      document.getElementById('pending-count').textContent = pendingFiles.length;
+      document.getElementById('preview-grid').innerHTML = pendingFiles.map(pf => {
+        const url = URL.createObjectURL(pf.file);
+        const sc = pf.status === 'done' ? 'status-done' : pf.status === 'error' ? 'status-error' : 'status-pending';
+        const st = pf.status === 'done' ? '완료' : pf.status === 'error' ? '오류' : '대기';
+        return `<div class="preview-item">
         <img src="${url}">
         ${pf.status === 'pending' ? `<button class="remove-btn" onclick="removeFile('${pf.id}')"></button>` : ''}
         <div class="status-badge ${sc}" id="badge-${pf.id}">${st}</div>
       </div>`;
-    }).join('');
-  }
-
-  function removeFile(id) {
-    pendingFiles = pendingFiles.filter(f => f.id !== id);
-    if (!pendingFiles.length) document.getElementById('pending-card').style.display = 'none';
-    else renderPreview();
-  }
-
-  function clearPending() {
-    pendingFiles = [];
-    document.getElementById('pending-card').style.display = 'none';
-  }
-
-  async function uploadAll() {
-    const toUpload = pendingFiles.filter(f => f.status === 'pending');
-    if (!toUpload.length) return;
-
-    const btn = document.getElementById('upload-btn');
-    btn.disabled = true;
-    document.getElementById('progress-wrap').style.display = 'block';
-
-    let done = 0; const total = toUpload.length;
-
-    const updateStatus = () => {
-      document.getElementById('progress-bar').style.width = (done / total * 100) + '%';
-      document.getElementById('upload-status').textContent =
-        `사진 변환 및 업로드 중... ${done}/${total}장 (${Math.round(done/total*100)}%)`;
-    };
-    updateStatus();
-
-    for (let i = 0; i < toUpload.length; i += PARALLEL) {
-      const chunk = toUpload.slice(i, i + PARALLEL);
-      await Promise.all(chunk.map(async pf => {
-        try {
-          const badge = document.getElementById('badge-' + pf.id);
-          if (badge) { badge.className = 'status-badge status-pending'; badge.textContent = '변환중'; }
-          const blob = pf.blob || await resizeToBlob(pf.file);
-          if (!blob) throw new Error('변환 실패');
-          if (badge) { badge.textContent = '업로드'; }
-          const fileName = `${Date.now()}_${pf.file.name.replace(/\s/g, '_')}`;
-          const result = await uploadToCloudinary(blob, fileName);
-
-          await db.collection('uploads').add({
-            userId: studentId,
-            userName: studentName,
-            fileName: result.public_id,
-            originalName: pf.file.name,
-            url: result.secure_url,
-            cloudinaryId: result.public_id,
-            labeled: false,
-            width: TARGET_SIZE,
-            height: TARGET_SIZE,
-            created_at: new Date().toISOString(),
-            teamCode: teamCode
-          });
-
-          pf.status = 'done';
-          if (badge) { badge.className = 'status-badge status-done'; badge.textContent = '완료'; }
-        } catch (e) {
-          pf.status = 'error';
-          const badge = document.getElementById('badge-' + pf.id);
-          if (badge) { badge.className = 'status-badge status-error'; badge.textContent = '오류'; }
-          console.error(e);
-        }
-        done++;
-        updateStatus();
-      }));
+      }).join('');
     }
 
-    document.getElementById('upload-status').textContent = `${done}장 업로드 완료!`;
-    document.getElementById('progress-bar').style.width = '100%';
-    btn.disabled = false;
-    loadCurrentView();
-
-    // 점수 보상 (+20점)
-    try {
-      const userRef = db.collection('students').doc(studentId);
-      const userDoc = await userRef.get();
-      const currentScore = userDoc.exists ? (userDoc.data().score || 0) : 0;
-      const questsDone = userDoc.exists ? (userDoc.data().questsDone || 0) : 0;
-
-      await userRef.set({
-        score: currentScore + 20,
-        questsDone: Math.max(questsDone, 3),
-        q3_done: true,
-        q3Done: true
-      }, { merge: true });
-
-      const newScore = currentScore + 20;
-      localStorage.setItem("elementary_score", newScore);
-      localStorage.setItem("quest3_completed", "true");
-      localStorage.setItem("elementary_q3_done", "true");
-      document.getElementById('dispScore').textContent = `${newScore}점`;
-      showAlert('퀘스트 3 사진 수집 완료! +20점 획득!', 'success');
-    } catch(e) {
-      console.error(e);
+    function removeFile(id) {
+      pendingFiles = pendingFiles.filter(f => f.id !== id);
+      if (!pendingFiles.length) document.getElementById('pending-card').style.display = 'none';
+      else renderPreview();
     }
-  }
 
-  // 내가 올린 사진 목록
-  async function loadMyUploads() {
-    try {
-      const snap = await db.collection('uploads')
-        .where('userId', '==', studentId)
-        .get();
+    function clearPending() {
+      pendingFiles = [];
+      document.getElementById('pending-card').style.display = 'none';
+    }
 
-      document.getElementById('my-count').textContent = snap.size;
-      if (snap.empty) {
-        document.getElementById('my-uploads').innerHTML =
-          `<div style="text-align:center; padding:24px; color:#78909C; font-weight:600;">아직 수집한 사진이 없습니다. 상단에서 사진을 올려보세요!</div>`;
-        return;
+    async function uploadAll() {
+      const toUpload = pendingFiles.filter(f => f.status === 'pending');
+      if (!toUpload.length) return;
+
+      const btn = document.getElementById('upload-btn');
+      btn.disabled = true;
+      document.getElementById('progress-wrap').style.display = 'block';
+
+      let done = 0; const total = toUpload.length;
+
+      const updateStatus = () => {
+        document.getElementById('progress-bar').style.width = (done / total * 100) + '%';
+        document.getElementById('upload-status').textContent =
+          `사진 변환 및 업로드 중... ${done}/${total}장 (${Math.round(done / total * 100)}%)`;
+      };
+      updateStatus();
+
+      for (let i = 0; i < toUpload.length; i += PARALLEL) {
+        const chunk = toUpload.slice(i, i + PARALLEL);
+        await Promise.all(chunk.map(async pf => {
+          try {
+            const badge = document.getElementById('badge-' + pf.id);
+            if (badge) { badge.className = 'status-badge status-pending'; badge.textContent = '변환중'; }
+            const blob = pf.blob || await resizeToBlob(pf.file);
+            if (!blob) throw new Error('변환 실패');
+            if (badge) { badge.textContent = '업로드'; }
+            const fileName = `${Date.now()}_${pf.file.name.replace(/\s/g, '_')}`;
+            const result = await uploadToCloudinary(blob, fileName);
+
+            await db.collection('uploads').add({
+              userId: studentId,
+              userName: studentName,
+              fileName: result.public_id,
+              originalName: pf.file.name,
+              url: result.secure_url,
+              cloudinaryId: result.public_id,
+              labeled: false,
+              width: TARGET_SIZE,
+              height: TARGET_SIZE,
+              created_at: new Date().toISOString(),
+              teamCode: teamCode
+            });
+
+            pf.status = 'done';
+            if (badge) { badge.className = 'status-badge status-done'; badge.textContent = '완료'; }
+          } catch (e) {
+            pf.status = 'error';
+            const badge = document.getElementById('badge-' + pf.id);
+            if (badge) { badge.className = 'status-badge status-error'; badge.textContent = '오류'; }
+            console.error(e);
+          }
+          done++;
+          updateStatus();
+        }));
       }
 
-      const docs = snap.docs.sort((a, b) => {
-        const da = a.data().created_at || '';
-        const db = b.data().created_at || '';
-        return db.localeCompare(da);
-      });
+      document.getElementById('upload-status').textContent = `${done}장 업로드 완료!`;
+      document.getElementById('progress-bar').style.width = '100%';
+      btn.disabled = false;
+      loadCurrentView();
 
-      document.getElementById('my-uploads').innerHTML = docs.map(doc => {
-        const d = doc.data();
-        const date = d.created_at ? d.created_at.slice(0, 16).replace('T', ' ') : '';
-        return `<div class="uploaded-item">
+      // 점수 보상 (+20점)
+      try {
+        const userRef = db.collection('students').doc(studentId);
+        const userDoc = await userRef.get();
+        const currentScore = userDoc.exists ? (userDoc.data().score || 0) : 0;
+        const questsDone = userDoc.exists ? (userDoc.data().questsDone || 0) : 0;
+
+        await userRef.set({
+          score: currentScore + 20,
+          questsDone: Math.max(questsDone, 3),
+          q3_done: true,
+          q3Done: true
+        }, { merge: true });
+
+        const newScore = currentScore + 20;
+        localStorage.setItem("elementary_score", newScore);
+        localStorage.setItem("quest3_completed", "true");
+        localStorage.setItem("elementary_q3_done", "true");
+        document.getElementById('dispScore').textContent = `${newScore}점`;
+        showAlert('퀘스트 3 사진 수집 완료! +20점 획득!', 'success');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // 내가 올린 사진 목록
+    async function loadMyUploads() {
+      try {
+        const snap = await db.collection('uploads')
+          .where('userId', '==', studentId)
+          .get();
+
+        document.getElementById('my-count').textContent = snap.size;
+        if (snap.empty) {
+          document.getElementById('my-uploads').innerHTML =
+            `<div style="text-align:center; padding:24px; color:#78909C; font-weight:600;">아직 수집한 사진이 없습니다. 상단에서 사진을 올려보세요!</div>`;
+          return;
+        }
+
+        const docs = snap.docs.sort((a, b) => {
+          const da = a.data().created_at || '';
+          const db = b.data().created_at || '';
+          return db.localeCompare(da);
+        });
+
+        document.getElementById('my-uploads').innerHTML = docs.map(doc => {
+          const d = doc.data();
+          const date = d.created_at ? d.created_at.slice(0, 16).replace('T', ' ') : '';
+          return `<div class="uploaded-item">
           <img class="uploaded-thumb" src="${d.url}" onerror="this.style.opacity='0.3'">
           <div style="flex:1; min-width:80px; overflow:hidden;">
             <div style="font-size:16px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${d.originalName || '사진 데이터'}</div>
@@ -792,52 +844,52 @@
           <div style="font-size:13px; color:#999; flex-shrink:0;">${date}</div>
           <button class="del-btn" onclick="deleteUpload('${doc.id}')">삭제</button>
         </div>`;
-      }).join('');
+        }).join('');
 
-    } catch (e) {
-      document.getElementById('my-uploads').innerHTML =
-        `<div style="color:#C62828; padding:16px; font-weight:bold;">로딩 오류: ${e.message}</div>`;
+      } catch (e) {
+        document.getElementById('my-uploads').innerHTML =
+          `<div style="color:#C62828; padding:16px; font-weight:bold;">로딩 오류: ${e.message}</div>`;
+      }
     }
-  }
 
-  // 팀 활동 내역 조회
-  async function loadTeamUploads() {
-    if (!teamCode) {
-      document.getElementById('my-uploads').innerHTML =
-        `<div style="text-align:center; padding:24px; color:#E65100; font-weight:bold;">
+    // 팀 활동 내역 조회
+    async function loadTeamUploads() {
+      if (!teamCode) {
+        document.getElementById('my-uploads').innerHTML =
+          `<div style="text-align:center; padding:24px; color:#E65100; font-weight:bold;">
           아직 팀 코드가 등록되지 않았습니다.<br>
           <a href="main.html" style="color:#0277BD; text-decoration:underline;">메인 화면으로 가서 팀 코드를 입력</a>해주세요!
         </div>`;
-      document.getElementById('my-count').textContent = '0';
-      return;
-    }
-
-    try {
-      const snap = await db.collection('uploads')
-        .where('teamCode', '==', teamCode)
-        .get();
-
-      document.getElementById('my-count').textContent = snap.size;
-      if (snap.empty) {
-        document.getElementById('my-uploads').innerHTML =
-          `<div style="text-align:center; padding:24px; color:#78909C; font-weight:600;">
-            우리 모둠('${teamCode}') 친구들이 아직 등록한 사진이 없습니다.<br>친구들과 함께 사진을 올려보세요!
-          </div>`;
+        document.getElementById('my-count').textContent = '0';
         return;
       }
 
-      const docs = snap.docs.sort((a, b) => {
-        const da = a.data().created_at || '';
-        const db = b.data().created_at || '';
-        return db.localeCompare(da);
-      });
+      try {
+        const snap = await db.collection('uploads')
+          .where('teamCode', '==', teamCode)
+          .get();
 
-      document.getElementById('my-uploads').innerHTML = docs.map(doc => {
-        const d = doc.data();
-        const date = d.created_at ? d.created_at.slice(0, 16).replace('T', ' ') : '';
-        const isMine = d.userId === studentId;
-        const uploaderLabel = isMine ? '나' : (d.userName || '모둠원');
-        return `<div class="uploaded-item" style="${isMine ? 'border-color:#81C784;' : 'border-color:#90CAF9; background:#F0F8FF;'}">
+        document.getElementById('my-count').textContent = snap.size;
+        if (snap.empty) {
+          document.getElementById('my-uploads').innerHTML =
+            `<div style="text-align:center; padding:24px; color:#78909C; font-weight:600;">
+            우리 모둠('${teamCode}') 친구들이 아직 등록한 사진이 없습니다.<br>친구들과 함께 사진을 올려보세요!
+          </div>`;
+          return;
+        }
+
+        const docs = snap.docs.sort((a, b) => {
+          const da = a.data().created_at || '';
+          const db = b.data().created_at || '';
+          return db.localeCompare(da);
+        });
+
+        document.getElementById('my-uploads').innerHTML = docs.map(doc => {
+          const d = doc.data();
+          const date = d.created_at ? d.created_at.slice(0, 16).replace('T', ' ') : '';
+          const isMine = d.userId === studentId;
+          const uploaderLabel = isMine ? '나' : (d.userName || '모둠원');
+          return `<div class="uploaded-item" style="${isMine ? 'border-color:#81C784;' : 'border-color:#90CAF9; background:#F0F8FF;'}">
           <img class="uploaded-thumb" src="${d.url}" onerror="this.style.opacity='0.3'">
           <div style="flex:1; min-width:80px; overflow:hidden;">
             <div style="font-size:16px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
@@ -854,34 +906,35 @@
           <div style="font-size:13px; color:#999; flex-shrink:0;">${date}</div>
           ${isMine ? `<button class="del-btn" onclick="deleteUpload('${doc.id}')">삭제</button>` : ''}
         </div>`;
-      }).join('');
+        }).join('');
 
-    } catch (e) {
-      document.getElementById('my-uploads').innerHTML =
-        `<div style="color:#C62828; padding:16px; font-weight:bold;">로딩 오류: ${e.message}</div>`;
+      } catch (e) {
+        document.getElementById('my-uploads').innerHTML =
+          `<div style="color:#C62828; padding:16px; font-weight:bold;">로딩 오류: ${e.message}</div>`;
+      }
     }
-  }
 
-  async function deleteUpload(docId) {
-    if (!confirm('이 사진을 정말 삭제할까요?')) return;
-    try {
-      await db.collection('uploads').doc(docId).delete();
-      loadCurrentView();
-    } catch(e) {
-      alert('삭제 실패: ' + e.message);
+    async function deleteUpload(docId) {
+      if (!confirm('이 사진을 정말 삭제할까요?')) return;
+      try {
+        await db.collection('uploads').doc(docId).delete();
+        loadCurrentView();
+      } catch (e) {
+        alert('삭제 실패: ' + e.message);
+      }
     }
-  }
 
-  function showAlert(msg, type = 'success') {
-    const c = { success: 'alert-success', error: 'alert-error' };
-    document.getElementById('main-alert').innerHTML = `<div class="alert ${c[type] || ''}">${msg}</div>`;
-    setTimeout(() => {
-      const el = document.getElementById('main-alert');
-      if (el) el.innerHTML = '';
-    }, 5000);
-  }
+    function showAlert(msg, type = 'success') {
+      const c = { success: 'alert-success', error: 'alert-error' };
+      document.getElementById('main-alert').innerHTML = `<div class="alert ${c[type] || ''}">${msg}</div>`;
+      setTimeout(() => {
+        const el = document.getElementById('main-alert');
+        if (el) el.innerHTML = '';
+      }, 5000);
+    }
 
-  initUser();
-</script>
+    initUser();
+  </script>
 </body>
+
 </html>

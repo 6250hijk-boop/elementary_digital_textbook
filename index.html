@@ -16,6 +16,23 @@
         for (const k of keys) caches.delete(k);
       });
     }
+
+    // 동적 디바이스 감지: 스마트폰 및 태블릿 접속 시 앱 모드 클래스 부여 (노트북은 기존 유지)
+    function syncDeviceMode() {
+        var ua = navigator.userAgent || '';
+        var isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i.test(ua);
+        var isIPadOS = (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1 && !/Windows/i.test(ua));
+        var isDesktopOS = /Windows NT|Linux x86_64|CrOS/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints <= 1);
+        var isSmallMobileScreen = window.innerWidth <= 768 && !isDesktopOS;
+
+        if (isMobileUA || isIPadOS || isSmallMobileScreen) {
+          document.documentElement.classList.add('is-mobile-app');
+        } else {
+          document.documentElement.classList.remove('is-mobile-app');
+        }
+      }
+      syncDeviceMode();
+    window.addEventListener('resize', syncDeviceMode);
   </script>
   <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua 사용 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
@@ -46,30 +63,94 @@
     }
 
     body {
-      background: url('images/bs-login.png') no-repeat center center fixed;
+      background-image: url('images/bs-bs.png'), url('images/bs-bg.png');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-attachment: fixed;
       background-size: cover;
       min-height: 100vh;
       display: flex;
+      overflow: hidden;
     }
 
-    /* 화면을 세로로 2분할 (좌측: bs-login 배경 아트, 우측: 로그인 팝업 카드) */
+    /* 화면을 세로로 2분할 (좌측 50%: 상단 bs-logo + 하단 bs-char, 우측 50%: 로그인 팝업 카드) */
     .login-split-container {
       display: flex;
       width: 100vw;
-      min-height: 100vh;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
     }
 
     .login-split-left {
+      flex: 0 0 50%;
+      width: 50%;
+      max-width: 50%;
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 28px 24px 0 36px;
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+
+    /* 좌측 상단 bs-logo (로고) */
+    .login-logo-box {
+      width: 100%;
+      height: 22vh;
+      max-height: 165px;
+      min-height: 76px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      flex-shrink: 0;
+      margin-bottom: 8px;
+    }
+
+    .login-logo-img {
+      max-width: 86%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      object-position: left top;
+      filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.55));
+    }
+
+    /* 좌측 bs-logo 아래에 위치하는 bs-char (웹앱 캐릭터) */
+    .login-char-box {
       flex: 1;
-      /* 좌측 50%는 bs-login 배경이 깔끔하게 보이도록 비워둠 */
+      min-height: 0;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .login-char-img {
+      max-width: 95%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      object-position: bottom center;
+      filter: drop-shadow(0 16px 34px rgba(0, 0, 0, 0.6));
     }
 
     .login-split-right {
-      flex: 1;
+      flex: 0 0 50%;
+      width: 50%;
+      max-width: 50%;
+      height: 100vh;
+      height: 100dvh;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 32px 24px;
+      box-sizing: border-box;
     }
 
     /* 우측 영역의 80% 정도 크기로 제작된 로그인 팝업 카드 */
@@ -166,44 +247,99 @@
       transform: none;
     }
 
-    @media (max-width: 820px) {
-      .login-split-container {
-        flex-direction: column;
-      }
-      .login-split-left {
-        display: none;
-      }
-      .login-split-right {
-        width: 100%;
-        padding: 24px 16px;
-      }
-      .login-card {
-        width: 90%;
-        max-width: 440px;
-        padding: 36px 24px;
-      }
-      label {
-        font-size: 18px;
-      }
-      input[type="text"] {
-        font-size: 16px;
-        padding: 14px 16px;
-      }
-      .btn-start {
-        font-size: 21px;
-        padding: 16px;
-      }
+    /* 노트북/PC에서는 모바일 앱 전용 헤더 숨김 (기존 화면 100% 유지) */
+    .mobile-app-header {
+      display: none;
+    }
+
+    /* 스마트폰 및 태블릿 전용 앱 UI (html.is-mobile-app 전용: bs-char 미사용, 앱 형태 로그인 화면) */
+    html.is-mobile-app body {
+      background:
+        linear-gradient(180deg, rgba(6, 27, 80, 0.76) 0%, rgba(11, 17, 32, 0.94) 100%),
+        url('images/bs-bg.png') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+    html.is-mobile-app .login-split-container {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 24px 18px 32px;
+    }
+    html.is-mobile-app .login-split-left {
+      display: none !important;
+    }
+    html.is-mobile-app .login-split-right {
+      flex: none;
+      width: 100%;
+      max-width: 440px;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    html.is-mobile-app .mobile-app-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+      width: 100%;
+      text-align: center;
+    }
+    html.is-mobile-app .mobile-app-logo {
+      width: clamp(200px, 45vw, 280px);
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.6));
+    }
+    html.is-mobile-app .mobile-app-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(6, 27, 80, 0.88);
+      border: 1.5px solid #38BDF8;
+      color: #E0F2FE;
+      font-family: 'Jua', sans-serif;
+      font-size: 14px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    }
+    html.is-mobile-app .login-card {
+      width: 100%;
+      max-width: 440px;
+      min-width: 0;
+      padding: 30px 24px;
+      border-radius: 26px;
+      background: rgba(15, 71, 192, 0.96);
+      border: 2px solid rgba(255, 255, 255, 0.28);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
     }
   </style>
 </head>
 <body>
 
 <div class="login-split-container">
-  <!-- 좌측 50% 분할 영역: bs-login 배경 아트 표시 -->
-  <div class="login-split-left"></div>
+  <!-- 좌측 50% 분할 영역: 상단 bs-logo(로고) + 하단 bs-char(웹앱 캐릭터) -->
+  <div class="login-split-left">
+    <div class="login-logo-box">
+      <img src="images/bs-logo.png" alt="AI 자원순환 탐정단 로고" class="login-logo-img">
+    </div>
+    <div class="login-char-box">
+      <img src="images/bs-char.png" alt="AI 자원순환 탐정단 웹앱 캐릭터" class="login-char-img">
+    </div>
+  </div>
 
-  <!-- 우측 50% 분할 영역: 80% 크기의 로그인 팝업 카드 -->
+  <!-- 우측 50% 분할 영역: 로그인 팝업 카드 (스마트폰/태블릿 접속 시 앱 형태로 전환) -->
   <div class="login-split-right">
+    <div class="mobile-app-header">
+      <img src="images/bs-logo.png" alt="AI 자원순환 탐정단" class="mobile-app-logo">
+      <span class="mobile-app-badge">📱 AI 자원순환 탐정단 스마트 앱</span>
+    </div>
     <div class="login-card">
       <!-- 모둠 코드 & 학생 닉네임(별명) 입력 -->
       <div class="form-group">

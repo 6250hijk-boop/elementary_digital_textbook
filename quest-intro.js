@@ -1,5 +1,22 @@
-// quest-intro.js: QUEST 1~7 대화형 비주얼 인트로 시스템
+// quest-intro.js: QUEST 1~7 대화형 비주얼 인트로 시스템 및 모바일/태블릿 앱 UI 동적 대응
 (function() {
+  // 동적 디바이스 감지: 스마트폰 및 태블릿 접속 시에만 앱 모드 클래스 부여 (노트북/PC는 창 크기나 터치 드라이버와 무관하게 노트북 UI 유지)
+  function syncDeviceMode() {
+    const ua = navigator.userAgent || '';
+    const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i.test(ua);
+    const isIPadOS = (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1 && !/Windows/i.test(ua));
+    const isDesktopOS = /Windows NT|Linux x86_64|CrOS/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints <= 1);
+    const isSmallMobileScreen = window.innerWidth <= 768 && !isDesktopOS;
+
+    if (isMobileUA || isIPadOS || isSmallMobileScreen) {
+      document.documentElement.classList.add('is-mobile-app');
+    } else {
+      document.documentElement.classList.remove('is-mobile-app');
+    }
+  }
+  syncDeviceMode();
+  window.addEventListener('resize', syncDeviceMode);
+
   function detectQuestNumber() {
     const fullPath = window.location.pathname + window.location.search + window.location.hash;
     const match = fullPath.match(/quest(\d+)/i);
@@ -14,12 +31,10 @@
   const qNum = detectQuestNumber();
   if (qNum < 1 || qNum > 7) return;
 
-  // 인트로 표시 여부 판별 (요청: q1부터 q7까지 intro는 퀘스트 완료했어도 항상 보이도록 설정)
+  // 인트로 표시 여부 판별 (q1~q7 진입 시 항상 대화형 인트로 표시)
   function shouldSkipIntro(num) {
-    // 퀘스트 완료 여부나 세션과 관계없이 퀘스트 진입 시 항상 대화형 인트로 표시
     return false;
   }
-
 
   const INTRO_DIALOGS = {
     1: {
@@ -83,22 +98,23 @@
   const currentIntro = INTRO_DIALOGS[qNum];
   if (!currentIntro) return;
 
-  // 스타일 주입
+  // 스타일 주입 (화면을 세로로 나눴을 때 좌측 50% / 우측 50% 정확히 분할)
   const styleEl = document.createElement('style');
   styleEl.textContent = `
     .quest-intro-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 999999;
-      width: 100vw;
-      height: 100vh;
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 999999 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      height: 100dvh !important;
       background: #000000;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-items: center;
-      padding: 24px;
-      overflow: hidden;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: stretch !important;
+      justify-content: space-between !important;
+      padding: 0 !important;
+      overflow: hidden !important;
       transition: opacity 0.4s ease, visibility 0.4s ease;
       cursor: pointer;
       user-select: none;
@@ -112,7 +128,7 @@
       object-fit: cover;
       object-position: center;
       z-index: 1;
-      filter: brightness(0.9);
+      filter: brightness(0.92);
       transition: transform 10s ease;
       transform: scale(1.02);
     }
@@ -125,27 +141,52 @@
       position: absolute;
       inset: 0;
       z-index: 2;
-      background: linear-gradient(to top, rgba(15, 23, 42, 0.96) 0%, rgba(15, 23, 42, 0.45) 45%, rgba(0, 0, 0, 0.2) 100%);
+      background:
+        radial-gradient(circle at 75% 50%, rgba(6, 27, 80, 0.55) 0%, transparent 65%),
+        linear-gradient(to right, rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.55) 50%, rgba(15, 23, 42, 0.85) 100%);
       pointer-events: none;
+    }
+
+    /* 좌측 50% 영역: 상단 bs-logo + 하단 bs-char (서로 절대 겹치지 않도록 상하 분리 배치) */
+    .quest-intro-left-col {
+      position: relative;
+      z-index: 10;
+      width: 50% !important;
+      flex: 0 0 50% !important;
+      max-width: 50% !important;
+      height: 100vh !important;
+      height: 100dvh !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 16px 0 32px;
+      pointer-events: none;
+      box-sizing: border-box;
     }
 
     /* 좌측 상단 bs-logo */
     .quest-intro-logo-wrap {
-      position: absolute;
-      top: 24px;
-      left: 28px;
-      z-index: 12;
+      width: 100%;
+      height: 20vh;
+      max-height: 150px;
+      min-height: 68px;
       display: flex;
-      align-items: center;
-      pointer-events: none;
+      align-items: flex-start;
+      justify-content: flex-start;
+      flex-shrink: 0;
+      margin-bottom: 8px;
       animation: introLogoFade 0.6s ease forwards;
     }
 
     .quest-intro-logo-img {
-      height: 64px;
-      max-width: 200px;
+      max-width: 85%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
       object-fit: contain;
-      filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.7));
+      object-position: left top;
+      filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.7));
     }
 
     @keyframes introLogoFade {
@@ -153,32 +194,46 @@
       100% { opacity: 1; transform: translateY(0); }
     }
 
-    /* 좌측 크게 bs-char (대화창과 겹치면 항상 대화창이 위로 가도록 z-index: 6 설정) */
+    /* 좌측 하단 bs-char (로고 아래 남은 영역에만 배치되어 bs-logo 및 우측 대화창과 겹치지 않음) */
     .quest-intro-char-wrap {
-      position: absolute;
-      bottom: 0;
-      left: 2%;
-      height: 82vh;
-      max-height: 860px;
-      z-index: 6; /* 대화창(z-index: 15)보다 아래에 위치 */
+      flex: 1;
+      min-height: 0;
+      width: 100%;
       display: flex;
       align-items: flex-end;
-      pointer-events: none;
+      justify-content: center;
       animation: introCharSlideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
     .quest-intro-char-img {
-      height: 100%;
+      max-height: 100%;
+      max-width: 100%;
       width: auto;
-      max-width: 46vw;
+      height: auto;
       object-fit: contain;
-      object-position: bottom left;
+      object-position: bottom center;
       filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.75));
     }
 
     @keyframes introCharSlideIn {
-      0% { opacity: 0; transform: translateX(-50px) scale(0.95); }
+      0% { opacity: 0; transform: translateX(-40px) scale(0.95); }
       100% { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    /* 우측 50% 영역: 화면을 세로로 나눴을 때 우측 50%만 사용하며 대화창을 우측 중앙에 배치 */
+    .quest-intro-right-col {
+      position: relative;
+      z-index: 15;
+      width: 50% !important;
+      flex: 0 0 50% !important;
+      max-width: 50% !important;
+      height: 100vh !important;
+      height: 100dvh !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 64px 40px 44px 28px !important;
+      box-sizing: border-box !important;
     }
 
     .quest-intro-skip-btn {
@@ -207,65 +262,114 @@
       transform: scale(1.05);
     }
 
-    /* 하단 대화창 (대화창과 bs-char이 겹치면 항상 대화창이 위로 가도록 z-index: 15 설정) */
+    /* 우측 말풍선 대화창 (우측 50% 영역 내부에 꽉 차게 배치, bs-logo 및 bs-char와 절대 겹치지 않음) */
     .quest-intro-dialog-card {
       position: relative;
-      z-index: 15; /* bs-char(z-index: 6)보다 항상 위! */
-      width: 100%;
-      max-width: 960px;
-      background: rgba(6, 27, 80, 0.94);
-      border: 2.5px solid #38BDF8;
-      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.8), 0 0 28px rgba(56, 189, 248, 0.45);
-      border-radius: 26px;
-      padding: 26px 36px;
+      z-index: 15;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      background: rgba(6, 27, 80, 0.95);
+      border: 3px solid #38BDF8;
+      box-shadow: 0 20px 55px rgba(0, 0, 0, 0.8), 0 0 32px rgba(56, 189, 248, 0.4);
+      border-radius: 30px;
+      padding: 34px 36px;
       backdrop-filter: blur(14px);
-      margin-bottom: 24px;
       animation: dialogPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       cursor: pointer;
+      box-sizing: border-box;
     }
 
-    @media (max-width: 768px) {
-      .quest-intro-logo-img { height: 46px; }
-      .quest-intro-char-wrap { height: 60vh; max-width: 65vw; }
-      .quest-intro-dialog-card { padding: 18px 22px; margin-bottom: 14px; }
+    /* 말풍선 꼬리 (좌측 50% 영역의 bs-char 방향을 가리킴) */
+    .quest-intro-dialog-card::before {
+      content: '';
+      position: absolute;
+      left: -26px;
+      top: 52%;
+      transform: translateY(-50%);
+      border-width: 16px 26px 16px 0;
+      border-style: solid;
+      border-color: transparent #38BDF8 transparent transparent;
+      filter: drop-shadow(-6px 4px 8px rgba(0, 0, 0, 0.45));
+    }
+
+    .quest-intro-dialog-card::after {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: 52%;
+      transform: translateY(-50%);
+      border-width: 13px 21px 13px 0;
+      border-style: solid;
+      border-color: transparent rgba(6, 27, 80, 0.96) transparent transparent;
     }
 
     @keyframes dialogPop {
-      0% { opacity: 0; transform: translateY(20px) scale(0.97); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
+      0% { opacity: 0; transform: translateX(20px) scale(0.96); }
+      100% { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    .quest-intro-speaker-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1.5px solid rgba(56, 189, 248, 0.28);
     }
 
     .quest-intro-speaker-tag {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 10px;
       background: linear-gradient(135deg, #0284C7, #0369A1);
       color: #FFFFFF;
       font-family: 'Jua', sans-serif;
-      font-size: 15px;
-      padding: 5px 14px;
-      border-radius: 10px;
-      border: 1px solid #38BDF8;
-      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
-      margin-bottom: 12px;
+      font-size: 17px;
+      padding: 6px 16px 6px 8px;
+      border-radius: 30px;
+      border: 1.5px solid #38BDF8;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.45);
+    }
+
+    .quest-intro-speaker-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #0F172A;
+      border: 2px solid #FACC15;
+      object-fit: contain;
+      flex-shrink: 0;
     }
 
     .quest-intro-quest-badge {
-      font-size: 12px;
-      background: rgba(255, 255, 255, 0.25);
-      padding: 1px 7px;
-      border-radius: 6px;
-      font-weight: 800;
+      font-size: 13px;
+      background: #FACC15;
+      color: #0F172A;
+      padding: 2px 9px;
+      border-radius: 12px;
+      font-weight: 900;
+    }
+
+    .quest-intro-quest-title-label {
+      font-family: 'Jua', sans-serif;
+      font-size: 18px;
+      color: #FACC15;
+      letter-spacing: 0.3px;
     }
 
     .quest-intro-text {
       font-family: 'Pretendard', sans-serif;
-      font-size: clamp(17px, 2.2vw, 22px);
+      font-size: clamp(18px, 2vw, 24px);
       font-weight: 700;
       color: #F8FAFC;
-      line-height: 1.7;
+      line-height: 1.75;
       word-break: keep-all;
-      min-height: 64px;
+      min-height: 110px;
+      display: flex;
+      align-items: center;
       text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
     }
 
@@ -273,22 +377,26 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 14px;
-      padding-top: 10px;
-      border-top: 1px dashed rgba(255, 255, 255, 0.2);
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.22);
     }
 
     .quest-intro-step-hint {
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 14px;
+      font-weight: 800;
       color: #38BDF8;
+      background: rgba(56, 189, 248, 0.14);
+      padding: 5px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
     .quest-intro-click-prompt {
-      font-size: 13.5px;
+      font-size: 15px;
       font-weight: 800;
       color: #FACC15;
       animation: promptBlink 1.4s infinite ease-in-out;
@@ -377,6 +485,98 @@
       0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
       50% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
     }
+
+    /* ============================================================
+       스마트폰 & 태블릿 앱 모드 (html.is-mobile-app 전용: bs-char 미사용, 대화창은 동일하게 우측 50% 유지)
+       ============================================================ */
+    html.is-mobile-app .quest-intro-overlay {
+      flex-direction: row !important;
+      justify-content: space-between !important;
+      align-items: stretch !important;
+      padding: 0 !important;
+    }
+    html.is-mobile-app .quest-intro-left-col {
+      width: 50% !important;
+      flex: 0 0 50% !important;
+      max-width: 50% !important;
+      height: 100vh !important;
+      height: 100dvh !important;
+      padding: 16px 12px !important;
+      flex-direction: column !important;
+      justify-content: flex-start !important;
+      align-items: flex-start !important;
+    }
+    html.is-mobile-app .quest-intro-logo-wrap {
+      height: auto !important;
+      max-height: 90px !important;
+      margin-bottom: 0 !important;
+      width: 100% !important;
+    }
+    html.is-mobile-app .quest-intro-logo-img {
+      max-width: 85% !important;
+      max-height: 80px !important;
+    }
+    html.is-mobile-app .quest-intro-char-wrap,
+    html.is-mobile-app .quest-intro-speaker-avatar,
+    html.is-mobile-app .author-avatar,
+    html.is-mobile-app .author-char-icon-circle,
+    html.is-mobile-app #dispWriterCharImg {
+      display: none !important;
+    }
+    html.is-mobile-app .quest-intro-right-col {
+      width: 50% !important;
+      flex: 0 0 50% !important;
+      max-width: 50% !important;
+      height: 100vh !important;
+      height: 100dvh !important;
+      padding: 48px 16px 24px 12px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    html.is-mobile-app .quest-intro-dialog-card {
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 20px 18px !important;
+      border-radius: 22px !important;
+    }
+    html.is-mobile-app .quest-intro-dialog-card::before,
+    html.is-mobile-app .quest-intro-dialog-card::after {
+      display: none !important;
+    }
+    html.is-mobile-app .app-header,
+    html.is-mobile-app header,
+    html.is-mobile-app .select-header {
+      padding: 10px 14px !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+    }
+    html.is-mobile-app .header-bs-logo {
+      height: 32px !important;
+    }
+    html.is-mobile-app .btn-quest-map {
+      padding: 6px 12px !important;
+      font-size: 14px !important;
+      border-radius: 10px !important;
+    }
+    html.is-mobile-app .header-main-title,
+    html.is-mobile-app .header-title {
+      font-size: 18px !important;
+    }
+    html.is-mobile-app .header-right,
+    html.is-mobile-app .header-info-group {
+      gap: 6px !important;
+      flex-wrap: wrap !important;
+    }
+    html.is-mobile-app .student-badge,
+    html.is-mobile-app .team-badge,
+    html.is-mobile-app .header-team,
+    html.is-mobile-app .score-badge,
+    html.is-mobile-app .header-score,
+    html.is-mobile-app .btn-intro-replay {
+      font-size: 13px !important;
+      padding: 5px 10px !important;
+    }
   `;
   document.head.appendChild(styleEl);
 
@@ -415,14 +615,13 @@
   }
 
   function createIntroDOM(force = false) {
-    // 세션 건너뛰기 조건 확인 (force === true인 경우 수동 다시보기이므로 무조건 표시)
     if (!force && shouldSkipIntro(qNum)) {
       return;
     }
 
-    // 이미 오버레이가 생성되어 있으면 중복 생성 방지
-    if (document.getElementById('questIntroOverlay')) {
-      return;
+    const existing = document.getElementById('questIntroOverlay');
+    if (existing) {
+      existing.remove();
     }
 
     const overlay = document.createElement('div');
@@ -433,29 +632,36 @@
       <img src="images/bs-bg.png" alt="퀘스트 인트로 배경" class="quest-intro-bg-img" onerror="this.style.display='none'">
       <div class="quest-intro-vignette"></div>
 
-      <!-- 좌측 상단 bs-logo -->
-      <div class="quest-intro-logo-wrap">
-        <img src="images/bs-logo.png" alt="AI 자원순환 탐정단 로고" class="quest-intro-logo-img">
+      <!-- 좌측 50% 영역: 상단 bs-logo + 하단 bs-char (서로 겹치지 않도록 분리) -->
+      <div class="quest-intro-left-col">
+        <div class="quest-intro-logo-wrap">
+          <img src="images/bs-logo.png" alt="AI 자원순환 탐정단 로고" class="quest-intro-logo-img">
+        </div>
+        <div class="quest-intro-char-wrap">
+          <img src="images/bs-char.png" alt="탐정 캐릭터" class="quest-intro-char-img">
+        </div>
       </div>
 
-      <!-- 좌측 크게 bs-char (대화창과 겹치면 대화창이 위로 오도록 설정) -->
-      <div class="quest-intro-char-wrap">
-        <img src="images/bs-char.png" alt="탐정 캐릭터" class="quest-intro-char-img">
+      <!-- 우측 50% 영역: 화면을 세로로 나눴을 때 우측 50%만 사용하는 말풍선 대화창 -->
+      <div class="quest-intro-right-col">
+        <div class="quest-intro-dialog-card" id="questIntroDialogCard">
+          <div class="quest-intro-speaker-row">
+            <div class="quest-intro-speaker-tag">
+              <img src="images/bs-char.png" alt="탐정 캐릭터" class="quest-intro-speaker-avatar">
+              <span class="quest-intro-quest-badge">Q${qNum}</span>
+              <span id="questIntroSpeakerText">${currentIntro.speaker}</span>
+            </div>
+            <span class="quest-intro-quest-title-label">${currentIntro.title}</span>
+          </div>
+          <div class="quest-intro-text" id="questIntroDialogText"></div>
+          <div class="quest-intro-footer">
+            <span class="quest-intro-step-hint" id="questIntroStepHint">대화 1 / ${currentIntro.lines.length}</span>
+            <span class="quest-intro-click-prompt" id="questIntroClickPrompt">화면을 클릭하여 계속 진행 ▶</span>
+          </div>
+        </div>
       </div>
 
       <button class="quest-intro-skip-btn" id="questIntroSkipBtn">스킵 (건너뛰기)</button>
-
-      <div class="quest-intro-dialog-card" id="questIntroDialogCard">
-        <div class="quest-intro-speaker-tag">
-          <span class="quest-intro-quest-badge">Q${qNum}</span>
-          <span id="questIntroSpeakerText">${currentIntro.speaker}</span>
-        </div>
-        <div class="quest-intro-text" id="questIntroDialogText"></div>
-        <div class="quest-intro-footer">
-          <span class="quest-intro-step-hint" id="questIntroStepHint">대화 1 / ${currentIntro.lines.length}</span>
-          <span class="quest-intro-click-prompt" id="questIntroClickPrompt">화면을 클릭하여 계속 진행 ▶</span>
-        </div>
-      </div>
 
       <!-- 시작하기 팝업 모달 -->
       <div class="quest-intro-modal-wrap" id="questIntroStartModal">
@@ -492,7 +698,6 @@
     renderLine(0);
 
     function nextDialog(e) {
-      // 팝업 박스 자체 클릭 시 대화 넘김 무시
       if (e && e.target && popupBox && popupBox.contains(e.target)) {
         return;
       }
@@ -506,7 +711,6 @@
         playTone(620);
         renderLine(currentLineIndex);
       } else {
-        // 모든 대화 완료 -> 시작하기 팝업 띄우기
         playTone(850, 0.15);
         modalWrapEl.style.display = 'flex';
       }
@@ -541,20 +745,14 @@
     }
   }
 
-  // 인트로 수동 다시보기 함수 (헤더 버튼 또는 개발자 콘솔에서 호출 가능)
   window.replayQuestIntro = function() {
     try {
       sessionStorage.removeItem(`quest_intro_dismissed_${qNum}`);
       sessionStorage.removeItem(`quest${qNum}_just_completed`);
     } catch(e) {}
-    const existing = document.getElementById('questIntroOverlay');
-    if (existing) {
-      existing.remove();
-    }
     createIntroDOM(true);
   };
 
-  // 초기 실행: 인트로 표시
   function initIntro() {
     if (!shouldSkipIntro(qNum)) {
       createIntroDOM(false);

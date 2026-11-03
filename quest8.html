@@ -822,7 +822,97 @@
     .toast-box.show {
       transform: translateX(-50%) translateY(0);
     }
+
+    /* ============================================================
+       [동적 반응형] 스마트폰 / 태블릿 앱 UI (노트북 화면은 100% 유지, bs-char 미사용)
+       ============================================================ */
+    @media (max-width: 1024px) {
+      #myHeaderChar,
+      #myHeaderCharImg {
+        display: none !important;
+      }
+
+      .app-header {
+        padding: 10px 14px !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+      }
+
+      .header-bs-logo {
+        height: 32px !important;
+      }
+
+      .btn-quest-map {
+        font-size: 13px !important;
+        padding: 6px 12px !important;
+        border-radius: 10px !important;
+      }
+
+      .header-title {
+        font-size: 16px !important;
+      }
+
+      .header-right {
+        gap: 6px !important;
+      }
+
+      .student-badge,
+      .score-badge {
+        font-size: 12px !important;
+        padding: 4px 10px !important;
+      }
+
+      main {
+        padding: 12px !important;
+        gap: 14px !important;
+      }
+
+      .hero-banner {
+        padding: 16px 18px !important;
+        border-radius: 18px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+      }
+
+      .hero-banner-title {
+        font-size: 20px !important;
+      }
+
+      .hero-banner-desc {
+        font-size: 14px !important;
+      }
+
+      .workspace-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+      }
+    }
+
+    html.is-mobile-app #myHeaderChar,
+    html.is-mobile-app #myHeaderCharImg {
+      display: none !important;
+    }
   </style>
+  <script>
+    (function () {
+      function syncDeviceMode() {
+        var ua = navigator.userAgent || '';
+        var isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i.test(ua);
+        var isIPadOS = (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1 && !/Windows/i.test(ua));
+        var isDesktopOS = /Windows NT|Linux x86_64|CrOS/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints <= 1);
+        var isSmallMobileScreen = window.innerWidth <= 768 && !isDesktopOS;
+
+        if (isMobileUA || isIPadOS || isSmallMobileScreen) {
+          document.documentElement.classList.add('is-mobile-app');
+        } else {
+          document.documentElement.classList.remove('is-mobile-app');
+        }
+      }
+      syncDeviceMode();
+      window.addEventListener('resize', syncDeviceMode);
+    })();
+  </script>
 </head>
 <body>
 
