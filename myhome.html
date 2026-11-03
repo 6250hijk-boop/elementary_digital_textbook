@@ -1038,7 +1038,7 @@
     /* ============================================================
        [동적 반응형] 스마트폰 / 태블릿 앱 UI (노트북 화면은 100% 유지, bs-char 미사용)
        ============================================================ */
-    @media (max-width: 1024px) {
+    @media (max-width: 768px) {
       body {
         padding: 12px 12px 28px !important;
         font-size: 16px !important;
@@ -1058,13 +1058,13 @@
 
       .char-avatar-circle::after {
         content: '🔍';
-        font-size: 22px;
+        font-size: 20px;
         line-height: 1;
       }
 
       .avatar-box {
-        width: 48px !important;
-        height: 48px !important;
+        width: 44px !important;
+        height: 44px !important;
         cursor: default !important;
         pointer-events: none !important;
       }
@@ -1076,36 +1076,72 @@
       header {
         padding: 16px !important;
         border-radius: 20px !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+      }
+
+      .user-profile {
+        width: 100% !important;
+        padding-bottom: 12px !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.16) !important;
         gap: 12px !important;
       }
 
       .user-info h2 {
-        font-size: 22px !important;
+        font-size: 20px !important;
       }
 
+      .user-info p {
+        font-size: 13.5px !important;
+      }
+
+      /* 상단 1줄: [모둠(test)] [점수] [신입 탐정단] 3등분 균등 배치
+         하단 2줄: [🧭 퀘스트지도가기 (2칸)] [로그아웃 (1칸)] 정렬 */
       .status-badges {
-        width: 100% !important;
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
         gap: 8px !important;
+        width: 100% !important;
       }
 
       .badge-pill {
-        font-size: 14px !important;
-        padding: 6px 12px !important;
-        border-radius: 14px !important;
+        width: 100% !important;
+        height: 38px !important;
+        padding: 0 8px !important;
+        border-radius: 12px !important;
+        font-size: 13.5px !important;
+        justify-content: center !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        box-sizing: border-box !important;
       }
 
       .btn-nav-map {
+        grid-column: 1 / 3 !important;
+        width: 100% !important;
+        height: 44px !important;
+        padding: 0 14px !important;
+        border-radius: 12px !important;
         font-size: 15px !important;
-        padding: 9px 16px !important;
-        border-radius: 14px !important;
-        flex: 1;
-        justify-content: center;
+        justify-content: center !important;
+        align-items: center !important;
+        box-sizing: border-box !important;
       }
 
       .btn-logout {
+        grid-column: 3 / 4 !important;
+        width: 100% !important;
+        height: 44px !important;
+        padding: 0 10px !important;
+        border-radius: 12px !important;
         font-size: 14px !important;
-        padding: 8px 14px !important;
-        border-radius: 14px !important;
+        display: inline-flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        box-sizing: border-box !important;
       }
 
       .lobby-card {
@@ -1115,11 +1151,11 @@
       }
 
       .lobby-title-wrap h3 {
-        font-size: 22px !important;
+        font-size: 21px !important;
       }
 
       .players-grid {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 10px !important;
       }
 
@@ -1129,12 +1165,12 @@
       }
 
       .player-avatar {
-        width: 48px !important;
-        height: 48px !important;
+        width: 46px !important;
+        height: 46px !important;
       }
 
       .player-name {
-        font-size: 17px !important;
+        font-size: 16px !important;
       }
 
       .ai-setup-banner {
@@ -1164,22 +1200,87 @@
       }
     }
 
+    /* html.is-mobile-app 직접 매칭 (스마트폰 & 태블릿 공통 적용) */
+    html.is-mobile-app body {
+      padding: 12px 12px 28px !important;
+    }
     html.is-mobile-app .char-avatar-img,
     html.is-mobile-app .avatar-edit-badge,
     html.is-mobile-app .btn-change-char,
     html.is-mobile-app #charPickerModal {
       display: none !important;
     }
-
     html.is-mobile-app .char-avatar-circle::after {
       content: '🔍';
-      font-size: 22px;
+      font-size: 20px;
       line-height: 1;
     }
-
     html.is-mobile-app .avatar-box {
+      width: 44px !important;
+      height: 44px !important;
       cursor: default !important;
       pointer-events: none !important;
+    }
+    html.is-mobile-app header {
+      padding: 16px !important;
+      border-radius: 20px !important;
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 12px !important;
+    }
+    html.is-mobile-app .user-profile {
+      width: 100% !important;
+      padding-bottom: 12px !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16) !important;
+      gap: 12px !important;
+    }
+    html.is-mobile-app .user-info h2 {
+      font-size: 20px !important;
+    }
+    html.is-mobile-app .user-info p {
+      font-size: 13.5px !important;
+    }
+    html.is-mobile-app .status-badges {
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      gap: 8px !important;
+      width: 100% !important;
+    }
+    html.is-mobile-app .badge-pill {
+      width: 100% !important;
+      height: 38px !important;
+      padding: 0 8px !important;
+      border-radius: 12px !important;
+      font-size: 13.5px !important;
+      justify-content: center !important;
+      text-align: center !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      box-sizing: border-box !important;
+    }
+    html.is-mobile-app .btn-nav-map {
+      grid-column: 1 / 3 !important;
+      width: 100% !important;
+      height: 44px !important;
+      padding: 0 14px !important;
+      border-radius: 12px !important;
+      font-size: 15px !important;
+      justify-content: center !important;
+      align-items: center !important;
+      box-sizing: border-box !important;
+    }
+    html.is-mobile-app .btn-logout {
+      grid-column: 3 / 4 !important;
+      width: 100% !important;
+      height: 44px !important;
+      padding: 0 10px !important;
+      border-radius: 12px !important;
+      font-size: 14px !important;
+      display: inline-flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      box-sizing: border-box !important;
     }
   </style>
   <script>
