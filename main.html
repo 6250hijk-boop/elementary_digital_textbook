@@ -1035,21 +1035,14 @@
 
     const azitIconEl = document.getElementById("azitBtnCharIcon");
     if (azitIconEl) {
-      const isMobileApp = document.documentElement.classList.contains("is-mobile-app") || window.innerWidth <= 1024;
-      if (isMobileApp) {
-        // 모바일/태블릿 앱 모드에서는 bs-char 대신 깔끔한 앱 홈 아이콘 표시
-        azitIconEl.innerHTML = `<span style="font-size:26px; line-height:1;">🏠</span>`;
-      } else {
-        // 노트북/PC에서는 기존대로 캐릭터 아바타 표시 (1~11)
-        let savedChar = localStorage.getItem("elementary_my_char") || localStorage.getItem("my_avatar_char");
-        let myCharId = parseInt(savedChar, 10);
-        if (!myCharId || myCharId < 1 || myCharId > 11) {
-          myCharId = 1;
-        }
-        azitIconEl.innerHTML = `
-          <img src="images/bs-char (${myCharId}).png" alt="내 캐릭터" onerror="this.onerror=null; this.src='images/char(${myCharId}).png';" style="width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));">
-        `;
+      let savedChar = localStorage.getItem("elementary_my_char") || localStorage.getItem("my_avatar_char");
+      let myCharId = parseInt(savedChar, 10);
+      if (!myCharId || myCharId < 1 || myCharId > 11) {
+        myCharId = 1;
       }
+      azitIconEl.innerHTML = `
+        <img src="images/bs-char (${myCharId}).png" alt="내 캐릭터" onerror="this.onerror=null; this.src='images/char(${myCharId}).png';" style="width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));">
+      `;
     }
   }
   updateMyHomeTitle();

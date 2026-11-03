@@ -652,11 +652,7 @@
       font-size: 13px !important;
       padding: 5px 10px !important;
     }
-    html.is-mobile-app .author-avatar,
-    html.is-mobile-app .author-char-icon-circle,
-    html.is-mobile-app #dispWriterCharImg {
-      display: none !important;
-    }
+    
   `;
   document.head.appendChild(styleEl);
 

@@ -1036,7 +1036,7 @@
     }
 
     /* ============================================================
-       [동적 반응형] 스마트폰 / 태블릿 앱 UI (노트북 화면은 100% 유지, bs-char 미사용)
+       [동적 반응형] 스마트폰 / 태블릿 앱 UI (노트북 화면 유지, 모바일에서도 내 캐릭터 표시)
        ============================================================ */
     @media (max-width: 768px) {
       body {
@@ -1048,29 +1048,9 @@
         gap: 14px !important;
       }
 
-      /* bs-char 캐릭터 이미지 및 캐릭터 변경 UI 미사용 */
-      .char-avatar-img,
-      .avatar-edit-badge,
-      .btn-change-char,
-      #charPickerModal {
-        display: none !important;
-      }
-
-      .char-avatar-circle::after {
-        content: '🔍';
-        font-size: 20px;
-        line-height: 1;
-      }
-
       .avatar-box {
-        width: 44px !important;
-        height: 44px !important;
-        cursor: default !important;
-        pointer-events: none !important;
-      }
-
-      .player-card.is-me {
-        cursor: default !important;
+        width: 52px !important;
+        height: 52px !important;
       }
 
       header {
@@ -1165,24 +1145,91 @@
       }
 
       .player-avatar {
-        width: 46px !important;
-        height: 46px !important;
+        width: 54px !important;
+        height: 54px !important;
       }
 
       .player-name {
         font-size: 16px !important;
       }
 
+      /* 우리 모둠 AI 이름 짓기 영역: 화면 밖으로 나가지 않도록 좌우 폭 100% 맞춤 & 입력창 아래에 버튼 배치 */
       .ai-setup-banner {
+        width: 100% !important;
+        max-width: 100% !important;
         padding: 16px !important;
         border-radius: 16px !important;
+        display: flex !important;
         flex-direction: column !important;
         align-items: stretch !important;
+        gap: 12px !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+      }
+
+      .ai-info-left {
+        width: 100% !important;
+        max-width: 100% !important;
+        gap: 12px !important;
+        min-width: 0 !important;
+      }
+
+      .ai-icon-large {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        font-size: 17px !important;
+        flex-shrink: 0 !important;
+      }
+
+      .ai-text {
+        flex: 1 !important;
+        min-width: 0 !important;
+      }
+
+      .ai-text h4 {
+        font-size: 18px !important;
+        flex-wrap: wrap !important;
+        word-break: keep-all !important;
+      }
+
+      .ai-text p {
+        font-size: 13px !important;
+        word-break: keep-all !important;
       }
 
       .ai-edit-form {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
         max-width: 100% !important;
         min-width: 0 !important;
+        gap: 10px !important;
+        box-sizing: border-box !important;
+      }
+
+      .ai-input {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding: 13px 14px !important;
+        font-size: 15px !important;
+        border-radius: 12px !important;
+        box-sizing: border-box !important;
+      }
+
+      .btn-ai-save {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 13px 16px !important;
+        font-size: 16px !important;
+        border-radius: 12px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
       }
 
       .quick-bar {
@@ -1204,22 +1251,9 @@
     html.is-mobile-app body {
       padding: 12px 12px 28px !important;
     }
-    html.is-mobile-app .char-avatar-img,
-    html.is-mobile-app .avatar-edit-badge,
-    html.is-mobile-app .btn-change-char,
-    html.is-mobile-app #charPickerModal {
-      display: none !important;
-    }
-    html.is-mobile-app .char-avatar-circle::after {
-      content: '🔍';
-      font-size: 20px;
-      line-height: 1;
-    }
     html.is-mobile-app .avatar-box {
-      width: 44px !important;
-      height: 44px !important;
-      cursor: default !important;
-      pointer-events: none !important;
+      width: 52px !important;
+      height: 52px !important;
     }
     html.is-mobile-app header {
       padding: 16px !important;
@@ -1280,6 +1314,75 @@
       display: inline-flex !important;
       justify-content: center !important;
       align-items: center !important;
+      box-sizing: border-box !important;
+    }
+    html.is-mobile-app .ai-setup-banner {
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 16px !important;
+      border-radius: 16px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 12px !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+    html.is-mobile-app .ai-info-left {
+      width: 100% !important;
+      max-width: 100% !important;
+      gap: 12px !important;
+      min-width: 0 !important;
+    }
+    html.is-mobile-app .ai-icon-large {
+      width: 44px !important;
+      height: 44px !important;
+      min-width: 44px !important;
+      font-size: 17px !important;
+      flex-shrink: 0 !important;
+    }
+    html.is-mobile-app .ai-text {
+      flex: 1 !important;
+      min-width: 0 !important;
+    }
+    html.is-mobile-app .ai-text h4 {
+      font-size: 18px !important;
+      flex-wrap: wrap !important;
+      word-break: keep-all !important;
+    }
+    html.is-mobile-app .ai-text p {
+      font-size: 13px !important;
+      word-break: keep-all !important;
+    }
+    html.is-mobile-app .ai-edit-form {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: stretch !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      gap: 10px !important;
+      box-sizing: border-box !important;
+    }
+    html.is-mobile-app .ai-input {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      padding: 13px 14px !important;
+      font-size: 15px !important;
+      border-radius: 12px !important;
+      box-sizing: border-box !important;
+    }
+    html.is-mobile-app .btn-ai-save {
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 13px 16px !important;
+      font-size: 16px !important;
+      border-radius: 12px !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      text-align: center !important;
       box-sizing: border-box !important;
     }
   </style>
@@ -1591,7 +1694,7 @@
           <div class="player-avatar">${avatarHtml}</div>
           <div class="player-name">${member}</div>
           <div class="player-tag ${isMe ? 'me' : ''}">
-            ${isMe ? ((document.documentElement.classList.contains('is-mobile-app') || window.innerWidth <= 1024) ? '나 (접속 중)' : '나 (캐릭터 변경 ✏️)') : `동료 탐정 #${charId}`}
+            ${isMe ? '나 (캐릭터 변경 ✏️)' : `동료 탐정 #${charId}`}
           </div>
         </div>
       `;
@@ -1621,8 +1724,7 @@
     let tempSelectedChar = myCharId;
 
     window.openCharPickerModal = function () {
-      if (document.documentElement.classList.contains('is-mobile-app') || window.innerWidth <= 1024) return;
-      tempSelectedChar = myCharId;
+        tempSelectedChar = myCharId;
       updateCharPickerView();
       const modal = document.getElementById("charPickerModal");
       if (modal) {
