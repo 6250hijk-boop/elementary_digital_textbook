@@ -945,6 +945,7 @@
     <button class="tab-btn" data-tab="tab-photos" onclick="switchTab('tab-photos')">조별 수집 및 라벨링 사진</button>
     <button class="tab-btn" data-tab="tab-team-mgmt" onclick="switchTab('tab-team-mgmt')">모둠 코드 개설 및 관리</button>
     <button class="tab-btn" data-tab="tab-students" onclick="switchTab('tab-students')">학생별 개별 학습 현황</button>
+    <button class="tab-btn" data-tab="tab-museum" onclick="switchTab('tab-museum')">오류박물관 통계 대시보드</button>
     <button class="tab-btn" data-tab="tab-surveys" onclick="switchTab('tab-surveys')">사전·사후 설문 분석 그래프</button>
   </div>
 
@@ -1139,7 +1140,113 @@
     </div>
   </div>
 
-  <!-- TAB 5: 사전·사후 설문 분석 그래프 -->
+  <!-- TAB 5: 오류박물관 통계 대시보드 (총 착각 사례수 & 원인태그 분포) -->
+  <div class="tab-content" id="tab-museum">
+    <div class="manage-card" style="margin-bottom:20px;">
+      <div class="section-header" style="margin-bottom:14px;">
+        <div>
+          <h2>오류박물관 학급 전체 통계 대시보드</h2>
+          <span style="font-size:13px; color:#558B2F; font-weight:bold;">QUEST 5·6에서 수집된 AI 착각 사례 수와 원인태그 분포(%)를 실시간으로 집계합니다.</span>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <select id="museumTeamFilter" onchange="renderMuseumDashboard()"
+            style="padding:8px 12px; border:1.5px solid #C8E6C9; border-radius:10px; font-size:13px; font-weight:700; color:#1B5E20; background:#F1F8E9;">
+            <option value="ALL">전체 모둠 통합 보기</option>
+          </select>
+          <button onclick="downloadMuseumCSV()" class="btn-action btn-green" style="font-size:13px; padding:8px 14px;">오류박물관 통계 CSV 다운로드</button>
+        </div>
+      </div>
+
+      <!-- 오류박물관 핵심 4대 요약 카드 -->
+      <div class="stat-cards" style="margin-bottom:0;">
+        <div class="stat-card purple">
+          <div class="stat-num" id="museumTotalCases">0건</div>
+          <div class="stat-label">총 등록 착각 사례 수</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-num" id="museumTotalTags">0개</div>
+          <div class="stat-label">누적 원인태그 선택 수</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-num" id="museumTopTag" style="font-size:20px;">-</div>
+          <div class="stat-label">최다 원인태그 (1위)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="museumActiveTeams">0개</div>
+          <div class="stat-label">오류박물관 참여 모둠</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 주요 원인태그 핵심 비율(%) 한눈에 보기 칩 -->
+    <div class="manage-card" style="margin-bottom:20px;">
+      <div class="section-header" style="margin-bottom:12px;">
+        <div>
+          <h2>주요 원인별 분포 요약 (구겨짐 · 가려짐 · 조명반사 · 배경혼동)</h2>
+          <span style="font-size:13px; color:#64748B;">전체 등록 태그 중 각 핵심 원인이 차지하는 비율(%)</span>
+        </div>
+      </div>
+      <div id="museumCoreRatioGrid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px;"></div>
+    </div>
+
+    <!-- 2열 차트: 원인태그 분포 그래프 + AI 오인식 품목 TOP -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(360px, 1fr)); gap:20px; margin-bottom:20px;">
+      <div class="manage-card" style="margin-bottom:0;">
+        <div class="section-header" style="margin-bottom:12px;">
+          <div>
+            <h2>원인태그 분포 (건수 & 비율 %)</h2>
+            <span style="font-size:13px; color:#64748B;">등록된 모든 원인태그의 순위와 점유율</span>
+          </div>
+        </div>
+        <div style="position:relative; width:100%; height:260px; margin-bottom:16px;">
+          <canvas id="museumTagChart"></canvas>
+        </div>
+        <div id="museumTagBarsList" style="display:flex; flex-direction:column; gap:8px;"></div>
+      </div>
+
+      <div class="manage-card" style="margin-bottom:0;">
+        <div class="section-header" style="margin-bottom:12px;">
+          <div>
+            <h2>모둠별 착각 사례 & AI 오인식 품목 현황</h2>
+            <span style="font-size:13px; color:#64748B;">어느 모둠이, 어떤 품목에서 AI 착각을 가장 많이 발견했는지 확인</span>
+          </div>
+        </div>
+        <div id="museumTeamSummaryList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:18px;"></div>
+        <h3 style="font-size:15px; color:#1B5E20; font-weight:800; margin-bottom:10px; padding-top:10px; border-top:1px dashed #CBD5E1;">AI 오인식 품목 분포</h3>
+        <div id="museumClassList" style="display:flex; flex-direction:column; gap:8px;"></div>
+      </div>
+    </div>
+
+    <!-- 하단: 등록된 착각 사례 전체 목록 -->
+    <div class="manage-card">
+      <div class="section-header">
+        <div>
+          <h2>등록된 착각 사례 상세 목록</h2>
+          <span style="font-size:13px; color:#558B2F; font-weight:bold;">총 <span id="museumTableCount">0</span>건의 사례</span>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>사진</th>
+              <th>모둠</th>
+              <th>수집 학생</th>
+              <th>AI 오인식 결과</th>
+              <th>신뢰도</th>
+              <th>등록된 원인태그</th>
+              <th>등록 일시</th>
+            </tr>
+          </thead>
+          <tbody id="museumTableBody">
+            <tr><td colspan="7" style="text-align:center; padding:30px; color:#94A3B8;">오류박물관 데이터를 불러오고 있습니다...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 6: 사전·사후 설문 분석 그래프 -->
   <div class="tab-content" id="tab-surveys">
     <!-- 상단 핵심 요약 지표 카드 4개 -->
     <div class="stat-grid" style="margin-bottom:20px;">
@@ -1334,6 +1441,7 @@
   let studentsCache = [];
   let uploadsCache = [];
   let labelsCache = [];
+  let museumCache = [];
   const questSubmittedMap = {}; // { teamCode: { q1: true, q2: true, ... }, studentId: { ... } }
   const questArtifactsMap = {}; // { teamCode: { q1: [...], q2: [...], ... } }
 
@@ -1403,6 +1511,15 @@
       renderTabPhotosTeamSelector();
     }
   }, (err) => console.warn("Uploads listener error:", err));
+
+  // 오류박물관(quest6_museum) 실시간 구독
+  onSnapshot(collection(db, "quest6_museum"), (snapshot) => {
+    museumCache = [];
+    snapshot.forEach(d => {
+      museumCache.push({ id: d.id, ...d.data() });
+    });
+    renderMuseumDashboard();
+  }, (err) => console.warn("quest6_museum listener error:", err));
 
   // 라벨 데이터(labels) 실시간 구독
   onSnapshot(collection(db, "labels"), (snapshot) => {
@@ -1548,6 +1665,7 @@
     renderTeamMgmtGrid(mergedTeams);
     renderStudentsTable(mergedTeams);
     renderTabPhotosTeamSelector(mergedTeams);
+    renderMuseumDashboard();
     renderSurveyAnalytics();
   }
 
@@ -1796,7 +1914,11 @@
           : '<span style="color:#94A3B8;">아직 AI 탐정 수사 기록이 없습니다.</span>';
       } else if (qDef.key === 'q6') {
         contentHtml = list.length 
-          ? list.map(item => `• <b>${item.studentName || item.author || '탐정'}:</b> ${item.tag ? `<span style="background:#EDE9FE;color:#6D28D9;padding:2px 6px;border-radius:6px;font-weight:bold;">[${item.tag}]</span> ` : ''}"${item.reason || item.comment || item.thought || '오류 원인 분석 완료'}"`).join('<br>')
+          ? list.map(item => {
+              const tagList = Array.isArray(item.tags) && item.tags.length ? item.tags : (item.tag ? [item.tag] : []);
+              const tagBadges = tagList.map(t => `<span style="background:#EDE9FE;color:#6D28D9;padding:2px 6px;border-radius:6px;font-weight:bold;margin-right:4px;">${t}</span>`).join('');
+              return `• <b>${item.studentName || item.author || '탐정'}:</b> ${tagBadges}"${item.feedback || item.reason || item.comment || item.thought || item.className || '오류 원인 분석 완료'}"`;
+            }).join('<br>')
           : '<span style="color:#94A3B8;">아직 등록된 오류 분석이 없습니다.</span>';
       } else if (qDef.key === 'q7') {
         contentHtml = list.length 
@@ -2208,9 +2330,280 @@
       renderTabPhotosTeamSelector(merged);
       renderTabPhotos(currentTabPhotosTeamCode);
     }
+    if (tabId === 'tab-museum') {
+      renderMuseumDashboard();
+    }
     if (tabId === 'tab-surveys') {
       renderSurveyAnalytics();
     }
+  };
+
+  // ── 오류박물관 통계 대시보드 렌더링 & CSV 다운로드 ──
+  let museumTagChartInstance = null;
+
+  function normalizeMuseumTag(rawTag) {
+    return String(rawTag || '').trim();
+  }
+
+  window.renderMuseumDashboard = function() {
+    const filterEl = document.getElementById("museumTeamFilter");
+    const totalCasesEl = document.getElementById("museumTotalCases");
+    if (!totalCasesEl) return;
+
+    // 모둠 필터 셀렉트 옵션 갱신
+    if (filterEl) {
+      const prevVal = filterEl.value || "ALL";
+      const teamSet = new Set();
+      teamsCache.forEach(t => { if (t.teamCode || t.id) teamSet.add(t.teamCode || t.id); });
+      museumCache.forEach(m => { if (m.teamCode) teamSet.add(m.teamCode); });
+
+      const sortedTeams = Array.from(teamSet).sort();
+      filterEl.innerHTML = `<option value="ALL">전체 모둠 통합 보기 (${museumCache.length}건)</option>` +
+        sortedTeams.map(tc => {
+          const cnt = museumCache.filter(m => m.teamCode === tc).length;
+          return `<option value="${tc}">${tc} 모둠 (${cnt}건)</option>`;
+        }).join('');
+      filterEl.value = Array.from(filterEl.options).some(o => o.value === prevVal) ? prevVal : "ALL";
+    }
+
+    const selectedTeam = filterEl ? filterEl.value : "ALL";
+    const items = selectedTeam === "ALL"
+      ? museumCache
+      : museumCache.filter(m => m.teamCode === selectedTeam);
+
+    // 1. 기본 카운트 및 태그/품목/모둠 집계
+    const tagCounts = {};
+    const classCounts = {};
+    const teamCounts = {};
+    const activeTeamsSet = new Set();
+    let totalTagsCount = 0;
+
+    items.forEach(item => {
+      if (item.teamCode) {
+        activeTeamsSet.add(item.teamCode);
+        teamCounts[item.teamCode] = (teamCounts[item.teamCode] || 0) + 1;
+      }
+      const cls = (item.className || '미분류').trim();
+      classCounts[cls] = (classCounts[cls] || 0) + 1;
+
+      const tagsArr = Array.isArray(item.tags) ? item.tags : (item.tag ? [item.tag] : []);
+      tagsArr.forEach(t => {
+        const clean = normalizeMuseumTag(t);
+        if (!clean) return;
+        tagCounts[clean] = (tagCounts[clean] || 0) + 1;
+        totalTagsCount++;
+      });
+    });
+
+    const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+    const sortedClasses = Object.entries(classCounts).sort((a, b) => b[1] - a[1]);
+    const sortedTeamEntries = Object.entries(teamCounts).sort((a, b) => b[1] - a[1]);
+
+    // 2. 상단 요약 카드 4개 갱신
+    totalCasesEl.textContent = `${items.length}건`;
+    const totalTagsEl = document.getElementById("museumTotalTags");
+    if (totalTagsEl) totalTagsEl.textContent = `${totalTagsCount}개`;
+
+    const topTagEl = document.getElementById("museumTopTag");
+    if (topTagEl) {
+      if (sortedTags.length > 0) {
+        const [topName, topCnt] = sortedTags[0];
+        const topPct = totalTagsCount > 0 ? Math.round((topCnt / totalTagsCount) * 100) : 0;
+        topTagEl.textContent = `${topName} (${topPct}%)`;
+      } else {
+        topTagEl.textContent = "태그 없음";
+      }
+    }
+
+    const activeTeamsEl = document.getElementById("museumActiveTeams");
+    if (activeTeamsEl) activeTeamsEl.textContent = `${activeTeamsSet.size}개`;
+
+    // 3. 핵심 4대 원인 비율(%) 카드 렌더링 (구겨짐, 가려짐, 조명/반사, 배경혼동)
+    const coreRatioGrid = document.getElementById("museumCoreRatioGrid");
+    if (coreRatioGrid) {
+      const coreCategories = [
+        { label: "구겨짐 / 찌그러짐", match: t => t.includes("구겨짐") || t.includes("찌그러짐"), color: "#7C3AED", bg: "#F5F3FF", border: "#DDD6FE" },
+        { label: "가려짐 / 일부노출", match: t => t.includes("가려짐") || t.includes("일부노출") || t.includes("부분확대"), color: "#0284C7", bg: "#F0F9FF", border: "#BAE6FD" },
+        { label: "조명 / 반사광 / 화질", match: t => t.includes("조명") || t.includes("반사") || t.includes("초점") || t.includes("화질"), color: "#D97706", bg: "#FFFBEB", border: "#FDE68A" },
+        { label: "배경혼동 / 오분류", match: t => t.includes("배경") || t.includes("혼동") || t.includes("색상"), color: "#15803D", bg: "#F0FDF4", border: "#BBF7D0" }
+      ];
+
+      coreRatioGrid.innerHTML = coreCategories.map(cat => {
+        let cnt = 0;
+        sortedTags.forEach(([tagName, tagCnt]) => {
+          if (cat.match(tagName)) cnt += tagCnt;
+        });
+        const pct = totalTagsCount > 0 ? ((cnt / totalTagsCount) * 100).toFixed(1) : "0.0";
+        return `
+          <div style="background:${cat.bg}; border:1.5px solid ${cat.border}; border-radius:14px; padding:14px; text-align:center;">
+            <div style="font-size:13px; font-weight:800; color:${cat.color}; margin-bottom:4px;">${cat.label}</div>
+            <div style="font-size:24px; font-weight:900; color:#1E293B;">${pct}%</div>
+            <div style="font-size:12px; color:#64748B; font-weight:700; margin-top:2px;">${cnt}회 선택</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 4. Chart.js 원인태그 분포 차트 + 막대 리스트
+    const chartCanvas = document.getElementById("museumTagChart");
+    const tagBarsList = document.getElementById("museumTagBarsList");
+    const chartColors = ["#7C3AED", "#0284C7", "#16A34A", "#F59E0B", "#EC4899", "#06B6D4", "#64748B", "#EA580C"];
+
+    if (chartCanvas && typeof Chart !== "undefined") {
+      if (museumTagChartInstance) {
+        museumTagChartInstance.destroy();
+        museumTagChartInstance = null;
+      }
+      if (sortedTags.length > 0) {
+        const topForChart = sortedTags.slice(0, 7);
+        const etcCount = sortedTags.slice(7).reduce((acc, [, c]) => acc + c, 0);
+        if (etcCount > 0) topForChart.push(["기타 태그", etcCount]);
+
+        museumTagChartInstance = new Chart(chartCanvas.getContext("2d"), {
+          type: "doughnut",
+          data: {
+            labels: topForChart.map(([t]) => t),
+            datasets: [{
+              data: topForChart.map(([, c]) => c),
+              backgroundColor: topForChart.map((_, i) => chartColors[i % chartColors.length]),
+              borderWidth: 2,
+              borderColor: "#FFFFFF"
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: "right", labels: { font: { family: "Pretendard", size: 12, weight: "bold" }, boxWidth: 14 } }
+            }
+          }
+        });
+      }
+    }
+
+    if (tagBarsList) {
+      if (sortedTags.length === 0) {
+        tagBarsList.innerHTML = `<div style="text-align:center; padding:20px; color:#94A3B8; font-size:13px; background:#F8FAFC; border-radius:10px;">아직 등록된 원인태그가 없습니다.</div>`;
+      } else {
+        const maxTagCnt = sortedTags[0][1];
+        tagBarsList.innerHTML = sortedTags.map(([tag, cnt], idx) => {
+          const pct = totalTagsCount > 0 ? ((cnt / totalTagsCount) * 100).toFixed(1) : "0.0";
+          const barW = maxTagCnt > 0 ? Math.max(8, Math.round((cnt / maxTagCnt) * 100)) : 8;
+          const barColor = chartColors[idx % chartColors.length];
+          return `
+            <div style="display:flex; align-items:center; gap:10px; font-size:13px;">
+              <span style="min-width:24px; text-align:center; font-weight:800; color:${barColor};">${idx + 1}</span>
+              <span style="min-width:130px; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; color:#1E293B;" title="${tag}">${tag}</span>
+              <div style="flex:1; height:12px; background:#F1F5F9; border-radius:999px; overflow:hidden;">
+                <div style="width:${barW}%; height:100%; background:${barColor}; border-radius:999px;"></div>
+              </div>
+              <span style="min-width:85px; text-align:right; font-weight:800; color:#334155;">${cnt}회 (${pct}%)</span>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // 5. 모둠별 착각 사례 현황 & AI 오인식 품목 분포
+    const teamListEl = document.getElementById("museumTeamSummaryList");
+    if (teamListEl) {
+      if (sortedTeamEntries.length === 0) {
+        teamListEl.innerHTML = `<div style="text-align:center; padding:16px; color:#94A3B8; font-size:13px;">등록된 모둠 사례가 없습니다.</div>`;
+      } else {
+        const maxT = sortedTeamEntries[0][1];
+        teamListEl.innerHTML = sortedTeamEntries.map(([tc, cnt]) => {
+          const pct = items.length > 0 ? Math.round((cnt / items.length) * 100) : 0;
+          const barW = Math.max(10, Math.round((cnt / maxT) * 100));
+          return `
+            <div style="display:flex; align-items:center; gap:10px; font-size:13px;">
+              <span style="min-width:90px; font-weight:800; color:#1B5E20;">${tc}</span>
+              <div style="flex:1; height:12px; background:#E8F5E9; border-radius:999px; overflow:hidden;">
+                <div style="width:${barW}%; height:100%; background:#2E7D32; border-radius:999px;"></div>
+              </div>
+              <span style="min-width:80px; text-align:right; font-weight:800; color:#1E293B;">${cnt}건 (${pct}%)</span>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    const classListEl = document.getElementById("museumClassList");
+    if (classListEl) {
+      if (sortedClasses.length === 0) {
+        classListEl.innerHTML = `<div style="text-align:center; padding:16px; color:#94A3B8; font-size:13px;">AI 오인식 품목 데이터가 없습니다.</div>`;
+      } else {
+        classListEl.innerHTML = sortedClasses.slice(0, 8).map(([cls, cnt]) => {
+          const pct = items.length > 0 ? Math.round((cnt / items.length) * 100) : 0;
+          return `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; font-size:13px;">
+              <span style="font-weight:700; color:#334155;">${cls}</span>
+              <span style="font-weight:800; color:#0284C7;">${cnt}건 (${pct}%)</span>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // 6. 하단 착각 사례 상세 테이블
+    const tbody = document.getElementById("museumTableBody");
+    const tableCntEl = document.getElementById("museumTableCount");
+    if (tableCntEl) tableCntEl.textContent = items.length;
+    if (tbody) {
+      if (items.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:#94A3B8;">아직 오류박물관에 등록된 착각 사례가 없습니다.</td></tr>`;
+      } else {
+        const sortedItems = [...items].sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+        tbody.innerHTML = sortedItems.map(item => {
+          const tagsArr = Array.isArray(item.tags) ? item.tags : (item.tag ? [item.tag] : []);
+          const tagsHtml = tagsArr.length
+            ? tagsArr.map(t => `<span style="display:inline-block; background:#EDE9FE; color:#6D28D9; padding:2px 8px; border-radius:999px; font-size:11px; font-weight:700; margin:2px;">${t}</span>`).join('')
+            : `<span style="color:#94A3B8; font-size:12px;">태그 미등록</span>`;
+          const confVal = item.confidence ? `${parseFloat(item.confidence).toFixed(1)}%` : '-';
+          const dateStr = item.createdAt?.seconds
+            ? new Date(item.createdAt.seconds * 1000).toLocaleString('ko-KR')
+            : '-';
+          const imgUrl = item.imageData || 'images/quest1-q1.png';
+          return `
+            <tr>
+              <td><img src="${imgUrl}" alt="착각 사례" style="width:56px; height:42px; object-fit:cover; border-radius:8px; border:1px solid #CBD5E1;" onerror="this.src='images/quest1-q1.png'"></td>
+              <td><span style="font-weight:800; color:#1B5E20;">${item.teamCode || '-'}</span></td>
+              <td>${item.studentName || '탐정'}</td>
+              <td style="font-weight:700; color:#0F172A;">${item.className || '오류 품목'}</td>
+              <td style="font-weight:700; color:#0284C7;">${confVal}</td>
+              <td style="max-width:260px;">${tagsHtml}</td>
+              <td style="font-size:12px; color:#64748B;">${dateStr}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+  };
+
+  window.downloadMuseumCSV = function() {
+    if (!museumCache.length) {
+      alert("다운로드할 오류박물관 데이터가 없습니다.");
+      return;
+    }
+    const headers = ["모둠코드", "학생이름", "AI오인식품목", "신뢰도(%)", "원인태그목록", "설명", "등록일시"];
+    const rows = museumCache.map(item => {
+      const tagsArr = Array.isArray(item.tags) ? item.tags : (item.tag ? [item.tag] : []);
+      const dateStr = item.createdAt?.seconds ? new Date(item.createdAt.seconds * 1000).toLocaleString('ko-KR') : '';
+      return [
+        item.teamCode || '',
+        item.studentName || '',
+        item.className || '',
+        item.confidence || '',
+        tagsArr.join(' | '),
+        (item.feedback || '').replace(/\n/g, ' '),
+        dateStr
+      ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+    });
+    const csvContent = "\uFEFF" + headers.join(',') + "\n" + rows.join('\n');
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `오류박물관_착각사례_원인태그통계_${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
   };
 
   // ── 사전·사후 설문 분석 그래프 및 통계 함수 ──
