@@ -1737,7 +1737,52 @@
     }
   }
 
-  // 2. 모둠별 8대 퀘스트 진도 매트릭스 테이블 렌더링
+  // 공통 헬퍼: 모둠코드별 조원 목록 추출 (표시명: 모둠코드_이름)
+  function getTeamMemberEntries(teamCode, teamObj = null) {
+    const team = teamObj || getAllMergedTeams().find(t => (t.teamCode || t.id) === teamCode) || {};
+    const byName = new Map();
+    const normTeam = String(teamCode || '').trim().toLowerCase();
+
+    (team.members || []).forEach(m => {
+      const name = String(m || '').trim();
+      if (!name) return;
+      byName.set(name.toLowerCase(), {
+        name,
+        displayId: `${teamCode}_${name}`,
+        studentId: `${teamCode}_${name}`,
+        studentObj: null
+      });
+    });
+
+    studentsCache.forEach(s => {
+      const sTeam = String(s.teamCode || '').trim().toLowerCase();
+      if (sTeam !== normTeam) return;
+      const rawName = String(s.studentName || s.name || s.id || '').trim();
+      const prefix = `${teamCode}_`;
+      const name = rawName.startsWith(prefix) ? rawName.slice(prefix.length) : rawName;
+      if (!name) return;
+      const key = name.toLowerCase();
+      const prev = byName.get(key);
+      byName.set(key, {
+        name,
+        displayId: `${teamCode}_${name}`,
+        studentId: s.studentId || s.id || (prev ? prev.studentId : `${teamCode}_${name}`),
+        studentObj: s
+      });
+    });
+
+    return Array.from(byName.values());
+  }
+
+  // 2. 모둠별 8대 퀘스트 진도 매트릭스 테이블 렌더링 (첫 화면 모둠만 -> 클릭 시 모둠_조원 펼침)
+  const expandedMatrixTeams = new Set();
+
+  window.toggleMatrixTeamMembers = function(teamCode) {
+    if (expandedMatrixTeams.has(teamCode)) expandedMatrixTeams.delete(teamCode);
+    else expandedMatrixTeams.add(teamCode);
+    renderTeamsTable(getAllMergedTeams());
+  };
+
   function renderTeamsTable(mergedTeams) {
     const tbody = document.getElementById("teamTableBody");
     if (!tbody) return;
@@ -1749,40 +1794,42 @@
 
     tbody.innerHTML = mergedTeams.map(t => {
       const code = t.teamCode || t.id;
+      const safeCode = code.replace(/'/g, "\\'");
       const approved = t.approvedQuests || {};
       const submitted = questSubmittedMap[code] || {};
+      const memberEntries = getTeamMemberEntries(code, t);
+      const isExpanded = expandedMatrixTeams.has(code);
 
       let completedCount = 0;
 
-      const renderQuestBadge = (num) => {
+      const renderQuestBadge = (num, customSub = null) => {
         const key = `q${num}`;
         const isApproved = !!approved[key];
-        const isSubmitted = !!submitted[key];
+        const isSubmitted = customSub ? !!customSub[key] : !!submitted[key];
         const isDone = isApproved || isSubmitted;
 
+        if (isDone && !customSub) completedCount++;
         if (isDone) {
-          completedCount++;
-          return `<td class="col-quest"><span class="quest-cell-badge done" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 퀘스트 완료됨 (클릭하여 제출물 확인)"></span></td>`;
+          return `<td class="col-quest"><span class="quest-cell-badge done" onclick="viewTeamArtifacts('${safeCode}', '${(t.aiName||'에코봇').replace(/'/g, "\\'")}', '${key}')" title="[Q${num}] 퀘스트 완료됨 (클릭하여 제출물 확인)"></span></td>`;
         } else {
-          return `<td class="col-quest"><span class="quest-cell-badge yet" onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}', '${key}')" title="[Q${num}] 아직 미제출"></span></td>`;
+          return `<td class="col-quest"><span class="quest-cell-badge yet" onclick="viewTeamArtifacts('${safeCode}', '${(t.aiName||'에코봇').replace(/'/g, "\\'")}', '${key}')" title="[Q${num}] 아직 미제출"></span></td>`;
         }
       };
 
       const qTds = [1, 2, 3, 4, 5, 6, 7, 8].map(num => renderQuestBadge(num)).join('');
-
       const pct = Math.round((completedCount / 8) * 100);
 
-      const membersList = (t.members && t.members.length) 
-        ? t.members.map(m => `<span class="member-pill">${m}</span>`).join(' ')
-        : '<span style="color:#B0BEC5;font-size:11px;">접속 대기</span>';
-
-      return `
-        <tr>
+      let rowsHtml = `
+        <tr style="background:${isExpanded ? '#F0FDF4' : '#FFFFFF'};">
           <td class="col-team">
-            <strong class="code-tag clickable-team" onclick="openTeamPhotoGallery('${code}')" title="클릭하여 [${code}] 수집 및 라벨링 사진 일괄 보기">${code}</strong>
+            <strong class="code-tag clickable-team" onclick="toggleMatrixTeamMembers('${safeCode}')" title="클릭하여 [${code}] 모둠 조원 보기">${code}</strong>
             <div style="font-size:11px;color:#2E7D32;margin-top:2px;font-weight:700;">${t.aiName || '에코봇'}</div>
           </td>
-          <td class="col-members">${membersList}</td>
+          <td class="col-members">
+            <button type="button" onclick="toggleMatrixTeamMembers('${safeCode}')" class="btn-sm-action ${isExpanded ? 'btn-sm-view' : 'btn-sm-photos'}" style="font-size:11.5px;padding:4px 10px;">
+              ${isExpanded ? `조원닫기 (${memberEntries.length}명) ▲` : `조원보기 (${memberEntries.length}명) ▼`}
+            </button>
+          </td>
           ${qTds}
           <td class="col-progress">
             <div class="progress-bar-wrap" style="width:48px;margin-bottom:2px;">
@@ -1796,14 +1843,61 @@
           </td>
           <td class="col-action">
             <div class="matrix-actions">
-              <button onclick="openTeamPhotoGallery('${code}')" class="btn-sm-action btn-sm-photos" title="모둠 수집 사진 및 라벨링 일괄 보기">사진</button>
-              <button onclick="viewTeamArtifacts('${code}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-view" title="과제 검토 및 승인">검토</button>
-              <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit" title="AI 파트너 이름 수정">AI</button>
+              <button onclick="openTeamPhotoGallery('${safeCode}')" class="btn-sm-action btn-sm-photos" title="모둠 수집 사진 및 라벨링 일괄 보기">사진</button>
+              <button onclick="viewTeamArtifacts('${safeCode}', '${(t.aiName||'에코봇').replace(/'/g, "\\'")}')" class="btn-sm-action btn-sm-view" title="과제 검토 및 승인">검토</button>
+              <button onclick="editTeamAiName('${t.id}', '${(t.aiName||'에코봇').replace(/'/g, "\\'")}')" class="btn-sm-action btn-sm-edit" title="AI 파트너 이름 수정">AI</button>
               <button onclick="deleteTeam('${t.id}')" class="btn-sm-action btn-sm-del" title="모둠 삭제"></button>
             </div>
           </td>
         </tr>
       `;
+
+      if (isExpanded) {
+        if (!memberEntries.length) {
+          rowsHtml += `
+            <tr style="background:#F8FAFC;">
+              <td colspan="13" style="text-align:center;padding:10px;color:#94A3B8;font-size:12px;">아직 입장한 조원이 없습니다.</td>
+            </tr>
+          `;
+        } else {
+          rowsHtml += memberEntries.map(m => {
+            const s = m.studentObj || {};
+            const sSub = questSubmittedMap[m.studentId] || {};
+            const mSub = {};
+            let mDone = 0;
+            for (let i = 1; i <= 8; i++) {
+              const k = `q${i}`;
+              const ok = !!(approved[k] || submitted[k] || sSub[k] || s[`q${i}Done`] || s[`q${i}_done`]);
+              mSub[k] = ok;
+              if (ok) mDone++;
+            }
+            const mPct = Math.round((mDone / 8) * 100);
+            const mScore = s.score !== undefined ? s.score : (t.score || 0);
+            const mQtds = [1, 2, 3, 4, 5, 6, 7, 8].map(num => renderQuestBadge(num, mSub)).join('');
+            return `
+              <tr style="background:#F8FAFC;">
+                <td class="col-team" style="padding-left:18px;">
+                  <span style="color:#94A3B8;">└</span>
+                  <strong style="color:#1E293B;font-size:12.5px;">${m.displayId}</strong>
+                </td>
+                <td class="col-members"><span class="member-pill">${m.displayId}</span></td>
+                ${mQtds}
+                <td class="col-progress">
+                  <div style="font-size:11px;font-weight:700;color:#475569;">${mDone}/8 (${mPct}%)</div>
+                </td>
+                <td class="col-score">
+                  <strong style="color:#2E7D32;font-size:12px;">${mScore}</strong>
+                </td>
+                <td class="col-action">
+                  <span style="font-size:11px;color:#64748B;">조원</span>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      return rowsHtml;
     }).join('');
   }
 
@@ -1857,7 +1951,7 @@
         <tr style="background:${isExpanded ? '#F0FDF4' : '#FFFFFF'};">
           <td>
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-              <span class="code-tag" style="font-size:13px;padding:3px 9px;">${tCode}</span>
+              <span class="code-tag clickable-team" onclick="toggleStudentTeamMembers('${safeCode}')" style="font-size:13px;padding:3px 9px;cursor:pointer;" title="클릭하여 조원 보기">${tCode}</span>
               <span style="font-size:12.5px;color:#475569;font-weight:700;">조원 ${list.length}명</span>
             </div>
           </td>
@@ -1884,17 +1978,20 @@
         } else {
           rowsHtml += list.map(s => {
             const sId = s.studentId || s.id;
-            const sName = s.studentName || s.name || s.id;
+            const rawName = String(s.studentName || s.name || s.id || '').trim();
+            const prefix = `${tCode}_`;
+            const shortName = rawName.startsWith(prefix) ? rawName.slice(prefix.length) : rawName;
+            const displayMemberName = `${tCode}_${shortName}`;
             const studentSub = questSubmittedMap[sId] || {};
             const completedCount = ['q1','q2','q3','q4','q5','q6','q7','q8'].filter(k => approved[k] || submitted[k] || studentSub[k]).length;
-            const cleanName = (sName || '').replace(/'/g, "\\'");
+            const cleanName = (shortName || '').replace(/'/g, "\\'");
 
             return `
               <tr style="background:#F8FAFC;">
                 <td style="padding-left:24px;">
                   <div style="display:flex;align-items:center;gap:6px;">
                     <span style="color:#94A3B8;">└</span>
-                    <strong style="color:#1E293B;">${sName}</strong>
+                    <strong style="color:#1E293B;">${displayMemberName}</strong>
                   </div>
                 </td>
                 <td><span class="code-tag" style="font-size:11.5px;padding:2px 6px;">${s.teamCode || '미지정'}</span></td>
@@ -2360,22 +2457,22 @@
     grid.innerHTML = mergedTeams.map(t => {
       const code = t.teamCode || t.id;
       const safeCode = code.replace(/'/g, "\\'");
-      const members = t.members || [];
-      const memberCount = members.length;
+      const memberEntries = getTeamMemberEntries(code, t);
+      const memberCount = memberEntries.length;
       const approved = t.approvedQuests || {};
       const completedCount = ['q1','q2','q3','q4','q5','q6','q7','q8'].filter(k => approved[k]).length;
       const isTest = (code.toLowerCase() === 'test');
       const isExpanded = expandedMgmtTeams.has(code);
 
       const membersListHtml = memberCount > 0
-        ? members.map(m => `<span class="member-pill">${m}</span>`).join(' ')
+        ? memberEntries.map(m => `<span class="member-pill">${m.displayId}</span>`).join(' ')
         : '<span style="color:#94A3B8;font-size:12px;">아직 입장한 학생 없음</span>';
 
       return `
         <div class="team-mgmt-card" style="${isTest ? 'border-color:#C084FC;background:#FAF5FF;' : ''}">
           <div class="team-mgmt-header">
             <div>
-              <span class="code-tag clickable-team" onclick="openTeamPhotoGallery('${safeCode}')" style="font-size:14px;padding:3px 8px;cursor:pointer;${isTest ? 'background:#F3E8FF;color:#7E22CE;border-color:#D8B4FE;' : ''}" title="클릭하여 [${code}] 수집 및 라벨링 사진 일괄 보기">${code}</span>
+              <span class="code-tag clickable-team" onclick="toggleMgmtTeamMembers('${safeCode}')" style="font-size:14px;padding:3px 8px;cursor:pointer;${isTest ? 'background:#F3E8FF;color:#7E22CE;border-color:#D8B4FE;' : ''}" title="클릭하여 [${code}] 조원 보기">${code}</span>
               ${isTest ? '<span style="font-size:11px;background:#E9D5FF;color:#6B21A8;padding:2px 6px;border-radius:6px;margin-left:4px;font-weight:bold;">TEST</span>' : ''}
               <div style="font-size:12px;color:#2E7D32;margin-top:4px;font-weight:700;">${t.aiName || '에코봇'}</div>
             </div>
@@ -3747,8 +3844,8 @@
         <div class="student-photo-card" style="background:#FFFFFF; border:2px solid #E2E8F0; border-radius:18px; padding:18px 20px; margin-bottom:20px; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
           <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #F1F5F9; padding-bottom:12px; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
             <div style="display:flex; align-items:center; gap:8px;">
-              <span style="background:#E8F5E9; color:#1B5E20; font-size:12px; font-weight:800; padding:3px 8px; border-radius:8px;">학생 대원</span>
-              <strong style="font-size:18px; font-family:'GmarketSans',sans-serif; color:#1E293B;">${name}</strong>
+              <span style="background:#E8F5E9; color:#1B5E20; font-size:12px; font-weight:800; padding:3px 8px; border-radius:8px;">조원</span>
+              <strong style="font-size:18px; font-family:'GmarketSans',sans-serif; color:#1E293B;">${teamCode}_${name}</strong>
               ${studentObj?.badge ? `<span style="font-size:11px; background:#FFF9C4; color:#B45309; padding:2px 7px; border-radius:8px; font-weight:bold;">${studentObj.badge}</span>` : ''}
             </div>
             <div style="display:flex; gap:8px; align-items:center; font-size:13px; font-weight:700;">
@@ -3872,10 +3969,12 @@
 
   // ── 탭 4: 관리자 페이지 내 조별 사진 탭 함수 ──
   let tabPhotosShowMembers = false;
+  let currentTabPhotosMemberName = null; // null이면 조원 버튼 목록 또는 전체 조원
 
   window.selectTabPhotosTeam = function(teamCode, showMembers = false) {
     currentTabPhotosTeamCode = teamCode;
     tabPhotosShowMembers = !!showMembers;
+    currentTabPhotosMemberName = null;
     renderTabPhotosTeamSelector();
     renderTabPhotos(teamCode);
   };
@@ -3887,8 +3986,14 @@
       currentTabPhotosTeamCode = teamCode;
       tabPhotosShowMembers = true;
     }
+    currentTabPhotosMemberName = null;
     renderTabPhotosTeamSelector();
     renderTabPhotos(teamCode);
+  };
+
+  window.selectTabPhotosMember = function(memberName) {
+    currentTabPhotosMemberName = (currentTabPhotosMemberName === memberName) ? null : memberName;
+    renderTabPhotos(currentTabPhotosTeamCode);
   };
 
   function renderTabPhotosTeamSelector(mergedTeams = null) {
@@ -3997,7 +4102,68 @@
       return;
     }
 
-    grid.innerHTML = buildStudentGroupedPhotosHtml(teamCode, tabFilterStatus, tabShowBoxes);
+    const memberEntries = getTeamMemberEntries(teamCode);
+    const safeCode = teamCode.replace(/'/g, "\\'");
+    const memberPillsHtml = memberEntries.length > 0
+      ? memberEntries.map(m => {
+          const mPhotos = allPhotos.filter(p =>
+            (p.userName && p.userName.trim().toLowerCase() === m.name.trim().toLowerCase()) ||
+            (p.userId && (p.userId === `${teamCode}_${m.name}` || p.userId.endsWith('_' + m.name) || p.userId === m.name))
+          );
+          const isSel = currentTabPhotosMemberName === m.name;
+          const escName = m.name.replace(/'/g, "\\'");
+          return `
+            <button type="button" onclick="selectTabPhotosMember('${escName}')"
+                    class="gallery-pill ${isSel ? 'active' : ''}"
+                    style="${isSel ? '' : 'background:#FFFFFF;'}">
+              ${m.displayId} (${mPhotos.length}장)
+            </button>
+          `;
+        }).join('')
+      : '<span style="font-size:12.5px; color:#94A3B8;">등록된 조원이 없습니다.</span>';
+
+    const memberBarHtml = `
+      <div style="background:#F8FAFC; border:1.5px solid #CBD5E1; border-radius:14px; padding:12px 14px; margin-bottom:14px;">
+        <div style="font-size:13px; font-weight:800; color:#1B5E20; margin-bottom:8px;">[${teamCode}] 조원 목록 (클릭하면 해당 조원의 사진만 표시됩니다):</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          <button type="button" onclick="currentTabPhotosMemberName=null; renderTabPhotos('${safeCode}');"
+                  class="gallery-pill ${!currentTabPhotosMemberName ? 'active' : ''}"
+                  style="${!currentTabPhotosMemberName ? '' : 'background:#FFFFFF;'}">
+            전체 조원 (${memberEntries.length}명)
+          </button>
+          ${memberPillsHtml}
+        </div>
+      </div>
+    `;
+
+    if (currentTabPhotosMemberName) {
+      const mPhotos = allPhotos.filter(p =>
+        (p.userName && p.userName.trim().toLowerCase() === currentTabPhotosMemberName.trim().toLowerCase()) ||
+        (p.userId && (p.userId === `${teamCode}_${currentTabPhotosMemberName}` || p.userId.endsWith('_' + currentTabPhotosMemberName) || p.userId === currentTabPhotosMemberName))
+      );
+      let filtered = mPhotos;
+      if (tabFilterStatus === 'labeled') filtered = mPhotos.filter(p => p.isLabeled);
+      else if (tabFilterStatus === 'unlabeled') filtered = mPhotos.filter(p => !p.isLabeled);
+
+      grid.innerHTML = memberBarHtml + `
+        <div class="student-photo-card" style="background:#FFFFFF; border:2px solid #22C55E; border-radius:18px; padding:18px 20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #F1F5F9; padding-bottom:12px; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="background:#DCFCE7; color:#15803D; font-size:12px; font-weight:800; padding:3px 8px; border-radius:8px;">선택된 조원</span>
+              <strong style="font-size:18px; font-family:'GmarketSans',sans-serif; color:#1E293B;">${teamCode}_${currentTabPhotosMemberName}</strong>
+            </div>
+            <span style="font-size:13px; font-weight:700; color:#475569;">표시 사진: ${filtered.length}장</span>
+          </div>
+          ${filtered.length > 0
+            ? `<div class="gallery-grid">${buildPhotoCardsHtml(filtered, tabShowBoxes)}</div>`
+            : `<div style="text-align:center; padding:24px; color:#94A3B8; font-size:13.5px;">선택한 조건에 해당하는 사진이 없습니다.</div>`
+          }
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = memberBarHtml + buildStudentGroupedPhotosHtml(teamCode, tabFilterStatus, tabShowBoxes);
   }
 
   // ── 정밀 검사 라이트박스 함수 ──
