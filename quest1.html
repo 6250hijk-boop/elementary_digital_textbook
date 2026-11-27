@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>QUEST 1: AI의 눈 | AI 자원순환 탐정단</title>
-  <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- 로컬 폰트: Paperlogy & GmarketSans -->
+  <link rel="stylesheet" href="fonts.css">
   
   <style>
     :root {
@@ -33,7 +31,7 @@
     }
 
     body {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Paperlogy', sans-serif;
       background-color: var(--bg-blue);
       background-image: 
         radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.2), transparent 35%),
@@ -93,7 +91,7 @@
       border: 1.5px solid rgba(255, 255, 255, 0.6);
       padding: 8px 16px;
       border-radius: 12px;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 16px;
       font-weight: 800;
       text-decoration: none;
@@ -125,7 +123,7 @@
     }
 
     .header-main-title {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 24px;
       color: var(--text-white);
       letter-spacing: -0.3px;
@@ -142,7 +140,7 @@
       background: rgba(6, 27, 80, 0.8);
       border: 2px solid var(--btn-yellow);
       color: var(--btn-yellow);
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-weight: 900;
       font-size: 18px;
       padding: 7px 18px;
@@ -178,7 +176,7 @@
       border-radius: 12px;
       font-size: 15px;
       font-weight: 800;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -296,12 +294,12 @@
       border-radius: 30px;
       font-size: 16px;
       font-weight: 900;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       margin-bottom: 12px;
     }
 
     .stage-title {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: clamp(24px, 3.4vw, 30px);
       color: var(--text-white);
       margin-bottom: 16px;
@@ -420,7 +418,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 18px;
       flex-shrink: 0;
     }
@@ -471,7 +469,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 20px;
       color: var(--btn-yellow);
       margin-bottom: 8px;
@@ -500,7 +498,7 @@
       border-radius: 16px;
       font-size: 19px;
       font-weight: 800;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -571,7 +569,7 @@
     }
 
     .cert-title {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 30px;
       color: #BF360C;
       margin-bottom: 10px;
@@ -598,7 +596,7 @@
     .comparison-table th {
       background: #FFF3E0;
       color: #E65100;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 16px;
     }
 
@@ -968,7 +966,7 @@
 
         <!-- 우리 모둠 탐정 한마디 작성 & 실시간 공유 영역 -->
         <div style="background:white; border-radius:18px; padding:20px; border:2.5px solid #93C5FD; margin-bottom:24px; text-align:left;">
-          <h4 style="font-family:'Jua'; color:#1D4ED8; font-size:19px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+          <h4 style="font-family:'GmarketSans'; color:#1D4ED8; font-size:19px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
             <span></span> <span>우리 모둠('${teamCode || '1모둠'}') 탐정 한마디 남기기</span>
           </h4>
           <p style="font-size:14px; color:#64748B; margin-bottom:12px;">
@@ -978,7 +976,7 @@
             <textarea 
               id="detectiveThought" 
               class="custom-textarea" 
-              style="min-height:70px; border:2px solid #CBD5E1; border-radius:12px; padding:10px 14px; font-size:15px; font-family:'Pretendard';"
+              style="min-height:70px; border:2px solid #CBD5E1; border-radius:12px; padding:10px 14px; font-size:15px; font-family:'Paperlogy';"
               placeholder="예: 사람은 흐리거나 가려져도 전체 맥락을 추론하지만, AI는 구체적인 픽셀 특징이 있어야 알아볼 수 있어요."
             >사람은 흐리거나 가려져도 전체 맥락을 추론하지만, AI는 구체적인 픽셀 특징이 있어야 알아볼 수 있어요.</textarea>
           </div>
@@ -987,7 +985,7 @@
         <!-- 실시간 우리 모둠 피드 -->
         <div style="background:#F8FAFC; border-radius:18px; padding:20px; border:2px solid #E2E8F0; margin-bottom:24px; text-align:left;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-            <h4 style="font-family:'Jua'; color:#1E293B; font-size:18px; display:flex; align-items:center; gap:6px;">
+            <h4 style="font-family:'GmarketSans'; color:#1E293B; font-size:18px; display:flex; align-items:center; gap:6px;">
               <span></span> <span>우리 모둠 탐정단 탐구 공유 피드</span>
             </h4>
             <span style="font-size:13px; font-weight:700; color:#2563EB; background:#EFF6FF; padding:4px 10px; border-radius:12px;" id="teamMemberCount">실시간 동기화 중...</span>
@@ -1000,7 +998,7 @@
         </div>
 
         <div style="background:white; border-radius:16px; padding:18px; border:2px solid #FFE082; margin-bottom:24px; text-align:left;">
-          <h4 style="font-family:'Jua'; color:#2E7D32; font-size:18px; margin-bottom:8px;">탐구 완료 안내:</h4>
+          <h4 style="font-family:'GmarketSans'; color:#2E7D32; font-size:18px; margin-bottom:8px;">탐구 완료 안내:</h4>
           <p style="font-size:15px; color:#37474F; line-height:1.6;">
             AI가 사진을 잘 구별하게 하려면 우리가 직접 명확한 규칙을 알려주어야 합니다!<br>
             완료 후 <strong>메인 화면</strong>으로 이동하여 다음 퀘스트를 선택해보세요.
@@ -1093,7 +1091,7 @@
             return `
               <div style="background:white; border:1.5px solid ${isMe ? '#93C5FD' : '#E2E8F0'}; border-radius:14px; padding:14px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                  <span style="font-family:'Jua'; font-size:15px; color:${isMe ? '#2563EB' : '#1E293B'}; display:flex; align-items:center; gap:6px;">
+                  <span style="font-family:'GmarketSans'; font-size:15px; color:${isMe ? '#2563EB' : '#1E293B'}; display:flex; align-items:center; gap:6px;">
                     <span>${isMe ? '나 (' + item.studentName + ')' : '' + item.studentName}</span>
                     <span style="background:#DCFCE7; color:#15803D; font-size:12px; padding:2px 8px; border-radius:8px;">${item.badge || '견습 탐정'}</span>
                   </span>

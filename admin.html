@@ -4,11 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>AI 자원순환 탐정단 - 선생님 관리자 및 실시간 모둠 진도표</title>
-  <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua 사용 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+  <!-- 로컬 폰트: Paperlogy & GmarketSans -->
+  <link rel="stylesheet" href="fonts.css">
   <!-- Chart.js 4.4.1 (사전/사후 설문 분석 그래프 시각화용) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
@@ -28,7 +25,7 @@
       --yet-bg: #F1F5F9;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Paperlogy', sans-serif; -webkit-tap-highlight-color: transparent; }
 
     body {
       background: #F4FBF4;
@@ -62,7 +59,7 @@
     }
 
     .admin-title-area h1 {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 28px;
       color: var(--primary);
       display: flex;
@@ -86,7 +83,7 @@
     .btn-action {
       padding: 10px 18px;
       border-radius: 14px;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 15px;
       cursor: pointer;
       border: none;
@@ -147,7 +144,7 @@
     .stat-card.purple::after { background: #7C3AED; }
 
     .stat-num {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 32px;
       color: var(--primary);
     }
@@ -171,7 +168,7 @@
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
     }
     .quest-overview-title {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 17px;
       color: var(--primary);
       margin-bottom: 12px;
@@ -206,7 +203,7 @@
       text-overflow: ellipsis;
     }
     .quest-mini-count {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 16px;
       color: #16A34A;
     }
@@ -230,7 +227,7 @@
     }
 
     .section-header h2 {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 24px;
       color: var(--primary);
       display: flex;
@@ -285,7 +282,7 @@
     th {
       background: #F1F8E9;
       color: #1B5E20;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 14px;
       padding: 10px 6px;
       border-bottom: 2px solid #C8E6C9;
@@ -419,7 +416,7 @@
       border: none;
       border-radius: 12px;
       padding: 9px 18px;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 15px;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
@@ -435,7 +432,7 @@
       border: 1.5px solid #FCA5A5;
       border-radius: 10px;
       padding: 6px 12px;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 13px;
       cursor: pointer;
       transition: all 0.2s;
@@ -448,7 +445,7 @@
       border: none;
       border-radius: 12px;
       padding: 8px 16px;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 14px;
       cursor: pointer;
       box-shadow: 0 4px 10px rgba(29, 78, 216, 0.2);
@@ -490,7 +487,7 @@
       border: none;
       cursor: pointer;
       font-weight: 700;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       transition: transform 0.15s;
     }
     .btn-sm-action:hover { transform: scale(1.04); }
@@ -542,7 +539,7 @@
     }
 
     .modal-header h3 {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 22px;
       color: var(--primary);
     }
@@ -582,7 +579,7 @@
       padding: 16px;
     }
     .artifact-title {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 16px;
       color: #0F172A;
       margin-bottom: 8px;
@@ -614,7 +611,7 @@
     .tab-btn {
       padding: 10px 20px;
       border-radius: 14px;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 16px;
       border: none;
       cursor: pointer;
@@ -1048,7 +1045,7 @@
 
       <!-- 새 모둠 코드 추가 폼 -->
       <div class="add-team-box">
-        <strong style="color:#2E7D32;font-family:'Jua',sans-serif;font-size:16px;">새 모둠 코드 개설:</strong>
+        <strong style="color:#2E7D32;font-family:'GmarketSans',sans-serif;font-size:16px;">새 모둠 코드 개설:</strong>
         <input type="text" id="newTeamCode" placeholder="모둠 코드 (예: 1모둠, GREEN, 탐정단)" style="flex:1;min-width:140px;">
         <input type="text" id="newTeamAiName" placeholder="기본 AI 이름 (예: 에코봇)" style="flex:1;min-width:140px;">
         <button onclick="addNewTeamCode()" class="btn-action btn-green" style="padding:9px 16px;font-size:14px;">모둠 생성</button>
@@ -1056,7 +1053,7 @@
 
       <!-- 개설된 모둠 카드 목록 -->
       <div style="margin-top:20px;">
-        <h3 style="font-family:'Jua',sans-serif;font-size:18px;color:#1B5E20;margin-bottom:12px;">현재 개설된 모둠 목록</h3>
+        <h3 style="font-family:'GmarketSans',sans-serif;font-size:18px;color:#1B5E20;margin-bottom:12px;">현재 개설된 모둠 목록</h3>
         <div class="team-mgmt-grid" id="teamMgmtGrid">
           <div style="text-align:center;padding:30px;color:#78909C;grid-column:1/-1;">모둠 목록을 불러오는 중입니다...</div>
         </div>
@@ -1133,7 +1130,7 @@
       <!-- 사진 갤러리 컨테이너 (학생별 분류 카드 렌더링) -->
       <div id="tabPhotoGalleryGrid" style="display:flex; flex-direction:column; gap:20px; width:100%;">
         <div style="text-align:center; padding:50px 20px; color:#94A3B8; background:#F8FAFC; border-radius:18px; border:2px dashed #CBD5E1;">
-          <div style="font-size:20px; font-family:'Jua',sans-serif; color:#1B5E20; margin-bottom:8px;">조(모둠) 이름을 클릭해주세요</div>
+          <div style="font-size:20px; font-family:'GmarketSans',sans-serif; color:#1B5E20; margin-bottom:8px;">조(모둠) 이름을 클릭해주세요</div>
           <div style="font-size:14px; color:#64748B;">상단의 조 이름을 클릭하시면 해당 조의 수집 및 라벨링 사진이 <strong>학생별로 분류</strong>되어 표시됩니다.</div>
         </div>
       </div>
@@ -1358,7 +1355,7 @@
   <div class="modal-content gallery-modal-content">
     <div class="modal-header" style="background:#F0FDF4; border-bottom:2px solid #BBF7D0;">
       <div>
-        <h3 id="photoModalTitle" style="color:#15803D; font-size:22px; font-family:'Jua',sans-serif;">[모둠] 수집 사진 및 라벨링 (학생별 분류)</h3>
+        <h3 id="photoModalTitle" style="color:#15803D; font-size:22px; font-family:'GmarketSans',sans-serif;">[모둠] 수집 사진 및 라벨링 (학생별 분류)</h3>
         <p id="photoModalSub" style="font-size:13px; color:#166534; font-weight:600; margin-top:2px;">모둠 학생들이 수집하고 라벨링한 사진 데이터를 학생별로 분류하여 표시합니다.</p>
       </div>
       <button class="btn-modal-close" onclick="closeTeamPhotoModal()"></button>
@@ -1393,7 +1390,7 @@
 <div class="lightbox-modal" id="photoLightboxModal">
   <div class="lightbox-box">
     <div class="modal-header" style="background:#F8FAFC; border-bottom:1px solid #E2E8F0; padding:14px 20px;">
-      <h3 id="lightboxTitle" style="font-size:18px; color:#1E293B; font-family:'Jua',sans-serif;">사진 상세 검사</h3>
+      <h3 id="lightboxTitle" style="font-size:18px; color:#1E293B; font-family:'GmarketSans',sans-serif;">사진 상세 검사</h3>
       <button class="btn-modal-close" onclick="closePhotoLightbox()"></button>
     </div>
     <div style="display:flex; flex-direction:row; flex-wrap:wrap; overflow-y:auto; flex:1;">
@@ -1407,7 +1404,7 @@
       <!-- 오른쪽: 상세 정보 및 라벨 목록 -->
       <div style="flex:1; min-width:280px; padding:20px; background:#FFFFFF; display:flex; flex-direction:column; gap:14px;">
         <div id="lightboxMeta"></div>
-        <div style="font-family:'Jua',sans-serif; font-size:16px; color:#0F172A; border-bottom:2px solid #E2E8F0; padding-bottom:6px;">라벨링된 객체 목록</div>
+        <div style="font-family:'GmarketSans',sans-serif; font-size:16px; color:#0F172A; border-bottom:2px solid #E2E8F0; padding-bottom:6px;">라벨링된 객체 목록</div>
         <div id="lightboxBoxesList" style="flex:1; overflow-y:auto; max-height:260px; display:flex; flex-direction:column; gap:8px;"></div>
         <div style="margin-top:auto; padding-top:12px; border-top:1px solid #E2E8F0; display:flex; gap:8px;">
           <a id="lightboxDownloadBtn" href="#" target="_blank" class="btn-action btn-green" style="font-size:13px; padding:8px 14px; text-decoration:none; text-align:center; flex:1; justify-content:center;">원본 사진 새 탭에서 열기</a>
@@ -2474,7 +2471,7 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-              legend: { position: "right", labels: { font: { family: "Pretendard", size: 12, weight: "bold" }, boxWidth: 14 } }
+              legend: { position: "right", labels: { font: { family: "Paperlogy", size: 12, weight: "bold" }, boxWidth: 14 } }
             }
           }
         });
@@ -2801,7 +2798,7 @@
               legend: {
                 position: 'top',
                 labels: {
-                  font: { family: 'Pretendard', size: 12, weight: 'bold' },
+                  font: { family: 'Paperlogy', size: 12, weight: 'bold' },
                   boxWidth: 14,
                   boxHeight: 14
                 }
@@ -2823,11 +2820,11 @@
               y: {
                 min: 0,
                 max: 5,
-                ticks: { stepSize: 1, font: { family: 'Pretendard', size: 11 } },
+                ticks: { stepSize: 1, font: { family: 'Paperlogy', size: 11 } },
                 grid: { color: '#E2E8F0' }
               },
               x: {
-                ticks: { font: { family: 'Pretendard', size: 11, weight: '600' } },
+                ticks: { font: { family: 'Paperlogy', size: 11, weight: '600' } },
                 grid: { display: false }
               }
             }
@@ -2875,7 +2872,7 @@
               legend: {
                 position: 'top',
                 labels: {
-                  font: { family: 'Pretendard', size: 12, weight: 'bold' },
+                  font: { family: 'Paperlogy', size: 12, weight: 'bold' },
                   boxWidth: 14,
                   boxHeight: 14
                 }
@@ -2894,7 +2891,7 @@
                 max: 5,
                 ticks: { stepSize: 1, display: false },
                 pointLabels: {
-                  font: { family: 'Pretendard', size: 12, weight: '700' },
+                  font: { family: 'Paperlogy', size: 12, weight: '700' },
                   color: '#334155'
                 },
                 grid: { color: '#E2E8F0' },
@@ -3521,7 +3518,7 @@
     if (!teamCode) {
       return `
         <div style="text-align:center; padding:60px 20px; background:#F8FAFC; border:2px dashed #CBD5E1; border-radius:18px;">
-          <div style="font-size:20px; font-family:'Jua',sans-serif; color:#1B5E20; margin-bottom:8px;">조(모둠) 이름을 클릭해주세요</div>
+          <div style="font-size:20px; font-family:'GmarketSans',sans-serif; color:#1B5E20; margin-bottom:8px;">조(모둠) 이름을 클릭해주세요</div>
           <div style="font-size:14px; color:#64748B;">상단의 조 이름을 클릭하시면 해당 조의 수집 및 라벨링 사진이 <strong>학생별로 분류</strong>되어 나타납니다.</div>
         </div>
       `;
@@ -3590,7 +3587,7 @@
           <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #F1F5F9; padding-bottom:12px; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
             <div style="display:flex; align-items:center; gap:8px;">
               <span style="background:#E8F5E9; color:#1B5E20; font-size:12px; font-weight:800; padding:3px 8px; border-radius:8px;">학생 대원</span>
-              <strong style="font-size:18px; font-family:'Jua',sans-serif; color:#1E293B;">${name}</strong>
+              <strong style="font-size:18px; font-family:'GmarketSans',sans-serif; color:#1E293B;">${name}</strong>
               ${studentObj?.badge ? `<span style="font-size:11px; background:#FFF9C4; color:#B45309; padding:2px 7px; border-radius:8px; font-weight:bold;">${studentObj.badge}</span>` : ''}
             </div>
             <div style="display:flex; gap:8px; align-items:center; font-size:13px; font-weight:700;">
@@ -3620,7 +3617,7 @@
           <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #F1F5F9; padding-bottom:12px; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
             <div style="display:flex; align-items:center; gap:8px;">
               <span style="background:#F1F5F9; color:#475569; font-size:12px; font-weight:800; padding:3px 8px; border-radius:8px;">기타</span>
-              <strong style="font-size:18px; font-family:'Jua',sans-serif; color:#475569;">기타/미분류 수집 사진</strong>
+              <strong style="font-size:18px; font-family:'GmarketSans',sans-serif; color:#475569;">기타/미분류 수집 사진</strong>
             </div>
             <div style="font-size:13px; font-weight:700; color:#475569;">
               사진: ${unassignedPhotos.length}장

@@ -248,7 +248,7 @@
       border-radius: 20px;
       font-size: 15px;
       font-weight: 700;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       cursor: pointer;
       backdrop-filter: blur(8px);
       transition: all 0.2s ease;
@@ -326,7 +326,7 @@
       gap: 10px;
       background: linear-gradient(135deg, #0284C7, #0369A1);
       color: #FFFFFF;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 17px;
       padding: 6px 16px 6px 8px;
       border-radius: 30px;
@@ -354,14 +354,14 @@
     }
 
     .quest-intro-quest-title-label {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 18px;
       color: #FACC15;
       letter-spacing: 0.3px;
     }
 
     .quest-intro-text {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Paperlogy', sans-serif;
       font-size: clamp(18px, 2vw, 24px);
       font-weight: 700;
       color: #F8FAFC;
@@ -443,7 +443,7 @@
     }
 
     .quest-intro-popup-title {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 28px;
       color: #FCD34D;
       margin-bottom: 12px;
@@ -462,7 +462,7 @@
     .quest-intro-btn-start {
       background: linear-gradient(135deg, #10B981, #059669);
       color: #FFFFFF;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 22px;
       border: none;
       padding: 16px 42px;

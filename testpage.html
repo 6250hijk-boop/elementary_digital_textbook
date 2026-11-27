@@ -6,10 +6,8 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <title> 퀘스트 맵 좌표 매퍼 | AI 자원순환 탐정단</title>
   
-  <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- 로컬 폰트: Paperlogy & GmarketSans -->
+  <link rel="stylesheet" href="fonts.css">
   
   <style>
     :root {
@@ -34,7 +32,7 @@
     }
 
     body {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Paperlogy', sans-serif;
       background-color: var(--bg-light);
       background-image: 
         radial-gradient(circle at 10% 10%, rgba(37, 99, 235, 0.06), transparent 35%),
@@ -96,7 +94,7 @@
     }
 
     .header-badge {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 12px;
       color: #2563eb;
       background: #eff6ff;
@@ -107,7 +105,7 @@
     }
 
     .header-title {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 20px;
       color: #1e293b;
       display: flex;
@@ -135,7 +133,7 @@
       border: none;
       border-radius: 10px;
       background: transparent;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 14px;
       color: #64748b;
       cursor: pointer;
@@ -180,7 +178,7 @@
     }
 
     .palette-title {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 17px;
       color: #1e293b;
       display: flex;
@@ -208,7 +206,7 @@
       border-radius: 12px;
       border: 2px solid #cbd5e1;
       background: #f8fafc;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 14px;
       color: #334155;
       cursor: pointer;
@@ -336,7 +334,7 @@
     }
 
     .hotspot-label {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 13px;
       color: white;
       background: var(--q-color, #2563eb);
@@ -427,7 +425,7 @@
     .btn-small {
       padding: 8px 14px;
       border-radius: 10px;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 13px;
       cursor: pointer;
       display: inline-flex;
@@ -857,7 +855,7 @@
       fallback.style.alignItems = 'center';
       fallback.style.justifyContent = 'center';
       fallback.style.color = '#38bdf8';
-      fallback.style.fontFamily = 'Jua';
+      fallback.style.fontFamily = 'GmarketSans';
       fallback.style.fontSize = '24px';
       fallback.innerHTML = ' mainpage.png 이미지 영역 (테스트 가능)';
       mapContainer.prepend(fallback);

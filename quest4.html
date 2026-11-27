@@ -4,11 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>QUEST 4: AI공부자료에 이름표 붙이기 | AI 자원순환 탐정단</title>
-  <!-- 저작권 무료 폰트: Pretendard 및 Google Fonts Jua 사용 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+  <!-- 로컬 폰트: Paperlogy & GmarketSans -->
+  <link rel="stylesheet" href="fonts.css">
 
   <style>
     :root {
@@ -24,7 +21,7 @@
       --shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Paperlogy', sans-serif; -webkit-tap-highlight-color: transparent; }
 
     body {
       background: var(--bg-blue);
@@ -77,7 +74,7 @@
     }
 
     .header-main-title {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 24px;
       color: var(--text-white);
       letter-spacing: -0.3px;
@@ -114,7 +111,7 @@
       border: 1.5px solid rgba(255, 255, 255, 0.6);
       padding: 8px 16px;
       border-radius: 12px;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 16px;
       font-weight: 800;
       text-decoration: none;
@@ -139,7 +136,7 @@
       padding: 8px 16px;
       border-radius: 12px;
       text-decoration: none;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 16px;
       font-weight: 800;
       display: inline-flex;
@@ -156,7 +153,7 @@
       border-radius: 12px;
       font-size: 15px;
       font-weight: 800;
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -172,7 +169,7 @@
     }
 
     .select-title {
-      font-family: 'Jua', sans-serif;
+      font-family: 'GmarketSans', sans-serif;
       font-size: 30px;
       color: var(--text-white);
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -214,15 +211,15 @@
     }
 
     .menu-icon { font-size: 44px; flex-shrink: 0; }
-    .menu-num { font-family: 'Jua', sans-serif; font-size: 16px; color: #1E40AF; margin-bottom: 2px; }
-    .menu-name { font-family: 'Jua', sans-serif; font-size: 24px; color: #0F172A; margin-bottom: 4px; }
+    .menu-num { font-family: 'GmarketSans', sans-serif; font-size: 16px; color: #1E40AF; margin-bottom: 2px; }
+    .menu-name { font-family: 'GmarketSans', sans-serif; font-size: 24px; color: #0F172A; margin-bottom: 4px; }
     .menu-desc { font-size: 16px; font-weight: 600; color: #475569; }
     .menu-arrow { margin-left: auto; font-size: 26px; color: #0F172A; font-weight: bold; }
 
     /* ── 라벨링 도구 전체 레이아웃 ── */
     .labeler-layout { display: flex; height: 100vh; flex-direction: column; background: var(--card-navy); color: white; }
     .top-bar { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: var(--card-navy); border-bottom: 2px solid rgba(255, 255, 255, 0.2); flex-shrink: 0; flex-wrap: wrap; }
-    .top-bar .title { font-family: 'Jua', sans-serif; font-size: 22px; color: var(--btn-yellow); white-space: nowrap; }
+    .top-bar .title { font-family: 'GmarketSans', sans-serif; font-size: 22px; color: var(--btn-yellow); white-space: nowrap; }
     .content-area { display: flex; flex: 1; overflow: hidden; }
     .img-sidebar { width: 140px; background: rgba(14, 70, 191, 0.35); border-right: 2px solid rgba(255, 255, 255, 0.2); overflow-y: auto; flex-shrink: 0; }
     .img-thumb { cursor: pointer; border-bottom: 1px solid rgba(255, 255, 255, 0.2); position: relative; }
@@ -238,7 +235,7 @@
 
     .right-panel { width: 230px; background: var(--card-navy); border-left: 2px solid rgba(255, 255, 255, 0.2); display: flex; flex-direction: column; overflow: hidden; }
     .panel-section { padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
-    .panel-title { font-family: 'Jua', sans-serif; font-size: 18px; color: var(--btn-yellow); margin-bottom: 8px; }
+    .panel-title { font-family: 'GmarketSans', sans-serif; font-size: 18px; color: var(--btn-yellow); margin-bottom: 8px; }
     
     /* 클래스 선택 버튼: 흰색 배경에 검정 글씨, 클릭 시 노란색으로 변화 */
     .class-btn { 
@@ -275,7 +272,7 @@
     .box-del { margin-left: auto; background: #EF5350; border: none; border-radius: 6px; padding: 4px 8px; color: white; font-size: 12px; cursor: pointer; }
 
     .bottom-bar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--card-navy); border-top: 2px solid rgba(255, 255, 255, 0.2); flex-shrink: 0; flex-wrap: wrap; }
-    .tool-btn { padding: 8px 16px; border: 1.5px solid rgba(255,255,255,0.4); border-radius: 10px; background: rgba(255,255,255,0.15); color: white; font-family: 'Jua', sans-serif; font-size: 16px; cursor: pointer; transition: all .2s; white-space: nowrap; }
+    .tool-btn { padding: 8px 16px; border: 1.5px solid rgba(255,255,255,0.4); border-radius: 10px; background: rgba(255,255,255,0.15); color: white; font-family: 'GmarketSans', sans-serif; font-size: 16px; cursor: pointer; transition: all .2s; white-space: nowrap; }
     .tool-btn:hover { background: rgba(255,255,255,0.25); }
     .tool-btn.active { background: var(--btn-yellow); color: #0F172A; font-weight: bold; }
     .save-status { font-size: 16px; font-weight: bold; color: var(--btn-yellow); margin-left: auto; }
@@ -312,7 +309,7 @@
     /* ── 튜토리얼 & 연습하기 서브 레이아웃 ── */
     .tutorial-wrap, .practice-wrap { max-width: 720px; margin: 0 auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 16px; }
     .tutorial-step { background: #FFFFFF; border: 3px solid #C8E6C9; border-radius: 20px; padding: 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.04); }
-    .tutorial-step h3 { font-family: 'Jua', sans-serif; font-size: 24px; margin-bottom: 10px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    .tutorial-step h3 { font-family: 'GmarketSans', sans-serif; font-size: 24px; margin-bottom: 10px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
     .tutorial-step p { font-size: 17px; color: #455A64; line-height: 1.6; font-weight: 600; margin-bottom: 10px; }
     .tip-box { background: #E8F5E9; border-left: 5px solid #2E7D32; border-radius: 10px; padding: 12px 14px; font-size: 16px; color: #1B5E20; font-weight: 600; margin-top: 8px; }
 
@@ -430,7 +427,7 @@
     <div class="header-right" style="display:flex; align-items:center; gap:10px;">
       <button class="btn-intro-replay" onclick="window.replayQuestIntro && window.replayQuestIntro()" title="대화형 인트로 다시보기">🎬 인트로</button>
       <div class="student-badge" id="dispStudent" style="background:rgba(14,70,191,0.4); border:1.5px solid rgba(255,255,255,0.3); padding:6px 14px; border-radius:20px; font-size:15px; font-weight:700; color:#FFFFFF; white-space:nowrap;">학생 탐정</div>
-      <div class="score-badge" style="background:rgba(6,27,80,0.8); border:2px solid var(--btn-yellow); padding:6px 14px; border-radius:20px; font-family:'Jua',sans-serif; font-size:18px; color:var(--btn-yellow);" id="dispScore">0점</div>
+      <div class="score-badge" style="background:rgba(6,27,80,0.8); border:2px solid var(--btn-yellow); padding:6px 14px; border-radius:20px; font-family:'GmarketSans',sans-serif; font-size:18px; color:var(--btn-yellow);" id="dispScore">0점</div>
     </div>
   </header>
 
@@ -475,7 +472,7 @@
   <div class="tutorial-wrap">
     <div style="display:flex; align-items:center; gap:10px;">
       <button onclick="showScreen('select')" class="btn-back" style="padding:6px 12px; font-size:14px;">뒤로</button>
-      <h2 style="font-family:'Jua',sans-serif; font-size:24px; color:#2E7D32;">라벨링 튜토리얼</h2>
+      <h2 style="font-family:'GmarketSans',sans-serif; font-size:24px; color:#2E7D32;">라벨링 튜토리얼</h2>
     </div>
 
     <div class="tutorial-step">
@@ -533,7 +530,7 @@
   <div class="practice-wrap">
     <div style="display:flex; align-items:center; gap:10px;">
       <button onclick="showScreen('select')" class="btn-back" style="padding:6px 12px; font-size:14px;">뒤로</button>
-      <h2 style="font-family:'Jua',sans-serif; font-size:24px; color:#2E7D32;">라벨링 연습하기</h2>
+      <h2 style="font-family:'GmarketSans',sans-serif; font-size:24px; color:#2E7D32;">라벨링 연습하기</h2>
     </div>
 
     <div class="practice-guide" id="practice-guide">
@@ -592,7 +589,7 @@
   <div class="content-area">
     <!-- 왼쪽 수집 사진 사이드바 -->
     <div class="img-sidebar" id="img-sidebar">
-      <div style="padding:10px; font-family:'Jua',sans-serif; font-size:14px; color:#A5D6A7; border-bottom:1px solid #455A64;">내 사진 목록</div>
+      <div style="padding:10px; font-family:'GmarketSans',sans-serif; font-size:14px; color:#A5D6A7; border-bottom:1px solid #455A64;">내 사진 목록</div>
       <div id="thumb-list"></div>
     </div>
 
@@ -736,7 +733,7 @@
 
     const ctx = ic.getContext('2d');
     ctx.fillStyle = '#263238'; ctx.fillRect(0, 0, ic.width, ic.height);
-    ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 20px Pretendard'; ctx.textAlign = 'center';
+    ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 20px Paperlogy'; ctx.textAlign = 'center';
     ctx.fillText('예시: q4-1 수집 사진 불러오는 중...', 300, 180);
 
     const candidateSources = [
@@ -778,24 +775,24 @@
         ctx.fillStyle = '#dbeafe'; ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 3;
         ctx.fillRect(80, 80, 100, 190); ctx.strokeRect(80, 80, 100, 190);
         ctx.fillStyle = '#ef4444'; ctx.fillRect(80, 130, 100, 70);
-        ctx.fillStyle = '#ffffff'; ctx.font = 'bold 15px Pretendard';
+        ctx.fillStyle = '#ffffff'; ctx.font = 'bold 15px Paperlogy';
         ctx.fillText('비닐 라벨', 130, 170);
 
         // 우유팩 일러스트
         ctx.fillStyle = '#fef3c7'; ctx.strokeStyle = '#f59e0b';
         ctx.fillRect(240, 90, 110, 180); ctx.strokeRect(240, 90, 110, 180);
-        ctx.fillStyle = '#92400e'; ctx.font = 'bold 16px Pretendard';
+        ctx.fillStyle = '#92400e'; ctx.font = 'bold 16px Paperlogy';
         ctx.fillText('우유팩', 295, 180);
 
         // 알루미늄 캔 일러스트
         ctx.fillStyle = '#e2e8f0'; ctx.strokeStyle = '#64748b';
         ctx.fillRect(410, 110, 100, 160); ctx.strokeRect(410, 110, 100, 160);
-        ctx.fillStyle = '#1e293b'; ctx.font = 'bold 16px Pretendard';
+        ctx.fillStyle = '#1e293b'; ctx.font = 'bold 16px Paperlogy';
         ctx.fillText('알루미늄 캔', 460, 190);
 
-        ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 18px Pretendard';
+        ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 18px Paperlogy';
         ctx.fillText('예시 사진 (q4-1)', 300, 45);
-        ctx.fillStyle = '#94a3b8'; ctx.font = '14px Pretendard';
+        ctx.fillStyle = '#94a3b8'; ctx.font = '14px Paperlogy';
         ctx.fillText('마우스/손가락으로 드래그해서 상자를 그려보세요!', 300, 315);
         redrawPractice();
       }
@@ -815,7 +812,7 @@
       dctx.strokeStyle = cls.color; dctx.lineWidth = 3;
       dctx.strokeRect(box.x, box.y, box.w, box.h);
       dctx.fillStyle = cls.color + '33'; dctx.fillRect(box.x, box.y, box.w, box.h);
-      dctx.fillStyle = cls.color; dctx.font = 'bold 13px Pretendard';
+      dctx.fillStyle = cls.color; dctx.font = 'bold 13px Paperlogy';
       dctx.fillRect(box.x, box.y - 20, Math.max(70, cls.name.length * 12), 20);
       dctx.fillStyle = '#FFFFFF'; dctx.fillText('[' + box.classIdx + '] ' + cls.name, box.x + 4, box.y - 5);
     });
@@ -1015,7 +1012,7 @@
       dc.strokeStyle = cls.color; dc.lineWidth = (i === selectedBoxIdx) ? 4 : 2.5;
       dc.strokeRect(x, y, w, h);
       dc.fillStyle = cls.color + '44'; dc.fillRect(x, y, w, h);
-      dc.fillStyle = cls.color; dc.font = 'bold 13px Pretendard';
+      dc.fillStyle = cls.color; dc.font = 'bold 13px Paperlogy';
       dc.fillRect(x, y - 18, Math.max(70, cls.name.length * 10), 18);
       dc.fillStyle = '#FFFFFF'; dc.fillText('[' + box.classIdx + '] ' + cls.name, x + 3, y - 4);
     });
