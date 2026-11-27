@@ -1251,10 +1251,11 @@
               <th>신뢰도</th>
               <th>등록된 원인태그</th>
               <th>등록 일시</th>
+              <th>관리</th>
             </tr>
           </thead>
           <tbody id="museumTableBody">
-            <tr><td colspan="7" style="text-align:center; padding:30px; color:#94A3B8;">오류박물관 데이터를 불러오고 있습니다...</td></tr>
+            <tr><td colspan="8" style="text-align:center; padding:30px; color:#94A3B8;">오류박물관 데이터를 불러오고 있습니다...</td></tr>
           </tbody>
         </table>
       </div>
@@ -2848,7 +2849,7 @@
     if (tableCntEl) tableCntEl.textContent = items.length;
     if (tbody) {
       if (items.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:#94A3B8;">아직 오류박물관에 등록된 착각 사례가 없습니다.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:30px; color:#94A3B8;">아직 오류박물관에 등록된 착각 사례가 없습니다.</td></tr>`;
       } else {
         const sortedItems = [...items].sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
         tbody.innerHTML = sortedItems.map(item => {
@@ -2861,6 +2862,7 @@
             ? new Date(item.createdAt.seconds * 1000).toLocaleString('ko-KR')
             : '-';
           const imgUrl = item.imageData || 'images/quest1-q1.png';
+          const safeId = String(item.id || '').replace(/'/g, "\\'");
           return `
             <tr>
               <td><img src="${imgUrl}" alt="착각 사례" style="width:56px; height:42px; object-fit:cover; border-radius:8px; border:1px solid #CBD5E1;" onerror="this.src='images/quest1-q1.png'"></td>
@@ -2870,10 +2872,23 @@
               <td style="font-weight:700; color:#0284C7;">${confVal}</td>
               <td style="max-width:260px;">${tagsHtml}</td>
               <td style="font-size:12px; color:#64748B;">${dateStr}</td>
+              <td>
+                <button type="button" onclick="deleteMuseumCase('${safeId}')" class="btn-sm-action btn-sm-del" style="font-size:12px; padding:4px 10px;" title="오류박물관 사진 삭제">삭제</button>
+              </td>
             </tr>
           `;
         }).join('');
       }
+    }
+  };
+
+  window.deleteMuseumCase = async function(docId) {
+    if (!docId) return;
+    if (!confirm("이 오류박물관 사진(착각 사례)을 정말 삭제하시겠습니까?")) return;
+    try {
+      await deleteDoc(doc(db, "quest6_museum", docId));
+    } catch (e) {
+      alert("삭제 중 오류가 발생했습니다: " + e.message);
     }
   };
 
