@@ -968,7 +968,7 @@
         <!-- 우리 모둠 탐정 한마디 작성 & 실시간 공유 영역 -->
         <div style="background:white; border-radius:18px; padding:20px; border:2.5px solid #93C5FD; margin-bottom:24px; text-align:left;">
           <h4 style="font-family:'GmarketSans'; color:#1D4ED8; font-size:19px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
-            <span></span> <span>우리 모둠('${teamCode || '1모둠'}') 탐정 한마디 남기기</span>
+            <span></span> <span id="teamThoughtTitle">우리 모둠 탐정 한마디 남기기</span>
           </h4>
           <p style="font-size:14px; color:#64748B; margin-bottom:12px;">
             AI와 사람의 눈을 비교하며 알게 된 점이나 느낀 점을 한 문장으로 남겨 모둠원들과 공유해보세요!
@@ -1052,6 +1052,10 @@
     const studentDisplay = document.getElementById('studentDisplay');
     if (studentDisplay) {
       studentDisplay.textContent = (window.innerWidth <= 768) ? `${studentName}` : `${studentName} (${teamCode})`;
+    }
+    const teamThoughtTitle = document.getElementById('teamThoughtTitle');
+    if (teamThoughtTitle) {
+      teamThoughtTitle.textContent = `우리 모둠('${teamCode}') 탐정 한마디 남기기`;
     }
 
     // 전역 상태
