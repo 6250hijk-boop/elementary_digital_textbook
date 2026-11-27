@@ -937,6 +937,23 @@
     </div>
   </div>
 
+  <!-- 모둠코드별 필터 체크박스 바 (체크한 모둠코드만 아래 화면에 표시) -->
+  <div class="manage-card" id="globalTeamFilterBar" style="margin-bottom:16px; padding:14px 18px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+      <div>
+        <strong style="font-size:15px; color:#1B5E20;">모둠코드별 필터</strong>
+        <span style="font-size:12.5px; color:#64748B; margin-left:8px;">보고 싶은 모둠코드를 체크하면 해당 모둠과 조원(같은 모둠코드 내 별명별 조원)만 표시됩니다.</span>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button type="button" onclick="toggleAllAdminTeams(true)" class="btn-action btn-ghost" style="font-size:12px; padding:4px 10px;">전체 선택</button>
+        <button type="button" onclick="toggleAllAdminTeams(false)" class="btn-action btn-ghost" style="font-size:12px; padding:4px 10px;">전체 해제</button>
+      </div>
+    </div>
+    <div id="globalTeamCheckList" style="display:flex; flex-wrap:wrap; gap:8px; padding:10px 12px; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:12px;">
+      <span style="font-size:12.5px; color:#94A3B8;">모둠코드를 불러오는 중...</span>
+    </div>
+  </div>
+
   <!-- 탭 네비게이션 -->
   <div class="admin-tabs">
     <button class="tab-btn active" data-tab="tab-matrix" onclick="switchTab('tab-matrix')">실시간 모둠 8대 퀘스트 진도표</button>
@@ -1621,7 +1638,14 @@
 
     // 1. 기존 teams 데이터
     teamsCache.forEach(t => {
-      const code = t.teamCode || t.id;
+      const code = String(t.teamCode || t.id || '').trim();
+      if (!code) return;
+      const memberSet = new Set((t.members || []).map(m => String(m || '').trim()).filter(Boolean));
+      if (t.presence && typeof t.presence === 'object') {
+        Object.values(t.presence).forEach(p => {
+          if (p && p.name) memberSet.add(String(p.name).trim());
+        });
+      }
       teamMap[code] = {
         id: t.id || code,
         teamCode: code,
@@ -1629,13 +1653,13 @@
         score: t.score !== undefined ? t.score : 10,
         badge: t.badge || "신입 탐정단",
         approvedQuests: t.approvedQuests || {},
-        members: t.members ? [...t.members] : []
+        members: Array.from(memberSet)
       };
     });
 
-    // 2. 학생 목록에서 발견된 모둠 코드 자동 병합
+    // 2. 학생 목록에서 발견된 모둠 코드 및 서로 다른 별명 자동 병합
     studentsCache.forEach(s => {
-      const code = s.teamCode;
+      const code = String(s.teamCode || '').trim();
       if (!code) return;
       if (!teamMap[code]) {
         teamMap[code] = {
@@ -1648,9 +1672,21 @@
           members: []
         };
       }
-      const sName = s.studentName || s.name || s.id;
+      const rawName = String(s.studentName || s.name || s.id || '').trim();
+      const prefix = `${code}_`;
+      const sName = rawName.startsWith(prefix) ? rawName.slice(prefix.length) : rawName;
       if (sName && !teamMap[code].members.includes(sName)) {
         teamMap[code].members.push(sName);
+      }
+    });
+
+    // 3. 업로드 사진 목록에서 발견된 별명 병합
+    uploadsCache.forEach(u => {
+      const code = String(u.teamCode || '').trim();
+      if (!code || !teamMap[code]) return;
+      const uName = String(u.userName || '').trim();
+      if (uName && uName !== '학생' && uName !== '모둠원' && !teamMap[code].members.includes(uName)) {
+        teamMap[code].members.push(uName);
       }
     });
 
@@ -1673,14 +1709,66 @@
     return Object.values(teamMap).sort((a, b) => (a.teamCode || '').localeCompare(b.teamCode || '', 'ko-KR', { numeric: true }));
   }
 
+  // 전역 모둠코드 체크박스 필터 상태
+  let selectedAdminTeams = null;
+
+  function renderGlobalTeamCheckboxes(allTeams) {
+    const box = document.getElementById("globalTeamCheckList");
+    if (!box) return;
+    if (!allTeams.length) {
+      box.innerHTML = '<span style="font-size:12.5px; color:#94A3B8;">개설된 모둠코드가 없습니다.</span>';
+      return;
+    }
+    if (selectedAdminTeams === null) {
+      selectedAdminTeams = new Set(allTeams.map(t => t.teamCode || t.id));
+    }
+    box.innerHTML = allTeams.map(t => {
+      const code = t.teamCode || t.id;
+      const checked = selectedAdminTeams.has(code);
+      const esc = code.replace(/'/g, "\\'");
+      const memberCnt = getTeamMemberEntries(code, t).length;
+      return `
+        <label style="display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:10px; border:1.5px solid ${checked ? '#22C55E' : '#CBD5E1'}; background:${checked ? '#F0FDF4' : '#FFFFFF'}; color:#1E293B; font-size:13px; font-weight:700; cursor:pointer;">
+          <input type="checkbox" ${checked ? 'checked' : ''} onchange="onToggleAdminTeam('${esc}', this.checked)">
+          <span>${code}</span>
+          <span style="font-size:11px; color:#64748B;">(${memberCnt}명)</span>
+        </label>
+      `;
+    }).join('');
+  }
+
+  window.onToggleAdminTeam = function(teamCode, isChecked) {
+    const allTeams = getAllMergedTeams();
+    if (selectedAdminTeams === null) {
+      selectedAdminTeams = new Set(allTeams.map(t => t.teamCode || t.id));
+    }
+    if (isChecked) selectedAdminTeams.add(teamCode);
+    else selectedAdminTeams.delete(teamCode);
+    renderAll();
+  };
+
+  window.toggleAllAdminTeams = function(selectAll) {
+    const allTeams = getAllMergedTeams();
+    selectedAdminTeams = selectAll ? new Set(allTeams.map(t => t.teamCode || t.id)) : new Set();
+    renderAll();
+  };
+
+  function getFilteredMergedTeams(allTeams = null) {
+    const teams = allTeams || getAllMergedTeams();
+    if (selectedAdminTeams === null) return teams;
+    return teams.filter(t => selectedAdminTeams.has(t.teamCode || t.id));
+  }
+
   // 통합 렌더링 함수
   function renderAll() {
     const mergedTeams = getAllMergedTeams();
-    renderStatsAndOverview(mergedTeams);
-    renderTeamsTable(mergedTeams);
-    renderTeamMgmtGrid(mergedTeams);
-    renderStudentsTable(mergedTeams);
-    renderTabPhotosTeamSelector(mergedTeams);
+    renderGlobalTeamCheckboxes(mergedTeams);
+    const filteredTeams = getFilteredMergedTeams(mergedTeams);
+    renderStatsAndOverview(filteredTeams);
+    renderTeamsTable(filteredTeams);
+    renderTeamMgmtGrid(filteredTeams);
+    renderStudentsTable(filteredTeams);
+    renderTabPhotosTeamSelector(filteredTeams);
     renderMuseumDashboard();
     renderSurveyAnalytics();
   }
@@ -1744,7 +1832,9 @@
     const normTeam = String(teamCode || '').trim().toLowerCase();
 
     (team.members || []).forEach(m => {
-      const name = String(m || '').trim();
+      const raw = String(m || '').trim();
+      const prefix = `${teamCode}_`;
+      const name = raw.startsWith(prefix) ? raw.slice(prefix.length) : raw;
       if (!name) return;
       byName.set(name.toLowerCase(), {
         name,
@@ -1771,6 +1861,22 @@
       });
     });
 
+    uploadsCache.forEach(u => {
+      const uTeam = String(u.teamCode || '').trim().toLowerCase();
+      if (uTeam !== normTeam) return;
+      const uName = String(u.userName || '').trim();
+      if (!uName || uName === '학생' || uName === '모둠원') return;
+      const key = uName.toLowerCase();
+      if (!byName.has(key)) {
+        byName.set(key, {
+          name: uName,
+          displayId: `${teamCode}_${uName}`,
+          studentId: u.userId || `${teamCode}_${uName}`,
+          studentObj: null
+        });
+      }
+    });
+
     return Array.from(byName.values());
   }
 
@@ -1780,7 +1886,7 @@
   window.toggleMatrixTeamMembers = function(teamCode) {
     if (expandedMatrixTeams.has(teamCode)) expandedMatrixTeams.delete(teamCode);
     else expandedMatrixTeams.add(teamCode);
-    renderTeamsTable(getAllMergedTeams());
+    renderTeamsTable(getFilteredMergedTeams());
   };
 
   function renderTeamsTable(mergedTeams) {
@@ -1907,7 +2013,7 @@
   window.toggleStudentTeamMembers = function(teamCode) {
     if (expandedStudentTeams.has(teamCode)) expandedStudentTeams.delete(teamCode);
     else expandedStudentTeams.add(teamCode);
-    renderStudentsTable(getAllMergedTeams());
+    renderStudentsTable(getFilteredMergedTeams());
   };
 
   function renderStudentsTable(mergedTeams) {
@@ -1916,7 +2022,7 @@
     if (countEl) countEl.textContent = studentsCache.length.toString();
     if (!tbody) return;
 
-    // 모둠별 학생 그룹핑
+    // 모둠별 학생 그룹핑 (체크된 모둠코드만 표시)
     const groupMap = {};
     mergedTeams.forEach(t => {
       const code = t.teamCode || t.id;
@@ -1925,10 +2031,9 @@
 
     studentsCache.forEach(s => {
       const tCode = (s.teamCode || '').trim() || '미지정';
-      if (!groupMap[tCode]) {
-        groupMap[tCode] = { team: { teamCode: tCode, aiName: s.aiPartnerName || '에코봇', score: 0, approvedQuests: {} }, students: [] };
+      if (groupMap[tCode]) {
+        groupMap[tCode].students.push(s);
       }
-      groupMap[tCode].students.push(s);
     });
 
     const groups = Object.entries(groupMap);
@@ -2442,7 +2547,7 @@
   window.toggleMgmtTeamMembers = function(teamCode) {
     if (expandedMgmtTeams.has(teamCode)) expandedMgmtTeams.delete(teamCode);
     else expandedMgmtTeams.add(teamCode);
-    renderTeamMgmtGrid(getAllMergedTeams());
+    renderTeamMgmtGrid(getFilteredMergedTeams());
   };
 
   function renderTeamMgmtGrid(mergedTeams) {
@@ -4000,7 +4105,7 @@
     const selector = document.getElementById("tabPhotosTeamSelector");
     if (!selector) return;
 
-    const teams = mergedTeams || getAllMergedTeams();
+    const teams = mergedTeams || getFilteredMergedTeams();
     if (!teams.length) {
       selector.innerHTML = '<span style="font-size:12px; color:#94A3B8;">개설된 모둠이 없습니다.</span>';
       return;
