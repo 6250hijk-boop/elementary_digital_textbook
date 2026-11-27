@@ -36,6 +36,7 @@
   </script>
   <!-- 로컬 폰트: Paperlogy & GmarketSans -->
   <link rel="stylesheet" href="fonts.css">
+  <script src="rank-helper.js"></script>
   
   <style>
     :root {
@@ -1247,6 +1248,34 @@
     if (progressFillEl) progressFillEl.style.width = `${(completedCount / 8) * 100}%`;
   }
 
+  let latestTeamScore = null;
+  let latestStudentScore = null;
+
+  function applySyncedScoreAndRank() {
+    const scores = [latestTeamScore, latestStudentScore].filter(v => typeof v === 'number' && !isNaN(v));
+    if (scores.length === 0) return;
+    const effectiveScore = Math.max(...scores);
+    const rank = window.updateLocalScoreAndRank
+      ? window.updateLocalScoreAndRank(effectiveScore)
+      : { level: 1, title: "신입 탐정단", icon: "🌱" };
+
+    const scoreEl = document.getElementById("teamScoreDisplay");
+    if (scoreEl) scoreEl.textContent = effectiveScore.toString();
+
+    const teamBadgeEl = document.getElementById("teamBadgeDisplay");
+    if (teamBadgeEl) {
+      const currentTeam = localStorage.getItem("elementary_teamCode") || teamCode || "탐정단";
+      teamBadgeEl.textContent = `${currentTeam} · ${rank.icon} Lv.${rank.level} ${rank.title}`;
+    }
+
+    if (teamCode && latestStudentScore !== null && latestTeamScore !== null && latestStudentScore > latestTeamScore) {
+      updateDoc(doc(db, "teams", teamCode), {
+        score: latestStudentScore,
+        badge: rank.title
+      }).catch(e => console.warn(e));
+    }
+  }
+
   // 5. 모둠(Team) 실시간 구독 (교사 승인 상태 & 동접 멤버 목록 동기화)
   if (teamCode) {
     onSnapshot(doc(db, "teams", teamCode), (docSnap) => {
@@ -1256,9 +1285,8 @@
           localStorage.setItem("elementary_aiName", d.aiName);
         }
         if (d.score !== undefined) {
-          localStorage.setItem("elementary_score", d.score.toString());
-          const scoreEl = document.getElementById("teamScoreDisplay");
-          if (scoreEl) scoreEl.textContent = d.score.toString();
+          latestTeamScore = Number(d.score) || 0;
+          applySyncedScoreAndRank();
         }
         if (d.approvedQuests) {
           for (let i = 1; i <= 8; i++) {
@@ -1313,10 +1341,8 @@
       if (docSnap.exists()) {
         const sd = docSnap.data();
         if (sd.score !== undefined) {
-          localStorage.setItem("elementary_score", sd.score.toString());
-          localStorage.setItem("studentExp", sd.score.toString());
-          const scoreEl = document.getElementById("teamScoreDisplay");
-          if (scoreEl) scoreEl.textContent = sd.score.toString();
+          latestStudentScore = Number(sd.score) || 0;
+          applySyncedScoreAndRank();
         }
         if (sd.badge) {
           localStorage.setItem("elementary_badge", sd.badge);

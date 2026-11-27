@@ -9,6 +9,7 @@
 
   <!-- 로컬 폰트: Paperlogy & GmarketSans -->
   <link rel="stylesheet" href="fonts.css">
+  <script src="rank-helper.js"></script>
 
   <style>
     :root {
@@ -1671,6 +1672,10 @@
 
       const sentence = `"AI는 ${limit}하지만, 사람은 ${role}해야 한다."`;
 
+      const rank = window.updateLocalScoreAndRank
+        ? window.updateLocalScoreAndRank(window.state.score)
+        : { title: "신입 탐정단" };
+
       if (db && studentId && studentId !== "guest") {
         try {
           await addDoc(collection(db, "quest6_reflections"), {
@@ -1686,10 +1691,19 @@
 
           await updateDoc(doc(db, "students", studentId), {
             score: increment(30),
-            badge: "오류 큐레이터",
+            questsDone: increment(1),
+            badge: rank.title,
             q6Done: true,
             q6_done: true
           });
+          if (teamCode) {
+            await updateDoc(doc(db, "teams", teamCode), {
+              score: increment(30),
+              questsDone: increment(1),
+              badge: rank.title,
+              lastActive: serverTimestamp()
+            }).catch(e => console.warn(e));
+          }
         } catch (e) {
           console.warn("Reflection save err:", e);
         }
@@ -1697,7 +1711,6 @@
 
       localStorage.setItem("quest6_completed", "true");
       localStorage.setItem("elementary_q6_done", "true");
-      localStorage.setItem("elementary_badge", "오류 큐레이터");
       showToast("우리 모둠 생각 게시판에 나의 한 문장이 공유되었습니다! (+30 EXP)");
     };
 

@@ -8,6 +8,7 @@
 
   <!-- 로컬 폰트: Paperlogy & GmarketSans -->
   <link rel="stylesheet" href="fonts.css">
+  <script src="rank-helper.js"></script>
 
   <style>
     :root {
@@ -893,18 +894,29 @@
       try {
         const userRef = db.collection('students').doc(studentId);
         const userDoc = await userRef.get();
-        const currentScore = userDoc.exists ? (userDoc.data().score || 0) : 0;
+        const currentScore = userDoc.exists ? (userDoc.data().score || 0) : parseInt(localStorage.getItem("elementary_score") || "0", 10);
         const questsDone = userDoc.exists ? (userDoc.data().questsDone || 0) : 0;
+        const newScore = currentScore + 20;
+        const rank = window.updateLocalScoreAndRank
+          ? window.updateLocalScoreAndRank(newScore)
+          : { title: "신입 탐정단" };
 
         await userRef.set({
-          score: currentScore + 20,
+          score: newScore,
           questsDone: Math.max(questsDone, 3),
+          badge: rank.title,
           q3_done: true,
           q3Done: true
         }, { merge: true });
 
-        const newScore = currentScore + 20;
-        localStorage.setItem("elementary_score", newScore);
+        if (teamCode) {
+          await db.collection('teams').doc(teamCode).set({
+            score: firebase.firestore.FieldValue.increment(20),
+            badge: rank.title,
+            lastActive: firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true });
+        }
+
         localStorage.setItem("quest3_completed", "true");
         localStorage.setItem("elementary_q3_done", "true");
         document.getElementById('dispScore').textContent = `${newScore}점`;

@@ -6,6 +6,7 @@
   <title>QUEST 4: AI공부자료에 이름표 붙이기 | AI 자원순환 탐정단</title>
   <!-- 로컬 폰트: Paperlogy & GmarketSans -->
   <link rel="stylesheet" href="fonts.css">
+  <script src="rank-helper.js"></script>
 
   <style>
     :root {
@@ -1156,13 +1157,25 @@
           if (!data.q4_done) {
             const currentScore = data.score || 0;
             const questsDone = data.questsDone || 0;
+            const newScore = currentScore + 30;
+            const rank = window.updateLocalScoreAndRank
+              ? window.updateLocalScoreAndRank(newScore)
+              : { title: "신입 탐정단" };
             await userRef.set({
-              score: currentScore + 30,
+              score: newScore,
               questsDone: Math.max(questsDone, 4),
+              badge: rank.title,
               q4_done: true,
               q4Done: true
             }, { merge: true });
-            localStorage.setItem("elementary_score", currentScore + 30);
+            const teamCode = localStorage.getItem("elementary_teamCode");
+            if (teamCode) {
+              await db.collection('teams').doc(teamCode).set({
+                score: firebase.firestore.FieldValue.increment(30),
+                badge: rank.title,
+                lastActive: firebase.firestore.FieldValue.serverTimestamp()
+              }, { merge: true });
+            }
             localStorage.setItem("quest4_completed", "true");
             localStorage.setItem("elementary_q4_done", "true");
             alert("Quest 4 라벨링 성공! (+30점 획득)");

@@ -6,6 +6,7 @@
   <title>AI 자원순환 탐정단 - 선생님 관리자 및 실시간 모둠 진도표</title>
   <!-- 로컬 폰트: Paperlogy & GmarketSans -->
   <link rel="stylesheet" href="fonts.css">
+  <script src="rank-helper.js"></script>
   <!-- Chart.js 4.4.1 (사전/사후 설문 분석 그래프 시각화용) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
@@ -1773,7 +1774,7 @@
           </td>
           <td class="col-score">
             <strong style="color:#F59E0B;font-size:13px;">${t.score || 10}</strong><br>
-            <span class="badge-tag" style="font-size:10px;padding:2px 5px;margin-top:2px;">${t.badge || '신입 탐정단'}</span>
+            <span class="badge-tag" style="font-size:10px;padding:2px 5px;margin-top:2px;">${window.getDetectiveRank ? `${window.getDetectiveRank(t.score || 0).icon} ${window.getDetectiveRank(t.score || 0).title}` : (t.badge || '신입 탐정단')}</span>
           </td>
           <td class="col-action">
             <div class="matrix-actions">

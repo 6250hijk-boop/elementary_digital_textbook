@@ -7,6 +7,7 @@
   <title>QUEST 7: 우리 모둠 실천 규약 초안 입력하기</title>
   <!-- 로컬 폰트: Paperlogy & GmarketSans -->
   <link rel="stylesheet" href="fonts.css">
+  <script src="rank-helper.js"></script>
 
   <style>
     :root {
@@ -1325,12 +1326,36 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // 점수 증가
-    window.addScore = function (exp) {
+    // 점수 증가 및 Firestore 동기화
+    window.addScore = async function (exp) {
       window.state.score += exp;
-      localStorage.setItem("elementary_score", window.state.score);
+      const rank = window.updateLocalScoreAndRank
+        ? window.updateLocalScoreAndRank(window.state.score)
+        : { title: "신입 탐정단" };
       const scoreDisp = document.getElementById('scoreDisplay');
       if (scoreDisp) scoreDisp.textContent = `${window.state.score} EXP`;
+
+      if (db && exp > 0) {
+        try {
+          if (studentId && studentId !== "guest") {
+            await setDoc(doc(db, "students", studentId), {
+              score: increment(exp),
+              exp: increment(exp),
+              badge: rank.title,
+              updatedAt: serverTimestamp()
+            }, { merge: true });
+          }
+          if (teamCode) {
+            await setDoc(doc(db, "teams", teamCode), {
+              score: increment(exp),
+              badge: rank.title,
+              lastActive: serverTimestamp()
+            }, { merge: true });
+          }
+        } catch (e) {
+          console.warn("Score sync error:", e);
+        }
+      }
     };
 
     // 1단계: 실천 규약 게시 (Firestore 저장 & 즉시 표시)
@@ -1633,47 +1658,28 @@
     // ── 3단계: 우리 반 모둠별 대표 규약 전당 로직 ──
     let currentRepRulesList = [];
 
-    // 3단계: 전체 모둠 규약 실시간 구독 (각 모둠 내 좋아요 1위 대표 규약 집계)
+    // 3단계: 우리 모둠 규약 실시간 구독 (같은 모둠 데이터만 표시)
     function subscribeAllTeamRepRules() {
-      const q = collection(db, "quest7_rules");
+      const q = query(
+        collection(db, "quest7_rules"),
+        where("teamCode", "==", teamCode)
+      );
 
       onSnapshot(q, (snapshot) => {
-        const allRules = [];
-        snapshot.forEach(docSnap => {
-          allRules.push({ id: docSnap.id, ...docSnap.data() });
-        });
-
-        // 1. 모둠별(teamCode)로 그룹화
-        const teamGroups = {};
-        allRules.forEach(rule => {
-          const tCode = rule.teamCode || '미지정';
-          if (!teamGroups[tCode]) teamGroups[tCode] = [];
-          teamGroups[tCode].push(rule);
-        });
-
-        // 2. 각 모둠별로 모둠 내 좋아요(likes) 1위 추출
         const repRules = [];
-        Object.entries(teamGroups).forEach(([tCode, rules]) => {
-          rules.sort((a, b) => {
-            const likesA = (typeof a.likes === 'number') ? a.likes : (Array.isArray(a.likedBy) ? a.likedBy.length : 0);
-            const likesB = (typeof b.likes === 'number') ? b.likes : (Array.isArray(b.likedBy) ? b.likedBy.length : 0);
-            if (likesB !== likesA) return likesB - likesA;
-            return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
-          });
-          const bestRule = rules[0];
-          if (bestRule) {
-            repRules.push(bestRule);
-          }
+        snapshot.forEach(docSnap => {
+          repRules.push({ id: docSnap.id, ...docSnap.data() });
         });
 
-        // 3. 3단계 반 대표 좋아요(classLikes) 순으로 정렬
+        // 3단계 대표 좋아요(classLikes) 순 -> 모둠 내 좋아요(likes) 순 -> 최신순 정렬
         repRules.sort((a, b) => {
           const vA = (typeof a.classLikes === 'number') ? a.classLikes : (Array.isArray(a.classLikedBy) ? a.classLikedBy.length : 0);
           const vB = (typeof b.classLikes === 'number') ? b.classLikes : (Array.isArray(b.classLikedBy) ? b.classLikedBy.length : 0);
           if (vB !== vA) return vB - vA;
           const mA = (typeof a.likes === 'number') ? a.likes : (Array.isArray(a.likedBy) ? a.likedBy.length : 0);
           const mB = (typeof b.likes === 'number') ? b.likes : (Array.isArray(b.likedBy) ? b.likedBy.length : 0);
-          return mB - mA;
+          if (mB !== mA) return mB - mA;
+          return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
         });
 
         currentRepRulesList = repRules;
@@ -1692,7 +1698,7 @@
       const syncStatus = document.getElementById("classSyncStatus");
 
       if (syncStatus) {
-        syncStatus.textContent = `총 ${repRules.length}개 모둠 대표 규약 집계 중`;
+        syncStatus.textContent = `${teamCode} 모둠 규약 ${repRules.length}건 집계 중`;
       }
 
       if (!grid) return;
@@ -1793,18 +1799,17 @@
 
     // QUEST 7 최종 완료
     window.finishQuest7 = async function () {
-      window.addScore(100);
+      await window.addScore(100);
       localStorage.setItem("quest7_completed", "true");
       localStorage.setItem("elementary_q7_done", "true");
 
       if (db && studentId && studentId !== "guest") {
         try {
-          await updateDoc(doc(db, "students", studentId), {
-            score: increment(100),
+          await setDoc(doc(db, "students", studentId), {
             questsDone: increment(1),
             q7Done: true,
             q7_done: true
-          });
+          }, { merge: true });
         } catch (e) {
           console.warn("Firestore update error:", e);
         }

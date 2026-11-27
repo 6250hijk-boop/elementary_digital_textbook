@@ -8,6 +8,7 @@
   
   <!-- 로컬 폰트: Paperlogy & GmarketSans -->
   <link rel="stylesheet" href="fonts.css">
+  <script src="rank-helper.js"></script>
   
   <!-- ONNX Runtime Web (WASM/WebGL 브라우저 AI 엔진) -->
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.2/dist/ort.min.js"></script>
@@ -1330,10 +1331,21 @@
       // Firestore 저장
       if (db && studentId && studentId !== "guest") {
         try {
+          const rank = window.updateLocalScoreAndRank
+            ? window.updateLocalScoreAndRank(window.state.score)
+            : { title: "신입 탐정단" };
           await addDoc(collection(db, "quest6_museum"), museumItem);
           await updateDoc(doc(db, "students", studentId), {
-            score: increment(20)
+            score: increment(20),
+            badge: rank.title
           });
+          if (teamCode) {
+            await updateDoc(doc(db, "teams", teamCode), {
+              score: increment(20),
+              badge: rank.title,
+              lastActive: serverTimestamp()
+            }).catch(e => console.warn(e));
+          }
         } catch(e) {
           console.warn("Museum record save failed:", e);
         }
@@ -1360,6 +1372,9 @@
       window.addScore(30);
 
       const pred = window.state.lastPrediction;
+      const rank = window.updateLocalScoreAndRank
+        ? window.updateLocalScoreAndRank(window.state.score)
+        : { title: "신입 탐정단" };
       if (db && studentId && studentId !== "guest") {
         try {
           await addDoc(collection(db, "quest5_records"), {
@@ -1375,9 +1390,18 @@
           await updateDoc(doc(db, "students", studentId), {
             score: increment(30),
             questsDone: increment(1),
+            badge: rank.title,
             q5Done: true,
             q5_done: true
           });
+          if (teamCode) {
+            await updateDoc(doc(db, "teams", teamCode), {
+              score: increment(30),
+              questsDone: increment(1),
+              badge: rank.title,
+              lastActive: serverTimestamp()
+            }).catch(e => console.warn(e));
+          }
           localStorage.setItem("quest5_completed", "true");
           localStorage.setItem("elementary_q5_done", "true");
         } catch(e) {

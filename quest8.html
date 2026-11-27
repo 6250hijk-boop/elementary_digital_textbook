@@ -7,6 +7,7 @@
 
   <!-- 로컬 폰트: Paperlogy & GmarketSans -->
   <link rel="stylesheet" href="fonts.css">
+  <script src="rank-helper.js"></script>
 
   <!-- ONNX Runtime Web (best.pt 가중치 모델 실행용) -->
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/ort.min.js"></script>
@@ -2025,11 +2026,12 @@
       localStorage.setItem("quest8_submitted", "true");
       localStorage.setItem("elementary_q8_done", "true");
 
-      const prevExp = parseInt(localStorage.getItem("elementary_score") || localStorage.getItem("studentExp") || "700", 10);
+      const prevExp = parseInt(localStorage.getItem("elementary_score") || localStorage.getItem("studentExp") || "0", 10);
       const currentExp = prevExp + 100;
+      const rank = window.updateLocalScoreAndRank
+        ? window.updateLocalScoreAndRank(currentExp)
+        : { title: "신입 탐정단" };
 
-      localStorage.setItem("elementary_score", currentExp.toString());
-      localStorage.setItem("studentExp", currentExp.toString());
       document.getElementById('expDisplay').textContent = `EXP ${currentExp}`;
 
       // Firestore 동기화
@@ -2046,12 +2048,23 @@
           q8Done: true,
           q8_done: true,
           quest8Done: true,
+          questsDone: 8,
           lastCompletedQuest: 8,
           score: currentExp,
           exp: currentExp,
+          badge: rank.title,
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
           lastActive: firebase.firestore.FieldValue.serverTimestamp()
         }, { merge: true });
+
+        if (teamCode) {
+          await db.collection("teams").doc(teamCode).set({
+            score: firebase.firestore.FieldValue.increment(100),
+            questsDone: 8,
+            badge: rank.title,
+            lastActive: firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true });
+        }
 
         // 로그 기록
         await db.collection("quest8_logs").add({

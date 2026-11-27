@@ -7,6 +7,7 @@
   
   <!-- 로컬 폰트: Paperlogy & GmarketSans -->
   <link rel="stylesheet" href="fonts.css">
+  <script src="rank-helper.js"></script>
   
   <style>
     :root {
@@ -960,6 +961,14 @@
           createdAt: serverTimestamp()
         };
 
+          // 로컬 상태 완료 반영
+        addScore(100);
+        const rank = window.updateLocalScoreAndRank
+          ? window.updateLocalScoreAndRank(currentScore)
+          : { title: "견습 탐정단" };
+        localStorage.setItem("quest2_completed", "true");
+        localStorage.setItem("elementary_q2_done", "true");
+
         if (db) {
           const docRef = await addDoc(collection(db, "quest2_rules"), postData);
           if (docRef && docRef.id) {
@@ -971,6 +980,7 @@
             await updateDoc(doc(db, "students", studentId), {
               score: increment(100),
               questsDone: increment(1),
+              badge: rank.title,
               q2Done: true,
               q2_done: true
             }).catch(e => console.warn(e));
@@ -978,15 +988,11 @@
             await updateDoc(doc(db, "teams", teamCode), {
               score: increment(100),
               questsDone: increment(1),
+              badge: rank.title,
               lastActive: serverTimestamp()
             }).catch(e => console.warn(e));
           }
         }
-
-        // 로컬 상태 완료 반영
-        addScore(100);
-        localStorage.setItem("quest2_completed", "true");
-        localStorage.setItem("elementary_q2_done", "true");
 
         playSound('success');
         showToast("분류 규칙이 성공적으로 게시판에 등록되었습니다! (+100 EXP)");

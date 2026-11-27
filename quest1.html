@@ -6,6 +6,7 @@
   <title>QUEST 1: AI의 눈 | AI 자원순환 탐정단</title>
   <!-- 로컬 폰트: Paperlogy & GmarketSans -->
   <link rel="stylesheet" href="fonts.css">
+  <script src="rank-helper.js"></script>
   
   <style>
     :root {
@@ -1242,9 +1243,12 @@
     window.finishQuest1 = async function() {
       window.playSound('fanfare');
       window.addScore(100);
+      const rank = window.updateLocalScoreAndRank
+        ? window.updateLocalScoreAndRank(window.state.score)
+        : { title: "견습 탐정단" };
+
       localStorage.setItem("quest1_completed", "true");
       localStorage.setItem("elementary_q1_done", "true");
-      localStorage.setItem("elementary_badge", "견습 탐정");
 
       const thought = document.getElementById('detectiveThought') ? document.getElementById('detectiveThought').value.trim() : '';
 
@@ -1256,7 +1260,7 @@
             teamCode,
             quizScore: 3,
             thought: thought || "사람은 흐리거나 가려져도 맥락을 잘 파악하지만, AI는 구체적인 특징 정보가 필수적입니다!",
-            badge: "견습 탐정",
+            badge: rank.title,
             score: window.state.score,
             createdAt: serverTimestamp()
           });
@@ -1264,16 +1268,25 @@
           await updateDoc(doc(db, "students", studentId), {
             score: increment(100),
             questsDone: increment(1),
-            badge: "견습 탐정",
+            badge: rank.title,
             q1Done: true,
             q1_done: true
           });
+
+          if (teamCode) {
+            await updateDoc(doc(db, "teams", teamCode), {
+              score: increment(100),
+              questsDone: increment(1),
+              badge: rank.title,
+              lastActive: serverTimestamp()
+            }).catch(e => console.warn(e));
+          }
         } catch(e) {
           console.warn("Firestore error:", e);
         }
       }
 
-      alert(`축하합니다! QUEST 1 [AI의 눈]을 완료하고 [견습 탐정] 배지를 획득했습니다!\n\n총 획득 점수: ${window.state.score} EXP\n메인 화면으로 이동합니다.`);
+      alert(`축하합니다! QUEST 1 [AI의 눈]을 완료하고 [${rank.title}] 등급이 되었습니다!\n\n총 획득 점수: ${window.state.score} EXP\n메인 화면으로 이동합니다.`);
       window.location.href = 'main.html';
     };
 
