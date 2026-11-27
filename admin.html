@@ -1475,7 +1475,8 @@
   let uploadsCache = [];
   let labelsCache = [];
   let museumCache = [];
-  const questSubmittedMap = {}; // { teamCode: { q1: true, q2: true, ... }, studentId: { ... } }
+  const questSubmittedMap = {}; // { teamCode: { q1: true, q2: true, ... } }
+  const studentSubmittedMap = {}; // { studentId: { q1: true, q2: true, ... } }
   const questArtifactsMap = {}; // { teamCode: { q1: [...], q2: [...], ... } }
 
   // 8대 퀘스트 컬렉션 실시간 구독
@@ -1501,11 +1502,14 @@
       onSnapshot(collection(db, name), (snapshot) => {
         snapshot.forEach(docSnap => {
           const data = docSnap.data();
-          const tCode = data.teamCode;
+          const rawTCode = data.teamCode;
           const sId = data.studentId || data.userId;
+          const tCode = (rawTCode && String(rawTCode).includes('_') && teamsCache.some(t => (t.teamCode || t.id) === String(rawTCode).split('_')[0]))
+            ? String(rawTCode).split('_')[0]
+            : rawTCode;
 
-          // 모둠 키 등록
-          if (tCode) {
+          // 모둠 키 등록 (실제 모둠코드만 등록)
+          if (tCode && (!sId || tCode !== sId)) {
             if (!questSubmittedMap[tCode]) questSubmittedMap[tCode] = {};
             questSubmittedMap[tCode][key] = true;
 
@@ -1517,10 +1521,10 @@
             }
           }
 
-          // 학생 키 등록
+          // 학생 키 등록 (모둠코드 목록과 분리 저장)
           if (sId) {
-            if (!questSubmittedMap[sId]) questSubmittedMap[sId] = {};
-            questSubmittedMap[sId][key] = true;
+            if (!studentSubmittedMap[sId]) studentSubmittedMap[sId] = {};
+            studentSubmittedMap[sId][key] = true;
           }
         });
         renderAll();
@@ -1690,9 +1694,10 @@
       }
     });
 
-    // 3. 퀘스트 제출 목록에서 발견된 모둠 코드 병합
+    // 3. 퀘스트 제출 목록에서 발견된 모둠 코드 병합 (학생ID 형태인 '모둠코드_별명' 제외)
     Object.keys(questSubmittedMap).forEach(code => {
       if (!code) return;
+      if (code.includes('_') && teamMap[code.split('_')[0]]) return;
       if (!teamMap[code]) {
         teamMap[code] = {
           id: code,
@@ -1968,7 +1973,7 @@
         } else {
           rowsHtml += memberEntries.map(m => {
             const s = m.studentObj || {};
-            const sSub = questSubmittedMap[m.studentId] || {};
+            const sSub = studentSubmittedMap[m.studentId] || {};
             const mSub = {};
             let mDone = 0;
             for (let i = 1; i <= 8; i++) {
@@ -2087,7 +2092,7 @@
             const prefix = `${tCode}_`;
             const shortName = rawName.startsWith(prefix) ? rawName.slice(prefix.length) : rawName;
             const displayMemberName = `${tCode}_${shortName}`;
-            const studentSub = questSubmittedMap[sId] || {};
+            const studentSub = studentSubmittedMap[sId] || {};
             const completedCount = ['q1','q2','q3','q4','q5','q6','q7','q8'].filter(k => approved[k] || submitted[k] || studentSub[k]).length;
             const cleanName = (shortName || '').replace(/'/g, "\\'");
 
