@@ -1106,8 +1106,8 @@
 
       <!-- 모둠 선택 탭 바 -->
       <div style="margin-bottom:16px;">
-        <div style="font-size:13px; font-weight:800; color:#1B5E20; margin-bottom:8px;">조(모둠) 선택:</div>
-        <div id="tabPhotosTeamSelector" style="display:flex; gap:8px; flex-wrap:wrap; padding:12px 14px; background:#F1F8E9; border-radius:16px; border:1.5px solid #C8E6C9;">
+        <div style="font-size:13px; font-weight:800; color:#1B5E20; margin-bottom:8px;">조(모둠) 선택 (모둠만 표시 · 옆의 [조원보기]를 누르면 조원별 사진이 펼쳐집니다):</div>
+        <div id="tabPhotosTeamSelector" style="display:flex; gap:10px; flex-wrap:wrap; padding:12px 14px; background:#F1F8E9; border-radius:16px; border:1.5px solid #C8E6C9;">
           <!-- Javascript로 동적 모둠 선택 칩 생성 -->
         </div>
       </div>
@@ -1246,6 +1246,24 @@
 
   <!-- TAB 6: 사전·사후 설문 분석 그래프 -->
   <div class="tab-content" id="tab-surveys">
+    <!-- 모둠별 체크 필터 및 추출 바 -->
+    <div class="manage-card" style="margin-bottom:20px; padding:16px 20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+        <div>
+          <strong style="font-size:15px; color:#1B5E20;">모둠별 설문 필터 및 데이터 추출</strong>
+          <span style="font-size:12.5px; color:#64748B; margin-left:8px;">체크한 모둠만 그래프와 CSV 추출에 반영됩니다.</span>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <button type="button" onclick="toggleAllSurveyTeams(true)" class="btn-action btn-ghost" style="font-size:12px; padding:5px 10px;">전체 선택</button>
+          <button type="button" onclick="toggleAllSurveyTeams(false)" class="btn-action btn-ghost" style="font-size:12px; padding:5px 10px;">전체 해제</button>
+          <button type="button" onclick="downloadSurveyCSV()" class="btn-action btn-green" style="font-size:13px; padding:7px 14px;">체크한 모둠 설문 CSV 추출</button>
+        </div>
+      </div>
+      <div id="surveyTeamCheckList" style="display:flex; flex-wrap:wrap; gap:8px; padding:10px 12px; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:12px;">
+        <span style="font-size:12.5px; color:#94A3B8;">모둠 목록을 불러오는 중...</span>
+      </div>
+    </div>
+
     <!-- 상단 핵심 요약 지표 카드 4개 -->
     <div class="stat-grid" style="margin-bottom:20px;">
       <div class="stat-card">
@@ -1789,51 +1807,114 @@
     }).join('');
   }
 
-  // 3. 학생 개별 테이블 렌더링
+  // 3. 학생 개별 테이블 렌더링 (첫 화면은 모둠만 표시, [조원보기] 클릭 시 조원 펼침)
+  const expandedStudentTeams = new Set();
+
+  window.toggleStudentTeamMembers = function(teamCode) {
+    if (expandedStudentTeams.has(teamCode)) expandedStudentTeams.delete(teamCode);
+    else expandedStudentTeams.add(teamCode);
+    renderStudentsTable(getAllMergedTeams());
+  };
+
   function renderStudentsTable(mergedTeams) {
     const tbody = document.getElementById("studentTableBody");
     const countEl = document.getElementById("studentTableCount");
     if (countEl) countEl.textContent = studentsCache.length.toString();
     if (!tbody) return;
 
-    if (!studentsCache.length) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#78909C;">접속한 학생 데이터가 없습니다. 학생 로그인 시 자동 등록됩니다.</td></tr>';
+    // 모둠별 학생 그룹핑
+    const groupMap = {};
+    mergedTeams.forEach(t => {
+      const code = t.teamCode || t.id;
+      groupMap[code] = { team: t, students: [] };
+    });
+
+    studentsCache.forEach(s => {
+      const tCode = (s.teamCode || '').trim() || '미지정';
+      if (!groupMap[tCode]) {
+        groupMap[tCode] = { team: { teamCode: tCode, aiName: s.aiPartnerName || '에코봇', score: 0, approvedQuests: {} }, students: [] };
+      }
+      groupMap[tCode].students.push(s);
+    });
+
+    const groups = Object.entries(groupMap);
+    if (!groups.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#78909C;">접속한 모둠/학생 데이터가 없습니다.</td></tr>';
       return;
     }
 
-    tbody.innerHTML = studentsCache.map(s => {
-      const sId = s.studentId || s.id;
-      const sName = s.studentName || s.name || s.id;
-      const tCode = s.teamCode || '';
-      const team = mergedTeams.find(t => (t.teamCode || t.id) === tCode);
+    tbody.innerHTML = groups.map(([tCode, grp]) => {
+      const team = grp.team;
+      const list = grp.students;
+      const isExpanded = expandedStudentTeams.has(tCode);
+      const safeCode = tCode.replace(/'/g, "\\'");
       const approved = team?.approvedQuests || {};
       const submitted = questSubmittedMap[tCode] || {};
-      const studentSub = questSubmittedMap[sId] || {};
-      const completedCount = ['q1','q2','q3','q4','q5','q6','q7','q8'].filter(k => approved[k] || submitted[k] || studentSub[k]).length;
-      const cleanName = (sName || '').replace(/'/g, "\\'");
+      const teamDone = ['q1','q2','q3','q4','q5','q6','q7','q8'].filter(k => approved[k] || submitted[k]).length;
+      const teamScore = team?.score || list.reduce((max, s) => Math.max(max, s.score || 0), 0);
 
-      return `
-        <tr>
+      let rowsHtml = `
+        <tr style="background:${isExpanded ? '#F0FDF4' : '#FFFFFF'};">
           <td>
-            <div style="display:flex;align-items:center;gap:6px;">
-              <strong style="color:#1E293B;">${sName}</strong>
-              <button onclick="editStudentNicknameAdmin('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-edit" style="padding:2px 6px;font-size:11px;" title="닉네임 수정">✏️</button>
-              <button onclick="deleteStudentNicknameAdmin('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-del" style="padding:2px 6px;font-size:11px;" title="닉네임 초기화">✕</button>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span class="code-tag" style="font-size:13px;padding:3px 9px;">${tCode}</span>
+              <span style="font-size:12.5px;color:#475569;font-weight:700;">조원 ${list.length}명</span>
             </div>
           </td>
-          <td><span class="code-tag" style="font-size:12px;padding:2px 6px;">${s.teamCode || '미지정'}</span></td>
-          <td>${s.aiPartnerName || team?.aiName || '에코봇'}</td>
-          <td><strong style="color:#2E7D32;">${s.score || 0} EXP</strong></td>
-          <td><strong style="color:#16A34A;">${completedCount}/8 완료됨</strong></td>
-          <td style="font-size:12px;color:#64748B;">${formatDateTime(s.lastActive || s.joinedAt || s.createdAt)}</td>
+          <td><span style="font-size:12.5px;color:#64748B;font-weight:700;">모둠 대표</span></td>
+          <td>${team?.aiName || '에코봇'}</td>
+          <td><strong style="color:#2E7D32;">${teamScore} EXP</strong></td>
+          <td><strong style="color:#16A34A;">${teamDone}/8 완료됨</strong></td>
+          <td style="font-size:12px;color:#64748B;">${formatDateTime(team?.lastActive || team?.createdAt)}</td>
           <td>
-            <div style="display:flex;gap:4px;">
-              <button onclick="editStudentNicknameAdmin('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-edit" style="padding:4px 8px;font-size:12px;">닉네임 수정</button>
-              <button onclick="deleteStudent('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-del" style="padding:4px 8px;font-size:12px;">삭제</button>
-            </div>
+            <button onclick="toggleStudentTeamMembers('${safeCode}')" class="btn-sm-action ${isExpanded ? 'btn-sm-view' : 'btn-sm-photos'}" style="padding:5px 11px;font-size:12px;">
+              ${isExpanded ? '조원닫기 ▲' : `조원보기 (${list.length}명) ▼`}
+            </button>
           </td>
         </tr>
       `;
+
+      if (isExpanded) {
+        if (!list.length) {
+          rowsHtml += `
+            <tr style="background:#F8FAFC;">
+              <td colspan="7" style="text-align:center;padding:12px;color:#94A3B8;font-size:12.5px;">아직 입장한 조원이 없습니다.</td>
+            </tr>
+          `;
+        } else {
+          rowsHtml += list.map(s => {
+            const sId = s.studentId || s.id;
+            const sName = s.studentName || s.name || s.id;
+            const studentSub = questSubmittedMap[sId] || {};
+            const completedCount = ['q1','q2','q3','q4','q5','q6','q7','q8'].filter(k => approved[k] || submitted[k] || studentSub[k]).length;
+            const cleanName = (sName || '').replace(/'/g, "\\'");
+
+            return `
+              <tr style="background:#F8FAFC;">
+                <td style="padding-left:24px;">
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="color:#94A3B8;">└</span>
+                    <strong style="color:#1E293B;">${sName}</strong>
+                  </div>
+                </td>
+                <td><span class="code-tag" style="font-size:11.5px;padding:2px 6px;">${s.teamCode || '미지정'}</span></td>
+                <td>${s.aiPartnerName || team?.aiName || '에코봇'}</td>
+                <td><strong style="color:#2E7D32;">${s.score || 0} EXP</strong></td>
+                <td><strong style="color:#16A34A;">${completedCount}/8 완료됨</strong></td>
+                <td style="font-size:12px;color:#64748B;">${formatDateTime(s.lastActive || s.joinedAt || s.createdAt)}</td>
+                <td>
+                  <div style="display:flex;gap:4px;">
+                    <button onclick="editStudentNicknameAdmin('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-edit" style="padding:4px 8px;font-size:12px;">닉네임 수정</button>
+                    <button onclick="deleteStudent('${sId}', '${cleanName}')" class="btn-sm-action btn-sm-del" style="padding:4px 8px;font-size:12px;">삭제</button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      return rowsHtml;
     }).join('');
   }
 
@@ -2258,7 +2339,15 @@
     }
   };
 
-  // 모둠 관리 그리드 렌더링
+  // 모둠 관리 그리드 렌더링 (첫 화면은 모둠만 표시, [조원보기] 클릭 시 조원 목록 펼침)
+  const expandedMgmtTeams = new Set();
+
+  window.toggleMgmtTeamMembers = function(teamCode) {
+    if (expandedMgmtTeams.has(teamCode)) expandedMgmtTeams.delete(teamCode);
+    else expandedMgmtTeams.add(teamCode);
+    renderTeamMgmtGrid(getAllMergedTeams());
+  };
+
   function renderTeamMgmtGrid(mergedTeams) {
     const grid = document.getElementById("teamMgmtGrid");
     if (!grid) return;
@@ -2270,11 +2359,13 @@
 
     grid.innerHTML = mergedTeams.map(t => {
       const code = t.teamCode || t.id;
+      const safeCode = code.replace(/'/g, "\\'");
       const members = t.members || [];
       const memberCount = members.length;
       const approved = t.approvedQuests || {};
       const completedCount = ['q1','q2','q3','q4','q5','q6','q7','q8'].filter(k => approved[k]).length;
       const isTest = (code.toLowerCase() === 'test');
+      const isExpanded = expandedMgmtTeams.has(code);
 
       const membersListHtml = memberCount > 0
         ? members.map(m => `<span class="member-pill">${m}</span>`).join(' ')
@@ -2284,13 +2375,13 @@
         <div class="team-mgmt-card" style="${isTest ? 'border-color:#C084FC;background:#FAF5FF;' : ''}">
           <div class="team-mgmt-header">
             <div>
-              <span class="code-tag clickable-team" onclick="openTeamPhotoGallery('${code}')" style="font-size:14px;padding:3px 8px;cursor:pointer;${isTest ? 'background:#F3E8FF;color:#7E22CE;border-color:#D8B4FE;' : ''}" title="클릭하여 [${code}] 수집 및 라벨링 사진 일괄 보기">${code}</span>
+              <span class="code-tag clickable-team" onclick="openTeamPhotoGallery('${safeCode}')" style="font-size:14px;padding:3px 8px;cursor:pointer;${isTest ? 'background:#F3E8FF;color:#7E22CE;border-color:#D8B4FE;' : ''}" title="클릭하여 [${code}] 수집 및 라벨링 사진 일괄 보기">${code}</span>
               ${isTest ? '<span style="font-size:11px;background:#E9D5FF;color:#6B21A8;padding:2px 6px;border-radius:6px;margin-left:4px;font-weight:bold;">TEST</span>' : ''}
               <div style="font-size:12px;color:#2E7D32;margin-top:4px;font-weight:700;">${t.aiName || '에코봇'}</div>
             </div>
-            <div style="display:flex;gap:4px;">
-              <button onclick="openTeamPhotoGallery('${code}')" class="btn-sm-action btn-sm-photos" style="font-size:11px;padding:4px 8px;" title="모둠 수집 사진 및 라벨링 일괄 보기">사진</button>
-              <button onclick="copyTeamCode('${code}')" class="btn-sm-action btn-sm-view" style="font-size:11px;padding:4px 8px;" title="모둠코드 복사">코드복사</button>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;">
+              <button onclick="toggleMgmtTeamMembers('${safeCode}')" class="btn-sm-action ${isExpanded ? 'btn-sm-view' : 'btn-sm-photos'}" style="font-size:11px;padding:4px 8px;" title="모둠 조원 목록 보기">${isExpanded ? '조원닫기' : `조원보기 (${memberCount}명)`}</button>
+              <button onclick="copyTeamCode('${safeCode}')" class="btn-sm-action btn-sm-view" style="font-size:11px;padding:4px 8px;" title="모둠코드 복사">코드복사</button>
             </div>
           </div>
           <div class="team-mgmt-meta">
@@ -2298,14 +2389,16 @@
             <div>퀘스트 승인: <b>${completedCount}/8</b></div>
             <div>모둠 점수: <b>${t.score || 10} EXP</b></div>
           </div>
-          <div style="margin-bottom:12px;">
-            <div style="font-size:11px;color:#64748B;font-weight:bold;margin-bottom:4px;">참여 학생 명단:</div>
-            <div style="display:flex;flex-wrap:wrap;gap:4px;max-height:60px;overflow-y:auto;">
+          ${isExpanded ? `
+          <div style="margin-bottom:12px; padding:8px 10px; background:#F8FAFC; border-radius:10px; border:1px solid #E2E8F0;">
+            <div style="font-size:11px;color:#64748B;font-weight:bold;margin-bottom:4px;">참여 조원 명단:</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;max-height:80px;overflow-y:auto;">
               ${membersListHtml}
             </div>
           </div>
+          ` : ''}
           <div class="team-mgmt-actions">
-            <button onclick="editTeamAiName('${t.id}', '${t.aiName||'에코봇'}')" class="btn-sm-action btn-sm-edit" style="flex:1;">AI 이름 수정</button>
+            <button onclick="editTeamAiName('${t.id}', '${(t.aiName||'에코봇').replace(/'/g, "\\'")}')" class="btn-sm-action btn-sm-edit" style="flex:1;">AI 이름 수정</button>
             <button onclick="deleteTeam('${t.id}')" class="btn-sm-action btn-sm-del" style="flex:0.8;">모둠 삭제</button>
           </div>
         </div>
@@ -2639,7 +2732,70 @@
       .replace(/'/g, "&#039;");
   }
 
+  // 모둠별 설문 필터 상태
+  let selectedSurveyTeams = null; // null이면 초기 전체 선택 상태
+
+  function getAvailableSurveyTeams() {
+    const teamSet = new Set();
+    getAllMergedTeams().forEach(t => { if (t.teamCode || t.id) teamSet.add(t.teamCode || t.id); });
+    preSurveysCache.forEach(d => { if (d.teamCode) teamSet.add(d.teamCode); });
+    postSurveysCache.forEach(d => { if (d.teamCode) teamSet.add(d.teamCode); });
+    return Array.from(teamSet).sort((a, b) => a.localeCompare(b, 'ko-KR', { numeric: true }));
+  }
+
+  function renderSurveyTeamCheckboxes() {
+    const box = document.getElementById("surveyTeamCheckList");
+    if (!box) return;
+    const teams = getAvailableSurveyTeams();
+    if (!teams.length) {
+      box.innerHTML = '<span style="font-size:12.5px; color:#94A3B8;">등록된 모둠이 없습니다.</span>';
+      return;
+    }
+    if (selectedSurveyTeams === null) {
+      selectedSurveyTeams = new Set(teams);
+    }
+    box.innerHTML = teams.map(t => {
+      const checked = selectedSurveyTeams.has(t);
+      const esc = t.replace(/'/g, "\\'");
+      return `
+        <label style="display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:10px; border:1.5px solid ${checked ? '#22C55E' : '#CBD5E1'}; background:${checked ? '#F0FDF4' : '#FFFFFF'}; color:#1E293B; font-size:13px; font-weight:700; cursor:pointer;">
+          <input type="checkbox" ${checked ? 'checked' : ''} onchange="onToggleSurveyTeam('${esc}', this.checked)">
+          <span>${escapeHtml(t)}</span>
+        </label>
+      `;
+    }).join('');
+  }
+
+  window.onToggleSurveyTeam = function(teamCode, isChecked) {
+    if (selectedSurveyTeams === null) selectedSurveyTeams = new Set(getAvailableSurveyTeams());
+    if (isChecked) selectedSurveyTeams.add(teamCode);
+    else selectedSurveyTeams.delete(teamCode);
+    renderSurveyAnalytics();
+  };
+
+  window.toggleAllSurveyTeams = function(selectAll) {
+    const teams = getAvailableSurveyTeams();
+    selectedSurveyTeams = selectAll ? new Set(teams) : new Set();
+    renderSurveyAnalytics();
+  };
+
+  function getFilteredSurveyCaches() {
+    const teams = getAvailableSurveyTeams();
+    if (selectedSurveyTeams === null) selectedSurveyTeams = new Set(teams);
+    const matchTeam = (d) => {
+      const t = d.teamCode || studentsCache.find(s => (s.id || s.studentId) === (d.studentId || d.id))?.teamCode || '';
+      return selectedSurveyTeams.has(t);
+    };
+    return {
+      preList: preSurveysCache.filter(matchTeam),
+      postList: postSurveysCache.filter(matchTeam)
+    };
+  }
+
   function renderSurveyAnalytics() {
+    renderSurveyTeamCheckboxes();
+    const { preList: filteredPreSurveys, postList: filteredPostSurveys } = getFilteredSurveyCaches();
+
     const preCountEl = document.getElementById("statPreSurveyCount");
     const postCountEl = document.getElementById("statPostSurveyCount");
     const preAvgScoreEl = document.getElementById("statPreAvgScore");
@@ -2648,21 +2804,21 @@
     const matchedCountEl = document.getElementById("surveyMatchedCount");
     const tableBody = document.getElementById("surveyTableBody");
 
-    const preCount = preSurveysCache.length;
-    const postCount = postSurveysCache.length;
+    const preCount = filteredPreSurveys.length;
+    const postCount = filteredPostSurveys.length;
 
     if (preCountEl) preCountEl.textContent = `${preCount}명`;
     if (postCountEl) postCountEl.textContent = `${postCount}명`;
 
     // 매핑 테이블 생성
     const preMap = {};
-    preSurveysCache.forEach(d => {
+    filteredPreSurveys.forEach(d => {
       const sid = d.studentId || d.id;
       if (sid) preMap[sid] = d;
     });
 
     const postMap = {};
-    postSurveysCache.forEach(d => {
+    filteredPostSurveys.forEach(d => {
       const sid = d.studentId || d.id;
       if (sid) postMap[sid] = d;
     });
@@ -2670,7 +2826,7 @@
     // 사전 평균 점수 계산 (5점 만점 환산)
     let preTotalSum = 0;
     let preValidCount = 0;
-    preSurveysCache.forEach(d => {
+    filteredPreSurveys.forEach(d => {
       const avg = d.avgScore || (d.totalScore ? d.totalScore / 10 : 0);
       if (avg > 0) {
         preTotalSum += avg;
@@ -2682,7 +2838,7 @@
     // 사후 평균 점수 계산 (5점 만점 환산)
     let postTotalSum = 0;
     let postValidCount = 0;
-    postSurveysCache.forEach(d => {
+    filteredPostSurveys.forEach(d => {
       const avg = d.avgScore || (d.totalScore ? d.totalScore / 10 : 0);
       if (avg > 0) {
         postTotalSum += avg;
@@ -2716,7 +2872,7 @@
     // 10개 문항별 사전 vs 사후 평균 점수 계산
     const preQAvgs = SURVEY_QUESTIONS.map(q => {
       let sum = 0, count = 0;
-      preSurveysCache.forEach(d => {
+      filteredPreSurveys.forEach(d => {
         const val = d.answers ? d.answers[q.key] : 0;
         if (val) { sum += val; count++; }
       });
@@ -2725,7 +2881,7 @@
 
     const postQAvgs = SURVEY_QUESTIONS.map(q => {
       let sum = 0, count = 0;
-      postSurveysCache.forEach(d => {
+      filteredPostSurveys.forEach(d => {
         const val = d.answers ? d.answers[q.key] : 0;
         if (val) { sum += val; count++; }
       });
@@ -2735,7 +2891,7 @@
     // 5대 핵심 영역별 사전 vs 사후 평균 점수 계산
     const preAreaAvgs = SURVEY_AREAS.map(area => {
       const areaVals = [];
-      preSurveysCache.forEach(d => {
+      filteredPreSurveys.forEach(d => {
         if (!d.answers) return;
         let qSum = 0, qCnt = 0;
         area.keys.forEach(k => {
@@ -2749,7 +2905,7 @@
 
     const postAreaAvgs = SURVEY_AREAS.map(area => {
       const areaVals = [];
-      postSurveysCache.forEach(d => {
+      filteredPostSurveys.forEach(d => {
         if (!d.answers) return;
         let qSum = 0, qCnt = 0;
         area.keys.forEach(k => {
@@ -2907,9 +3063,8 @@
     // 3. 학생별 매칭 상세 테이블 렌더링
     if (tableBody) {
       const allStudentIds = new Set();
-      studentsCache.forEach(s => allStudentIds.add(s.id || s.studentId));
-      preSurveysCache.forEach(s => allStudentIds.add(s.studentId || s.id));
-      postSurveysCache.forEach(s => allStudentIds.add(s.studentId || s.id));
+      filteredPreSurveys.forEach(s => allStudentIds.add(s.studentId || s.id));
+      filteredPostSurveys.forEach(s => allStudentIds.add(s.studentId || s.id));
 
       const rows = [];
       allStudentIds.forEach(sid => {
@@ -2986,17 +3141,22 @@
     }
   }
 
-  // ── 설문 데이터 CSV 일괄 다운로드 함수 ──
+  // ── 설문 데이터 CSV 일괄 다운로드 함수 (체크된 모둠 기준) ──
   window.downloadSurveyCSV = function() {
+    const { preList, postList } = getFilteredSurveyCaches();
+    if (selectedSurveyTeams && selectedSurveyTeams.size === 0) {
+      alert("추출할 모둠을 1개 이상 체크해주세요!");
+      return;
+    }
+
     const allStudentIds = new Set();
-    studentsCache.forEach(s => allStudentIds.add(s.id || s.studentId));
-    preSurveysCache.forEach(s => allStudentIds.add(s.studentId || s.id));
-    postSurveysCache.forEach(s => allStudentIds.add(s.studentId || s.id));
+    preList.forEach(s => allStudentIds.add(s.studentId || s.id));
+    postList.forEach(s => allStudentIds.add(s.studentId || s.id));
 
     const preMap = {};
-    preSurveysCache.forEach(d => { preMap[d.studentId || d.id] = d; });
+    preList.forEach(d => { preMap[d.studentId || d.id] = d; });
     const postMap = {};
-    postSurveysCache.forEach(d => { postMap[d.studentId || d.id] = d; });
+    postList.forEach(d => { postMap[d.studentId || d.id] = d; });
 
     const headers = [
       "학번/아이디", "이름", "소속모둠",
@@ -3711,8 +3871,22 @@
   }
 
   // ── 탭 4: 관리자 페이지 내 조별 사진 탭 함수 ──
-  window.selectTabPhotosTeam = function(teamCode) {
+  let tabPhotosShowMembers = false;
+
+  window.selectTabPhotosTeam = function(teamCode, showMembers = false) {
     currentTabPhotosTeamCode = teamCode;
+    tabPhotosShowMembers = !!showMembers;
+    renderTabPhotosTeamSelector();
+    renderTabPhotos(teamCode);
+  };
+
+  window.toggleTabPhotosMembers = function(teamCode) {
+    if (currentTabPhotosTeamCode === teamCode) {
+      tabPhotosShowMembers = !tabPhotosShowMembers;
+    } else {
+      currentTabPhotosTeamCode = teamCode;
+      tabPhotosShowMembers = true;
+    }
     renderTabPhotosTeamSelector();
     renderTabPhotos(teamCode);
   };
@@ -3729,14 +3903,23 @@
 
     selector.innerHTML = teams.map(t => {
       const code = t.teamCode || t.id;
+      const safeCode = code.replace(/'/g, "\\'");
       const count = getTeamPhotos(code).length;
       const isActive = (currentTabPhotosTeamCode === code);
+      const isMembersOpen = isActive && tabPhotosShowMembers;
       return `
-        <button class="gallery-pill ${isActive ? 'active' : ''}" 
-                onclick="selectTabPhotosTeam('${code}')"
-                style="${isActive ? '' : 'background:#FFFFFF;'}">
-          ${code} (${count}장)
-        </button>
+        <div style="display:inline-flex; align-items:center; gap:4px; background:${isActive ? '#DCFCE7' : '#FFFFFF'}; border:1.5px solid ${isActive ? '#16A34A' : '#CBD5E1'}; border-radius:20px; padding:3px 6px;">
+          <button class="gallery-pill ${isActive ? 'active' : ''}" 
+                  onclick="selectTabPhotosTeam('${safeCode}', false)"
+                  style="border:none; margin:0; padding:4px 10px; ${isActive ? '' : 'background:transparent;'}">
+            ${code} (${count}장)
+          </button>
+          <button type="button" onclick="toggleTabPhotosMembers('${safeCode}')"
+                  class="btn-sm-action ${isMembersOpen ? 'btn-sm-view' : 'btn-sm-photos'}"
+                  style="font-size:11px; padding:4px 9px; border-radius:14px;">
+            ${isMembersOpen ? '조원닫기' : '조원보기'}
+          </button>
+        </div>
       `;
     }).join('');
   }
@@ -3787,6 +3970,32 @@
     if (cntAll) cntAll.textContent = allPhotos.length;
     if (cntLabeled) cntLabeled.textContent = labeledPhotos.length;
     if (cntUnlabeled) cntUnlabeled.textContent = unlabeledPhotos.length;
+
+    if (!tabPhotosShowMembers) {
+      let filtered = allPhotos;
+      if (tabFilterStatus === 'labeled') filtered = labeledPhotos;
+      else if (tabFilterStatus === 'unlabeled') filtered = unlabeledPhotos;
+      const safeCode = teamCode.replace(/'/g, "\\'");
+
+      grid.innerHTML = `
+        <div style="background:#FFFFFF; border:2px solid #C8E6C9; border-radius:18px; padding:18px 20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #F1F5F9; padding-bottom:12px; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="code-tag" style="font-size:14px; padding:4px 10px;">${teamCode}</span>
+              <strong style="font-size:17px; color:#1E293B;">모둠 전체 사진 (${filtered.length}장)</strong>
+            </div>
+            <button type="button" onclick="toggleTabPhotosMembers('${safeCode}')" class="btn-sm-action btn-sm-photos" style="font-size:12px; padding:6px 12px;">
+              조원보기 (조원별로 펼쳐보기)
+            </button>
+          </div>
+          ${filtered.length > 0
+            ? `<div class="gallery-grid">${buildPhotoCardsHtml(filtered, tabShowBoxes)}</div>`
+            : `<div style="text-align:center; padding:30px; color:#94A3B8; font-size:13.5px;">선택한 조건에 해당하는 사진이 없습니다.</div>`
+          }
+        </div>
+      `;
+      return;
+    }
 
     grid.innerHTML = buildStudentGroupedPhotosHtml(teamCode, tabFilterStatus, tabShowBoxes);
   }
