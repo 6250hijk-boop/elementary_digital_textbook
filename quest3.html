@@ -624,11 +624,37 @@
 
     <!-- ==================== 사진 업로드 및 데이터 수집 존 ==================== -->
     <div class="card">
-      <h3>사진 데이터 직접 수집 & 업로드</h3>
+      <h3>사진 데이터 직접 수집 &amp; 업로드</h3>
+
+      <!-- 카메라 직접 촬영 영역 -->
+      <div id="camera-section" style="margin-bottom:18px; padding:18px; border-radius:18px; background:rgba(14,70,191,0.35); border:2px solid rgba(254,218,53,0.45); text-align:center;">
+        <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+          <button type="button" class="btn btn-primary" id="btn-open-camera" onclick="openCamera()">📷 카메라로 직접 찍기</button>
+          <button type="button" class="btn btn-ghost" id="btn-switch-camera" onclick="switchCamera()" style="display:none; color:#fff; border-color:rgba(255,255,255,0.4);">🔄 카메라 전환</button>
+          <button type="button" class="btn btn-ghost" id="btn-close-camera" onclick="stopCamera()" style="display:none; color:#fecaca; border-color:rgba(248,113,113,0.5);">✕ 카메라 닫기</button>
+        </div>
+
+        <!-- 실시간 카메라 미리보기 -->
+        <div id="camera-live-wrap" style="display:none; flex-direction:column; align-items:center; gap:12px;">
+          <video id="camera-video" autoplay playsinline muted style="width:100%; max-width:420px; aspect-ratio:1/1; object-fit:cover; border-radius:16px; border:3px solid var(--btn-yellow); background:#000;"></video>
+          <button type="button" class="btn btn-primary" onclick="captureCameraPhoto()" style="font-size:18px; padding:12px 28px;">📸 사진 찍기</button>
+        </div>
+
+        <!-- 촬영 후 확인 미리보기 (바로 저장하지 않고 다시찍기 / 저장하기 선택) -->
+        <div id="camera-preview-wrap" style="display:none; flex-direction:column; align-items:center; gap:12px;">
+          <img id="camera-preview-img" alt="촬영된 사진 미리보기" style="width:100%; max-width:420px; aspect-ratio:1/1; object-fit:cover; border-radius:16px; border:3px solid #22C55E; background:#000;">
+          <div style="font-size:14px; color:#FEF08A; font-weight:700;">사진이 잘 나왔나요? 확인 후 저장하기를 눌러주세요!</div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+            <button type="button" class="btn btn-ghost" id="btn-retake-photo" onclick="retakeCameraPhoto()" style="font-size:16px; padding:10px 22px; color:#fff; border-color:rgba(255,255,255,0.6);">🔄 다시찍기</button>
+            <button type="button" class="btn btn-primary" id="btn-save-photo" onclick="saveCapturedPhoto()" style="font-size:16px; padding:10px 26px; background:#22C55E; color:#fff; border-color:#86EFAC;">💾 저장하기</button>
+          </div>
+        </div>
+      </div>
+
       <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()"
         ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFiles(event)">
-        <div class="icon"></div>
-        <h4>사진을 여기에 끌어다 놓거나 클릭하여 선택하세요!</h4>
+        <div class="icon">📁</div>
+        <h4>또는 저장된 사진 파일을 끌어다 놓거나 클릭하여 선택하세요!</h4>
         <p>JPG, PNG, WEBP 지원 · 600×600 자동 변환 · 최대 20장</p>
       </div>
       <input type="file" id="file-input" accept="image/*" multiple onchange="handleFiles(this.files)">
@@ -889,7 +915,150 @@
       document.getElementById('progress-bar').style.width = '100%';
       btn.disabled = false;
       loadCurrentView();
+      await awardQuest3Score();
+    }
 
+    // ── 카메라 직접 촬영 (미리보기 -> 다시찍기 / 저장하기) ──
+    let cameraStream = null;
+    let cameraFacingMode = 'environment';
+    let capturedBlob = null;
+
+    async function startCameraStream() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showAlert('이 기기/브라우저에서는 카메라 직접 촬영이 지원되지 않습니다. 아래 파일 선택을 이용해주세요.', 'error');
+        return;
+      }
+      stopCameraStreamOnly();
+      try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: cameraFacingMode },
+          audio: false
+        });
+        const video = document.getElementById('camera-video');
+        video.srcObject = cameraStream;
+        document.getElementById('camera-live-wrap').style.display = 'flex';
+        document.getElementById('camera-preview-wrap').style.display = 'none';
+        document.getElementById('btn-switch-camera').style.display = 'inline-flex';
+        document.getElementById('btn-close-camera').style.display = 'inline-flex';
+        document.getElementById('btn-open-camera').style.display = 'none';
+      } catch (err) {
+        console.error('Camera open error:', err);
+        showAlert('카메라 권한을 허용해주세요! (' + (err.message || '접근 불가') + ')', 'error');
+      }
+    }
+
+    function stopCameraStreamOnly() {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(t => t.stop());
+        cameraStream = null;
+      }
+    }
+
+    window.openCamera = async function () {
+      capturedBlob = null;
+      await startCameraStream();
+    };
+
+    window.switchCamera = async function () {
+      cameraFacingMode = (cameraFacingMode === 'environment') ? 'user' : 'environment';
+      capturedBlob = null;
+      await startCameraStream();
+    };
+
+    window.stopCamera = function () {
+      stopCameraStreamOnly();
+      capturedBlob = null;
+      document.getElementById('camera-live-wrap').style.display = 'none';
+      document.getElementById('camera-preview-wrap').style.display = 'none';
+      document.getElementById('btn-switch-camera').style.display = 'none';
+      document.getElementById('btn-close-camera').style.display = 'none';
+      document.getElementById('btn-open-camera').style.display = 'inline-flex';
+    };
+
+    window.captureCameraPhoto = function () {
+      const video = document.getElementById('camera-video');
+      if (!video || !video.videoWidth || !video.videoHeight) {
+        showAlert('카메라 화면이 아직 준비되지 않았습니다. 잠시 후 다시 눌러주세요.', 'error');
+        return;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = TARGET_SIZE;
+      canvas.height = TARGET_SIZE;
+      const ctx = canvas.getContext('2d');
+      const minDim = Math.min(video.videoWidth, video.videoHeight);
+      const sx = (video.videoWidth - minDim) / 2;
+      const sy = (video.videoHeight - minDim) / 2;
+      ctx.drawImage(video, sx, sy, minDim, minDim, 0, 0, TARGET_SIZE, TARGET_SIZE);
+
+      const previewUrl = canvas.toDataURL('image/jpeg', QUALITY);
+      document.getElementById('camera-preview-img').src = previewUrl;
+      canvas.toBlob(blob => {
+        capturedBlob = blob;
+      }, 'image/jpeg', QUALITY);
+
+      document.getElementById('camera-live-wrap').style.display = 'none';
+      document.getElementById('camera-preview-wrap').style.display = 'flex';
+    };
+
+    window.retakeCameraPhoto = async function () {
+      capturedBlob = null;
+      document.getElementById('camera-preview-wrap').style.display = 'none';
+      if (cameraStream) {
+        document.getElementById('camera-live-wrap').style.display = 'flex';
+      } else {
+        await startCameraStream();
+      }
+    };
+
+    window.saveCapturedPhoto = async function () {
+      if (!capturedBlob) {
+        showAlert('저장할 사진이 없습니다. 먼저 사진을 찍어주세요!', 'error');
+        return;
+      }
+      const saveBtn = document.getElementById('btn-save-photo');
+      const retakeBtn = document.getElementById('btn-retake-photo');
+      saveBtn.disabled = true;
+      retakeBtn.disabled = true;
+      saveBtn.textContent = '저장 중...';
+
+      try {
+        const fileName = `camera_${Date.now()}.jpg`;
+        const result = await uploadToCloudinary(capturedBlob, fileName);
+
+        await db.collection('uploads').add({
+          userId: studentId,
+          userName: studentName,
+          fileName: result.public_id,
+          originalName: fileName,
+          url: result.secure_url,
+          cloudinaryId: result.public_id,
+          labeled: false,
+          width: TARGET_SIZE,
+          height: TARGET_SIZE,
+          created_at: new Date().toISOString(),
+          teamCode: teamCode
+        });
+
+        capturedBlob = null;
+        loadCurrentView();
+        await awardQuest3Score();
+        document.getElementById('camera-preview-wrap').style.display = 'none';
+        if (cameraStream) {
+          document.getElementById('camera-live-wrap').style.display = 'flex';
+        }
+      } catch (e) {
+        console.error(e);
+        showAlert('사진 저장 중 오류가 발생했습니다. 다시 시도해주세요.', 'error');
+      } finally {
+        saveBtn.disabled = false;
+        retakeBtn.disabled = false;
+        saveBtn.textContent = '💾 저장하기';
+      }
+    };
+
+    window.addEventListener('beforeunload', stopCameraStreamOnly);
+
+    async function awardQuest3Score() {
       // 점수 보상 (+20점)
       try {
         const userRef = db.collection('students').doc(studentId);
