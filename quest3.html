@@ -49,7 +49,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 16px;
       font-size: 17px;
     }
 
@@ -59,20 +58,45 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
-      padding-bottom: 60px;
+      padding: 20px 16px 60px;
     }
 
-    header {
+    .app-header {
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
       background: var(--card-navy);
-      border: 2px solid rgba(255, 255, 255, 0.25);
-      border-radius: 20px;
-      padding: 12px 22px;
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+      padding: 10px 22px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
       gap: 12px;
-      flex-wrap: wrap;
+    }
+
+    .header-title-group {
+      display: flex;
+      flex-direction: column;
+      white-space: nowrap;
+    }
+
+    .badge-chasi {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--btn-yellow);
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .header-main-title {
+      font-family: 'Jua', sans-serif;
+      font-size: 24px;
+      color: var(--text-white);
+      letter-spacing: -0.3px;
+      white-space: nowrap;
     }
 
     .header-left {
@@ -571,25 +595,28 @@
 
 <body>
 
-  <div class="page-wrap">
-    <!-- 상단 헤더 -->
-    <header>
-      <div class="header-left">
-        <a href="main.html" class="header-logo-link" title="메인 화면으로 이동">
-          <img src="images/bs-logo.png" alt="AI 자원순환 탐정단" class="header-bs-logo">
-        </a>
-        <a href="main.html" class="btn-quest-map" title="퀘스트 지도로 이동">🧭 퀘스트지도가기</a>
+  <!-- 상단 헤더 -->
+  <header class="app-header">
+    <div class="header-left">
+      <a href="main.html" class="header-logo-link" title="메인 화면으로 이동">
+        <img src="images/bs-logo.png" alt="AI 자원순환 탐정단" class="header-bs-logo">
+      </a>
+      <a href="main.html" class="btn-quest-map" title="퀘스트 지도로 이동">🧭 퀘스트지도가기</a>
+      <div class="header-title-group">
+        <span class="badge-chasi">QUEST 3</span>
+        <h1 class="header-main-title">AI가 잘 배우는 사진은 무엇일까?</h1>
       </div>
-      <div class="header-info-group">
-        <button class="btn-intro-replay" onclick="window.replayQuestIntro && window.replayQuestIntro()"
-          title="대화형 인트로 다시보기">🎬 인트로</button>
-        <div class="header-team" id="dispTeam">1모둠</div>
-        <div class="header-score" id="dispScore">0점</div>
-      </div>
-    </header>
+    </div>
+    <div class="header-info-group">
+      <button class="btn-intro-replay" onclick="window.replayQuestIntro && window.replayQuestIntro()"
+        title="대화형 인트로 다시보기">🎬 인트로</button>
+      <div class="header-team" id="dispTeam">1모둠</div>
+      <div class="header-score" id="dispScore">0점</div>
+    </div>
+  </header>
 
+  <div class="page-wrap">
     <div>
-      <div class="page-title">QUEST 3: AI가 잘 배우는 사진은 무엇일까?</div>
       <div class="page-desc">
         우리가 만든 분류 기준을 바탕으로 AI 학습용 사진 데이터를 직접 수집해봅시다!
       </div>

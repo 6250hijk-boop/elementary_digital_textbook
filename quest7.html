@@ -45,16 +45,17 @@
       flex-direction: column;
     }
 
-    header {
-      background: rgba(6, 27, 80, 0.95);
+    .app-header {
+      width: 100%;
+      background: var(--card-navy);
       backdrop-filter: blur(12px);
-      border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.25);
       color: white;
-      padding: 12px 20px;
+      padding: 10px 22px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
       position: sticky;
       top: 0;
       z-index: 100;
@@ -107,11 +108,25 @@
       transform: translateY(-1px);
     }
 
-    .header-title {
+    .header-title-group {
+      display: flex;
+      flex-direction: column;
+      white-space: nowrap;
+    }
+
+    .badge-chasi {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--btn-yellow);
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .header-main-title {
       font-family: 'Jua', sans-serif;
       font-size: 24px;
-      letter-spacing: 0.5px;
       color: var(--text-white);
+      letter-spacing: -0.3px;
       white-space: nowrap;
     }
 
@@ -1065,13 +1080,16 @@
 
 <body>
 
-  <header>
+  <header class="app-header">
     <div class="header-left">
       <a href="main.html" class="header-logo-link" title="메인 화면으로 이동">
         <img src="images/bs-logo.png" alt="AI 자원순환 탐정단" class="header-bs-logo">
       </a>
       <a href="main.html" class="btn-quest-map" title="퀘스트 지도로 이동">🧭 퀘스트지도가기</a>
-      <span class="header-title">QUEST 7: 우리 모둠 실천 규약 초안 입력하기</span>
+      <div class="header-title-group">
+        <span class="badge-chasi">QUEST 7</span>
+        <h1 class="header-main-title">우리 모둠 실천 규약 초안 입력하기</h1>
+      </div>
     </div>
     <div class="header-right">
       <button class="btn-intro-replay" onclick="window.replayQuestIntro && window.replayQuestIntro()"
