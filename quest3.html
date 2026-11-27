@@ -587,6 +587,150 @@
         flex-shrink: 0 !important;
       }
     }
+
+    /* ==================== 사전 사진 비교 퀴즈 UI ==================== */
+    .quiz-progress-pill {
+      display: inline-block;
+      background: rgba(254, 218, 53, 0.2);
+      border: 1.5px solid var(--btn-yellow);
+      color: var(--btn-yellow);
+      font-family: 'GmarketSans', sans-serif;
+      font-size: 14px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    .quiz-pair-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .quiz-photo-btn {
+      position: relative;
+      background: rgba(255, 255, 255, 0.08);
+      border: 3px solid rgba(255, 255, 255, 0.28);
+      border-radius: 18px;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-white);
+    }
+
+    .quiz-photo-btn:hover:not(:disabled) {
+      border-color: var(--btn-yellow);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .quiz-photo-btn:disabled {
+      cursor: default;
+    }
+
+    .quiz-photo-btn img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 12px;
+      background: #0f172a;
+    }
+
+    .quiz-photo-label {
+      font-family: 'GmarketSans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .quiz-choice-badge {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-family: 'GmarketSans', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+      display: none;
+    }
+
+    .quiz-photo-btn.is-correct {
+      border-color: #22C55E;
+      background: rgba(34, 197, 94, 0.22);
+      box-shadow: 0 0 24px rgba(34, 197, 94, 0.55);
+      animation: quizPop 0.38s ease;
+    }
+
+    .quiz-photo-btn.is-correct .quiz-choice-badge {
+      display: inline-block;
+      background: #22C55E;
+      color: #FFFFFF;
+    }
+
+    .quiz-photo-btn.is-wrong {
+      border-color: #EF4444;
+      background: rgba(239, 68, 68, 0.22);
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.45);
+      animation: quizShake 0.42s ease;
+    }
+
+    .quiz-photo-btn.is-wrong .quiz-choice-badge {
+      display: inline-block;
+      background: #EF4444;
+      color: #FFFFFF;
+    }
+
+    .quiz-feedback-box {
+      margin-top: 16px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.55;
+      display: none;
+      text-align: center;
+      animation: quizPop 0.28s ease;
+    }
+
+    .quiz-feedback-box.correct {
+      display: block;
+      background: #DCFCE7;
+      color: #14532D;
+      border: 2.5px solid #22C55E;
+    }
+
+    .quiz-feedback-box.wrong {
+      display: block;
+      background: #FEE2E2;
+      color: #7F1D1D;
+      border: 2.5px solid #EF4444;
+    }
+
+    @keyframes quizPop {
+      0% { transform: scale(0.95); opacity: 0.7; }
+      60% { transform: scale(1.03); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes quizShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+
+    @media (max-width: 600px) {
+      .quiz-pair-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
   <script src="quest-intro.js?v=7"></script>
 </head>
@@ -622,9 +766,33 @@
 
     <div id="main-alert"></div>
 
+    <!-- ==================== 사전 퀴즈: AI가 공부하기 좋은 사진 고르기 ==================== -->
+    <div class="card" id="q3-quiz-section">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <span class="quiz-progress-pill" id="q3-quiz-step">문제 1 / 4</span>
+      </div>
+      <h3 style="margin-bottom:6px;">어떤 사진이 AI가 공부하기 좋은 사진일지 골라보세요</h3>
+      <p style="font-size:15px; color:var(--text-white-dim); margin-bottom:4px;">
+        두 사진 중 AI 학습용으로 더 알맞은 사진을 클릭해보세요!
+      </p>
+
+      <div class="quiz-pair-grid" id="q3-quiz-grid"></div>
+
+      <div class="quiz-feedback-box" id="q3-quiz-feedback"></div>
+
+      <div id="q3-quiz-next-wrap" style="display:none; text-align:center; margin-top:16px;">
+        <button type="button" class="btn btn-primary" id="q3-quiz-next-btn" onclick="nextQ3QuizQuestion()" style="font-size:18px; padding:12px 28px;">
+          다음 문제 →
+        </button>
+      </div>
+    </div>
+
     <!-- ==================== 사진 업로드 및 데이터 수집 존 ==================== -->
-    <div class="card">
-      <h3>사진 데이터 직접 수집 &amp; 업로드</h3>
+    <div class="card" id="q3-capture-card" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+        <h3 style="margin-bottom:0;">사진 데이터 직접 수집 &amp; 업로드</h3>
+        <button type="button" class="btn btn-ghost" onclick="reopenQ3Quiz()" style="font-size:13px; padding:6px 12px; color:#FEF08A; border-color:rgba(254,218,53,0.5);">📝 사진 퀴즈 다시 풀기</button>
+      </div>
 
       <!-- 카메라 직접 촬영 영역 -->
       <div id="camera-section" style="margin-bottom:18px; padding:18px; border-radius:18px; background:rgba(14,70,191,0.35); border:2px solid rgba(254,218,53,0.45); text-align:center;">
@@ -1220,6 +1388,137 @@
       }, 5000);
     }
 
+    const Q3_QUIZ_DATA = [
+      {
+        options: ['images/q3-1-1.jpg', 'images/q3-1-2.jpg'],
+        answerIdx: 1,
+        correctMsg: '정답입니다. 내가 찍고 싶은 사진과 배경의 색이 비슷하면 AI가 학습하기 어려워요.',
+        wrongMsg: '아니에요. 내가 찍고 싶은 사진과 배경의 색이 비슷하면 AI가 학습하기 어려워요.'
+      },
+      {
+        options: ['images/q3-2-1.jpg', 'images/q3-2-2.jpg'],
+        answerIdx: 0,
+        correctMsg: '정답입니다. 사진을 찍을때는 물건 전체가 나오도록 찍어줘야해요',
+        wrongMsg: '아니에요. 사진을 찍을때는 물건 전체가 나오도록 찍어줘야해요'
+      },
+      {
+        options: ['images/q3-3-1.jpg', 'images/q3-3-2.jpg'],
+        answerIdx: 1,
+        correctMsg: '정답입니다. 사진을 찍을때는 사물이 잘 보이도록 흐리게 나오지 않도록 찍어줘야해요.',
+        wrongMsg: '오답입니다. 사진을 찍을때는 사물이 잘 보이도록 흐리게 나오지 않도록 찍어줘야해요'
+      },
+      {
+        options: ['images/q3-4-1.jpg', 'images/q3-4-2.jpg'],
+        answerIdx: 0,
+        correctMsg: '정답입니다. 사진을 찍을때는 물건이 겹쳐져있지 않고 다른 물건에 가려져 있으면 안되요.',
+        wrongMsg: '아니에요. 사진을 찍을때는 물건이 겹쳐져있지 않고 다른 물건에 가려져 있으면 안되요.'
+      }
+    ];
+
+    let q3QuizIndex = 0;
+    let q3QuizAnswered = false;
+
+    function playQuizTone(isCorrect) {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        const now = ctx.currentTime;
+        if (isCorrect) {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.08);
+          osc.frequency.setValueAtTime(783.99, now + 0.16);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(240, now);
+          osc.frequency.setValueAtTime(180, now + 0.12);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        }
+      } catch (e) { }
+    }
+
+    function renderQ3Quiz() {
+      const q = Q3_QUIZ_DATA[q3QuizIndex];
+      q3QuizAnswered = false;
+      document.getElementById('q3-quiz-step').textContent = `문제 ${q3QuizIndex + 1} / ${Q3_QUIZ_DATA.length}`;
+      const feedbackEl = document.getElementById('q3-quiz-feedback');
+      feedbackEl.className = 'quiz-feedback-box';
+      feedbackEl.textContent = '';
+      document.getElementById('q3-quiz-next-wrap').style.display = 'none';
+
+      const grid = document.getElementById('q3-quiz-grid');
+      grid.innerHTML = q.options.map((src, idx) => `
+        <button type="button" class="quiz-photo-btn" id="q3-opt-${idx}" onclick="selectQ3QuizOption(${idx})">
+          <span class="quiz-choice-badge" id="q3-badge-${idx}"></span>
+          <img src="${src}" alt="사진 선택 ${idx + 1}">
+          <span class="quiz-photo-label">${idx === 0 ? '① 왼쪽 사진' : '② 오른쪽 사진'}</span>
+        </button>
+      `).join('');
+    }
+
+    window.selectQ3QuizOption = function (choiceIdx) {
+      if (q3QuizAnswered) return;
+      q3QuizAnswered = true;
+      const q = Q3_QUIZ_DATA[q3QuizIndex];
+      const isCorrect = (choiceIdx === q.answerIdx);
+
+      playQuizTone(isCorrect);
+
+      const chosenBtn = document.getElementById(`q3-opt-${choiceIdx}`);
+      const chosenBadge = document.getElementById(`q3-badge-${choiceIdx}`);
+      if (isCorrect) {
+        chosenBtn.classList.add('is-correct');
+        chosenBadge.textContent = '⭕ 정답!';
+      } else {
+        chosenBtn.classList.add('is-wrong');
+        chosenBadge.textContent = '❌ 오답';
+        const correctBtn = document.getElementById(`q3-opt-${q.answerIdx}`);
+        const correctBadge = document.getElementById(`q3-badge-${q.answerIdx}`);
+        if (correctBtn) correctBtn.classList.add('is-correct');
+        if (correctBadge) correctBadge.textContent = '⭕ 정답';
+      }
+
+      document.querySelectorAll('.quiz-photo-btn').forEach(btn => { btn.disabled = true; });
+
+      const feedbackEl = document.getElementById('q3-quiz-feedback');
+      feedbackEl.textContent = isCorrect ? q.correctMsg : q.wrongMsg;
+      feedbackEl.className = `quiz-feedback-box ${isCorrect ? 'correct' : 'wrong'}`;
+
+      const nextBtn = document.getElementById('q3-quiz-next-btn');
+      nextBtn.textContent = (q3QuizIndex < Q3_QUIZ_DATA.length - 1) ? '다음 문제 →' : '사진 찍으러 가기 📸';
+      document.getElementById('q3-quiz-next-wrap').style.display = 'block';
+    };
+
+    window.nextQ3QuizQuestion = function () {
+      if (q3QuizIndex < Q3_QUIZ_DATA.length - 1) {
+        q3QuizIndex++;
+        renderQ3Quiz();
+      } else {
+        document.getElementById('q3-quiz-section').style.display = 'none';
+        document.getElementById('q3-capture-card').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+
+    window.reopenQ3Quiz = function () {
+      q3QuizIndex = 0;
+      renderQ3Quiz();
+      document.getElementById('q3-capture-card').style.display = 'none';
+      document.getElementById('q3-quiz-section').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    renderQ3Quiz();
     initUser();
   </script>
 </body>
